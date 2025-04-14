@@ -1,2 +1,54 @@
-# anaTupleDef: AnaProd/anaTupleDef.py
+anaTupleDef: AnaProd/anaTupleDef.py
 analysis_import: Analysis.h_mumu
+signal_types:
+ - DY
+storeFatJets: False
+
+bjet_preselection_branch : "Jet_B1"
+tagger_name: particleNet
+met_type: "PuppiMET"
+
+corrections:
+  # - JEC
+  # - JER
+  - trg
+  - btagWP
+  - mu
+  - pu
+
+triggers:
+- HLT_singleMu
+
+
+categories:
+  - inclusive
+  - Zmumu
+
+category_definition:
+  - inclusive: "return true;"
+  - Zmumu: "m_mumu < 110 && m_mumu > 70"
+
+
+singleMu_th:
+  "Run2_2016": 26
+  "Run2_2016_HIPM": 26
+  "Run2_2017": 29
+  "Run2_2018": 26
+  "Run3_2022": 26
+  "Run3_2022EE": 26
+
+
+scales:
+  - Up
+  - Down
+
+
+sample_types_to_merge:
+  - DY
+  - TT
+  - W
+  - ST
+  - VVV
+  - VV
+  - ttH
+  - TTVV
