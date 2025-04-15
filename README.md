@@ -68,3 +68,26 @@ The ${ERA} is defined as before, whereas version can differ from InputFileTask (
  --InputFileTask-version ${INPUTFILETASK_VERSION_NAME}
 ```
 which in this example is Run3_2022.
+
+
+#### ToDo list
+- redesign jet selection and store
+- modify H(mm) candate selection
+- check what is done for MET in Run2 analysis
+- check the b-tagging WP based SF for jets
+- include FSR
+- add all corrections
+- data/MC control plots (short term)
+- setup workspace for ggH and VBF (for the moment both template fit)
+- improve documentations + add github project to correctly keep trace of changes
+
+#### R&D
+- efficiency gain using other triggers (non priority)
+- develop classifier optimized for Run3 (first focus on VBF, then possible extension to all categories)
+    - explore different architechtures
+    - validate
+    - hyperparameter optimization
+    - suitable to compare results w/ run2 and for run2+run3 combination
+- switch to Run3 muon ID
+- investigate for new production setup  (e.g. flashsim)
+
