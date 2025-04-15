@@ -3,7 +3,7 @@ GLOBAL:
     - drop ^.*
     - keep ^TTto.*
     - keep ^ttH.*
-    - keep ^ST.*
+    # - keep ^ST.*
     - keep DYto2L_M_10to50_amcatnloFXFX
     - keep DYto2L_M_50_amcatnloFXFX
     - keep WtoLNu_amcatnloFXFX
@@ -15,8 +15,8 @@ GLOBAL:
     - keep WZZ
     - keep ZZZ
     - keep ^Muon_.*
-    - keep ^Tau_.*
-    - keep ^EGamma_.*
+    # - keep ^Tau_.*
+    # - keep ^EGamma_.*
     # - keep ^MuonEG_.*
     # - keep ^Jet.*
     # - keep ^MET_.*
