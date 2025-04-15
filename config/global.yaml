@@ -1,5 +1,5 @@
 anaTupleDef: AnaProd/anaTupleDef.py
-analysis_import: Analysis.h_mumu
+analysis_import: Analysis.H_mumu
 signal_types:
  - DY
 storeFatJets: False
@@ -10,6 +10,16 @@ met_type: "PuppiMET"
 
 channelSelection:
   - muMu
+
+channelDefinition:
+  eTau: 13
+  muTau: 23
+  tauTau: 33
+  eE: 11
+  eMu: 12
+  muMu: 22
+
+
 corrections:
   # - JEC
   # - JER
@@ -18,16 +28,25 @@ corrections:
   - mu
   - pu
 
+region: SR
+region_default: SR
+
+SignRegions:
+  - OS
+ApplyBweight: False
 triggers:
   muMu: [singleMu]
+hist_triggers:
+  muMu:
+    default:  (HLT_singleMu)
 
 categories:
   - inclusive
   - Zmumu
 
 category_definition:
-  - inclusive: "return true;"
-  - Zmumu: "m_mumu < 110 && m_mumu > 70"
+  inclusive: "return true;"
+  Zmumu: "m_mumu < 110 && m_mumu > 70"
 
 
 singleMu_th:
