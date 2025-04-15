@@ -70,6 +70,8 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
 
         for muon_obs in Muon_observables:
             if f"mu{leg_idx+1}_{muon_obs}" in dfw.df.GetColumnNames(): continue
+            if f"Muon_{muon_obs}" not in dfw.df.GetColumnNames(): continue
+
             LegVar(muon_obs, f"Muon_{muon_obs}.at(HttCandidate.leg_index[{leg_idx}])",
                    var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu", default='-1.f')
         if not isData:
