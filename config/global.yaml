@@ -8,17 +8,18 @@ bjet_preselection_branch : "Jet_B1"
 tagger_name: particleNet
 met_type: "PuppiMET"
 
+channelSelection:
+  - muMu
 corrections:
   # - JEC
   # - JER
   - trg
-  - btagWP
+  # - btagWP
   - mu
   - pu
 
 triggers:
-- HLT_singleMu
-
+  muMu: [singleMu]
 
 categories:
   - inclusive
