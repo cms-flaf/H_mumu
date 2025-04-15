@@ -34,9 +34,9 @@ Repository for the Hmumu analysis
 
     analysis_config_area: config
 
-    compute_unc_variations: True
-    store_noncentral: True
-    compute_unc_histograms: True
+    compute_unc_variations: False
+    store_noncentral: False
+    compute_unc_histograms: False
 
     vars_to_plot:
         - mu1_pt
