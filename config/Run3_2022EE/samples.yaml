@@ -3,6 +3,7 @@ GLOBAL:
     - drop ^.*
     - keep ^TTto.*
     - keep ^ttH.*
+    - keep ^EWK_.*
     # - keep ^ST.*
     - keep DYto2L_M_10to50_amcatnloFXFX
     - keep DYto2L_M_50_amcatnloFXFX

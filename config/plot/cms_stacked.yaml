@@ -57,7 +57,7 @@ cms_text:
   font: 61
 
 ana_text:
-  text: "hh#rightarrowbb#tau#tau"
+  text: "h#rightarrow#mu#mu"
   pos_ref: cms_text
   pos: [ 0.12, -0.06 ]
   text_size: 0.03
@@ -79,7 +79,7 @@ datasim_text:
 
 cat_text:
   pos_ref: datasim_text
-  pos: [0.1, -0.079 ]
+  pos: [0.05, -0.079 ]
   text_size: 0.026
   font: 62
 
