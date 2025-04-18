@@ -47,7 +47,7 @@ categories:
 
 
 category_definition:
-  VBF: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && HasVBF && {region}"
+  VBF: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && HasVBF && jet1_pt > 25 && jet2_pt >25 && {region}"
   ggH: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && !(VBF) && {region}"
 
 
