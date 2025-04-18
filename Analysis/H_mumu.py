@@ -50,7 +50,7 @@ def GetWeight(channel, cat, boosted_categories):
         'muMu':["weight_trigSF_singleMu"],
     }
     ID_weights_dict = {
-        "muMu": ["weight_mu1_MuonID_SF_LoosePFIsoCentral","weight_mu1_MuonID_SF_TightID_TrkCentral","weight_mu2_MuonID_SF_LoosePFIsoCentral","weight_mu2_MuonID_SF_TightID_TrkCentral","weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"]
+        "muMu": ["weight_mu1_MuonID_SF_MediumIDLooseIsoCentral","weight_mu2_MuonID_SF_MediumIDLooseIsoCentral","weight_mu1_MuonID_SF_MediumID_TrkCentral","weight_mu2_MuonID_SF_MediumID_TrkCentral"]# "weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"]
         # 'muMu': ["weight_mu1_HighPt_MuonID_SF_Reco_Central", "weight_mu1_HighPt_MuonID_SF_TightID_Central", "weight_mu1_MuonID_SF_Reco_Central", "weight_mu1_MuonID_SF_TightID_Trk_Central", "weight_mu1_MuonID_SF_TightRelIso_Central", "weight_mu2_HighPt_MuonID_SF_Reco_Central", "weight_mu2_HighPt_MuonID_SF_TightID_Central", "weight_mu2_MuonID_SF_Reco_Central", "weight_mu2_MuonID_SF_TightID_Trk_Central", "weight_mu2_MuonID_SF_TightRelIso_Central","weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"],
         }
 
@@ -78,44 +78,25 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.df = self.df.Define("SS", "!OS")
 
 
-    # def defineCRs(self): # needs inv mass def
-    #     SR_mass_limits_bb_boosted = self.config['mass_cut_limits']['bb_m_vis']['boosted']
-    #     SR_mass_limits_bb = self.config['mass_cut_limits']['bb_m_vis']['other']
-    #     SR_mass_limits_tt = self.config['mass_cut_limits']['tautau_m_vis']
-    #     self.df = self.df.Define("SR_tt", f"return (tautau_m_vis > {SR_mass_limits_tt[0]} && tautau_m_vis  < {SR_mass_limits_tt[1]});")
-    #     self.df = self.df.Define("SR_bb", f"(bb_m_vis > {SR_mass_limits_bb[0]} && bb_m_vis < {SR_mass_limits_bb[1]});")
-    #     self.df = self.df.Define("SR_bb_boosted", f"(bb_m_vis_softdrop > {SR_mass_limits_bb_boosted[0]} && bb_m_vis_softdrop < {SR_mass_limits_bb_boosted[1]});")
-    #     self.df = self.df.Define("SR", f" SR_tt &&  SR_bb")
-    #     self.df = self.df.Define("SR_boosted", f" SR_tt &&  SR_bb_boosted")
+    def defineRegions(self): # needs inv mass def
+        self.df = self.df.Define("Inclusive", f" return true;")
+        # print("inclusive")
+        # print(self.df.Filter("Inclusive").Count().GetValue())
+        self.df = self.df.Define("DYEnriched", f" return (m_mumu > 70 && m_mumu < 100);")
+        # print("DYEnriched")
+        # print(self.df.Filter("DYEnriched").Count().GetValue())
 
 
-    #     self.df = self.df.Define("DYCR", "if(muMu || eE) {return (tautau_m_vis < 100 && tautau_m_vis > 80);} return true;")
-    #     self.df = self.df.Define("DYCR_boosted", "DYCR")
-
-
-    #     TTCR_mass_limits_eTau = self.config['TTCR_mass_limits']['eTau']
-    #     TTCR_mass_limits_muTau = self.config['TTCR_mass_limits']['muTau']
-    #     TTCR_mass_limits_tauTau = self.config['TTCR_mass_limits']['tauTau']
-    #     TTCR_mass_limits_muMu = self.config['TTCR_mass_limits']['muMu']
-    #     TTCR_mass_limits_eE = self.config['TTCR_mass_limits']['eE']
-    #     self.df = self.df.Define("TTCR", f"""
-    #                             if(eTau) {{return (tautau_m_vis < {TTCR_mass_limits_eTau[0]} || tautau_m_vis > {TTCR_mass_limits_eTau[1]});
-    #                             }};
-    #                              if(muTau) {{return (tautau_m_vis < {TTCR_mass_limits_muTau[0]} || tautau_m_vis > {TTCR_mass_limits_muTau[1]});
-    #                              }};
-    #                              if(tauTau) {{return (tautau_m_vis < {TTCR_mass_limits_tauTau[0]} || tautau_m_vis > {TTCR_mass_limits_tauTau[1]});
-    #                              }};
-    #                              if(muMu) {{return (tautau_m_vis < {TTCR_mass_limits_muMu[0]} || tautau_m_vis > {TTCR_mass_limits_muMu[1]});
-    #                              }};
-    #                              if(eE) {{return (tautau_m_vis < {TTCR_mass_limits_eE[0]} || tautau_m_vis > {TTCR_mass_limits_eE[1]});
-    #                              }};
-    #                              return true;""")defineTriggerWeights
-    #     self.df = self.df.Define("TTCR_boosted", "TTCR")
 
     def defineCategories(self): # needs lot of stuff --> at the end
+        singleMuTh = self.config["singleMu_th"][self.period]
+        # print(singleMuTh)
         for category_to_def in self.config['category_definition'].keys():
             category_name = category_to_def
-            self.df = self.df.Define(category_to_def, self.config['category_definition'][category_to_def])#.format(region=self.region))
+            cat_str = self.config['category_definition'][category_to_def].format(MuPtTh=singleMuTh, region=self.region)
+            # print(cat_str)
+            self.df = self.df.Define(category_to_def, cat_str)
+            # print(self.df.Filter(category_to_def).Count().GetValue())
 
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
@@ -124,21 +105,20 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         #     self.df = self.df.Define(f"{channel}", f"channelId=={ch_value}")
 
 
-    # def defineLeptonPreselection(self): # needs channel def
-    #     if self.period == 'Run2_2016' or self.period == 'Run2_2016_HIPM':
-    #         self.df = self.df.Define("eleEta2016", "if(eE) {return (abs(mu1_eta) < 2 && abs(mu2_eta)<2); } if(eTau||eMu) {return (abs(mu1_eta) < 2); } return true;")
-    #     else:
-    #         self.df = self.df.Define("eleEta2016", "return true;")
-    #     self.df = self.df.Define("muon1_tightId", "if(muTau || muMu) {return (mu1_Muon_tightId && mu1_Muon_pfRelIso04_all < 0.15); } return true;")
-    #     self.df = self.df.Define("muon2_tightId", "if(muMu || eMu) {return (mu2_Muon_tightId && mu2_Muon_pfRelIso04_all < 0.3);} return true;")
-    #     self.df = self.df.Define("firstele_mvaIso", "if(eMu || eE){return mu1_Electron_mvaIso_WP80==1 && mu1_Electron_pfRelIso03_all < 0.15 ; } return true; ")
-    #     self.df = self.df.Define("mu1_iso_medium", f"if(tauTau) return (mu1_idDeepTau{self.deepTauYear()}v{self.deepTauVersion}VSjet >= {Utilities.WorkingPointsTauVSjet.Medium.value}); return true;")
-    #     if f"mu1_gen_kind" not in self.df.GetColumnNames():
-    #         self.df=self.df.Define("mu1_gen_kind", "if(isData) return 5; return 0;")
-    #     if f"mu2_gen_kind" not in self.df.GetColumnNames():
-    #         self.df=self.df.Define("mu2_gen_kind", "if(isData) return 5; return 0;")
-    #     self.df = self.df.Define("tau_true", f"""(mu1_gen_kind==5 && mu2_gen_kind==5)""")
-    #     self.df = self.df.Define(f"lepton_preselection", "eleEta2016 && mu1_iso_medium && muon1_tightId && muon2_tightId && firstele_mvaIso")
+    def VBFJetSelection(self):
+        self.df = self.df.Define("VBFJetCand","FindVBFJets(SelectedJet_p4)")
+        self.df = self.df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
+        self.df = self.df.Define("VBF_mInv", "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f")
+        self.df = self.df.Define("VBF_etaSeparation", "if (HasVBF) return static_cast<float>(VBFJetCand.eta_separation); return -1000.f")
+        self.df = self.df.Define("VBFjet1_idx", "if (HasVBF) return static_cast<int>(VBFJetCand.leg_index[0]); return -1000; ")
+        self.df = self.df.Define("VBFjet2_idx", "if (HasVBF) return static_cast<int>(VBFJetCand.leg_index[1]); return -1000; ")
+        self.df = self.df.Define("VBFjet1_pt", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Pt()); return -1000.f; ")
+        self.df = self.df.Define("VBFjet2_pt", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Pt()); return -1000.f; ")
+        self.df = self.df.Define("VBFjet1_eta", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Eta()); return -1000.f; ")
+
+        self.df = self.df.Define("VBFjet2_eta", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Eta()); return -1000.f; ")
+        self.df = self.df.Define("VBFjet1_phi", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Phi()); return -1000.f; ")
+        self.df = self.df.Define("VBFjet2_phi", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Phi()); return -1000.f; ")
 
     def addNewCols(self):
         self.colNames = []
@@ -164,19 +144,19 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         for colName,colType in zip(self.colNames,self.colTypes):
             print(colName,colType)
 
-    def __init__(self, df, config, period,isData=False, isCentral=False):
+    def __init__(self, df, config, period,region,isData=False, isCentral=False):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
         self.isData = isData
         self.period = period
         self.isCentral = isCentral
+        self.region = region
         #  deepTauVersion='v2p1', bTagWPString = "Medium", pNetWPstring="Loose", region="SR", , wantTriggerSFErrors=False, whichType=3, wantScales=True
         # self.deepTauVersion = deepTauVersion
         # self.bTagWPString = bTagWPString
         # self.pNetWPstring = pNetWPstring
         # self.pNetWP = WorkingPointsParticleNet[period][pNetWPstring]
         # self.bTagWP = WorkingPointsDeepFlav[period][bTagWPString]
-        # self.region = region
         # self.whichType = whichType
         # self.wantTriggerSFErrors = wantTriggerSFErrors
         # self.wantScales = isCentral and wantScales
@@ -188,11 +168,13 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = defineP4AndInvMass(dfForHistograms.df)
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
+    dfForHistograms.VBFJetSelection()
     # dfForHistograms.df = createInvMass(dfForHistograms.df)
     if not dfForHistograms.isData:
         defineTriggerWeights(dfForHistograms)
         # if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
         #     defineTriggerWeightsErrors(dfForHistograms)
+    dfForHistograms.defineRegions()
     dfForHistograms.defineCategories()
     dfForHistograms.defineSignRegions()
     return dfForHistograms
@@ -201,6 +183,7 @@ def PrepareDfForHistograms(dfForHistograms):
 
 def defineP4AndInvMass(df):
     if "SelectedJet_idx" not in df.GetColumnNames():
+        print("SelectedJet_idx not in df.GetColumnNames")
         df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
     df = df.Define(f"SelectedJet_p4", f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)")
     for idx in [0,1]:
