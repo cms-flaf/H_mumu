@@ -1,6 +1,7 @@
 import ROOT
 if __name__ == "__main__":
     sys.path.append(os.environ['ANALYSIS_PATH'])
+    # ROOT.gInterpreter.Declare(f'#include "include/HmumuCore.h"')
 
 from FLAF.Analysis.HistHelper import *
 from Analysis.GetTriggerWeights import *
@@ -106,6 +107,8 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
     def VBFJetSelection(self):
+        ROOT.gROOT.ProcessLine(".include "+ os.environ['ANALYSIS_PATH'])
+        ROOT.gInterpreter.Declare(f'#include "include/Helper.h"')
         self.df = self.df.Define("VBFJetCand","FindVBFJets(SelectedJet_p4)")
         self.df = self.df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
         self.df = self.df.Define("VBF_mInv", "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f")
