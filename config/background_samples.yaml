@@ -5,11 +5,18 @@ WtoLNu_amcatnloFXFX:
 ############## TT ##############
 # TT:
 #   sampleType: TT
-TTTo2L2Nu:
+TTto2L2Nu:
   sampleType: TT
-TTTo4Q:
+TTto4Q:
   sampleType: TT
-TTToLNu2Q:
+TTtoLNu2Q:
+  sampleType: TT
+
+TTto2L2Nu_ext1:
+  sampleType: TT
+TTto4Q_ext1:
+  sampleType: TT
+TTtoLNu2Q_ext1:
   sampleType: TT
 
 ############## DY ##############
@@ -19,14 +26,14 @@ DYto2L_M_50_amcatnloFXFX:
   sampleType: DY
 
 ############## EWK ##############
-EWK_ZTo2L:
-  sampleType: EWK
-EWK_ZTo2Nu:
-  sampleType: EWK
-EWK_WplusToLNu:
-  sampleType: EWK
-EWK_WminusToLNu:
-  sampleType: EWK
+# EWK_ZTo2L:
+#   sampleType: EWK
+# EWK_ZTo2Nu:
+#   sampleType: EWK
+# EWK_WplusToLNu:
+#   sampleType: EWK
+# EWK_WminusToLNu:
+#   sampleType: EWK
 
 ############## single Higgs ##############
 # ggHToZZTo2L2Q:
@@ -68,14 +75,14 @@ ZZ:
 
 
 # ############## VVV inclusive ##############
-# WWW_4F:
-#   sampleType: VVV
-# WWZ_4F:
-#   sampleType: VVV
-# WZZ:
-#   sampleType: VVV
-# ZZZ:
-#   sampleType: VVV
+WWW_4F:
+  sampleType: VVV
+WWZ_4F:
+  sampleType: VVV
+WZZ:
+  sampleType: VVV
+ZZZ:
+  sampleType: VVV
 
 # ############## ST #############
 # ST_t_channel_antitop_4f_InclusiveDecays:

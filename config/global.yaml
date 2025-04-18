@@ -28,8 +28,8 @@ corrections:
   - mu
   - pu
 
-region: SR
-region_default: SR
+region: Inclusive
+region_default: Inclusive
 
 SignRegions:
   - OS
@@ -41,12 +41,14 @@ hist_triggers:
     default:  (HLT_singleMu)
 
 categories:
-  - inclusive
-  - Zmumu
+  - ggH
+  - VBF
+
+
 
 category_definition:
-  inclusive: "return true;"
-  Zmumu: "m_mumu < 110 && m_mumu > 70"
+  VBF: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && HasVBF && {region}"
+  ggH: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && !(VBF) && {region}"
 
 
 singleMu_th:
@@ -67,8 +69,8 @@ sample_types_to_merge:
   - DY
   - TT
   - W
-  - ST
   - VVV
   - VV
   - ttH
-  - TTVV
+  # - ST
+  # - TTVV
