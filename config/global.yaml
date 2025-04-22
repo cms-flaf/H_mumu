@@ -1,7 +1,10 @@
 anaTupleDef: AnaProd/anaTupleDef.py
 analysis_import: Analysis.H_mumu
 signal_types:
- - DY
+  - ggH
+  - VBFH
+  # - ttH
+  # - VH
 storeFatJets: False
 
 bjet_preselection_branch : "Jet_B1"
@@ -26,10 +29,11 @@ corrections:
   - trg
   # - btagWP
   - mu
+  - Vpt
   - pu
 
-region: Inclusive
-region_default: Inclusive
+region: All
+region_default: All
 
 SignRegions:
   - OS
@@ -41,14 +45,22 @@ hist_triggers:
     default:  (HLT_singleMu)
 
 categories:
+  - baseline
   - ggH
   - VBF
+  - baseline_Zmumu
+  - ggH_Zmumu
+  - VBF_Zmumu
 
 
 
 category_definition:
-  VBF: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && HasVBF && jet1_pt > 25 && jet2_pt >25 && {region}"
-  ggH: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && !(VBF) && {region}"
+  baseline: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) "
+  VBF: "baseline && HasVBF && VBFjet1_pt > 25 && VBFjet2_pt >25"
+  ggH: "baseline && !(VBF)"
+  baseline_Zmumu: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})&& DYEnriched"
+  VBF_Zmumu: "baseline && HasVBF && VBFjet1_pt > 25 && VBFjet2_pt >25 && DYEnriched"
+  ggH_Zmumu: "baseline && !(VBF) && DYEnriched"
 
 
 singleMu_th:

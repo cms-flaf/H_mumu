@@ -1,9 +1,12 @@
 GluGluHto2Mu:
   sampleType: ggH
+
 TTH_Hto2Mu:
   sampleType: ttH
+
 VBFHto2Mu:
   sampleType: VBFH
+
 WminusH_Hto2Mu_WtoAll:
   sampleType: VH
 WplusH_Hto2Mu_WtoAll:
