@@ -203,5 +203,6 @@ def defineP4AndInvMass(df):
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
     df = df.Define("dR_mumu", 'ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)')
     ### currently putting it here ####
-    df = df.Define("weight_EWKCorr_VptCentral_scaled1", "1+weight_EWKCorr_VptCentral")
+    if "weight_EWKCorr_VptCentral" in df.GetColumnNames():
+        df = df.Define("weight_EWKCorr_VptCentral_scaled1", "1+weight_EWKCorr_VptCentral")
     return df
