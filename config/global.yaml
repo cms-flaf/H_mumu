@@ -58,9 +58,15 @@ category_definition:
   baseline: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) "
   VBF: "baseline && HasVBF && VBFjet1_pt > 25 && VBFjet2_pt >25"
   ggH: "baseline && !(VBF)"
-  baseline_Zmumu: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})&& DYEnriched"
-  VBF_Zmumu: "baseline && HasVBF && VBFjet1_pt > 25 && VBFjet2_pt >25 && DYEnriched"
-  ggH_Zmumu: "baseline && !(VBF) && DYEnriched"
+  baseline_Zmumu: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && DYEnriched"
+  VBF_Zmumu: "baseline_Zmumu && VBF "
+  ggH_Zmumu: "baseline_Zmumu && !(VBF) "
+
+  VBF_JetVeto: "(VBF && (VBFjet1_pt > 50 && abs(VBFjet1_eta) >= 2.5 && abs(VBFjet1_eta) < 3 ) || (VBFjet2_pt > 50 && abs(VBFjet2_eta) >= 2.5 && abs(VBFjet2_eta) < 3 ))"
+  ggH_VBFJetVeto: "baseline && !(VBF_JetVeto)"
+
+  VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto"
+  ggH_Zmumu_JetVeto: "baseline_Zmumu && !VBF_JetVeto"
 
 
 singleMu_th:

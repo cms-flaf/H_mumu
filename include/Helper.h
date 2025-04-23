@@ -28,7 +28,7 @@ VBFJets FindVBFJets(const RVecLV& Jet_p4)
         float eta = Jet_p4.at(i).Eta() - Jet_p4.at(j).Eta();
         if (inv_mass >= inv_mass_th && std::abs(eta) >= eta_th){
           inv_mass_th = inv_mass;
-          eta_th = eta;
+          // eta_th = eta;
           VBF_jets_collection.leg_index[0] = i;
           VBF_jets_collection.leg_index[1] = j;
           VBF_jets_collection.leg_p4[0] = Jet_p4.at(i);
