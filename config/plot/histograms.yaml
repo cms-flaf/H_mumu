@@ -217,7 +217,7 @@ VBF_mInv:
   divide_by_bin_width: True
 
 VBF_etaSeparation:
-  x_bins: "120|-3.:3."
+  x_bins: "400|-10.:10."
   x_rebin: [-3.0, -2.9, -2.8, -2.7, -2.6, -2.5, 2.5, 2.6, 2.7, 2.8, 2.9, 3.]
   x_title: \Delta\eta(VBFj_{1}, VBFj_{2})
   y_title: Events
