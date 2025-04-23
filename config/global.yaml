@@ -62,7 +62,7 @@ category_definition:
   VBF_Zmumu: "baseline_Zmumu && VBF "
   ggH_Zmumu: "baseline_Zmumu && !(VBF) "
 
-  VBF_JetVeto: "(VBF && (VBFjet1_pt > 50 && abs(VBFjet1_eta) >= 2.5 && abs(VBFjet1_eta) =< 3 ) || (VBFjet2_pt > 50 && abs(VBFjet2_eta) >= 2.5 && abs(VBFjet2_eta) =< 3 ))"
+  VBF_JetVeto: "(VBF && (VBFjet1_pt > 50 && abs(VBFjet1_eta) >= 2.5 && abs(VBFjet1_eta) <= 3 ) || (VBFjet2_pt >= 50 && abs(VBFjet2_eta) >= 2.5 && abs(VBFjet2_eta) <= 3 ))"
   ggH_VBFJetVeto: "baseline && !(VBF_JetVeto)"
 
   VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto"
