@@ -46,11 +46,15 @@ hist_triggers:
 
 categories:
   - baseline
-  - ggH
   - VBF
+  - ggH
   - baseline_Zmumu
-  - ggH_Zmumu
   - VBF_Zmumu
+  - ggH_Zmumu
+  - VBF_JetVeto
+  - ggH_VBFJetVeto
+  - VBF_Zmumu_JetVeto
+  - ggH_Zmumu_JetVeto
 
 
 
