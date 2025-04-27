@@ -42,15 +42,112 @@ def GetBTagWeight(global_cfg_dict,cat,applyBtag=False):
                 btagshape_weight = "weight_bTagShape_Central"
     return f'{btag_weight}*{btagshape_weight}'
 
+def VBFJetSelection(df):
+
+    if "SelectedJet_idx" not in df.GetColumnNames():
+        print("SelectedJet_idx not in df.GetColumnNames")
+        df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
+    df = df.Define(f"SelectedJet_p4", f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)")
+
+    df = df.Define("VBFJetCand","FindVBFJets(SelectedJet_p4)")
+    df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
+    df = df.Define("m_jj", "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f")
+    df = df.Define("delta_eta_jj", "if (HasVBF) return static_cast<float>(VBFJetCand.eta_separation); return -1000.f")
+    df = df.Define("j1_idx", "if (HasVBF) return static_cast<int>(VBFJetCand.leg_index[0]); return -1000; ")
+    df = df.Define("j2_idx", "if (HasVBF) return static_cast<int>(VBFJetCand.leg_index[1]); return -1000; ")
+    df = df.Define("j1_pt", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Pt()); return -1000.f; ")
+    df = df.Define("j2_pt", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Pt()); return -1000.f; ")
+    df = df.Define("j1_eta", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Eta()); return -1000.f; ")
+    df = df.Define("j2_eta", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Eta()); return -1000.f; ")
+    df = df.Define("j1_phi", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Phi()); return -1000.f; ")
+    df = df.Define("j2_phi", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Phi()); return -1000.f; ")
+    df = df.Define("j1_y", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Rapidity()); return -1000.f; ")
+    df = df.Define("j2_y", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Rapidity()); return -1000.f; ")
+    df = df.Define("delta_phi_jj", "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;")
+    return df
+
+def GetMuMuObservables(df):
+    for idx in [0,1]:
+        df = Utilities.defineP4(df, f"mu{idx+1}")
+    df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
+    df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
+    df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
+    df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
+    df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
+    for idx in [0,1]:
+        df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
+    df = df.Define("dR_mumu", 'ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)')
+
+    df = df.Define("Ebeam", "13600.0/2")
+    df = df.Define("cosTheta_Phi_CS","ComputeCosThetaPhiCS(mu1_p4, mu2_p4,  Ebeam)")
+    df = df.Define("cosTheta_CS", "static_cast<float>(std::get<0>(cosTheta_Phi_CS))")
+    df = df.Define("phi_CS", "static_cast<float>(std::get<1>(cosTheta_Phi_CS))")
+    return df
+
+def VBFJetMuonsObservables(df):
+    df = df.Define("Zepperfield_Var", "if (HasVBF) return static_cast<float>((y_mumu - 0.5*(j1_y+j2_y))/std::abs(j1_y - j2_y)); return -10000.f;")
+    df = df.Define("pT_all_sum", "if(HasVBF) return static_cast<float>(pT_sum ({mu1_p4, mu2_p4, VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1]})); return -10000.f;")
+    df = df.Define("R_pt", "if(HasVBF) return static_cast<float>((pT_all_sum)/(pt_mumu + j1_pt + j2_pt)); return -10000.f;")
+    df = df.Define("pT_jj_sum", "if(HasVBF) return static_cast<float>(pT_sum ({VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1]})); return -10000.f;")
+    df = df.Define("pt_centrality", "if(HasVBF) return static_cast<float>(( (pt_mumu-0.5*(pT_jj_sum)) / pT_diff(VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1]) )); return -10000.f;")
+
+    df = df.Define("minDeltaPhi", "if(HasVBF) return static_cast<float>(std::min(ROOT::Math::VectorUtil::DeltaPhi( (mu1_p4+mu2_p4), VBFJetCand.leg_p4[0]), ROOT::Math::VectorUtil::DeltaPhi((mu1_p4+mu2_p4), VBFJetCand.leg_p4[1]) ) )  ; return -10000.f;")
+    df = df.Define("minDeltaEta", "if(HasVBF) return static_cast<float>(std::min(std::abs(eta_mumu - j1_eta),std::abs(eta_mumu - j2_eta))) ; return -10000.f;")
+    df = df.Define("minDeltaEtaSigned", "if(HasVBF) return static_cast<float>(std::min((eta_mumu - j1_eta),(eta_mumu - j2_eta))) ; return -10000.f;")
+
+    return df
+
+def GetSoftJets(df):
+    df = df.Define("SoftJet_def_vtx", "(SelectedJet_svIdx1 < 0 && SelectedJet_svIdx2< 0 ) ")
+    df = df.Define("SoftJet_def_pt", " (SelectedJet_pt>2) ")
+    df = df.Define("SoftJet_def_muon", "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)") # tmp patch. For next round it will be changed to the commented one in next line
+    # df = df.Define("SoftJet_def_muon", "(Jet_muonIdx1 != mu1_idx && Jet_muonIdx1 != mu2_idx && Jet_muonIdx2 != mu1_idx && Jet_muonIdx2 != mu2_idx)")
+    df = df.Define("SoftJet_def_VBF", " (HasVBF && SelectedJet_idx != j1_idx && SelectedJet_idx != j2_idx) ")
+    df = df.Define("SoftJet_def_noVBF", " (!(HasVBF)) ")
+    df = df.Define("SoftJet_def", "SoftJet_def_vtx && SoftJet_def_pt && SoftJet_def_muon && (SoftJet_def_VBF || SoftJet_def_noVBF )")
+
+    df = df.Define("N_softJet", "SelectedJet_p4[SoftJet_def].size()")
+    df = df.Define("SoftJet_energy", "v_ops::energy(SelectedJet_p4[SoftJet_def])")
+    df = df.Define("SoftJet_Et", "v_ops::Et(SelectedJet_p4[SoftJet_def])")
+    df = df.Define("SoftJet_HtCh_fraction", "SelectedJet_chHEF[SoftJet_def]")
+    df = df.Define("SoftJet_HtNe_fraction", "SelectedJet_neHEF[SoftJet_def]")
+    df = df.Define("SoftJet_HtHF_fraction", "SelectedJet_hfHEF[SoftJet_def]")
+    return df
+
+
+def defineP4AndInvMass(df):
+    if "SelectedJet_idx" not in df.GetColumnNames():
+        print("SelectedJet_idx not in df.GetColumnNames")
+        df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
+    df = df.Define(f"SelectedJet_p4", f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)")
+    for idx in [0,1]:
+        df = Utilities.defineP4(df, f"mu{idx+1}")
+    # for met_var in ['met','metnomu']:
+    #     df = df.Define(f"{met_var}_p4", f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>({met_var}_pt,0.,{met_var}_phi,0.)")
+    #     for leg_idx in [0,1]:
+    #         df = df.Define(f"deltaPhi_{met_var}_tau{leg_idx+1}",f"ROOT::Math::VectorUtil::DeltaPhi({met_var}_p4,tau{leg_idx+1}_p4)")
+            # df = df.Define(f"deltaPhi_{met_var}_b{leg_idx+1}",f"ROOT::Math::VectorUtil::DeltaPhi({met_var}_p4,b{leg_idx+1}_p4)")
+    # df = df.Define(f"met_nano_p4", f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(met_pt_nano,0.,met_phi_nano,0.)")
+    df = df.Define(f"pt_ll", "(mu1_p4+mu2_p4).Pt()")
+
+    df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
+    df = df.Define("dR_mumu", 'ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)')
+    ### currently putting it here ####
+    if "weight_EWKCorr_VptCentral" in df.GetColumnNames():
+        df = df.Define("weight_EWKCorr_VptCentral_scaled1", "1-weight_EWKCorr_VptCentral")
+    return df
+
+
 
 
 def GetWeight(channel, cat, boosted_categories):
-    weights_to_apply = ["weight_MC_Lumi_pu"] #  "weight_L1PreFiring_Central"
+    weights_to_apply = ["weight_MC_Lumi_pu", "weight_EWKCorr_VptCentral_scaled1"]#,"weight_EWKCorr_ewcorrCentral"] #  "weight_L1PreFiring_Central"
+
     trg_weights_dict = {
         'muMu':["weight_trigSF_singleMu"],
     }
     ID_weights_dict = {
-        "muMu": ["weight_mu1_MuonID_SF_LoosePFIsoCentral","weight_mu1_MuonID_SF_TightID_TrkCentral","weight_mu2_MuonID_SF_LoosePFIsoCentral","weight_mu2_MuonID_SF_TightID_TrkCentral","weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"]
+        "muMu": ["weight_mu1_MuonID_SF_MediumIDLooseIsoCentral","weight_mu2_MuonID_SF_MediumIDLooseIsoCentral","weight_mu1_MuonID_SF_MediumID_TrkCentral","weight_mu2_MuonID_SF_MediumID_TrkCentral"]# "weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"]
         # 'muMu': ["weight_mu1_HighPt_MuonID_SF_Reco_Central", "weight_mu1_HighPt_MuonID_SF_TightID_Central", "weight_mu1_MuonID_SF_Reco_Central", "weight_mu1_MuonID_SF_TightID_Trk_Central", "weight_mu1_MuonID_SF_TightRelIso_Central", "weight_mu2_HighPt_MuonID_SF_Reco_Central", "weight_mu2_HighPt_MuonID_SF_TightID_Central", "weight_mu2_MuonID_SF_Reco_Central", "weight_mu2_MuonID_SF_TightID_Trk_Central", "weight_mu2_MuonID_SF_TightRelIso_Central","weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"],
         }
 
@@ -77,110 +174,40 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.df = self.df.Define("OS", "mu1_charge*mu2_charge < 0")
         self.df = self.df.Define("SS", "!OS")
 
-
-    # def defineCRs(self): # needs inv mass def
-    #     SR_mass_limits_bb_boosted = self.config['mass_cut_limits']['bb_m_vis']['boosted']
-    #     SR_mass_limits_bb = self.config['mass_cut_limits']['bb_m_vis']['other']
-    #     SR_mass_limits_tt = self.config['mass_cut_limits']['tautau_m_vis']
-    #     self.df = self.df.Define("SR_tt", f"return (tautau_m_vis > {SR_mass_limits_tt[0]} && tautau_m_vis  < {SR_mass_limits_tt[1]});")
-    #     self.df = self.df.Define("SR_bb", f"(bb_m_vis > {SR_mass_limits_bb[0]} && bb_m_vis < {SR_mass_limits_bb[1]});")
-    #     self.df = self.df.Define("SR_bb_boosted", f"(bb_m_vis_softdrop > {SR_mass_limits_bb_boosted[0]} && bb_m_vis_softdrop < {SR_mass_limits_bb_boosted[1]});")
-    #     self.df = self.df.Define("SR", f" SR_tt &&  SR_bb")
-    #     self.df = self.df.Define("SR_boosted", f" SR_tt &&  SR_bb_boosted")
-
-
-    #     self.df = self.df.Define("DYCR", "if(muMu || eE) {return (tautau_m_vis < 100 && tautau_m_vis > 80);} return true;")
-    #     self.df = self.df.Define("DYCR_boosted", "DYCR")
-
-
-    #     TTCR_mass_limits_eTau = self.config['TTCR_mass_limits']['eTau']
-    #     TTCR_mass_limits_muTau = self.config['TTCR_mass_limits']['muTau']
-    #     TTCR_mass_limits_tauTau = self.config['TTCR_mass_limits']['tauTau']
-    #     TTCR_mass_limits_muMu = self.config['TTCR_mass_limits']['muMu']
-    #     TTCR_mass_limits_eE = self.config['TTCR_mass_limits']['eE']
-    #     self.df = self.df.Define("TTCR", f"""
-    #                             if(eTau) {{return (tautau_m_vis < {TTCR_mass_limits_eTau[0]} || tautau_m_vis > {TTCR_mass_limits_eTau[1]});
-    #                             }};
-    #                              if(muTau) {{return (tautau_m_vis < {TTCR_mass_limits_muTau[0]} || tautau_m_vis > {TTCR_mass_limits_muTau[1]});
-    #                              }};
-    #                              if(tauTau) {{return (tautau_m_vis < {TTCR_mass_limits_tauTau[0]} || tautau_m_vis > {TTCR_mass_limits_tauTau[1]});
-    #                              }};
-    #                              if(muMu) {{return (tautau_m_vis < {TTCR_mass_limits_muMu[0]} || tautau_m_vis > {TTCR_mass_limits_muMu[1]});
-    #                              }};
-    #                              if(eE) {{return (tautau_m_vis < {TTCR_mass_limits_eE[0]} || tautau_m_vis > {TTCR_mass_limits_eE[1]});
-    #                              }};
-    #                              return true;""")defineTriggerWeights
-    #     self.df = self.df.Define("TTCR_boosted", "TTCR")
+    def defineRegions(self): # needs inv mass def
+        self.df = self.df.Define("Inclusive", f" return true;")
+        self.df = self.df.Define("DYEnriched", f" return (m_mumu > 70 && m_mumu < 100);")
 
     def defineCategories(self): # needs lot of stuff --> at the end
+        singleMuTh = self.config["singleMu_th"][self.period]
+        # print(singleMuTh)
         for category_to_def in self.config['category_definition'].keys():
             category_name = category_to_def
-            self.df = self.df.Define(category_to_def, self.config['category_definition'][category_to_def])#.format(region=self.region))
+            cat_str = self.config['category_definition'][category_to_def].format(MuPtTh=singleMuTh)
+            # print(cat_str)
+            self.df = self.df.Define(category_to_def, cat_str)
+            # print(self.df.Filter(category_to_def).Count().GetValue())
 
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
-        # for channel in self.config['channelSelection']:
-        #     ch_value = self.config['channelDefinition'][channel]
-        #     self.df = self.df.Define(f"{channel}", f"channelId=={ch_value}")
 
-
-    # def defineLeptonPreselection(self): # needs channel def
-    #     if self.period == 'Run2_2016' or self.period == 'Run2_2016_HIPM':
-    #         self.df = self.df.Define("eleEta2016", "if(eE) {return (abs(mu1_eta) < 2 && abs(mu2_eta)<2); } if(eTau||eMu) {return (abs(mu1_eta) < 2); } return true;")
-    #     else:
-    #         self.df = self.df.Define("eleEta2016", "return true;")
-    #     self.df = self.df.Define("muon1_tightId", "if(muTau || muMu) {return (mu1_Muon_tightId && mu1_Muon_pfRelIso04_all < 0.15); } return true;")
-    #     self.df = self.df.Define("muon2_tightId", "if(muMu || eMu) {return (mu2_Muon_tightId && mu2_Muon_pfRelIso04_all < 0.3);} return true;")
-    #     self.df = self.df.Define("firstele_mvaIso", "if(eMu || eE){return mu1_Electron_mvaIso_WP80==1 && mu1_Electron_pfRelIso03_all < 0.15 ; } return true; ")
-    #     self.df = self.df.Define("mu1_iso_medium", f"if(tauTau) return (mu1_idDeepTau{self.deepTauYear()}v{self.deepTauVersion}VSjet >= {Utilities.WorkingPointsTauVSjet.Medium.value}); return true;")
-    #     if f"mu1_gen_kind" not in self.df.GetColumnNames():
-    #         self.df=self.df.Define("mu1_gen_kind", "if(isData) return 5; return 0;")
-    #     if f"mu2_gen_kind" not in self.df.GetColumnNames():
-    #         self.df=self.df.Define("mu2_gen_kind", "if(isData) return 5; return 0;")
-    #     self.df = self.df.Define("tau_true", f"""(mu1_gen_kind==5 && mu2_gen_kind==5)""")
-    #     self.df = self.df.Define(f"lepton_preselection", "eleEta2016 && mu1_iso_medium && muon1_tightId && muon2_tightId && firstele_mvaIso")
-
-    def addNewCols(self):
-        self.colNames = []
-        self.colTypes = []
-        colNames = [str(c) for c in self.df.GetColumnNames()] #if 'kinFit_result' not in str(c)]
-        cols_to_remove = []
-        for colName in colNames:
-            col_name_split = colName.split("_")
-            if "p4" in col_name_split or "vec" in col_name_split:
-                cols_to_remove.append(colName)
-        for col_to_remove in cols_to_remove:
-            colNames.remove(col_to_remove)
-        entryIndexIdx = colNames.index("entryIndex")
-        runIdx = colNames.index("run")
-        eventIdx = colNames.index("event")
-        lumiIdx = colNames.index("luminosityBlock")
-        colNames[entryIndexIdx], colNames[0] = colNames[0], colNames[entryIndexIdx]
-        colNames[runIdx], colNames[1] = colNames[1], colNames[runIdx]
-        colNames[eventIdx], colNames[2] = colNames[2], colNames[eventIdx]
-        colNames[lumiIdx], colNames[3] = colNames[3], colNames[lumiIdx]
-        self.colNames = colNames
-        self.colTypes = [str(self.df.GetColumnType(c)) for c in self.colNames]
-        for colName,colType in zip(self.colNames,self.colTypes):
-            print(colName,colType)
-
-    def __init__(self, df, config, period,isData=False, isCentral=False):
+    def __init__(self, df, config, period,isData=False, isCentral=False, colToSave=[]):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
         self.isData = isData
         self.period = period
         self.isCentral = isCentral
+        self.colToSave = colToSave
+        # self.region = region
         #  deepTauVersion='v2p1', bTagWPString = "Medium", pNetWPstring="Loose", region="SR", , wantTriggerSFErrors=False, whichType=3, wantScales=True
         # self.deepTauVersion = deepTauVersion
         # self.bTagWPString = bTagWPString
         # self.pNetWPstring = pNetWPstring
         # self.pNetWP = WorkingPointsParticleNet[period][pNetWPstring]
         # self.bTagWP = WorkingPointsDeepFlav[period][bTagWPString]
-        # self.region = region
         # self.whichType = whichType
         # self.wantTriggerSFErrors = wantTriggerSFErrors
         # self.wantScales = isCentral and wantScales
-
 
 
 
@@ -188,31 +215,16 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = defineP4AndInvMass(dfForHistograms.df)
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
-    # dfForHistograms.df = createInvMass(dfForHistograms.df)
+    dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
+    dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
+    dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
+    dfForHistograms.df = GetSoftJets(dfForHistograms.df)
     if not dfForHistograms.isData:
         defineTriggerWeights(dfForHistograms)
         # if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
         #     defineTriggerWeightsErrors(dfForHistograms)
+    dfForHistograms.defineRegions()
     dfForHistograms.defineCategories()
     dfForHistograms.defineSignRegions()
     return dfForHistograms
 
-
-
-def defineP4AndInvMass(df):
-    if "SelectedJet_idx" not in df.GetColumnNames():
-        df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
-    df = df.Define(f"SelectedJet_p4", f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)")
-    for idx in [0,1]:
-        df = Utilities.defineP4(df, f"mu{idx+1}")
-    # for met_var in ['met','metnomu']:
-    #     df = df.Define(f"{met_var}_p4", f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>({met_var}_pt,0.,{met_var}_phi,0.)")
-    #     for leg_idx in [0,1]:
-    #         df = df.Define(f"deltaPhi_{met_var}_tau{leg_idx+1}",f"ROOT::Math::VectorUtil::DeltaPhi({met_var}_p4,tau{leg_idx+1}_p4)")
-            # df = df.Define(f"deltaPhi_{met_var}_b{leg_idx+1}",f"ROOT::Math::VectorUtil::DeltaPhi({met_var}_p4,b{leg_idx+1}_p4)")
-    # df = df.Define(f"met_nano_p4", f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(met_pt_nano,0.,met_phi_nano,0.)")
-    df = df.Define(f"pt_ll", "(mu1_p4+mu2_p4).Pt()")
-
-    df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
-    df = df.Define("dR_mumu", 'ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)')
-    return df
