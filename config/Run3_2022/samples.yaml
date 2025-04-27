@@ -1,0 +1,55 @@
+GLOBAL:
+  sampleSelection:
+    - drop ^.*
+    - keep ^TTto.*
+    - keep ^ttH.*
+    - keep ^.*Hto2Mu.*
+    # - keep ^[GluGluTTH_|VBF|WminusH_|WplusH_|ZH_]Hto2Mu*
+    # - keep ^EWK_.*
+    # - keep ^ST.*
+    - keep DYto2L_M_10to50_amcatnloFXFX
+    - keep DYto2L_M_50_amcatnloFXFX
+    - keep WtoLNu_amcatnloFXFX
+    - keep WW
+    - keep WZ
+    - keep ZZ
+    - keep WWW_4F
+    - keep WWZ_4F
+    - keep WZZ
+    - keep ZZZ
+    - keep ^Muon_.*
+    # - keep ^Tau_.*
+    # - keep ^EGamma_.*
+    # - keep ^MuonEG_.*
+    # - keep ^Jet.*
+    # - keep ^MET_.*
+  use_stitching: false
+  triggerFile: config/Run3_2022EE/triggers.yaml
+
+GluGluHto2Mu:
+  sampleType: ggH
+  crossSection: GluGluHto2Mu
+  generator: powheg
+
+TTH_Hto2Mu:
+  sampleType: ttH
+  crossSection: TTH_Hto2Mu
+  generator: powheg
+
+VBFHto2Mu:
+  sampleType: VBFH
+  crossSection: VBFHto2Mu
+  generator: powheg
+
+WminusH_Hto2Mu_WtoAll:
+  sampleType: VH
+  crossSection: WminusH_Hto2Mu_WtoAll
+  generator: powheg
+WplusH_Hto2Mu_WtoAll:
+  sampleType: VH
+  crossSection: WplusH_Hto2Mu_WtoAll
+  generator: powheg
+ZH_Hto2Mu_ZtoAll:
+  sampleType: VH
+  crossSection: ZH_Hto2Mu_ZtoAll
+  generator: powheg
