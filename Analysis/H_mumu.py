@@ -138,6 +138,15 @@ def defineP4AndInvMass(df):
     return df
 
 
+def SaveVarsForNNInput(vars_to_save):
+    mumu_vars = ["pt_mumu","y_mumu","eta_mumu","phi_mumu","m_mumu","dR_mumu","cosTheta_CS","mu1_pt_rel","mu2_pt_rel","mu1_eta","mu2_eta","phi_CS"]#, "Ebeam"
+    jj_vars = ["j1_pt","j1_eta","j2_pt","j2_eta","HasVBF","m_jj","delta_eta_jj"] #,"j1_idx","j1_y","j1_phi","delta_phi_jj"
+    mumu_jj_vars = ["Zepperfield_Var", "R_pt",  "pt_centrality", "minDeltaPhi", "minDeltaEta", "minDeltaEtaSigned"]#, "pT_all_sum","pT_jj_sum",
+    softJets_vars = ["N_softJet", "SoftJet_energy","SoftJet_Et","SoftJet_HtCh_fraction","SoftJet_HtNe_fraction","SoftJet_HtHF_fraction" ]# ATTENTION: THESE ARE VECTORS, NOT FLAT OBSERVABLES
+    global_vars = ["entryIndex","luminosityBlock", "run","event", "sample_type", "sample_name", "period", "isData", "nJet"] # ,"PV_npvs"
+    for var in global_vars + mumu_vars + jj_vars + mumu_jj_vars + softJets_vars:
+        vars_to_save.append(var)
+    return vars_to_save
 
 
 def GetWeight(channel, cat, boosted_categories):
