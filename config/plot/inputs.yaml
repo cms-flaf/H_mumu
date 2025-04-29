@@ -28,6 +28,19 @@
     - VVV
   title: "VVV"
   color: kOrange-4
+- name: GluGluHto2Mu
+  type: signal
+  types:
+    - ggH
+  title: "ggH"
+  color: "kCyan"
+- name: VBFHto2Mu
+  type: signal
+  types:
+    - VBFH
+  title: "VBFH"
+  color: "kPink"
+
 # - name: ST
 #   types:
 #     - ST

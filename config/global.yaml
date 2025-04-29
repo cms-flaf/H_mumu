@@ -1,7 +1,10 @@
 anaTupleDef: AnaProd/anaTupleDef.py
 analysis_import: Analysis.H_mumu
 signal_types:
- - DY
+  - ggH
+  - VBFH
+  # - ttH
+  # - VH
 storeFatJets: False
 
 bjet_preselection_branch : "Jet_B1"
@@ -22,14 +25,15 @@ channelDefinition:
 
 corrections:
   # - JEC
-  # - JER
+  - JER
   - trg
   # - btagWP
   - mu
+  - Vpt
   - pu
 
-region: Inclusive
-region_default: Inclusive
+region: All
+region_default: All
 
 SignRegions:
   - OS
@@ -41,14 +45,30 @@ hist_triggers:
     default:  (HLT_singleMu)
 
 categories:
-  - ggH
+  - baseline
   - VBF
+  - ggH
+  - baseline_Zmumu
+  - VBF_Zmumu
+  - ggH_Zmumu
+  - VBF_JetVeto
+  - ggH_VBFJetVeto
+  - VBF_Zmumu_JetVeto
+  - ggH_Zmumu_JetVeto
 
 
 
 category_definition:
-  VBF: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && HasVBF && {region}"
-  ggH: "(mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) && !(VBF) && {region}"
+  baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) "
+  VBF: "baseline && HasVBF && j1_pt > 25 && j2_pt >25"
+  ggH: "baseline && !(VBF)"
+  baseline_Zmumu: "baseline && DYEnriched"
+  VBF_Zmumu: "baseline_Zmumu && VBF "
+  ggH_Zmumu: "baseline_Zmumu && !(VBF) "
+
+  VBF_JetVeto: "VBF && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
+  VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto"
+  ggH_Zmumu_JetVeto: "baseline_Zmumu && !VBF_JetVeto"
 
 
 singleMu_th:
