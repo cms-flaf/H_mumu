@@ -6,6 +6,26 @@ from FLAF.Analysis.HistHelper import *
 from Analysis.GetTriggerWeights import *
 from FLAF.Common.Utilities import *
 
+Muon_observables = ["IP_cov00","IP_cov10","IP_cov11","IP_cov20","IP_cov21","IP_cov22","IPx","IPy","IPz","bField_z","bsConstrainedChi2","bsConstrainedPt","bsConstrainedPtErr","charge","dxy","dxyErr","dxybs","dz","dzErr","eta","fsrPhotonIdx","genPartFlav","genPartIdx","highPtId","highPurity","inTimeMuon","ip3d","ipLengthSig","isGlobal","isPFcand","isStandalone","isTracker","jetIdx","jetNDauCharged","jetPtRelv2","jetRelIso","looseId","mass","mediumId","mediumPromptId","miniIsoId","miniPFRelIso_all","miniPFRelIso_chg","multiIsoId","mvaLowPt","mvaMuID","mvaMuID_WP","nStations","nTrackerLayers","pdgId","pfIsoId","pfRelIso03_all","pfRelIso03_chg","pfRelIso04_all","phi","promptMVA","pt","ptErr","puppiIsoId","segmentComp","sip3d","softId","softMva","softMvaId","softMvaRun3","svIdx","tightCharge","tightId","tkIsoId","tkRelIso","track_cov00","track_cov10","track_cov11","track_cov20","track_cov21","track_cov22","track_cov30","track_cov31","track_cov32","track_cov33","track_cov40","track_cov41","track_cov42","track_cov43","track_cov44","track_dsz","track_dxy","track_lambda","track_phi","track_qoverp","triggerIdLoose","tunepRelPt"]
+
+JetObservables = ["PNetRegPtRawCorr","PNetRegPtRawCorrNeutrino","PNetRegPtRawRes","area","btagDeepFlavB","btagDeepFlavCvB","btagDeepFlavCvL","btagDeepFlavQG","btagPNetB","btagPNetCvB","btagPNetCvL","btagPNetCvNotB","btagPNetQvG","btagPNetTauVJet","chEmEF","chHEF","chMultiplicity","electronIdx1","electronIdx2","eta","genJetIdx","hadronFlavour","hfEmEF","hfHEF","hfadjacentEtaStripsSize","hfcentralEtaStripSize","hfsigmaEtaEta","hfsigmaPhiPhi","jetId","mass","muEF","muonIdx1","muonIdx2","muonSubtrFactor","nConstituents","nElectrons","nMuons","nSVs","neEmEF","neHEF","neMultiplicity","partonFlavour","phi","pt","rawFactor","svIdx1","svIdx2"]
+JetObservablesMC = ["hadronFlavour","partonFlavour"]
+FatJetObservables = ["area", "btagCSVV2", "btagDDBvLV2", "btagDeepB", "btagHbb", "deepTagMD_HbbvsQCD",
+                     "deepTagMD_ZHbbvsQCD", "deepTagMD_ZbbvsQCD", "deepTagMD_bbvsLight", "deepTag_H",
+                     "jetId", "msoftdrop", "nBHadrons", "nCHadrons", "nConstituents","rawFactor",
+                      "particleNetMD_QCD", "particleNetMD_Xbb", "particleNet_HbbvsQCD", "particleNet_mass", # 2018
+                     "particleNet_QCD","particleNet_XbbVsQCD", # 2016
+                     "particleNetLegacy_QCD", "particleNetLegacy_Xbb", "particleNetLegacy_mass", # 2016
+                     "particleNetWithMass_QCD", "particleNetWithMass_HbbvsQCD", "particleNet_massCorr", # 2016
+                     "ptRes", "idbtagPNetB"]
+FatJetObservablesMC = ["hadronFlavour","partonFlavour"]
+
+SubJetObservables = ["btagDeepB", "eta", "mass", "phi", "pt", "rawFactor"]
+SubJetObservablesMC = ["hadronFlavour","partonFlavour"]
+
+defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type", "period", "isData","PuppiMET_pt", "PuppiMET_phi", "nJet","DeepMETResolutionTune_pt", "DeepMETResolutionTune_phi","DeepMETResponseTune_pt", "DeepMETResponseTune_phi","PV_npvs"]
+
+
 
 def createKeyFilterDict(global_cfg_dict, year):
     filter_dict = {}
@@ -112,6 +132,13 @@ def GetSoftJets(df):
     df = df.Define("SoftJet_HtCh_fraction", "SelectedJet_chHEF[SoftJet_def]")
     df = df.Define("SoftJet_HtNe_fraction", "SelectedJet_neHEF[SoftJet_def]")
     df = df.Define("SoftJet_HtHF_fraction", "SelectedJet_hfHEF[SoftJet_def]")
+    for var in JetObservables:
+        if f"SoftJet_{var}" not in df.GetColumnNames():
+            df = df.Define(f"SoftJet_{var}", f"SelectedJet_{var}[SoftJet_def]")
+    for var in JetObservablesMC:
+        if f"SoftJet_{var}" not in df.GetColumnNames() and f"SelectedJet_{var}" in df.GetColumnNames():
+            df = df.Define(f"SoftJet_{var}", f"SelectedJet_{var}[SoftJet_def]")
+        df = df.Define(f"SoftJetMC_{var}", f"SelectedJet_{var}[SoftJet_def]")
     return df
 
 

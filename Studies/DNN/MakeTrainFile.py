@@ -20,9 +20,33 @@ for header in [ "FLAF/include/Utilities.h","include/Helper.h", "include/HmumuCor
 lep1_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(lep1_pt,lep1_eta,lep1_phi,lep1_mass)"
 lep2_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(lep2_pt,lep2_eta,lep2_phi,lep2_mass)"
 MET_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(met_pt, 0., met_phi, 0.)"
+
 initialized = True # ??
 
 
+def AddColumnsToSave(config):
+    col_to_save = []
+    muon_vars = config['vars_to_save']['Muon']
+    VBFJet_vars = config['vars_to_save']['VBFJet']
+    for mu_idx in [1,2]:
+        for mu_varvar in muon_vars:
+            col_to_save.append(mu_var.format(mu_idx))
+    for j_idx in [1,2]:
+        for VBFJ_var in VBFJet_vars:
+            col_to_save.append(f"j{j_idx}_{VBFJ_var}")
+    SelectedJet_vars = config['vars_to_save']['SelectedJet']
+    for Jvar in SelectedJet_vars:
+        col_to_save.append(f"SelectedJet_{Jvar}")
+    SoftJet_vars = config['vars_to_save']['SoftJet']
+    for SJvar in SoftJet_vars:
+        col_to_save.append(f"SoftJet_{SJvar}")
+    VBFJetPair_vars = config['vars_to_save']['VBFJetPair']
+    MuJet_vars = config['vars_to_save']['MuJet']
+    MuPair_vars = config['vars_to_save']['MuPair']
+    Global_vars = config['vars_to_save']['Global']
+    for var in VBFJetPair_vars + MuJet_vars + MuPair_vars + Global_vars:
+        col_to_save.append(var)
+    return list(set(col_to_save))
 
 
 def create_file(config_dict, global_cfg_dict, period, output_folder, out_filename):
@@ -64,6 +88,7 @@ def create_file(config_dict, global_cfg_dict, period, output_folder, out_filenam
         if step_idx == 0:
             df_out = ROOT.RDataFrame(nBatches*batch_size)
             df_out = df_out.Define("is_valid", 'false')
+
             #Fill master column nametype
             master_column_names = df_in.GetColumnNames()
             master_column_types = [str(df_in.GetColumnType(str(c))) for c in master_column_names]
@@ -141,12 +166,15 @@ def create_file(config_dict, global_cfg_dict, period, output_folder, out_filenam
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out,global_cfg_dict, period)
     dfw_out = analysis.PrepareDfForNNInputs(dfw_out)
     dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
-    col_to_save = list(set(dfw_out.colToSave))
+    col_to_save = AddColumnsToSave(config_dict)
+
     dfw_out.df.Snapshot('Events', tmpnext_filename, Utilities.ListToVector(col_to_save), snapshotOptions)
 
     print(f"Finished create file, will copy tmp file to final output {out_filename}")
 
     os.system(f"cp {tmpnext_filename} {out_filename}")
+    os.system(f"rm {tmp_filename}")
+    os.system(f"rm {tmpnext_filename}")
 
 
 
