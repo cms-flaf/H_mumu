@@ -29,7 +29,7 @@ def AddColumnsToSave(config):
     muon_vars = config['vars_to_save']['Muon']
     VBFJet_vars = config['vars_to_save']['VBFJet']
     for mu_idx in [1,2]:
-        for mu_varvar in muon_vars:
+        for mu_var in muon_vars:
             col_to_save.append(mu_var.format(mu_idx))
     for j_idx in [1,2]:
         for VBFJ_var in VBFJet_vars:
