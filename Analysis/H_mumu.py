@@ -84,6 +84,12 @@ def VBFJetSelection(df):
     df = df.Define("j1_y", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Rapidity()); return -1000.f; ")
     df = df.Define("j2_y", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Rapidity()); return -1000.f; ")
     df = df.Define("delta_phi_jj", "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;")
+    df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Phi()")
+    for var in JetObservables:
+        if f"j1_{var}" not in df.GetColumnNames():
+            df = df.Define("j1_"+var, f"if (HasVBF && j1_idx >= 0) return static_cast<float>(SelectedJet_{var}[j1_idx]); return -1000.f;")
+        if f"j2_{var}" not in df.GetColumnNames():
+            df = df.Define("j2_"+var, f"if (HasVBF && j2_idx >= 0) return static_cast<float>(SelectedJet_{var}[j2_idx]); return -1000.f;")
     return df
 
 def GetMuMuObservables(df):
@@ -220,8 +226,10 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.colToSave.append("DYEnriched")
 
     def defineCategories(self): # needs lot of stuff --> at the end
+
+        print("self config singleMuth ",self.config["singleMu_th"])
         singleMuTh = self.config["singleMu_th"][self.period]
-        # print(singleMuTh)
+
         for category_to_def in self.config['category_definition'].keys():
             category_name = category_to_def
             cat_str = self.config['category_definition'][category_to_def].format(MuPtTh=singleMuTh)
@@ -238,6 +246,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.config = config
         self.isData = isData
         self.period = period
+        print(self.period)
         self.isCentral = isCentral
         self.colToSave = colToSave
         # self.region = region
