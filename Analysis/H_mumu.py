@@ -132,9 +132,7 @@ def defineP4AndInvMass(df):
 
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
     df = df.Define("dR_mumu", 'ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)')
-    ### currently putting it here ####
-    if "weight_EWKCorr_VptCentral" in df.GetColumnNames():
-        df = df.Define("weight_EWKCorr_VptCentral_scaled1", "1-weight_EWKCorr_VptCentral")
+
     return df
 
 
@@ -144,6 +142,7 @@ def SaveVarsForNNInput(vars_to_save):
     mumu_jj_vars = ["Zepperfield_Var", "R_pt",  "pt_centrality", "minDeltaPhi", "minDeltaEta", "minDeltaEtaSigned"]#, "pT_all_sum","pT_jj_sum",
     softJets_vars = ["N_softJet", "SoftJet_energy","SoftJet_Et","SoftJet_HtCh_fraction","SoftJet_HtNe_fraction","SoftJet_HtHF_fraction" ]# ATTENTION: THESE ARE VECTORS, NOT FLAT OBSERVABLES
     global_vars = ["entryIndex","luminosityBlock", "run","event", "sample_type", "sample_name", "period", "isData", "nJet"] # ,"PV_npvs"
+    # global_vars = ["FullEventId","luminosityBlock", "run","event", "sample_type", "sample_name", "period", "isData", "nJet"] # ,"PV_npvs"
     for var in global_vars + mumu_vars + jj_vars + mumu_jj_vars + softJets_vars:
         vars_to_save.append(var)
     return vars_to_save
@@ -181,11 +180,17 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
     def defineSignRegions(self):
         self.df = self.df.Define("OS", "mu1_charge*mu2_charge < 0")
+        self.colToSave.append("OS")
         self.df = self.df.Define("SS", "!OS")
+        ### currently putting it here ####
+        if "weight_EWKCorr_VptCentral" in self.df.GetColumnNames():
+            self.df = self.df.Define("weight_EWKCorr_VptCentral_scaled1", "1+weight_EWKCorr_VptCentral")
+
 
     def defineRegions(self): # needs inv mass def
         self.df = self.df.Define("Inclusive", f" return true;")
         self.df = self.df.Define("DYEnriched", f" return (m_mumu > 70 && m_mumu < 100);")
+        self.colToSave.append("DYEnriched")
 
     def defineCategories(self): # needs lot of stuff --> at the end
         singleMuTh = self.config["singleMu_th"][self.period]
@@ -195,6 +200,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
             cat_str = self.config['category_definition'][category_to_def].format(MuPtTh=singleMuTh)
             # print(cat_str)
             self.df = self.df.Define(category_to_def, cat_str)
+            self.colToSave.append(category_to_def)
             # print(self.df.Filter(category_to_def).Count().GetValue())
 
     def defineChannels(self):
@@ -221,7 +227,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-    dfForHistograms.df = defineP4AndInvMass(dfForHistograms.df)
+    # dfForHistograms.df = defineP4AndInvMass(dfForHistograms.df)
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
@@ -232,8 +238,45 @@ def PrepareDfForHistograms(dfForHistograms):
         defineTriggerWeights(dfForHistograms)
         # if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
         #     defineTriggerWeightsErrors(dfForHistograms)
+    dfForHistograms.defineSignRegions()
     dfForHistograms.defineRegions()
     dfForHistograms.defineCategories()
-    dfForHistograms.defineSignRegions()
     return dfForHistograms
 
+
+def PrepareDfForNNInputs(dfBuilder):
+    dfBuilder.df = GetMuMuObservables(dfBuilder.df)
+    dfBuilder.defineSignRegions()
+    dfBuilder.df = VBFJetSelection(dfBuilder.df)
+    dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
+    dfBuilder.df = GetSoftJets(dfBuilder.df)
+    dfBuilder.defineRegions()
+    dfBuilder.defineCategories()
+    dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
+    return dfBuilder
+
+
+
+# def addNewCols(self):
+#     self.colNames = []
+#     self.colTypes = []
+#     colNames = [str(c) for c in self.df.GetColumnNames()] #if 'kinFit_result' not in str(c)]
+#     cols_to_remove = []
+#     for colName in colNames:
+#         col_name_split = colName.split("_")
+#         if "p4" in col_name_split or "vec" in col_name_split:
+#             cols_to_remove.append(colName)
+#     for col_to_remove in cols_to_remove:
+#         colNames.remove(col_to_remove)
+#     FullEventIdIdx = colNames.index("FullEventId")
+#     runIdx = colNames.index("run")
+#     eventIdx = colNames.index("event")
+#     lumiIdx = colNames.index("luminosityBlock")
+#     colNames[FullEventIdIdx], colNames[0] = colNames[0], colNames[FullEventIdIdx]
+#     colNames[runIdx], colNames[1] = colNames[1], colNames[runIdx]
+#     colNames[eventIdx], colNames[2] = colNames[2], colNames[eventIdx]
+#     colNames[lumiIdx], colNames[3] = colNames[3], colNames[lumiIdx]
+#     self.colNames = colNames
+#     self.colTypes = [str(self.df.GetColumnType(c)) for c in self.colNames]
+#     for colName,colType in zip(self.colNames,self.colTypes):
+#         print(colName,colType)
