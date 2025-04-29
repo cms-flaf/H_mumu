@@ -25,7 +25,7 @@ channelDefinition:
 
 corrections:
   # - JEC
-  # - JER
+  - JER
   - trg
   # - btagWP
   - mu
@@ -66,8 +66,7 @@ category_definition:
   VBF_Zmumu: "baseline_Zmumu && VBF "
   ggH_Zmumu: "baseline_Zmumu && !(VBF) "
 
-  VBF_JetVeto: "(VBF && (j1_pt > 50 && abs(j1_eta) >= 2.5 && abs(j1_eta) <= 3 ) || (j2_pt >= 50 && abs(j2_eta) >= 2.5 && abs(j2_eta) <= 3 ))"
-  ggH_VBFJetVeto: "baseline && !(VBF_JetVeto)"
+  VBF_JetVeto: "VBF && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
   VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto"
   ggH_Zmumu_JetVeto: "baseline_Zmumu && !VBF_JetVeto"
 
