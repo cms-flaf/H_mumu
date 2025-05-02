@@ -42,7 +42,7 @@ mu2_pt:
   x_bins: "200|0:1000"
   x_rebin:
     other: [0, 5,10,15, 20,25, 30,35, 40,45, 50,55, 60,65, 70,75, 80,85, 90,95,100, 105,110,115, 120,125, 130, 135, 150, 165, 180, 200]
-  x_title: p_{T}(mu_{1}) (GeV)
+  x_title: p_{T}(mu_{2}) (GeV)
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
   #y_title: Events
   use_log_y: False
@@ -56,7 +56,7 @@ mu2_pt:
 mu2_eta:
   x_bins: "120|-3.:3."
   x_rebin: [-2.5, -2.3, -2.1, -1.9, -1.7, -1.5, -1.3, -1.1, -0.9, -0.7, -0.5, -0.3, -0.1, 0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5]
-  x_title: \eta(mu_{1})
+  x_title: \eta(mu_{2})
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -65,7 +65,7 @@ mu2_eta:
 mu2_phi:
   x_bins: "100|-3.2:3.2"
   x_rebin: [-3.2, -2.88, -2.56, -2.24, -1.92, -1.6, -1.28, -0.96, -0.64, -0.32, -0.0, 0.32, 0.64, 0.96, 1.28, 1.6, 1.92, 2.24, 2.56, 2.88, 3.2]
-  x_title: \phi(mu_{1})
+  x_title: \phi(mu_{2})
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -81,7 +81,7 @@ pt_mumu:
   x_bins: "200|0:1000"
   x_rebin:
     other: [0, 5,10,15, 20,25, 30,35, 40,45, 50,55, 60,65, 70,75, 80,85, 90,95,100, 105,110,115, 120,125, 130, 135, 150, 165, 180, 200]
-  x_title: p_{T}(\mu_{1},\mu_{2}) (GeV)
+  x_title: p_{T}(\mu\mu) (GeV)
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
   y_title: Events
   use_log_x: False
@@ -212,7 +212,7 @@ j2_pt:
   x_bins: "200|0:1000"
   x_rebin:
     other:  [0, 10, 20, 30, 40, 50, 60, 70, 80, 90,100, 120,140, 160, 180, 200, 220, 240, 260, 280, 300, 350, 400, 500]
-  x_title: p_{T}(j_{1}) (GeV)
+  x_title: p_{T}(j_{2}) (GeV)
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
   #y_title: Events
   use_log_y: False
@@ -226,7 +226,7 @@ j2_pt:
 j2_eta:
   x_bins: "192|-4.8:4.8"
   x_rebin: [-4.8, -4.6, -4.4, -4.2, -4., -3.8, -3.6, -3.4, -3.2, -3., -2.8, -2.6, -2.4, -2.2, -2., -1.8, -1.6, -1.4, -1.2, -1., -0.8, -0.6, -0.4, -0.2, 0., 0.2, 0.4, 0.6, 0.8, 1., 1.2, 1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 2.8, 3., 3.2, 3.4, 3.6, 3.8, 4., 4.2, 4.4, 4.6, 4.8]
-  x_title: \eta(j_{1})
+  x_title: \eta(j_{2})
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -235,7 +235,7 @@ j2_eta:
 j2_phi:
   x_bins: "128|-3.2:3.2"
   x_rebin: [-3.2, -2.88, -2.56, -2.24, -1.92, -1.6, -1.28, -0.96, -0.64, -0.32, -0.0, 0.32, 0.64, 0.96, 1.28, 1.6, 1.92, 2.24, 2.56, 2.88, 3.2]
-  x_title: \phi(j_{1})
+  x_title: \phi(j_{2})
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -315,7 +315,7 @@ m_jj:
 delta_eta_jj:
   x_bins: "400|-10.:10."
   x_rebin: [-8.5, -8.,-7.5,-7.0,-6.5,-6.0,-5.5,-5.0,-4.5,-4.0,-3.5,-3.0, -2.5, 2.5,3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.,8.5]
-  x_title: \Delta\eta(VBFj_{1}, VBFj_{2})
+  x_title: \Delta\eta(jj)
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -324,7 +324,7 @@ delta_eta_jj:
 minDeltaEta:
   x_bins: "400|-10.:10."
   x_rebin: [2.5,3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.,8.5]
-  x_title: \Delta\eta(VBFj_{1}, VBFj_{2})
+  x_title: min(\Delta\eta(\mu\mu, j))
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -333,7 +333,7 @@ minDeltaEta:
 minDeltaEtaSigned:
   x_bins: "400|-10.:10."
   x_rebin: [-8.5, -8.,-7.5,-7.0,-6.5,-6.0,-5.5,-5.0,-4.5,-4.0,-3.5,-3.0, -2.5, 2.5,3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.,8.5]
-  x_title: \Delta\eta(VBFj_{1}, VBFj_{2})
+  x_title: min(\Delta\eta(\mu\mu, j))
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -343,7 +343,7 @@ minDeltaEtaSigned:
 minDeltaPhi:
   x_bins: "100|-3.2:3.2"
   x_rebin: [-3.2, -2.88, -2.56, -2.24, -1.92, -1.6, -1.28, -0.96, -0.64, -0.32, -0.0, 0.32, 0.64, 0.96, 1.28, 1.6, 1.92, 2.24, 2.56, 2.88, 3.2]
-  x_title: \Delta\phi(mu_{1})
+  x_title: min(\Delta\phi(\mu\mu, j))
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
