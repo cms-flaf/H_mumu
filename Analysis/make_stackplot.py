@@ -1,38 +1,45 @@
 import os
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Create TrainTest Files for DNN.')
+    parser.add_argument('--var', required=True, type=str, help="vars, separated by commas")
+    parser.add_argument('--era', required= False, type=str, default="Run3_2022EE", help="era")
+    parser.add_argument('--histDir', required= False, type=str, default="/eos/user/v/vdamante/H_mumu/histograms/", help="era")
+    parser.add_argument('--version', required= False, type=str, default="Run3_2022EE_Hmumu_v2", help="version for input files")
+    parser.add_argument('--categories', required= False, type=str, help="categories")
+    parser.add_argument('--wantNonLog', required= False, type=bool, default=False,help="use uncertainties")
+    parser.add_argument('--wantLog', required= False, type=bool, default=False,help="use uncertainties")
+    parser.add_argument('--use_unc', required= False, type=bool, default=False,help="use uncertainties")
+    args = parser.parse_args()
 
-era = "Run3_2022EE"
-ver = "Run3_2022EE_Hmumu_v2"
-common_path = f"/afs/cern.ch/work/v/vdamante/H_mumu"
-using_uncertainties = False #True #When we turn on Up/Down, the file storage changes due to renameHists.py
-# varnames = [ "mu1_eta" , "mu2_eta" ]
-# varnames = ["m_mumu","pt_ll","mu1_pt","mu2_pt" ,"dR_mumu" ,  "mu1_eta" , "mu1_phi" ,  "mu2_eta" , "mu2_phi"  ]
-# varnames = ["VBF_etaSeparation","VBFjet1_eta","VBFjet2_eta","mu1_pt","mu2_pt","VBFjet1_pt","VBFjet2_pt","m_mumu", "VBF_mInv"]
-# varnames = ["m_mumu", "pt_ll", "VBF_etaSeparation", "VBFjet1_eta"]
-# varnames = ["pt_mumu"]
-# varnames = [  "m_mumu", "mu1_pt", "mu2_pt", "pt_mumu"] # "m_jj",
-varnames = [  "m_jj"]
-channellist = ["muMu"]
+    era = args.era #"Run3_2022EE"
+    ver = args.version # "Run3_2022EE_Hmumu_v2"
 
-region = "Inclusive"
-categories = ["baseline", "VBF", "ggH", "baseline_Zmumu", "VBF_Zmumu", "ggH_Zmumu", "VBF_JetVeto", "ggH_VBFJetVeto", "VBF_Zmumu_JetVeto", "ggH_Zmumu_JetVeto"]
-indir = f"/eos/user/v/vdamante/H_mumu/histograms/{ver}/{era}/merged/"
-plotdir = f"/eos/user/v/vdamante/H_mumu/histograms/{ver}/{era}/plots/"
+    common_path = os.getcwd() # f"/afs/cern.ch/work/v/vdamante/H_mumu"
+    using_uncertainties = args.use_unc #True #When we turn on Up/Down, the file storage changes due to renameHists.py
 
-for var in varnames:
-    for channel in channellist:
+    varnames = args.var.split(",")
+    categories = ["baseline", "VBF", "ggH", "baseline_Zmumu", "VBF_Zmumu", "ggH_Zmumu", "VBF_JetVeto", "VBF_Zmumu_JetVeto"]
+    if args.categories:
+        categories = args.categories.split(",")
+
+    indir = os.path.join(args.histDir, ver, era, "merged")
+    plotdir = os.path.join(args.histDir, ver, era, "plots")
+
+    for var in varnames:
         for cat in categories:
             filename = os.path.join(indir, var, f"{var}.root")
-            # print("Loading fname ", filename)
             os.makedirs(os.path.join(plotdir,cat), exist_ok=True)
-            outname = os.path.join(plotdir,cat, f"{var}_yLog.pdf")
 
             if not using_uncertainties:
-                os.system(f"python3 {common_path}/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig {common_path}/config/background_samples.yaml --globalConfig {common_path}/config/global.yaml --outFile {outname} --var {var} --category {cat} --channel {channel} --uncSource Central --wantData --year {era} --wantQCD False --wantLogScale y --rebin False --analysis H_mumu --qcdregion OS --sigConfig {common_path}/config/signal_samples.yaml --wantSignals")
+                if args.wantLog:
+                    outname = os.path.join(plotdir,cat, f"{var}_yLog.pdf")
+                    os.system(f"python3 {common_path}/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig {common_path}/config/background_samples.yaml --globalConfig {common_path}/config/global.yaml --outFile {outname} --var {var} --category {cat} --channel muMu --uncSource Central --wantData --year {era} --wantQCD False --wantLogScale y --rebin False --analysis H_mumu --qcdregion OS --sigConfig {common_path}/config/signal_samples.yaml --wantSignals")
 
-
-                # outname = os.path.join(plotdir, f"H_mumu_{var}_StackPlot.pdf")
-                # os.system(f"python3 {common_path}/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig {common_path}/config/background_samples.yaml --globalConfig {common_path}/config/global.yaml --outFile {outname} --var {var} --category {cat} --channel {channel} --uncSource Central --wantData --year {era} --wantQCD False --rebin False --analysis H_mumu --qcdregion OS --sigConfig {common_path}/config/{era}/samples.yaml")
+                if args.wantNonLog:
+                    outname = os.path.join(plotdir,cat, f"{var}.pdf")
+                    os.system(f"python3 {common_path}/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig {common_path}/config/background_samples.yaml --globalConfig {common_path}/config/global.yaml --outFile {outname} --var {var} --category {cat} --channel muMu --uncSource Central --wantData --year {era} --wantQCD False --rebin False --analysis H_mumu --qcdregion OS --sigConfig {common_path}/config/{era}/samples.yaml")
 
             else:
                 filename = os.path.join(indir, var, 'tmp', f"all_histograms_{var}_hadded.root")
-                os.system(f"python3 /afs/cern.ch/work/v/vdamante/H_mumu/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig ../config/background_samples.yaml --globalConfig ../config/global.yaml --outFile {outname} --var {var} --category {cat} --channel {channel} --uncSource Central --wantData --year {era} --wantQCD False --rebin False --analysis H_mumu --qcdregion OS_Iso --sigConfig ../config/{era}/samples.yaml")
+                os.system(f"python3 /afs/cern.ch/work/v/vdamante/H_mumu/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig ../config/background_samples.yaml --globalConfig ../config/global.yaml --outFile {outname} --var {var} --category {cat} --channel muMu --uncSource Central --wantData --year {era} --wantQCD False --rebin False --analysis H_mumu --qcdregion OS_Iso --sigConfig ../config/{era}/samples.yaml")

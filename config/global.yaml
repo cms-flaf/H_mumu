@@ -52,23 +52,31 @@ categories:
   - VBF_Zmumu
   - ggH_Zmumu
   - VBF_JetVeto
-  - ggH_VBFJetVeto
   - VBF_Zmumu_JetVeto
-  - ggH_Zmumu_JetVeto
 
 
 
 category_definition:
-  baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh}) "
-  VBF: "baseline && HasVBF && j1_pt > 25 && j2_pt >25"
-  ggH: "baseline && !(VBF)"
+  baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})" # OS = opposite charge sign for two muons
+  VBF_def : "HasVBF && j1_pt > 25 && j2_pt >25"
+  VBF: "baseline && VBF_def"
+  ggH: "baseline && !(VBF_def)"
+
+  # Control region peaking around Z mass
   baseline_Zmumu: "baseline && DYEnriched"
-  VBF_Zmumu: "baseline_Zmumu && VBF "
-  ggH_Zmumu: "baseline_Zmumu && !(VBF) "
-  VBF_JetVeto: "VBF && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
-  ggH_VBFJetVeto: " baseline && !(VBF_JetVeto) "
-  VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto"
-  ggH_Zmumu_JetVeto: "baseline_Zmumu && !VBF_JetVeto"
+  VBF_Zmumu: "baseline_Zmumu && VBF_def "
+  ggH_Zmumu: "baseline_Zmumu && !(VBF_def) "
+
+  # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
+  # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
+  # non-physics dependent, but related to Jet Energy Correction and Scale
+  VBF_JetVeto_def: "VBF_def && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
+  VBF_JetVeto_def: "baseline && VBF_def && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
+  ggH_VBFJetVeto: " baseline && !(VBF_JetVeto_def) " # no needed
+
+  # Control region peaking around Z mass + VBF Jets veto application
+  VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto_def"
+  ggH_Zmumu_JetVeto: "baseline_Zmumu && !VBF_JetVeto_def" # no needed
 
 
 singleMu_th:
