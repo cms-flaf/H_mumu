@@ -71,7 +71,7 @@ category_definition:
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
   # non-physics dependent, but related to Jet Energy Correction and Scale
   VBF_JetVeto_def: "VBF_def && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
-  VBF_JetVeto_def: "baseline && VBF_def && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
+  VBF_JetVeto: "baseline && VBF_def && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
   ggH_VBFJetVeto: " baseline && !(VBF_JetVeto_def) " # no needed
 
   # Control region peaking around Z mass + VBF Jets veto application
