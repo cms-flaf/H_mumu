@@ -45,40 +45,32 @@ VBFJets FindVBFJets(const RVecLV& Jet_p4)
 
 
 std::pair<double, double> ComputeCosThetaPhiCS(const LorentzVectorM& mu1_p4, const LorentzVectorM& mu2_p4, double Ebeam) {
-    // Calcolare il 4-vettore della coppia dilepton
 
-
-    // LVector ROOT::Math::VectorUtil::boost
-    // Calcolare il vettore di boost verso il rest frame della coppia dilepton
-
-
-
-
-    // Applicare il boost ai muoni
+    // muons p4 in XYZ coordinates
     LorentzVectorXYZ mu1_p4_XYZ = LorentzVectorXYZ{mu1_p4.Px(),mu1_p4.Py(),mu1_p4.Pz(),mu1_p4.E()};
     LorentzVectorXYZ mu2_p4_XYZ = LorentzVectorXYZ{mu2_p4.Px(),mu2_p4.Py(),mu2_p4.Pz(),mu2_p4.E()};
+    // dilepton boosted p4 in XYZ coordinates
     LorentzVectorXYZ dilepton = mu1_p4_XYZ + mu2_p4_XYZ;
+    // boost vector in XYZ coordinates
     ROOT::Math::XYZVector boost = -dilepton.BoostToCM();
-
+    // boost muons in XYZ coordinates
     LorentzVectorXYZ mu1_boosted_XYZ =  ROOT::Math::VectorUtil::boost (mu1_p4_XYZ, boost);
     LorentzVectorXYZ mu2_boosted_XYZ =  ROOT::Math::VectorUtil::boost (mu2_p4_XYZ, boost);
-
-    // Boost dei protoni (pA e pB)
+    // proton p4 in XYZ coordinates
     LorentzVectorXYZ pA(0, 0, Ebeam, Ebeam);
     LorentzVectorXYZ pB(0, 0, -Ebeam, Ebeam);
+    // boost proton p4 in XYZ coordinates
     LorentzVectorXYZ pA_boosted =  ROOT::Math::VectorUtil::boost (pA, boost);
     LorentzVectorXYZ pB_boosted =  ROOT::Math::VectorUtil::boost (pB, boost);
-
-
-    // Calcolare gli assi di Collins-Soper
+    // Collins-Soper axes
+    // z axis is the bisector of the angle between the two boosted muons
+    // y axis is the normal to the plane defined by the two boosted muons and the two boosted protons
     const ROOT::Math::DisplacementVector3D<ROOT::Math::Cartesian3D<double>> z_cs = (pA_boosted.Vect().Unit() - pB_boosted.Vect().Unit()).Unit();
     const ROOT::Math::DisplacementVector3D<ROOT::Math::Cartesian3D<double>> y_cs = (pA_boosted.Vect().Unit().Cross(pB_boosted.Vect().Unit())).Unit();
     const ROOT::Math::DisplacementVector3D<ROOT::Math::Cartesian3D<double>> x_cs = (y_cs.Cross(z_cs)).Unit();
-
-    // Calcolare cos(theta_CS)
+    // cos(theta_CS)
     double cos_theta_cs = mu1_boosted_XYZ.Vect().Unit().Dot(z_cs);
-
-    // Calcolare phi_CS
+    // phi_CS
     double phi_cs = atan2(mu1_boosted_XYZ.Vect().Dot(y_cs), mu1_boosted_XYZ.Vect().Dot(x_cs));
 
     return std::make_pair(cos_theta_cs, phi_cs);
