@@ -109,10 +109,10 @@ vars_to_save:
     # - weight_mu{}_MuonID_SF_TightID_TrkCentral
     # - weight_mu{}_TrgSF_singleMu_Central
   SoftJet:
-    - Et
-    - HtCh_fraction
-    - HtHF_fraction
-    - HtNe_fraction
+    - Et # transverse energy
+    - HtCh_fraction # hadronic transverse energy fraction from charged particles
+    - HtHF_fraction # hadronic transverse energy fraction in the HF calorimeter
+    - HtNe_fraction # hadronic transverse energy fraction from neutral particles
     - energy
     # - PNetRegPtRawCorr
     # - PNetRegPtRawCorrNeutrino
@@ -162,7 +162,7 @@ vars_to_save:
     # - rawFactor
     # - svIdx1
     # - svIdx2
-  VBFJet:
+  VBFJet: # j1 and j2, separated in eta ecc.. in VBF events (single jet observables)
     - eta
     - pt
     - btagPNetQvG
