@@ -139,6 +139,6 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
     if trigger_class is not None:
         print(f"mu{leg_idx+1}_p4" in dfw.df.GetColumnNames())
 
-        hltBranches = dfw.Apply(trigger_class.ApplyTriggers, lepton_legs, 'Htt',isData, isSignal)
+        hltBranches = dfw.Apply(trigger_class.ApplyTriggers, lepton_legs,isData, isSignal)
         # hltBranches = dfw.Apply(trigger_class.ApplyTriggers, isData)
         dfw.colToSave.extend(hltBranches)
