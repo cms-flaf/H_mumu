@@ -35,8 +35,12 @@ corrections:
 region: All
 region_default: All
 
-SignRegions:
-  - OS
+QCDRegions:
+  - Z_sideband
+  # - Signal_Fit
+  # - Signal_ext
+  # - H_sideband
+
 ApplyBweight: False
 triggers:
   muMu: [singleMu]
@@ -48,11 +52,6 @@ categories:
   - baseline
   - VBF
   - ggH
-  - baseline_Zmumu
-  - VBF_Zmumu
-  - ggH_Zmumu
-  - VBF_JetVeto
-  - VBF_Zmumu_JetVeto
 
 
 
@@ -61,12 +60,6 @@ category_definition:
   VBF_def : "HasVBF && j1_pt > 25 && j2_pt >25"
   VBF: "baseline && VBF_def"
   ggH: "baseline && !(VBF_def)"
-
-  # Control region peaking around Z mass
-  baseline_Zmumu: "baseline && DYEnriched"
-  VBF_Zmumu: "baseline_Zmumu && VBF_def "
-  ggH_Zmumu: "baseline_Zmumu && !(VBF_def) "
-
   # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
   # non-physics dependent, but related to Jet Energy Correction and Scale
@@ -74,9 +67,14 @@ category_definition:
   VBF_JetVeto: "baseline && VBF_def && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
   ggH_VBFJetVeto: " baseline && !(VBF_JetVeto_def) " # no needed
 
-  # Control region peaking around Z mass + VBF Jets veto application
-  VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto_def"
-  ggH_Zmumu_JetVeto: "baseline_Zmumu && !VBF_JetVeto_def" # no needed
+  # # Control region peaking around Z mass
+  # baseline_Zmumu: "baseline && DYEnriched"
+  # VBF_Zmumu: "baseline_Zmumu && VBF_def "
+  # ggH_Zmumu: "baseline_Zmumu && !(VBF_def) "
+
+  # # Control region peaking around Z mass + VBF Jets veto application
+  # VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto_def"
+  # ggH_Zmumu_JetVeto: "baseline_Zmumu && !VBF_JetVeto_def" # no needed
 
 
 singleMu_th:

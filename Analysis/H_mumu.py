@@ -19,7 +19,7 @@ def createKeyFilterDict(global_cfg_dict, year):
     filter_dict = {}
     filter_str = ""
     channels_to_consider = global_cfg_dict['channels_to_consider']
-    sign_regions_to_consider = global_cfg_dict['SignRegions']
+    sign_regions_to_consider = global_cfg_dict['QCDRegions']
     categories_to_consider = global_cfg_dict["categories"]
     triggers_dict = global_cfg_dict['hist_triggers']
     for ch in channels_to_consider:
@@ -201,7 +201,11 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
-    def defineSignRegions(self):
+    def defineRegions(self):
+         self.df = self.df.Define("Z_sideband", "m_mumu > 70 && m_mumu < 110")
+
+
+    def SignRegionDef(self):
         self.df = self.df.Define("OS", "mu1_charge*mu2_charge < 0")
         self.colToSave.append("OS")
         self.df = self.df.Define("SS", "!OS")
@@ -209,22 +213,13 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         if "weight_EWKCorr_VptCentral" in self.df.GetColumnNames():
             self.df = self.df.Define("weight_EWKCorr_VptCentral_scaled1", "1+weight_EWKCorr_VptCentral")
 
-
-    def defineRegions(self): # needs inv mass def
-        self.df = self.df.Define("Inclusive", f" return true;")
-        self.df = self.df.Define("DYEnriched", f" return (m_mumu > 70 && m_mumu < 100);") # ZMass peak --> 91 GeV
-        self.colToSave.append("DYEnriched")
-
     def defineCategories(self): # needs lot of stuff --> at the end
         singleMuTh = self.config["singleMu_th"][self.period]
-
         for category_to_def in self.config['category_definition'].keys():
             category_name = category_to_def
             cat_str = self.config['category_definition'][category_to_def].format(MuPtTh=singleMuTh)
-            # print(cat_str)
             self.df = self.df.Define(category_to_def, cat_str)
             self.colToSave.append(category_to_def)
-            # print(self.df.Filter(category_to_def).Count().GetValue())
 
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
@@ -261,7 +256,7 @@ def PrepareDfForHistograms(dfForHistograms):
         defineTriggerWeights(dfForHistograms)
         # if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
         #     defineTriggerWeightsErrors(dfForHistograms)
-    dfForHistograms.defineSignRegions()
+    dfForHistograms.SignRegionDef()
     dfForHistograms.defineRegions()
     dfForHistograms.defineCategories()
     return dfForHistograms
@@ -273,7 +268,7 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
     dfBuilder.df = GetSoftJets(dfBuilder.df)
-    dfBuilder.defineRegions()
+    # dfBuilder.defineRegions()
     dfBuilder.defineCategories()
     dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder
