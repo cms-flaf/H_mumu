@@ -1,4 +1,5 @@
 import ROOT
+import sys
 if __name__ == "__main__":
     sys.path.append(os.environ['ANALYSIS_PATH'])
 
@@ -7,21 +8,8 @@ from Analysis.GetTriggerWeights import *
 from FLAF.Common.Utilities import *
 
 Muon_observables = ["IP_cov00","IP_cov10","IP_cov11","IP_cov20","IP_cov21","IP_cov22","IPx","IPy","IPz","bField_z","bsConstrainedChi2","bsConstrainedPt","bsConstrainedPtErr","charge","dxy","dxyErr","dxybs","dz","dzErr","eta","fsrPhotonIdx","genPartFlav","genPartIdx","highPtId","highPurity","inTimeMuon","ip3d","ipLengthSig","isGlobal","isPFcand","isStandalone","isTracker","jetIdx","jetNDauCharged","jetPtRelv2","jetRelIso","looseId","mass","mediumId","mediumPromptId","miniIsoId","miniPFRelIso_all","miniPFRelIso_chg","multiIsoId","mvaLowPt","mvaMuID","mvaMuID_WP","nStations","nTrackerLayers","pdgId","pfIsoId","pfRelIso03_all","pfRelIso03_chg","pfRelIso04_all","phi","promptMVA","pt","ptErr","puppiIsoId","segmentComp","sip3d","softId","softMva","softMvaId","softMvaRun3","svIdx","tightCharge","tightId","tkIsoId","tkRelIso","track_cov00","track_cov10","track_cov11","track_cov20","track_cov21","track_cov22","track_cov30","track_cov31","track_cov32","track_cov33","track_cov40","track_cov41","track_cov42","track_cov43","track_cov44","track_dsz","track_dxy","track_lambda","track_phi","track_qoverp","triggerIdLoose","tunepRelPt"]
-
-JetObservables = ["PNetRegPtRawCorr","PNetRegPtRawCorrNeutrino","PNetRegPtRawRes","area","btagDeepFlavB","btagDeepFlavCvB","btagDeepFlavCvL","btagDeepFlavQG","btagPNetB","btagPNetCvB","btagPNetCvL","btagPNetCvNotB","btagPNetQvG","btagPNetTauVJet","chEmEF","chHEF","chMultiplicity","electronIdx1","electronIdx2","eta","genJetIdx","hadronFlavour","hfEmEF","hfHEF","hfadjacentEtaStripsSize","hfcentralEtaStripSize","hfsigmaEtaEta","hfsigmaPhiPhi","jetId","mass","muEF","muonIdx1","muonIdx2","muonSubtrFactor","nConstituents","nElectrons","nMuons","nSVs","neEmEF","neHEF","neMultiplicity","partonFlavour","phi","pt","rawFactor","svIdx1","svIdx2"]
-JetObservablesMC = ["hadronFlavour","partonFlavour"]
-FatJetObservables = ["area", "btagCSVV2", "btagDDBvLV2", "btagDeepB", "btagHbb", "deepTagMD_HbbvsQCD",
-                     "deepTagMD_ZHbbvsQCD", "deepTagMD_ZbbvsQCD", "deepTagMD_bbvsLight", "deepTag_H",
-                     "jetId", "msoftdrop", "nBHadrons", "nCHadrons", "nConstituents","rawFactor",
-                      "particleNetMD_QCD", "particleNetMD_Xbb", "particleNet_HbbvsQCD", "particleNet_mass", # 2018
-                     "particleNet_QCD","particleNet_XbbVsQCD", # 2016
-                     "particleNetLegacy_QCD", "particleNetLegacy_Xbb", "particleNetLegacy_mass", # 2016
-                     "particleNetWithMass_QCD", "particleNetWithMass_HbbvsQCD", "particleNet_massCorr", # 2016
-                     "ptRes", "idbtagPNetB"]
-FatJetObservablesMC = ["hadronFlavour","partonFlavour"]
-
-SubJetObservables = ["btagDeepB", "eta", "mass", "phi", "pt", "rawFactor"]
-SubJetObservablesMC = ["hadronFlavour","partonFlavour"]
+JetObservables = ["PNetRegPtRawCorr","PNetRegPtRawCorrNeutrino","PNetRegPtRawRes","area","btagDeepFlavB","btagDeepFlavCvB","btagDeepFlavCvL","btagDeepFlavQG","btagPNetB","btagPNetCvB","btagPNetCvL","btagPNetCvNotB","btagPNetQvG","btagPNetTauVJet","chEmEF","chHEF","chMultiplicity","electronIdx1","electronIdx2","eta","hfEmEF","hfHEF","hfadjacentEtaStripsSize","hfcentralEtaStripSize","hfsigmaEtaEta","hfsigmaPhiPhi","jetId","mass","muEF","muonIdx1","muonIdx2","muonSubtrFactor","nConstituents","nElectrons","nMuons","nSVs","neEmEF","neHEF","neMultiplicity","partonFlavour","phi","pt","rawFactor","svIdx1","svIdx2"]
+JetObservablesMC = ["hadronFlavour","partonFlavour", "genJetIdx"]
 
 defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type", "period", "isData","PuppiMET_pt", "PuppiMET_phi", "nJet","DeepMETResolutionTune_pt", "DeepMETResolutionTune_phi","DeepMETResponseTune_pt", "DeepMETResponseTune_phi","PV_npvs"]
 
@@ -31,7 +19,7 @@ def createKeyFilterDict(global_cfg_dict, year):
     filter_dict = {}
     filter_str = ""
     channels_to_consider = global_cfg_dict['channels_to_consider']
-    sign_regions_to_consider = global_cfg_dict['SignRegions']
+    sign_regions_to_consider = global_cfg_dict['QCDRegions']
     categories_to_consider = global_cfg_dict["categories"]
     triggers_dict = global_cfg_dict['hist_triggers']
     for ch in channels_to_consider:
@@ -46,9 +34,6 @@ def createKeyFilterDict(global_cfg_dict, year):
                 key = (ch, reg, cat)
                 filter_dict[key] = filter_str
     return filter_dict
-
-
-
 
 def GetBTagWeight(global_cfg_dict,cat,applyBtag=False):
     btag_weight = "1"
@@ -84,6 +69,14 @@ def VBFJetSelection(df):
     df = df.Define("j1_y", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Rapidity()); return -1000.f; ")
     df = df.Define("j2_y", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Rapidity()); return -1000.f; ")
     df = df.Define("delta_phi_jj", "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;")
+    df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Phi()")
+    for var in JetObservables:
+        if f"SelectedJet_{var}" not in df.GetColumnNames():
+            continue
+        if f"j1_{var}" not in df.GetColumnNames():
+            df = df.Define("j1_"+var, f"if (HasVBF && j1_idx >= 0) return static_cast<float>(SelectedJet_{var}[j1_idx]); return -1000.f;")
+        if f"j2_{var}" not in df.GetColumnNames():
+            df = df.Define("j2_"+var, f"if (HasVBF && j2_idx >= 0) return static_cast<float>(SelectedJet_{var}[j2_idx]); return -1000.f;")
     return df
 
 def GetMuMuObservables(df):
@@ -118,12 +111,15 @@ def VBFJetMuonsObservables(df):
     return df
 
 def GetSoftJets(df):
-    df = df.Define("SoftJet_def_vtx", "(SelectedJet_svIdx1 < 0 && SelectedJet_svIdx2< 0 ) ")
-    df = df.Define("SoftJet_def_pt", " (SelectedJet_pt>2) ")
-    df = df.Define("SoftJet_def_muon", "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)") # tmp patch. For next round it will be changed to the commented one in next line
-    # df = df.Define("SoftJet_def_muon", "(Jet_muonIdx1 != mu1_idx && Jet_muonIdx1 != mu2_idx && Jet_muonIdx2 != mu1_idx && Jet_muonIdx2 != mu2_idx)")
-    df = df.Define("SoftJet_def_VBF", " (HasVBF && SelectedJet_idx != j1_idx && SelectedJet_idx != j2_idx) ")
+    df = df.Define("SoftJet_def_vtx", "(SelectedJet_svIdx1 < 0 && SelectedJet_svIdx2< 0 ) ")  # no secondary vertex associated
+    df = df.Define("SoftJet_def_pt", " (SelectedJet_pt>2) ") # pT > 2 GeV
+    df = df.Define("SoftJet_def_muon", "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)") # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
+
+    # df = df.Define("SoftJet_def_muon", "(Jet_muonIdx1 != mu1_idx && Jet_muonIdx1 != mu2_idx && Jet_muonIdx2 != mu1_idx && Jet_muonIdx2 != mu2_idx)") # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
+
+    df = df.Define("SoftJet_def_VBF", " (HasVBF && SelectedJet_idx != j1_idx && SelectedJet_idx != j2_idx) ") # if it is a VBF event, the soft jets are not the VBF jets
     df = df.Define("SoftJet_def_noVBF", " (!(HasVBF)) ")
+
     df = df.Define("SoftJet_def", "SoftJet_def_vtx && SoftJet_def_pt && SoftJet_def_muon && (SoftJet_def_VBF || SoftJet_def_noVBF )")
 
     df = df.Define("N_softJet", "SelectedJet_p4[SoftJet_def].size()")
@@ -134,11 +130,11 @@ def GetSoftJets(df):
     df = df.Define("SoftJet_HtHF_fraction", "SelectedJet_hfHEF[SoftJet_def]")
     for var in JetObservables:
         if f"SoftJet_{var}" not in df.GetColumnNames():
-            df = df.Define(f"SoftJet_{var}", f"SelectedJet_{var}[SoftJet_def]")
+            if f"SoftJet_{var}" not in df.GetColumnNames() and f"SelectedJet_{var}" in df.GetColumnNames():
+                df = df.Define(f"SoftJet_{var}", f"SelectedJet_{var}[SoftJet_def]")
     for var in JetObservablesMC:
         if f"SoftJet_{var}" not in df.GetColumnNames() and f"SelectedJet_{var}" in df.GetColumnNames():
             df = df.Define(f"SoftJet_{var}", f"SelectedJet_{var}[SoftJet_def]")
-        df = df.Define(f"SoftJetMC_{var}", f"SelectedJet_{var}[SoftJet_def]")
     return df
 
 
@@ -205,7 +201,11 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
-    def defineSignRegions(self):
+    def defineRegions(self):
+         self.df = self.df.Define("Z_sideband", "m_mumu > 70 && m_mumu < 110")
+
+
+    def SignRegionDef(self):
         self.df = self.df.Define("OS", "mu1_charge*mu2_charge < 0")
         self.colToSave.append("OS")
         self.df = self.df.Define("SS", "!OS")
@@ -213,22 +213,13 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         if "weight_EWKCorr_VptCentral" in self.df.GetColumnNames():
             self.df = self.df.Define("weight_EWKCorr_VptCentral_scaled1", "1+weight_EWKCorr_VptCentral")
 
-
-    def defineRegions(self): # needs inv mass def
-        self.df = self.df.Define("Inclusive", f" return true;")
-        self.df = self.df.Define("DYEnriched", f" return (m_mumu > 70 && m_mumu < 100);")
-        self.colToSave.append("DYEnriched")
-
     def defineCategories(self): # needs lot of stuff --> at the end
         singleMuTh = self.config["singleMu_th"][self.period]
-        # print(singleMuTh)
         for category_to_def in self.config['category_definition'].keys():
             category_name = category_to_def
             cat_str = self.config['category_definition'][category_to_def].format(MuPtTh=singleMuTh)
-            # print(cat_str)
             self.df = self.df.Define(category_to_def, cat_str)
             self.colToSave.append(category_to_def)
-            # print(self.df.Filter(category_to_def).Count().GetValue())
 
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
@@ -265,7 +256,7 @@ def PrepareDfForHistograms(dfForHistograms):
         defineTriggerWeights(dfForHistograms)
         # if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
         #     defineTriggerWeightsErrors(dfForHistograms)
-    dfForHistograms.defineSignRegions()
+    dfForHistograms.SignRegionDef()
     dfForHistograms.defineRegions()
     dfForHistograms.defineCategories()
     return dfForHistograms
@@ -277,7 +268,7 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
     dfBuilder.df = GetSoftJets(dfBuilder.df)
-    dfBuilder.defineRegions()
+    # dfBuilder.defineRegions()
     dfBuilder.defineCategories()
     dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder
