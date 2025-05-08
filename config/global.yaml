@@ -22,7 +22,6 @@ channelDefinition:
   eMu: 12
   muMu: 22
 
-
 corrections:
   # - JEC
   - JER
@@ -35,11 +34,12 @@ corrections:
 region: All
 region_default: All
 
+# keeping the same naming covention as Stephens prev analysis
 QCDRegions:
   - Z_sideband
-  # - Signal_Fit
-  # - Signal_ext
-  # - H_sideband
+  - Signal_Fit
+  - Signal_ext
+  - H_sideband
 
 ApplyBweight: False
 triggers:
@@ -52,44 +52,60 @@ categories:
   - baseline
   - VBF
   - ggH
-
-
+  - VBF_JetVeto
+  - ggH_JetVeto
 
 category_definition:
-  baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})" # OS = opposite charge sign for two muons
-  VBF_def : "HasVBF && j1_pt > 25 && j2_pt >25"
-  VBF: "baseline && VBF_def"
-  ggH: "baseline && !(VBF_def)"
-  # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
-  # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
-  # non-physics dependent, but related to Jet Energy Correction and Scale
-  VBF_JetVeto_def: "VBF_def && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
-  VBF_JetVeto: "baseline && VBF_def && ( (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) ) && ( (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50) )"
-  ggH_VBFJetVeto: " baseline && !(VBF_JetVeto_def) " # no needed
+  # main categories
+  baseline:      "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})"
+  VBF_def:       "HasVBF && j1_pt > 25 && j2_pt >25"
+  VBF:           "baseline && VBF_def"
+  ggH:           "baseline && !(VBF_def)"
 
-  # # Control region peaking around Z mass
-  # baseline_Zmumu: "baseline && DYEnriched"
-  # VBF_Zmumu: "baseline_Zmumu && VBF_def "
-  # ggH_Zmumu: "baseline_Zmumu && !(VBF_def) "
+  # temporary jet‐veto subcategoriesa
+  VBF_JetVeto_def: >
+    VBF_def
+    && (
+         (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50)
+      && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50)
+       )
+  VBF_JetVeto:   "baseline && VBF_JetVeto_def"
+  ggH_JetVeto:   "baseline && !VBF_JetVeto_def"
 
-  # # Control region peaking around Z mass + VBF Jets veto application
-  # VBF_Zmumu_JetVeto: "baseline_Zmumu && VBF_JetVeto_def"
-  # ggH_Zmumu_JetVeto: "baseline_Zmumu && !VBF_JetVeto_def" # no needed
+  # QCDs control and signal regions by dimuon mass 
+  Z_sideband:   >
+    baseline
+    && mumu_mass > 70
+    && mumu_mass < 110
 
+  Signal_Fit:   >
+    baseline
+    && mumu_mass > 115
+    && mumu_mass < 135
+
+  H_sideband:   >
+    baseline
+    && (
+         (mumu_mass > 110 && mumu_mass < 115)
+      || (mumu_mass > 135 && mumu_mass < 150)
+       )
+
+  Signal_ext:   >
+    baseline
+    && mumu_mass > 110
+    && mumu_mass < 150
 
 singleMu_th:
-  "Run2_2016": 26
+  "Run2_2016":      26
   "Run2_2016_HIPM": 26
-  "Run2_2017": 29
-  "Run2_2018": 26
-  "Run3_2022": 26
-  "Run3_2022EE": 26
-
+  "Run2_2017":      29
+  "Run2_2018":      26
+  "Run3_2022":      26
+  "Run3_2022EE":    26
 
 scales:
   - Up
   - Down
-
 
 sample_types_to_merge:
   - DY
