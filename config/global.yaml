@@ -34,12 +34,12 @@ corrections:
 region: All
 region_default: All
 
-# keeping the same naming covention as Stephens prev analysis
+# QCD control regions by dimuon mass
 QCDRegions:
-  - Z_sideband
-  - Signal_Fit
-  - Signal_ext
-  - H_sideband
+  Z_sideband: "baseline && mumu_mass > 70 && mumu_mass < 110"
+  Signal_Fit: "baseline && mumu_mass > 115 && mumu_mass < 135"
+  H_sideband: "baseline && ((mumu_mass > 110 && mumu_mass < 115) || (mumu_mass > 135 && mumu_mass < 150))"
+  Signal_ext: "baseline && mumu_mass > 110 && mumu_mass < 150"
 
 ApplyBweight: False
 triggers:
@@ -57,51 +57,22 @@ categories:
 
 category_definition:
   # main categories
-  baseline:      "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})"
-  VBF_def:       "HasVBF && j1_pt > 25 && j2_pt >25"
-  VBF:           "baseline && VBF_def"
-  ggH:           "baseline && !(VBF_def)"
-
-  # temporary jet‐veto subcategoriesa
-  VBF_JetVeto_def: >
-    VBF_def
-    && (
-         (abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50)
-      && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50)
-       )
-  VBF_JetVeto:   "baseline && VBF_JetVeto_def"
-  ggH_JetVeto:   "baseline && !VBF_JetVeto_def"
-
-  # QCDs control and signal regions by dimuon mass 
-  Z_sideband:   >
-    baseline
-    && mumu_mass > 70
-    && mumu_mass < 110
-
-  Signal_Fit:   >
-    baseline
-    && mumu_mass > 115
-    && mumu_mass < 135
-
-  H_sideband:   >
-    baseline
-    && (
-         (mumu_mass > 110 && mumu_mass < 115)
-      || (mumu_mass > 135 && mumu_mass < 150)
-       )
-
-  Signal_ext:   >
-    baseline
-    && mumu_mass > 110
-    && mumu_mass < 150
+  baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})"
+  VBF_def: "HasVBF && j1_pt > 25 && j2_pt > 25"
+  VBF: "baseline && VBF_def"
+  ggH: "baseline && !(VBF_def)"
+  # temporary jet‐veto subcategories
+  VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
+  VBF_JetVeto: "baseline && VBF_JetVeto_def"
+  ggH_JetVeto: "baseline && !VBF_JetVeto_def"
 
 singleMu_th:
-  "Run2_2016":      26
+  "Run2_2016": 26
   "Run2_2016_HIPM": 26
-  "Run2_2017":      29
-  "Run2_2018":      26
-  "Run3_2022":      26
-  "Run3_2022EE":    26
+  "Run2_2017": 29
+  "Run2_2018": 26
+  "Run3_2022": 26
+  "Run3_2022EE": 26
 
 scales:
   - Up
