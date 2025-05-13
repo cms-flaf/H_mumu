@@ -36,10 +36,10 @@ region_default: All
 
 # QCD control regions by dimuon mass
 QCDRegions:
-  Z_sideband: "baseline && mumu_mass > 70 && mumu_mass < 110"
-  Signal_Fit: "baseline && mumu_mass > 115 && mumu_mass < 135"
-  H_sideband: "baseline && ((mumu_mass > 110 && mumu_mass < 115) || (mumu_mass > 135 && mumu_mass < 150))"
-  Signal_ext: "baseline && mumu_mass > 110 && mumu_mass < 150"
+  Z_sideband: "mumu_mass > 70 && mumu_mass < 110"
+  Signal_Fit: "mumu_mass > 115 && mumu_mass < 135"
+  H_sideband: "((mumu_mass > 110 && mumu_mass < 115) || (mumu_mass > 135 && mumu_mass < 150))"
+  Signal_ext: "mumu_mass > 110 && mumu_mass < 150"
 
 ApplyBweight: False
 triggers:
