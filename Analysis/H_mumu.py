@@ -14,50 +14,26 @@ JetObservablesMC = ["hadronFlavour","partonFlavour", "genJetIdx"]
 defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type", "period", "isData","PuppiMET_pt", "PuppiMET_phi", "nJet","DeepMETResolutionTune_pt", "DeepMETResolutionTune_phi","DeepMETResponseTune_pt", "DeepMETResponseTune_phi","PV_npvs"]
 
 
-# The previous version of this loop before making QCDregions as a dict in global
-# def createKeyFilterDict(global_cfg_dict, year):
-#     filter_dict = {}
-#     filter_str = ""
-#     channels_to_consider = global_cfg_dict['channels_to_consider']
-#     sign_regions_to_consider = global_cfg_dict['QCDregions']
-#     categories_to_consider = global_cfg_dict["categories"]
-#     triggers_dict = global_cfg_dict['hist_triggers']
-#     for ch in channels_to_consider:
-#         triggers = triggers_dict[ch]['default']
-#         if year in triggers_dict[ch].keys():
-#             triggers = triggers_dict[ch][year]
-#         for reg in sign_regions_to_consider:
-#             for cat in categories_to_consider:
-#                 filter_base = f" ({ch} && {triggers}&& {reg} && {cat})"
-#                 filter_str = f"(" + filter_base
-#                 filter_str += ")"
-#                 key = (ch, reg, cat)
-#                 filter_dict[key] = filter_str
-#     return filter_dict
-
-# new loop after making QCDregions a dict in global
+# The previous version of this loop before making QCDregions as a dict in global and it remains same
 def createKeyFilterDict(global_cfg_dict, year):
     filter_dict = {}
     filter_str = ""
-    channels_to_consider   = global_cfg_dict['channels_to_consider']
-    # now a dict of region_name → cut_string
-    region_defs            = global_cfg_dict['QCDRegions']
+    channels_to_consider = global_cfg_dict['channels_to_consider']
+    sign_regions_to_consider = global_cfg_dict['QCDregions']
     categories_to_consider = global_cfg_dict["categories"]
-    triggers_dict          = global_cfg_dict['hist_triggers']
-
+    triggers_dict = global_cfg_dict['hist_triggers']
     for ch in channels_to_consider:
         triggers = triggers_dict[ch]['default']
-        if year in triggers_dict[ch]:
+        if year in triggers_dict[ch].keys():
             triggers = triggers_dict[ch][year]
-        for reg_name, reg_cut in region_defs.items():
+        for reg in sign_regions_to_consider:
             for cat in categories_to_consider:
-                filter_base        = f" ({ch} && {triggers} && {reg_cut} && {cat})"
-                filter_str         = f"({filter_base})"
-                key                = (ch, reg_name, cat)
-                filter_dict[key]   = filter_str
-
+                filter_base = f" ({ch} && {triggers}&& {reg} && {cat})"
+                filter_str = f"(" + filter_base
+                filter_str += ")"
+                key = (ch, reg, cat)
+                filter_dict[key] = filter_str
     return filter_dict
-
 
 
 def GetBTagWeight(global_cfg_dict,cat,applyBtag=False):
@@ -226,8 +202,15 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
-    def defineRegions(self):
-         self.df = self.df.Define("Z_sideband", "m_mumu > 70 && m_mumu < 110")
+    # def defineRegions(self):
+    #      self.df = self.df.Define("Z_sideband", "m_mumu > 70 && m_mumu < 110")
+    def defineRegions(self, global_cfg_dict):
+    # new: QCDRegions is a dict {region_name: cut_string}
+    region_defs = global_cfg_dict['QCDRegions']
+    for reg_name, reg_cut in region_defs.items():
+        # reg_name → branch name, reg_cut → actual selection
+        self.df = self.df.Define(reg_name, reg_cut)
+    return self.df
 
 
     def SignRegionDef(self):
