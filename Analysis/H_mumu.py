@@ -14,11 +14,11 @@ JetObservablesMC = ["hadronFlavour","partonFlavour", "genJetIdx"]
 defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type", "period", "isData","PuppiMET_pt", "PuppiMET_phi", "nJet","DeepMETResolutionTune_pt", "DeepMETResolutionTune_phi","DeepMETResponseTune_pt", "DeepMETResponseTune_phi","PV_npvs"]
 
 
-# The previous version of this loop before making QCDregions as a dict in global and it remains same
+
 def createKeyFilterDict(global_cfg_dict, year):
     filter_dict = {}
     filter_str = ""
-    channels_to_consider = global_cfg_dict['channels_to_consider']
+    channels_to_consider = global_cfg_dict['channelSelection']
     sign_regions_to_consider = global_cfg_dict['QCDregions']
     categories_to_consider = global_cfg_dict["categories"]
     triggers_dict = global_cfg_dict['hist_triggers']
@@ -202,15 +202,12 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
-    # def defineRegions(self):
-    #      self.df = self.df.Define("Z_sideband", "m_mumu > 70 && m_mumu < 110")
-    def defineRegions(self, global_cfg_dict):
-    # new: QCDRegions is a dict {region_name: cut_string}
-    region_defs = global_cfg_dict['QCDRegions']
-    for reg_name, reg_cut in region_defs.items():
-        # reg_name → branch name, reg_cut → actual selection
-        self.df = self.df.Define(reg_name, reg_cut)
-    return self.df
+   
+    def defineRegions(self):
+        region_defs = global_cfg_dict['QCDregions']
+        for reg_name, reg_cut in region_defs.items():
+            self.df = self.df.Define(reg_name, reg_cut)
+        return self.df
 
 
     def SignRegionDef(self):
