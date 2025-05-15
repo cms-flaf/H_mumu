@@ -34,12 +34,11 @@ corrections:
 region: All
 region_default: All
 
-# QCD control regions by dimuon mass
-QCDRegions:
-  Z_sideband: "mumu_mass > 70 && mumu_mass < 110"
-  Signal_Fit: "mumu_mass > 115 && mumu_mass < 135"
-  H_sideband: "((mumu_mass > 110 && mumu_mass < 115) || (mumu_mass > 135 && mumu_mass < 150))"
-  Signal_ext: "mumu_mass > 110 && mumu_mass < 150"
+QCDregions:
+  Z_sideband: "m_mumu > 70 && m_mumu < 110"
+  Signal_Fit: "m_mumu > 115 && m_mumu < 135"
+  H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
+  Signal_ext: "m_mumu > 110 && m_mumu < 150"
 
 ApplyBweight: False
 triggers:
@@ -56,12 +55,10 @@ categories:
   - ggH_JetVeto
 
 category_definition:
-  # main categories
   baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})"
   VBF_def: "HasVBF && j1_pt > 25 && j2_pt > 25"
   VBF: "baseline && VBF_def"
   ggH: "baseline && !(VBF_def)"
-  # temporary jet‐veto subcategories
   VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
   VBF_JetVeto: "baseline && VBF_JetVeto_def"
   ggH_JetVeto: "baseline && !VBF_JetVeto_def"
