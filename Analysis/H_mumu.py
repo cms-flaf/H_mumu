@@ -264,16 +264,14 @@ def PrepareDfForHistograms(dfForHistograms):
 
 def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.df = GetMuMuObservables(dfBuilder.df)
-    dfBuilder.defineSignRegions()
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
-    dfBuilder.df = GetSoftJets(dfBuilder.df)
-    # dfBuilder.defineRegions()
+    #dfBuilder.df = GetSoftJets(dfBuilder.df)
+    dfBuilder.SignRegionDef()
+    dfBuilder.defineRegions()
     dfBuilder.defineCategories()
     dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder
-
-
 
 # def addNewCols(self):
 #     self.colNames = []

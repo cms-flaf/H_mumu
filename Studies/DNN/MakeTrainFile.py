@@ -46,9 +46,9 @@ def AddColumnsToSave(config):
     # SelectedJet_vars = config['vars_to_save']['SelectedJet']
     # for Jvar in SelectedJet_vars:
     #     col_to_save.append(f"SelectedJet_{Jvar}")
-    SoftJet_vars = config["vars_to_save"]["SoftJet"]
-    for SJvar in SoftJet_vars:
-        col_to_save.append(f"SoftJet_{SJvar}")
+    #SoftJet_vars = config["vars_to_save"]["SoftJet"]
+    #for SJvar in SoftJet_vars:
+    #    col_to_save.append(f"SoftJet_{SJvar}")
     VBFJetPair_vars = config["vars_to_save"]["VBFJetPair"]
     MuJet_vars = config["vars_to_save"]["MuJet"]
     MuPair_vars = config["vars_to_save"]["MuPair"]

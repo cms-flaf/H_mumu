@@ -206,20 +206,20 @@ vars_to_save:
     - sample_type
     ### categories ###
     - baseline
-    - baseline_Zmumu
+#    - baseline_Zmumu
     - ggH
-    - ggH_Zmumu
-    - ggH_Zmumu_JetVeto
+#    - ggH_Zmumu
+#    - ggH_Zmumu_JetVeto
     - VBF
     - VBF_JetVeto
-    - VBF_Zmumu
-    - VBF_Zmumu_JetVeto
+#    - VBF_Zmumu
+#    - VBF_Zmumu_JetVeto
     ### regions ###
-    - DYEnriched
+#    - DYEnriched
     ### sign ###
     - OS
     ### jet multiplicity ###
-    - N_softJet
+#    - N_softJet
     - nJet
     - nSelectedJet
     ### trg info ###
