@@ -207,7 +207,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         region_defs = global_cfg_dict['QCDregions']
         for reg_name, reg_cut in region_defs.items():
             self.df = self.df.Define(reg_name, reg_cut)
-        return self.df
+        # return self.df
 
 
     def SignRegionDef(self):
@@ -229,7 +229,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
 
-    def __init__(self, df, config, period,isData=False, isCentral=False, colToSave=[]):
+    def __init__(self, df, config, period, isData=False, isCentral=False, colToSave=[]):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
         self.isData = isData
