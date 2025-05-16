@@ -34,7 +34,7 @@ corrections:
 region: All
 region_default: All
 
-QCDregions:
+QCDRegions:
   Z_sideband: "m_mumu > 70 && m_mumu < 110"
   Signal_Fit: "m_mumu > 115 && m_mumu < 135"
   H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
@@ -52,7 +52,7 @@ categories:
   - VBF
   - ggH
   - VBF_JetVeto
-  - ggH_JetVeto
+  # - ggH_JetVeto
 
 category_definition:
   baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})"
@@ -61,7 +61,7 @@ category_definition:
   ggH: "baseline && !(VBF_def)"
   VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
   VBF_JetVeto: "baseline && VBF_JetVeto_def"
-  ggH_JetVeto: "baseline && !VBF_JetVeto_def"
+  # ggH_JetVeto: "baseline && !VBF_JetVeto_def"
 
 singleMu_th:
   "Run2_2016": 26
