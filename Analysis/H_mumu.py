@@ -19,7 +19,7 @@ def createKeyFilterDict(global_cfg_dict, year):
     filter_dict = {}
     filter_str = ""
     channels_to_consider = global_cfg_dict['channelSelection']
-    sign_regions_to_consider = global_cfg_dict['QCDregions']
+    sign_regions_to_consider = global_cfg_dict['QCDRegions']
     categories_to_consider = global_cfg_dict["categories"]
     triggers_dict = global_cfg_dict['hist_triggers']
     for ch in channels_to_consider:
@@ -204,10 +204,10 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
    
     def defineRegions(self):
-        region_defs = global_cfg_dict['QCDregions']
+        region_defs = self.config['QCDRegions']
         for reg_name, reg_cut in region_defs.items():
             self.df = self.df.Define(reg_name, reg_cut)
-        # return self.df
+        
 
 
     def SignRegionDef(self):
