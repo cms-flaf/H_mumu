@@ -62,6 +62,9 @@ category_definition:
   VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
   VBF_JetVeto: "baseline && VBF_JetVeto_def"
   # ggH_JetVeto: "baseline && !VBF_JetVeto_def"
+  # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
+  # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
+  # non-physics dependent, but related to Jet Energy Correction and Scale
 
 singleMu_th:
   "Run2_2016": 26
