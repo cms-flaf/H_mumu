@@ -1,80 +1,46 @@
 import os
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='Create TrainTest Files for DNN.')
+    parser.add_argument('--var', required=True, type=str, help="vars, separated by commas")
+    parser.add_argument('--era', required= False, type=str, default="Run3_2022EE", help="era")
+    parser.add_argument('--region', required= False, type=str, default="Z_sideband", help="region")
+    parser.add_argument('--histDir', required= False, type=str, default="/eos/user/v/vdamante/H_mumu/histograms/", help="hist_dir")
+    parser.add_argument('--version', required= False, type=str, default="Run3_2022EE_Hmumu_v3", help="version for input files")
+    parser.add_argument('--categories', required= False, type=str, help="categories")
+    parser.add_argument('--wantNonLog', required= False, type=bool, default=False,help="use uncertainties")
+    parser.add_argument('--wantLog', required= False, type=bool, default=False,help="use uncertainties")
+    parser.add_argument('--use_unc', required= False, type=bool, default=False,help="use uncertainties")
+    args = parser.parse_args()
 
-era = "Run3_2022EE"
-ver = "Run3_2022EE_Hmumu_v2"
-common_path = f"/afs/cern.ch/user/s/sabhosal/H_mumu" # CHANGE TO YOURS
-using_uncertainties = False #True #When we turn on Up/Down, the file storage changes due to renameHists.py
-# varnames = [ "mu1_eta" , "mu2_eta" ]
-# varnames = ["m_mumu","pt_ll","mu1_pt","mu2_pt" ,"dR_mumu" ,  "mu1_eta" , "mu1_phi" ,  "mu2_eta" , "mu2_phi"  ]
-# varnames = ["VBF_etaSeparation","VBFjet1_eta","VBFjet2_eta","mu1_pt","mu2_pt","VBFjet1_pt","VBFjet2_pt","m_mumu", "VBF_mInv"]
-# varnames = ["m_mumu", "pt_ll", "VBF_etaSeparation", "VBFjet1_eta"]
-# varnames = ["pt_mumu"]
-# varnames = ["m_mumu", "mu1_pt", "mu2_pt", "pt_mumu"] # "m_jj",
-varnames = ["pt_mumu"]
+    era = args.era #"Run3_2022EE"
+    ver = args.version # "Run3_2022EE_Hmumu_v2"
 
-channellist = ["muMu"]
+    common_path = os.getcwd() # f"/afs/cern.ch/work/v/vdamante/H_mumu"
+    using_uncertainties = args.use_unc #True #When we turn on Up/Down, the file storage changes due to renameHists.py
 
-categories = ["baseline", "VBF", "ggH", "VBF_JetVeto"]
+    varnames = args.var.split(",")
+    categories = ["baseline", "VBF", "ggH", "VBF_JetVeto"]
+    if args.categories:
+        categories = args.categories.split(",")
 
-# Including QCD control regions
-qcd_regions = ["Z_sideband", "H_sideband"]
+    indir = os.path.join(args.histDir, ver, era, "merged")
+    plotdir = os.path.join(args.histDir, ver, era, "plots")
 
-indir = f"/eos/user/s/sabhosal/H_mumu/histograms/Run3_2022EE_Hmumu_v2/Run3_2022EE/merged" # CHANGE TO YOURS
-plotdir = f"/eos/user/s/sabhosal/H_mumu/histograms/Run3_2022EE_Hmumu_v2/Run3_2022EE/plots" # CHANGE TO YOURS
-
-for var in varnames:
-    for channel in channellist:
+    for var in varnames:
         for cat in categories:
+            filename = os.path.join(indir, var, f"{var}.root")
+            os.makedirs(os.path.join(plotdir,cat,args.region), exist_ok=True)
 
-            # Looping over every QCD control region and making a plot for eachof them
-            for qcd_region in qcd_regions:
+            if not using_uncertainties:
+                if args.wantLog:
+                    outname = os.path.join(plotdir,cat,args.region, f"{var}_yLog.pdf")
+                    os.system(f"python3 {common_path}/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig {common_path}/config/background_samples.yaml --globalConfig {common_path}/config/global.yaml --outFile {outname} --var {var} --category {cat} --channel muMu --uncSource Central --wantData --year {era} --wantQCD False --wantLogScale y --rebin False --analysis H_mumu --qcdregion {args.region} --sigConfig {common_path}/config/signal_samples.yaml --wantSignals")
 
-                filename = os.path.join(indir, var, f"{var}.root")
-                # print("Loading fname ", filename)
-                os.makedirs(os.path.join(plotdir, cat), exist_ok=True)
-                outname = os.path.join(plotdir, cat, f"{var}_{qcd_region}_yLog.pdf")
+                if args.wantNonLog:
+                    outname = os.path.join(plotdir,cat,args.region, f"{var}.pdf")
+                    os.system(f"python3 {common_path}/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig {common_path}/config/background_samples.yaml --globalConfig {common_path}/config/global.yaml --outFile {outname} --var {var} --category {cat} --channel muMu --uncSource Central --wantData --year {era} --wantQCD False --rebin False --analysis H_mumu --qcdregion {args.region} --sigConfig {common_path}/config/{era}/samples.yaml")
 
-                if not using_uncertainties:
-                    os.system(
-                        f"python3 {common_path}/FLAF/Analysis/HistPlotter.py "
-                        f"--inFile {filename} "
-                        f"--bckgConfig {common_path}/config/background_samples.yaml "
-                        f"--globalConfig {common_path}/config/global.yaml "
-                        f"--outFile {outname} "
-                        f"--var {var} "
-                        f"--category {cat} "
-                        f"--channel {channel} "
-                        f"--uncSource Central "
-                        f"--wantData "
-                        f"--year {era} "
-                        f"--wantQCD False "
-                        f"--wantLogScale y "
-                        f"--rebin False "
-                        f"--analysis H_mumu "
-                        f"--qcdregion {qcd_region} "  # <- QCDRegion name passed here
-                        f"--sigConfig {common_path}/config/signal_samples.yaml "
-                        f"--wantSignals"
-                    )
-
-                    # outname = os.path.join(plotdir, f"H_mumu_{var}_StackPlot.pdf")
-                    # os.system(f"python3 {common_path}/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig {common_path}/config/background_samples.yaml --globalConfig {common_path}/config/global.yaml --outFile {outname} --var {var} --category {cat} --channel {channel} --uncSource Central --wantData --year {era} --wantQCD False --rebin False --analysis H_mumu --qcdregion OS --sigConfig {common_path}/config/{era}/samples.yaml")
-                else:
-                    filename_tmp = os.path.join(indir, var, "tmp", f"all_histograms_{var}_hadded.root")
-                    os.system(
-                        f"python3 /afs/cern.ch/work/v/vdamante/H_mumu/FLAF/Analysis/HistPlotter.py "
-                        f"--inFile {filename_tmp} "
-                        f"--bckgConfig ../config/background_samples.yaml "
-                        f"--globalConfig ../config/global.yaml "
-                        f"--outFile {outname} "
-                        f"--var {var} "
-                        f"--category {cat} "
-                        f"--channel {channel} "
-                        f"--uncSource Central "
-                        f"--wantData "
-                        f"--year {era} "
-                        f"--wantQCD False "
-                        f"--rebin False "
-                        f"--analysis H_mumu "
-                        f"--qcdregion {qcd_region} "
-                        f"--sigConfig ../config/{era}/samples.yaml"
-                    )
+            else:
+                filename = os.path.join(indir, var, 'tmp', f"all_histograms_{var}_hadded.root")
+                os.system(f"python3 /afs/cern.ch/work/v/vdamante/H_mumu/FLAF/Analysis/HistPlotter.py --inFile {filename} --bckgConfig ../config/background_samples.yaml --globalConfig ../config/global.yaml --outFile {outname} --var {var} --category {cat} --channel muMu --uncSource Central --wantData --year {era} --wantQCD False --rebin False --analysis H_mumu --qcdregion OS_Iso --sigConfig ../config/{era}/samples.yaml")
