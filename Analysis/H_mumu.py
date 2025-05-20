@@ -18,7 +18,7 @@ defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type
 def createKeyFilterDict(global_cfg_dict, year):
     filter_dict = {}
     filter_str = ""
-    channels_to_consider = global_cfg_dict['channelSelection']
+    channels_to_consider = global_cfg_dict['channels_to_consider']
     sign_regions_to_consider = global_cfg_dict['QCDRegions']
     categories_to_consider = global_cfg_dict["categories"]
     triggers_dict = global_cfg_dict['hist_triggers']
