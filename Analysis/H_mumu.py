@@ -35,6 +35,7 @@ def createKeyFilterDict(global_cfg_dict, year):
                 filter_dict[key] = filter_str
     return filter_dict
 
+
 def GetBTagWeight(global_cfg_dict,cat,applyBtag=False):
     btag_weight = "1"
     btagshape_weight = "1"
@@ -201,8 +202,12 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
+   
     def defineRegions(self):
-         self.df = self.df.Define("Z_sideband", "m_mumu > 70 && m_mumu < 110")
+        region_defs = self.config['QCDRegions']
+        for reg_name, reg_cut in region_defs.items():
+            self.df = self.df.Define(reg_name, reg_cut)
+        
 
 
     def SignRegionDef(self):
@@ -224,7 +229,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
 
-    def __init__(self, df, config, period,isData=False, isCentral=False, colToSave=[]):
+    def __init__(self, df, config, period, isData=False, isCentral=False, colToSave=[]):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
         self.isData = isData
