@@ -267,5 +267,5 @@ if __name__ == "__main__":
             general_cfg_dict,
             args.period,
             output_folder,
-            "/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/test.root",
-        )  # config_dict['meta_data']['input_filename']))
+            f"{config_dict['meta_data']['output_folder']}/{config_dict['meta_data']['output_name']}"
+        )
