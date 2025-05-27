@@ -25,10 +25,9 @@ def getChannelLegs(channel):
 def RecoHttCandidateSelection(df, config):
     df = df.Define("Muon_iso", "Muon_pfRelIso04_all")
     df = df.Define("Muon_B0", f"""
-        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""")
+        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""") # && abs(Muon_dz) < 0.2 && abs(Muon_dxy) < 0.024 # in future: Muon_bsConstrainedPt, Muon_bsConstrainedChi2, and Muon_bsConstrainedPtErr
     df = df.Define("Electron_B0_veto", f"""
-        v_ops::pt(Electron_p4) > 20 && abs(v_ops::eta(Electron_p4)) < 2.5  && ( Electron_mvaIso_WP90 == true )""")
-
+        v_ops::pt(Electron_p4) > 20 && abs(v_ops::eta(Electron_p4)) < 2.5  && ( Electron_mvaIso_WP90 == true )""") # && abs(Electron_dz) < 0.2 && abs(Electron_dxy) < 0.024
     df = df.Define("Muon_B2_muMu_1", "Muon_B0 && Muon_idx[Muon_B0].size()==2")
     df = df.Define("Muon_B2_muMu_2", "Muon_B0  && Muon_idx[Muon_B0].size()==2")
 
@@ -46,13 +45,6 @@ def RecoHttCandidateSelection(df, config):
     cand_list_str = ', '.join([ '&' + c for c in cand_columns])
     return df.Define('HttCandidate', f'GetBestHTTCandidate<2>({{ {cand_list_str} }}, event)')
 
-# def ObjReconstruction(df):
-#     df = df.Define("Muon_iso", "Muon_pfRelIso04_all")
-#     df = df.Define("Muon_B0", f"""
-#         v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""") # && abs(Muon_dz) < 0.2 && abs(Muon_dxy) < 0.024 # in future: Muon_bsConstrainedPt, Muon_bsConstrainedChi2, and Muon_bsConstrainedPtErr
-#     df = df.Define("Electron_B0_veto", f"""
-#         v_ops::pt(Electron_p4) > 20 && abs(v_ops::eta(Electron_p4)) < 2.5  && ( Electron_mvaIso_WP90 == true )""") # && abs(Electron_dz) < 0.2 && abs(Electron_dxy) < 0.024
-#     return df
 
 def LeptonVeto(df):
     df = df.Filter("Muon_idx[Muon_B0].size()==2",'No extra muons')
@@ -60,14 +52,12 @@ def LeptonVeto(df):
     return df
 
 def JetSelection(df, era):
-    jet_puID_cut = ""
+    # jet_puID_cut = ""
     # jet_puID_cut = "&& (Jet_puId>0 || v_ops::pt(Jet_p4)>50)" if era.startswith("Run2") else ""
-    df = df.Define("Jet_B0", f"""v_ops::pt(Jet_p4) > 25 && abs(v_ops::eta(Jet_p4))< 4.7 && ( Jet_jetId & 2 ) {jet_puID_cut} """)
+    df = df.Define("Jet_B0", f"""v_ops::pt(Jet_p4) > 25 && abs(v_ops::eta(Jet_p4))< 4.7 && ( Jet_jetId & 2 )""")
     df = df.Define("Jet_B1", "RemoveOverlaps(Jet_p4, Jet_B0,{{Muon_p4},}, 2, 0.4)")
-    df = df.Define("Jet_Veto_loose", "Jet_B1 && abs(v_ops::eta(Jet_p4))< 2.5 && Jet_idbtagPNetB >= 1")
-    df = df.Define("Jet_Veto_medium", "Jet_Veto_loose && Jet_idbtagPNetB >= 2")
-    df = df.Define("Jet_Veto", "Jet_idx[Jet_Veto_medium].size()==0 || Jet_idx[Jet_Veto_loose].size()==2")
-    df = df.Filter("Jet_Veto","excl. events with two loose or one medium b-jet")
+    df = df.Define("JetSel", "Jet_idx[Jet_B1].size()>0")
+    df = df.Filter("JetSel","excl. events with at least one jet passing loose selection")
     return df
 
 def GetMuMuCandidate(df):
