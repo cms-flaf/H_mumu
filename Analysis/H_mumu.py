@@ -54,7 +54,13 @@ def VBFJetSelection(df):
         print("SelectedJet_idx not in df.GetColumnNames")
         df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
     df = df.Define(f"SelectedJet_p4", f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)")
+    df = df.Define(f"JetVeto", f"SelectedJet_btagDeepFlavB")
+    # https://btv-wiki.docs.cern.ch/ScaleFactors/Run3Summer22EE/#ak4-b-tagging
+    df = df.Define("Jet_Veto_loose", "SelectedJet_btagPNetB >= 0.0499")  # 0.0499 is the loose working point for PNet B-tagging in Run3
+    df = df.Define("Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605")  # 0.2605 is the medium working point for PNet B-tagging in Run3
 
+    df = df.Filter("SelectedJet_p4[Jet_Veto_medium].size() < 1", "Remove events with at least one medium b-tagged jet")
+    df = df.Filter("SelectedJet_p4[Jet_Veto_loose].size() < 2", "Remove events with at least two loose b-tagged jets")
     df = df.Define("VBFJetCand","FindVBFJets(SelectedJet_p4)")
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
     df = df.Define("m_jj", "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f")
@@ -202,12 +208,12 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
-   
+
     def defineRegions(self):
         region_defs = self.config['QCDRegions']
         for reg_name, reg_cut in region_defs.items():
             self.df = self.df.Define(reg_name, reg_cut)
-        
+
 
 
     def SignRegionDef(self):

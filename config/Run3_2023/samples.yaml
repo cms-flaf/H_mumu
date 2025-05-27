@@ -13,10 +13,10 @@ GLOBAL:
     - keep WW
     - keep WZ
     - keep ZZ
-    # - keep WWW_4F
-    # - keep WWZ_4F
-    # - keep WZZ
-    # - keep ZZZ
+    - keep WWW_4F
+    - keep WWZ_4F
+    - keep WZZ
+    - keep ZZZ
     - keep ^Muon_.*
     # - keep ^Tau_.*
     # - keep ^EGamma_.*
