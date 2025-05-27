@@ -179,7 +179,7 @@ def SaveVarsForNNInput(vars_to_save):
 
 
 def GetWeight(channel, cat, boosted_categories):
-    weights_to_apply = ["weight_MC_Lumi_pu", "weight_EWKCorr_VptCentral_scaled1"]#,"weight_EWKCorr_ewcorrCentral"] #  "weight_L1PreFiring_Central"
+    weights_to_apply = ["weight_MC_Lumi_pu", "weight_EWKCorr_VptCentral"]#,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
         'muMu':["weight_trigSF_singleMu"],
@@ -220,9 +220,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.df = self.df.Define("OS", "mu1_charge*mu2_charge < 0")
         self.colToSave.append("OS")
         self.df = self.df.Define("SS", "!OS")
-        ### currently putting it here ####
-        if "weight_EWKCorr_VptCentral" in self.df.GetColumnNames():
-            self.df = self.df.Define("weight_EWKCorr_VptCentral_scaled1", "1+weight_EWKCorr_VptCentral")
 
     def defineCategories(self): # needs lot of stuff --> at the end
         singleMuTh = self.config["singleMu_th"][self.period]
