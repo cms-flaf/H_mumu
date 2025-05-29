@@ -63,25 +63,34 @@ class Tester:
 
 
     def make_stackplot(self, log=False, show=False):
+        # Init stuff
         plt.clf()
         df = self.testing_df
         processes = sorted(pd.unique(df.source_file))
+        fig, (ax_plot, ax_legend) = plt.subplots(1, 2, gridspec_kw={'width_ratios': [3, 1]})
+        # Add individual hist curves
         for p in processes:
             selected = df[df.source_file == p]
             counts, bin_edges = np.histogram(selected.NN_Output, bins=50, range=(0,1))
             x = np.concatenate(([0], bin_edges))
             y = np.concatenate(([0], counts, [0]))
             name = p.replace(".root", "")
-            plt.plot(x, y, label=name, drawstyle='steps-post')
-        plt.xlim((0,1))
+            ax_plot.plot(x, y, label=name, drawstyle='steps-post')
+        # Plot config
+        ax_plot.set_xlim((0,1))
         if log:
-            plt.yscale("log")
+            ax_plot.set_yscale("log")
         else:
-            plt.ylim(bottom=0)
-        plt.xlabel("NN Output")
-        plt.ylabel("Count (#)")
-        plt.legend()
+            ax_plot.set_ylim(bottom=0)
+        ax_plot.set_xlabel("NN Output")
+        ax_plot.set_ylabel("Count (#)")
+        # Create legend subplot
+        h, l = ax_plot.get_legend_handles_labels()
+        ax_legend.legend(h, l, loc='center', frameon=False, fontsize='medium')
+        ax_legend.axis('off')
+        # Output
+        plt.tight_layout()
         if show:
             plt.show()
         else:
-            plt.savefig("stackplot.png", bbox_inches="tight")
+            fig.savefig("stackplot.png", bbox_inches="tight")
