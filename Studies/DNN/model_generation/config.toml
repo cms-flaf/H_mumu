@@ -1,0 +1,18 @@
+
+[meta]
+results_dir = "C:\\Users\\acyeagle\\Documents\\CERN\\WprimeAN\\Mk2\\results"
+
+[network]
+layer_list = [26, 60, 60, 60, 30, 1]
+
+[training]
+batch_size = 400
+epochs = 3000
+early_stop = false
+patience = 30
+
+[optimizer]
+lr = 5e-04
+momentum = 0.0
+dampening = 0.0
+weight_decay = 0.0
