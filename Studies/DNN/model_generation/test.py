@@ -74,9 +74,10 @@ class Tester:
             name = p.replace(".root", "")
             plt.plot(x, y, label=name, drawstyle='steps-post')
         plt.xlim((0,1))
-        plt.ylim(bottom=0)
         if log:
             plt.yscale("log")
+        else:
+            plt.ylim(bottom=0)
         plt.xlabel("NN Output")
         plt.ylabel("Count (#)")
         plt.legend()
