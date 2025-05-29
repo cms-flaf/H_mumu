@@ -1,6 +1,6 @@
 
 [meta]
-results_dir = "C:\\Users\\acyeagle\\Documents\\CERN\\WprimeAN\\Mk2\\results"
+results_dir = "/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/results"
 
 [network]
 layer_list = [26, 60, 60, 60, 30, 1]
