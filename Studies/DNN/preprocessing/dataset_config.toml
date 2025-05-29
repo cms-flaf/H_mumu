@@ -31,6 +31,9 @@ selection_column = "VBF_JetVeto"
 
 signal_event_types = [31]
 
+valid_size = 0.15
+test_size = 0.40
+
 output_directory = "/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/preprocessing"
 dataset_directory = "/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/datasets"
-run_name = "set_run_3"
+run_name = "set_run_1"

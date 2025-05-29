@@ -41,7 +41,5 @@ if __name__ == "__main__":
     df = parser.parse(args.input_files_dir)
     parser.save_result(df, config["output_directory"], config["run_name"] + "_df.pkl")
 
-    builder = DatasetBuilder(
-        config["run_name"], df, config["columns_to_use"], config["dataset_directory"]
-    )
+    builder = DatasetBuilder(df, **config)
     builder.build()

@@ -13,11 +13,13 @@ class DatasetBuilder:
 
     ### Init ###
 
-    def __init__(self, run_name, input_df, columns_to_use, dataset_directory, **kwargs):
+    def __init__(self, input_df, run_name, columns_to_use, dataset_directory, valid_size, test_size, **kwargs):
         self.run_name = run_name
         self.columns_to_use = columns_to_use
         self.input_df = self._ensure_float(input_df)
         self.dataset_directory = dataset_directory
+        self.valid_size = valid_size
+        self.test_size = test_size
 
     def _ensure_float(self, df):
         for col in self.columns_to_use + ["label"]:
@@ -43,8 +45,8 @@ class DatasetBuilder:
                 data[data.source_file == category].sample(frac=1).reset_index(drop=True)
             )
             number = len(selected)
-            valid_size = floor(number * 0.10)
-            test_size = floor(number * 0.40)
+            valid_size = floor(number * self.valid_size)
+            test_size = floor(number * self.test_size)
             # Add a size number of rows to the df
             valid_df = pd.concat([valid_df, selected[:valid_size]])
             selected = selected[valid_size:]
