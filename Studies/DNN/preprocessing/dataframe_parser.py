@@ -56,5 +56,4 @@ class Parser:
 
     def save_result(self, df, output_dir, output_name):
         os.chdir(output_dir)
-        df_name = f"{output_name}.pkl"
-        df.to_pickle(df_name)
+        df.to_pickle(output_name)
