@@ -21,15 +21,18 @@ class Trainer:
         epochs,
         early_stop=False,
         patience=None,
+        device=None
     ):
 
         # Training data as a tuple of NumPy arrays (x_data, y_data)
         self.training_data = training_data
         # Convert the data to a Torch DataLoader, for optimal training
-        self.train_dataloader = self._make_dataloader(training_data, batch_size)
-        self.valid_dataloader = self._make_dataloader(validation_data, batch_size)
+        self.train_dataloader = self._make_dataloader(training_data, batch_size, device)
+        self.valid_dataloader = self._make_dataloader(validation_data, batch_size, device)
 
         self.weight = self._get_pos_weight()
+        if device is not None:
+            self.weight = self.weight.to(device)
         self.loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=self.weight)
 
         self.hyperparams = hyperparams
@@ -46,12 +49,17 @@ class Trainer:
 
     ### Init helpers ###
 
-    def _make_dataloader(self, data, batch_size):
+    def _make_dataloader(self, data, batch_size, device):
         """
         Converts the data (tuple of Numpy arrays) into a DataLoader object
         """
         x_data, y_data = self.training_data
-        dataset = TensorDataset(torch.Tensor(x_data), torch.Tensor(y_data))
+        if device is not None:
+            x_data = torch.tensor(x_data, device=device)
+            y_data = torch.tensor(y_data, device=device)
+            dataset = TensorDataset(x_data, y_data)
+        else:
+            dataset = TensorDataset(torch.Tensor(x_data), torch.Tensor(y_data))
         dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         return dataloader
 

@@ -7,9 +7,10 @@ from tqdm import tqdm
 
 class Tester:
 
-    def __init__(self, testing_data, testing_df):
+    def __init__(self, testing_data, testing_df, device=None):
         self.x_data, self.y_data = testing_data
         self.testing_df = testing_df
+        self.device = device
 
     def test(self, model):
         outputs = np.zeros(len(self.x_data))
@@ -18,7 +19,10 @@ class Tester:
             print("Running testing...")
             total = len(self.x_data)
             for i, sample in tqdm(enumerate(self.x_data), total=total):
-                x = torch.Tensor(sample)
+                if self.device is not None:
+                    x = torch.tensor(sample, device=self.device)
+                else:
+                    x = torch.Tensor(sample)
                 guess = model.predict(x).item()
                 outputs[i] = guess
         self.testing_df["Label"] = self.y_data

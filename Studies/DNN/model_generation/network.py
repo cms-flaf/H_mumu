@@ -2,7 +2,7 @@ import torch
 
 
 class Network(torch.nn.Module):
-    def __init__(self, layer_list, **kwargs):
+    def __init__(self, device, layer_list, **kwargs):
         """
         Create a linear network with hidden layers
         """
@@ -10,6 +10,9 @@ class Network(torch.nn.Module):
         self.activation = torch.nn.ReLU()
         self.final_activation = torch.nn.Sigmoid()
         self.layers = self._build_layers(layer_list)
+        if device is not None:
+            self.to(device)
+            self.double()
 
     def _build_layers(self, layer_list):
         layers = []

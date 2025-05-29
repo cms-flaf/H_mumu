@@ -71,14 +71,22 @@ if __name__ == "__main__":
     with open(args.config, "rb") as f:
         config = tomllib.load(f)
     train_data, valid_data, test_data, test_df = load_datasets(args.dataset)
-
     print("*** Running with the following parameters: ***")
     pprint(config)
 
-    # Init the objects for training
-    model = Network(**config["network"])
-    trainer = Trainer(train_data, valid_data, config["optimizer"], **config["training"])
-    tester = Tester(test_data, test_df)
+    # Set device for training (cpu or cuda)
+    if config['meta']['use_cuda'] and torch.cuda.is_available():
+        device = torch.device("cuda")
+        print("Moving to CUDA...")
+        print(f"Device count: {torch.cuda.device_count()}")
+        print(f"Current device: {torch.cuda.current_device()}")
+    else:
+        device = None
+
+    # Init objects
+    model = Network(device=device, **config["network"])
+    trainer = Trainer(train_data, valid_data, config["optimizer"], **config["training"], device=device)
+    tester = Tester(test_data, test_df, device=device)
 
     # Run the traininig and testing!
     start = datetime.now()
