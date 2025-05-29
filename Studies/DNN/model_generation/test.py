@@ -60,3 +60,27 @@ class Tester:
             plt.show()
         else:
             plt.savefig(output_name, bbox_inches="tight")
+
+
+    def make_stackplot(self, log=False, show=False):
+        plt.clf()
+        df = self.testing_df
+        processes = sorted(pd.unique(df.source_file))
+        for p in processes:
+            selected = df[df.source_file == p]
+            counts, bin_edges = np.histogram(selected.NN_Output, bins=50, range=(0,1))
+            x = np.concatenate(([0], bin_edges))
+            y = np.concatenate(([0], counts, [0]))
+            name = p.replace(".root", "")
+            plt.plot(x, y, label=name, drawstyle='steps-post')
+        plt.xlim((0,1))
+        plt.ylim(bottom=0)
+        if log:
+            plt.yscale("log")
+        plt.xlabel("NN Output")
+        plt.ylabel("Count (#)")
+        plt.legend()
+        if show:
+            plt.show()
+        else:
+            plt.savefig("stackplot.png", bbox_inches="tight")

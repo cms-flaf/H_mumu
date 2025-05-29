@@ -106,6 +106,7 @@ if __name__ == "__main__":
     trainer.plot_losses(valid=False)
     tester.make_hist(log=True)
     tester.make_hist(log=False)
+    tester.make_stackplot(log=True)
     tester.testing_df.to_pickle("evaluated_testing_df.pkl")
     with open("trained_model.torch", "wb") as f:
         torch.save(model, f)
