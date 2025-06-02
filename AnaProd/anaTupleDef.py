@@ -4,6 +4,7 @@ from Corrections.Corrections import Corrections
 from FLAF.Common.Utilities import *
 
 lepton_legs = [ "mu1", "mu2" ]
+offline_legs = [ "mu1", "mu2" ]
 loadTF = False
 loadHHBtag = False
 
@@ -57,7 +58,7 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
                 define_expr = f'{cond} ? ({define_expr}) : {default}'
             dfw.DefineAndAppend( f"mu{leg_idx+1}_{var_name}", define_expr)
 
-        LegVar('legType', f"HttCandidate.leg_type[{leg_idx}]", var_type='int', check_leg_type=False)
+        LegVar('legType', f"HttCandidate.leg_type[{leg_idx}]", check_leg_type=False)
         for var in [ 'pt', 'eta', 'phi', 'mass' ]:
             LegVar(var, f'HttCandidate.leg_p4[{leg_idx}].{var}()', var_type='float', default='-1.f')
         LegVar('charge', f'HttCandidate.leg_charge[{leg_idx}]', var_type='int')
