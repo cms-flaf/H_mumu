@@ -23,11 +23,11 @@
     - TT
   title: t#bar{t}
   color: kSpring+5
-- name: VVV
-  types:
-    - VVV
-  title: "VVV"
-  color: kOrange-4
+# - name: VVV
+#   types:
+#     - VVV
+#   title: "VVV"
+#   color: kOrange-4
 - name: GluGluHto2Mu
   type: signal
   types:

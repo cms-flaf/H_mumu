@@ -6,7 +6,7 @@ if __name__ == '__main__':
     parser.add_argument('--era', required= False, type=str, default="Run3_2022EE", help="era")
     parser.add_argument('--region', required= False, type=str, default="Z_sideband", help="region")
     parser.add_argument('--histDir', required= False, type=str, default="/eos/user/v/vdamante/H_mumu/histograms/", help="hist_dir")
-    parser.add_argument('--version', required= False, type=str, default="Run3_2022EE_Hmumu_v3", help="version for input files")
+    parser.add_argument('--version', required= False, type=str, default="Run3_2022EE_Hmumu_v1", help="version for input files")
     parser.add_argument('--categories', required= False, type=str, help="categories")
     parser.add_argument('--wantNonLog', required= False, type=bool, default=False,help="use uncertainties")
     parser.add_argument('--wantLog', required= False, type=bool, default=False,help="use uncertainties")

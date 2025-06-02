@@ -23,7 +23,7 @@ channelDefinition:
   muMu: 22
 
 corrections:
-  # - JEC
+  - JEC
   - JER
   - trg
   # - btagWP
