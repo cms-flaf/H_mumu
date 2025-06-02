@@ -59,7 +59,8 @@ def VBFJetSelection(df):
     df = df.Define("Jet_Veto_loose", "SelectedJet_btagPNetB >= 0.0499")  # 0.0499 is the loose working point for PNet B-tagging in Run3
     df = df.Define("Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605")  # 0.2605 is the medium working point for PNet B-tagging in Run3
 
-    df = df.Filter("SelectedJet_p4[Jet_Veto_medium].size() < 1", "Remove events with at least one medium b-tagged jet")
+    # df = df.Filter("SelectedJet_p4[Jet_Veto_loose].size() > 0 || SelectedJet_p4[Jet_Veto_medium].size() > 0 ", "Remove events with at least one medium b-tagged jet")
+    df = df.Filter("SelectedJet_p4[Jet_Veto_medium].size() < 1 ", "Remove events with at least one medium b-tagged jet")
     df = df.Filter("SelectedJet_p4[Jet_Veto_loose].size() < 2", "Remove events with at least two loose b-tagged jets")
     df = df.Define("VBFJetCand","FindVBFJets(SelectedJet_p4)")
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
@@ -185,8 +186,7 @@ def GetWeight(channel, cat, boosted_categories):
         'muMu':["weight_trigSF_singleMu"],
     }
     ID_weights_dict = {
-        "muMu": ["weight_mu1_MuonID_SF_MediumIDLooseIsoCentral","weight_mu2_MuonID_SF_MediumIDLooseIsoCentral","weight_mu1_MuonID_SF_MediumID_TrkCentral","weight_mu2_MuonID_SF_MediumID_TrkCentral"]# "weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"]
-        # 'muMu': ["weight_mu1_HighPt_MuonID_SF_Reco_Central", "weight_mu1_HighPt_MuonID_SF_TightID_Central", "weight_mu1_MuonID_SF_Reco_Central", "weight_mu1_MuonID_SF_TightID_Trk_Central", "weight_mu1_MuonID_SF_TightRelIso_Central", "weight_mu2_HighPt_MuonID_SF_Reco_Central", "weight_mu2_HighPt_MuonID_SF_TightID_Central", "weight_mu2_MuonID_SF_Reco_Central", "weight_mu2_MuonID_SF_TightID_Trk_Central", "weight_mu2_MuonID_SF_TightRelIso_Central","weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"],
+        "muMu": ["weight_mu1_MuonID_SF_LoosePFIsoCentral","weight_mu2_MuonID_SF_LoosePFIsoCentral","weight_mu1_MuonID_SF_MediumID_TrkCentral","weight_mu2_MuonID_SF_MediumID_TrkCentral"]
         }
 
     weights_to_apply.extend(ID_weights_dict[channel])
