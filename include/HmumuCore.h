@@ -12,6 +12,7 @@ struct VBFJets
   float m_inv;
   float eta_separation;
   bool isVBF;
+  RVecLV legs_p4;
 };
 
 
