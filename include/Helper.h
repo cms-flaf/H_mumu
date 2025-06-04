@@ -35,6 +35,7 @@ VBFJets FindVBFJets(const RVecLV& Jet_p4)
           VBF_jets_collection.m_inv = inv_mass;
           VBF_jets_collection.eta_separation = eta;
           VBF_jets_collection.isVBF = true;
+          VBF_jets_collection.legs_p4 = {Jet_p4.at(i), Jet_p4.at(j)};
         }
     }
   }

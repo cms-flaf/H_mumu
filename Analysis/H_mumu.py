@@ -78,6 +78,10 @@ def VBFJetSelection(df):
     df = df.Define("j2_y", "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Rapidity()); return -1000.f; ")
     df = df.Define("delta_phi_jj", "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;")
     df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Phi()")
+    df = df.Define("VBFjets_pt", f"RVecF void_pt {{}} ; if (HasVBF) return v_ops::pt(VBFJetCand.legs_p4); return void_pt;" )
+    df = df.Define("VBFjets_eta", f"RVecF void_eta {{}} ; if (HasVBF) return v_ops::eta(VBFJetCand.legs_p4); return void_eta;" )
+    df = df.Define("VBFjets_phi", f"RVecF void_phi {{}} ; if (HasVBF) return v_ops::phi(VBFJetCand.legs_p4); return void_phi;" )
+    df = df.Define("VBFjets_y", f"RVecF void_y {{}} ; if (HasVBF) return v_ops::rapidity(VBFJetCand.legs_p4); return void_y;" )
     for var in JetObservables:
         if f"SelectedJet_{var}" not in df.GetColumnNames():
             continue
