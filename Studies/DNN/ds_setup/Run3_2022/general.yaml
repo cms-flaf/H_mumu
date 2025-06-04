@@ -1,0 +1,289 @@
+vars_to_save:
+  Muon:
+    - mu{}_eta
+    - mu{}_pt
+    # - mu{}_HasMatching_singleMu
+    # - mu{}_IP_cov00
+    # - mu{}_IP_cov10
+    # - mu{}_IP_cov11
+    # - mu{}_IP_cov20
+    # - mu{}_IP_cov21
+    # - mu{}_IP_cov22
+    # - mu{}_IPx
+    # - mu{}_IPy
+    # - mu{}_IPz
+    # - mu{}_bField_z
+    # - mu{}_bsConstrainedChi2
+    # - mu{}_bsConstrainedPt
+    # - mu{}_bsConstrainedPtErr
+    # - mu{}_charge
+    # - mu{}_dxy
+    # - mu{}_dxyErr
+    # - mu{}_dxybs
+    # - mu{}_dz
+    # - mu{}_dzErr
+    # - mu{}_fsrPhotonIdx
+    # - mu{}_genPartFlav
+    # - mu{}_genPartIdx
+    # - mu{}_gen_charge
+    # - mu{}_gen_kind
+    # - mu{}_highPtId
+    # - mu{}_highPurity
+    # - mu{}_inTimeMuon
+    # - mu{}_ip3d
+    # - mu{}_ipLengthSig
+    # - mu{}_isGlobal
+    # - mu{}_isPFcand
+    # - mu{}_isStandalone
+    # - mu{}_isTracker
+    # - mu{}_iso
+    # - mu{}_jetIdx
+    # - mu{}_jetNDauCharged
+    # - mu{}_jetPtRelv2
+    # - mu{}_jetRelIso
+    # - mu{}_legType
+    # - mu{}_looseId
+    # - mu{}_mass
+    # - mu{}_mediumId
+    # - mu{}_mediumPromptId
+    # - mu{}_miniIsoId
+    # - mu{}_miniPFRelIso_all
+    # - mu{}_miniPFRelIso_chg
+    # - mu{}_multiIsoId
+    # - mu{}_mvaLowPt
+    # - mu{}_mvaMuID
+    # - mu{}_mvaMuID_WP
+    # - mu{}_nStations
+    # - mu{}_nTrackerLayers
+    # - mu{}_pdgId
+    # - mu{}_pfIsoId
+    # - mu{}_pfRelIso03_all
+    # - mu{}_pfRelIso03_chg
+    # - mu{}_pfRelIso04_all
+    # - mu{}_phi
+    # - mu{}_promptMVA
+    # - mu{}_ptErr
+    # - mu{}_pt_rel
+    # - mu{}_puppiIsoId
+    # - mu{}_segmentComp
+    # - mu{}_sip3d
+    # - mu{}_softId
+    # - mu{}_softMva
+    # - mu{}_softMvaId
+    # - mu{}_softMvaRun3
+    # - mu{}_svIdx
+    # - mu{}_tightCharge
+    # - mu{}_tightId
+    # - mu{}_tkIsoId
+    # - mu{}_tkRelIso
+    # - mu{}_track_cov00
+    # - mu{}_track_cov10
+    # - mu{}_track_cov11
+    # - mu{}_track_cov20
+    # - mu{}_track_cov21
+    # - mu{}_track_cov22
+    # - mu{}_track_cov30
+    # - mu{}_track_cov31
+    # - mu{}_track_cov32
+    # - mu{}_track_cov33
+    # - mu{}_track_cov40
+    # - mu{}_track_cov41
+    # - mu{}_track_cov42
+    # - mu{}_track_cov43
+    # - mu{}_track_cov44
+    # - mu{}_track_dsz
+    # - mu{}_track_dxy
+    # - mu{}_track_lambda
+    # - mu{}_track_phi
+    # - mu{}_track_qoverp
+    # - mu{}_triggerIdLoose
+    # - mu{}_tunepRelPt
+    # - weight_mu{}_HighPt_MuonID_SF_HighPtIDCentral
+    # - weight_mu{}_HighPt_MuonID_SF_HighPtIdRelTkIsoCentral
+    # - weight_mu{}_HighPt_MuonID_SF_RecoCentral
+    # - weight_mu{}_HighPt_MuonID_SF_TightIDCentral
+    # - weight_mu{}_LowPt_MuonID_SF_TightIDCentral
+    # - weight_mu{}_MuonID_SF_LoosePFIsoCentral
+    # - weight_mu{}_MuonID_SF_MediumIDLooseIsoCentral
+    # - weight_mu{}_MuonID_SF_MediumID_TrkCentral
+    # - weight_mu{}_MuonID_SF_TightID_TrkCentral
+    # - weight_mu{}_TrgSF_singleMu_Central
+  SoftJet:
+    - Et # transverse energy
+    - HtCh_fraction # hadronic transverse energy fraction from charged particles
+    - HtHF_fraction # hadronic transverse energy fraction in the HF calorimeter
+    - HtNe_fraction # hadronic transverse energy fraction from neutral particles
+    - energy
+    # - PNetRegPtRawCorr
+    # - PNetRegPtRawCorrNeutrino
+    # - PNetRegPtRawRes
+    # - area
+    # - btagDeepFlavB
+    # - btagDeepFlavCvB
+    # - btagDeepFlavCvL
+    # - btagDeepFlavQG
+    # - btagPNetB
+    # - btagPNetCvB
+    # - btagPNetCvL
+    # - btagPNetCvNotB
+    # - btagPNetQvG
+    # - btagPNetTauVJet
+    # - chEmEF
+    # - chHEF
+    # - chMultiplicity
+    # - electronIdx1
+    # - electronIdx2
+    # - eta
+    # - genJetIdx
+    # - hadronFlavour
+    # - hfEmEF
+    # - hfHEF
+    # - hfadjacentEtaStripsSize
+    # - hfcentralEtaStripSize
+    # - hfsigmaEtaEta
+    # - hfsigmaPhiPhi
+    # # - idx
+    # - jetId
+    # - mass
+    # - muEF
+    # - muonIdx1
+    # - muonIdx2
+    # - muonSubtrFactor
+    # - nConstituents
+    # - nElectrons
+    # - nMuons
+    # - nSVs
+    # - neEmEF
+    # - neHEF
+    # - neMultiplicity
+    # - partonFlavour
+    # - phi
+    # - pt
+    # - rawFactor
+    # - svIdx1
+    # - svIdx2
+  VBFJet: # j1 and j2, separated in eta ecc.. in VBF events (single jet observables)
+    - eta
+    - pt
+    - btagPNetQvG
+  VBFJetPair:
+    - m_jj
+    - delta_eta_jj
+    - pt_jj
+    # missing
+    # - m_jj_log
+  MuJet:
+    - R_pt
+    - minDeltaEta
+    - minDeltaEtaSigned
+    - minDeltaPhi
+    - Zepperfield_Var
+    - pt_centrality
+  MuPair:
+    - dR_mumu
+    - m_mumu
+    - eta_mumu
+    - cosTheta_CS
+    - phi_mumu
+    - pt_mumu
+    - y_mumu
+    - phi_CS
+    ### missing ###
+    # - sigma_m_mumu
+    # - m_mumu_BS  # using corrected muon pT after including BS constraint
+    # - sigma_m_mumu_BS
+  Global:
+    ### evt info ###
+    - entryIndex # will be FullEvtId
+    - luminosityBlock
+    # - is_valid
+    - isData
+    - HasVBF
+    - event
+    - period
+    - run
+    - sample_name
+    - sample_type
+    ### categories ###
+    - baseline
+    - baseline_Zmumu
+    - ggH
+    - ggH_Zmumu
+    - ggH_Zmumu_JetVeto
+    - VBF
+    - VBF_JetVeto
+    - VBF_Zmumu
+    - VBF_Zmumu_JetVeto
+    ### regions ###
+    - DYEnriched
+    ### sign ###
+    - OS
+    ### jet multiplicity ###
+    - N_softJet
+    - nJet
+    - nSelectedJet
+    ### trg info ###
+    - HLT_singleMu
+    ### global event weight ###
+    - weight_EWKCorr_VptCentral
+    - weight_EWKCorr_ewcorrCentral
+    - weight_MC_Lumi_pu
+    ### vertices info ###
+    # - PV_npvs
+    # - Pileup_nTrueInt
+    ### MET info ### --> not used
+    # - DeepMETResolutionTune_phi
+    # - DeepMETResolutionTune_pt
+    # - DeepMETResponseTune_phi
+    # - DeepMETResponseTune_pt
+    # - PuppiMET_phi
+    # - PuppiMET_pt
+  # SelectedJet:
+  #   - PNetRegPtRawCorr
+  #   - PNetRegPtRawCorrNeutrino
+  #   - PNetRegPtRawRes
+  #   - area
+  #   - btagDeepFlavB
+  #   - btagDeepFlavCvB
+  #   - btagDeepFlavCvL
+  #   - btagDeepFlavQG
+  #   - btagPNetB
+  #   - btagPNetCvB
+  #   - btagPNetCvL
+  #   - btagPNetCvNotB
+  #   - btagPNetQvG
+  #   - btagPNetTauVJet
+  #   - chEmEF
+  #   - chHEF
+  #   - chMultiplicity
+  #   - electronIdx1
+  #   - electronIdx2
+  #   - eta
+  #   - genJetIdx
+  #   - hadronFlavour
+  #   - hfEmEF
+  #   - hfHEF
+  #   - hfadjacentEtaStripsSize
+  #   - hfcentralEtaStripSize
+  #   - hfsigmaEtaEta
+  #   - hfsigmaPhiPhi
+  #   - idx
+  #   - jetId
+  #   - mass
+  #   - muEF
+  #   - muonIdx1
+  #   - muonIdx2
+  #   - muonSubtrFactor
+  #   - nConstituents
+  #   - nElectrons
+  #   - nMuons
+  #   - nSVs
+  #   - neEmEF
+  #   - neHEF
+  #   - neMultiplicity
+  #   - partonFlavour
+  #   - phi
+  #   - pt
+  #   - rawFactor
+  #   - svIdx1
+  #   - svIdx2
