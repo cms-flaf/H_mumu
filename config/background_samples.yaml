@@ -12,12 +12,12 @@ TTto4Q:
 TTtoLNu2Q:
   sampleType: TT
 
-TTto2L2Nu_ext1:
-  sampleType: TT
-TTto4Q_ext1:
-  sampleType: TT
-TTtoLNu2Q_ext1:
-  sampleType: TT
+# TTto2L2Nu_ext1:
+#   sampleType: TT
+# TTto4Q_ext1:
+#   sampleType: TT
+# TTtoLNu2Q_ext1:
+#   sampleType: TT
 
 ############## DY ##############
 # DYto2L_M_10to50_amcatnloFXFX:
@@ -106,14 +106,14 @@ ZZto2L2Q_amcatnloFXFX:
 #   sampleType: ST
 # ST_t_channel_top_4f_InclusiveDecays:
 #   sampleType: ST
-# ST_tW_antitop_2L2Nu:
-#   sampleType: ST
+ST_tW_antitop_2L2Nu:
+  sampleType: ST
 # ST_tW_antitop_4Q:
 #   sampleType: ST
 # ST_tW_antitop_LNu2Q:
 #   sampleType: ST
-# ST_tW_top_2L2Nu:
-#   sampleType: ST
+ST_tW_top_2L2Nu:
+  sampleType: ST
 # ST_tW_top_4Q:
 #   sampleType: ST
 # ST_tW_top_LNu2Q:
