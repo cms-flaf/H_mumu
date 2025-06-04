@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import torch
 
+from dataloader import DataLoader
 from network import Network
 from test import Tester
 from train import Trainer
@@ -25,27 +26,13 @@ def get_arguments():
     )
     parser.add_argument("-c", "--config", required=True, help="the .toml config file")
     parser.add_argument(
-        "-d",
-        "--dataset",
+        "-r",
+        "--rootfile",
         required=True,
-        help="the directory containing the training, testing, and validation datasets",
+        help="the .root file to use for testing and training events",
     )
     args = parser.parse_args()
     return args
-
-
-def load_datasets(directory):
-    """
-    Reads in the dataset files from the supplied directory.
-    """
-    with open(directory + "training_events.pkl", "rb") as f:
-        training_data = pkl.load(f)
-    with open(directory + "validation_events.pkl", "rb") as f:
-        validation_data = pkl.load(f)
-    with open(directory + "testing_events.pkl", "rb") as f:
-        testing_data = pkl.load(f)
-    testing_df = pd.read_pickle(directory + "testing_dataframe.pkl")
-    return training_data, validation_data, testing_data, testing_df
 
 
 def write_parameters(start, end, config, dataset, trainer):
@@ -70,7 +57,10 @@ if __name__ == "__main__":
     # Read in config and datasets from args
     with open(args.config, "rb") as f:
         config = tomllib.load(f)
-    train_data, valid_data, test_data, test_df = load_datasets(args.dataset)
+
+    dataloader = DataLoader(**config['dataloader'])
+
+    train_data, valid_data, test_data, test_df = dataloader.gen_datasets(args.rootfile)
     print("*** Running with the following parameters: ***")
     pprint(config)
 
@@ -110,4 +100,4 @@ if __name__ == "__main__":
     tester.testing_df.to_pickle("evaluated_testing_df.pkl")
     with open("trained_model.torch", "wb") as f:
         torch.save(model, f)
-    write_parameters(start, end, config, args.dataset, trainer)
+    write_parameters(start, end, config, args.rootfile, trainer)
