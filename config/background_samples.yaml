@@ -12,19 +12,22 @@ TTto4Q:
 TTtoLNu2Q:
   sampleType: TT
 
-TTto2L2Nu_ext1:
-  sampleType: TT
-TTto4Q_ext1:
-  sampleType: TT
-TTtoLNu2Q_ext1:
-  sampleType: TT
+# TTto2L2Nu_ext1:
+#   sampleType: TT
+# TTto4Q_ext1:
+#   sampleType: TT
+# TTtoLNu2Q_ext1:
+#   sampleType: TT
 
 ############## DY ##############
-DYto2L_M_10to50_amcatnloFXFX:
-  sampleType: DY
+# DYto2L_M_10to50_amcatnloFXFX:
+#   sampleType: DY
 DYto2L_M_50_amcatnloFXFX:
   sampleType: DY
-
+# DYto2Mu_MLL_120to200_powheg:
+#   sampleType: DY
+# DYto2Mu_MLL_50to120_powheg:
+#   sampleType: DY
 ############## EWK ##############
 # EWK_ZTo2L:
 #   sampleType: EWK
@@ -66,37 +69,51 @@ DYto2L_M_50_amcatnloFXFX:
 #   sampleType: VH
 
 ############## VV inclusive ##############
-WW:
+# WW:
+#   sampleType: VV
+# WZ:
+#   sampleType: VV
+# ZZ:
+#   sampleType: VV
+############## VV non inclusive ##############
+WWto2L2Nu_powheg:
   sampleType: VV
-WZ:
+WZto3LNu_powheg:
   sampleType: VV
-ZZ:
+WZto2L2Q_powheg:
   sampleType: VV
-
+ZZto2L2Nu_powheg:
+  sampleType: VV
+ZZto2L2Q_powheg:
+  sampleType: VV
+ZZto4L_powheg:
+  sampleType: VV
+ZZto2L2Q_amcatnloFXFX:
+  sampleType: VV
 
 # ############## VVV inclusive ##############
-WWW_4F:
-  sampleType: VVV
-WWZ_4F:
-  sampleType: VVV
-WZZ:
-  sampleType: VVV
-ZZZ:
-  sampleType: VVV
+# WWW_4F:
+#   sampleType: VVV
+# WWZ_4F:
+#   sampleType: VVV
+# WZZ:
+#   sampleType: VVV
+# ZZZ:
+#   sampleType: VVV
 
 # ############## ST #############
 # ST_t_channel_antitop_4f_InclusiveDecays:
 #   sampleType: ST
 # ST_t_channel_top_4f_InclusiveDecays:
 #   sampleType: ST
-# ST_tW_antitop_2L2Nu:
-#   sampleType: ST
+ST_tW_antitop_2L2Nu:
+  sampleType: ST
 # ST_tW_antitop_4Q:
 #   sampleType: ST
 # ST_tW_antitop_LNu2Q:
 #   sampleType: ST
-# ST_tW_top_2L2Nu:
-#   sampleType: ST
+ST_tW_top_2L2Nu:
+  sampleType: ST
 # ST_tW_top_4Q:
 #   sampleType: ST
 # ST_tW_top_LNu2Q:

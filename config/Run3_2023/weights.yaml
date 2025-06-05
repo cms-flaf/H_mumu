@@ -15,6 +15,6 @@ norm:
     expression: weight_mu1_MuonID_SF_MediumID_Trk{scale}_rel * weight_mu2_MuonID_SF_MediumID_Trk{scale}_rel * final_weight
     name: MediumID_Trk
   HLT_singleMu:
-    expression: weight_trigSF_singleMu_IsoMu24{scale}_rel * final_weight
+    expression: weight_trigSF_singleMu{scale}_rel * final_weight
 shape: []
 

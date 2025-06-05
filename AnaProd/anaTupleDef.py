@@ -4,6 +4,7 @@ from Corrections.Corrections import Corrections
 from FLAF.Common.Utilities import *
 
 lepton_legs = [ "mu1", "mu2" ]
+offline_legs = [ "mu1", "mu2" ]
 loadTF = False
 loadHHBtag = False
 
@@ -29,7 +30,6 @@ SubJetObservables = ["btagDeepB", "eta", "mass", "phi", "pt", "rawFactor"]
 SubJetObservablesMC = ["hadronFlavour","partonFlavour"]
 
 defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type", "period", "isData","PuppiMET_pt", "PuppiMET_phi", "nJet","DeepMETResolutionTune_pt", "DeepMETResolutionTune_phi","DeepMETResponseTune_pt", "DeepMETResponseTune_phi","PV_npvs"]
-# defaultColToSave = ["entryIndex","luminosityBlock", "run","event", "sample_type", "sample_name", "period", "isData","PuppiMET_pt", "PuppiMET_phi", "nJet","DeepMETResolutionTune_pt", "DeepMETResolutionTune_phi","DeepMETResponseTune_pt", "DeepMETResponseTune_phi","PV_npvs"]
 
 def getDefaultColumnsToSave(isData):
     colToSave = defaultColToSave.copy()
@@ -37,9 +37,8 @@ def getDefaultColumnsToSave(isData):
         colToSave.extend(['Pileup_nTrueInt'])
     return colToSave
 
-def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal, global_params, channels):
+def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal, applyTriggerFilter, global_params, channels):
     dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
-    # dfw.Apply(AnaBaseline.ObjReconstruction) # here go the reconstruction and vetos --> only two muons + veto
     dfw.Apply(AnaBaseline.LeptonVeto)
     dfw.Apply(Corrections.getGlobal().btag.getWPid)
     dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
@@ -59,7 +58,7 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
                 define_expr = f'{cond} ? ({define_expr}) : {default}'
             dfw.DefineAndAppend( f"mu{leg_idx+1}_{var_name}", define_expr)
 
-        LegVar('legType', f"HttCandidate.leg_type[{leg_idx}]", var_type='int', check_leg_type=False)
+        LegVar('legType', f"HttCandidate.leg_type[{leg_idx}]", check_leg_type=False)
         for var in [ 'pt', 'eta', 'phi', 'mass' ]:
             LegVar(var, f'HttCandidate.leg_p4[{leg_idx}].{var}()', var_type='float', default='-1.f')
         LegVar('charge', f'HttCandidate.leg_charge[{leg_idx}]', var_type='int')
@@ -139,6 +138,6 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
     if trigger_class is not None:
         print(f"mu{leg_idx+1}_p4" in dfw.df.GetColumnNames())
 
-        hltBranches = dfw.Apply(trigger_class.ApplyTriggers, lepton_legs,isData, isSignal)
+        hltBranches = dfw.Apply(trigger_class.ApplyTriggers, lepton_legs,isData, applyTriggerFilter)
         # hltBranches = dfw.Apply(trigger_class.ApplyTriggers, isData)
         dfw.colToSave.extend(hltBranches)
