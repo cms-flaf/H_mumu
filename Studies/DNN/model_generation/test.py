@@ -4,6 +4,7 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
+from sample_type_lookup import lookup
 
 class Tester:
 
@@ -63,18 +64,18 @@ class Tester:
 
 
     def make_stackplot(self, log=False, show=False):
-        # Init stuff
+        # Init plot
         plt.clf()
-        df = self.testing_df
-        processes = sorted(pd.unique(df.source_file))
         fig, (ax_plot, ax_legend) = plt.subplots(1, 2, gridspec_kw={'width_ratios': [3, 1]})
+
+	df = self.testing_df
         # Add individual hist curves
-        for p in processes:
-            selected = df[df.source_file == p]
+        for p in sorted(pd.unique(df.sample_type)):
+            selected = df[df. == p]
             counts, bin_edges = np.histogram(selected.NN_Output, bins=50, range=(0,1))
             x = np.concatenate(([0], bin_edges))
             y = np.concatenate(([0], counts, [0]))
-            name = p.replace(".root", "")
+            name = lookup[p]
             ax_plot.plot(x, y, label=name, drawstyle='steps-post')
         # Plot config
         ax_plot.set_xlim((0,1))
