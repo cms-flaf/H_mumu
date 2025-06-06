@@ -25,7 +25,7 @@ channelDefinition:
 corrections:
   - JEC
   - JER
-  - trg
+  - trgSF
   # - btagWP
   - mu
   - Vpt
