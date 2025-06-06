@@ -31,10 +31,10 @@ GLOBAL:
     # - keep ST_tW_top_2L2Nu_ext1
     - keep ST_tW_antitop_2L2Nu
     # - keep ST_tW_antitop_2L2Nu_ext1
-    # - keep WWW_4F
-    # - keep WWZ_4F
-    # - keep WZZ
-    # - keep ZZZ
+    - keep WWW_4F
+    - keep WWZ_4F
+    - keep WZZ
+    - keep ZZZ
     - keep ^Muon_.*
     # - keep ^Tau_.*
     # - keep ^EGamma_.*

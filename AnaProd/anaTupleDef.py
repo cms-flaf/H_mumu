@@ -104,19 +104,6 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
         dfw.Define( f"mu{leg_idx+1}_index", f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_index.at({leg_idx}) : -1")
         dfw.Define( f"mu{leg_idx+1}_type", f"HttCandidate.leg_type.size() > {leg_idx} ? static_cast<int>(HttCandidate.leg_type.at({leg_idx})) : -1")
 
-    # n_legs = 2
-
-    # for leg_idx in range(n_legs):
-    #     def LegVar(var_name, var_expr):
-    #         dfw.DefineAndAppend( f"mu{leg_idx+1}_{var_name}", define_expr)
-
-    #     dfw.Define( f"mu{leg_idx+1}_idx", f"Hmumu_idx[{leg_idx}]")
-    #     for var in Muon_observables:
-    #         dfw.DefineAndAppend( f"mu{leg_idx+1}_{var}", f"Muon_{var}.at(mu{leg_idx+1}_idx)")
-    #     dfw.df = defineP4(dfw.df, f"mu{leg_idx+1}")
-    #     print(f"mu{leg_idx+1}_p4" in dfw.df.GetColumnNames())
-    #     # dfw.df.Display(f"mu{leg_idx+1}_p4.Pt()").Print()
-
 
     for jetobs in JetObservables + ["idx"]:
         jet_obs_name = f"Jet_{jetobs}"
@@ -136,8 +123,5 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
     #     dfw.DefineAndAppend(f"met_{var}", f"static_cast<float>({pf_str}_{var})")
 
     if trigger_class is not None:
-        print(f"mu{leg_idx+1}_p4" in dfw.df.GetColumnNames())
-
         hltBranches = dfw.Apply(trigger_class.ApplyTriggers, lepton_legs,isData, applyTriggerFilter)
-        # hltBranches = dfw.Apply(trigger_class.ApplyTriggers, isData)
         dfw.colToSave.extend(hltBranches)
