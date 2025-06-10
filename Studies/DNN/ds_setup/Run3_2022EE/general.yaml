@@ -194,7 +194,7 @@ vars_to_save:
     # - sigma_m_mumu_BS
   Global:
     ### evt info ###
-    - entryIndex # will be FullEvtId
+    - FullEventId
     - luminosityBlock
     # - is_valid
     - isData
@@ -202,7 +202,7 @@ vars_to_save:
     - event
     - period
     - run
-    - sample_name
+#    - sample_name
     - sample_type
     ### categories ###
     - baseline
