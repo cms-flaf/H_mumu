@@ -56,7 +56,7 @@ categories:
 
 category_definition:
   baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})"
-  VBF_def: "HasVBF && j1_pt > 25 && j2_pt > 25"
+  VBF_def: "HasVBF && Jet_preselection && j1_pt > 25 && j2_pt > 25"
   VBF: "baseline && VBF_def"
   ggH: "baseline && !(VBF_def)"
   VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
