@@ -1,76 +1,35 @@
-import gc
+import argparse
+from glob import glob
 import os
 import sys
-from datetime import datetime
 
 import Analysis.H_mumu as analysis
 import FLAF.Common.Utilities as Utilities
 import psutil
 import ROOT
 import yaml
-from tqdm import tqdm
+
+from utils.parse_column_names import parse_column_names
 
 ROOT.gROOT.SetBatch(True)
 ROOT.EnableThreadSafety()
 from FLAF.Common.Utilities import DeclareHeader
 
-sys.path.append(os.environ["ANALYSIS_PATH"])
-ana_path = os.environ["ANALYSIS_PATH"]
-for header in [
-    "FLAF/include/Utilities.h",
-    "include/Helper.h",
-    "include/HmumuCore.h",
-    "FLAF/include/AnalysisTools.h",
-    "FLAF/include/AnalysisMath.h",
-]:
-    DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
-
-
-lep1_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(lep1_pt,lep1_eta,lep1_phi,lep1_mass)"
-lep2_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(lep2_pt,lep2_eta,lep2_phi,lep2_mass)"
-MET_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(met_pt, 0., met_phi, 0.)"
-
-initialized = True  # ??
-
-
-def AddColumnsToSave(config):
-    col_to_save = []
-    muon_vars = config["vars_to_save"]["Muon"]
-    VBFJet_vars = config["vars_to_save"]["VBFJet"]
-    for mu_idx in [1, 2]:
-        for mu_var in muon_vars:
-            col_to_save.append(mu_var.format(mu_idx))
-    for j_idx in [1, 2]:
-        for VBFJ_var in VBFJet_vars:
-            col_to_save.append(f"j{j_idx}_{VBFJ_var}")
-    # SelectedJet_vars = config['vars_to_save']['SelectedJet']
-    # for Jvar in SelectedJet_vars:
-    #     col_to_save.append(f"SelectedJet_{Jvar}")
-    #SoftJet_vars = config["vars_to_save"]["SoftJet"]
-    #for SJvar in SoftJet_vars:
-    #    col_to_save.append(f"SoftJet_{SJvar}")
-    VBFJetPair_vars = config["vars_to_save"]["VBFJetPair"]
-    MuJet_vars = config["vars_to_save"]["MuJet"]
-    MuPair_vars = config["vars_to_save"]["MuPair"]
-    Global_vars = config["vars_to_save"]["Global"]
-    for var in VBFJetPair_vars + MuJet_vars + MuPair_vars + Global_vars:
-        col_to_save.append(var)
-    return list(set(col_to_save))
 
 
 def create_file(
     config_dict, global_cfg_dict, general_cfg_dict, period, output_folder, out_filename
 ):
     print(
-        f"Starting create file. Memory usage in MB is {psutil.Process(os.getpid()).memory_info()[0] / float(2 ** 20)}"
+        f"Starting create file. Memory usage in MB is {get_memory_usage()}"
     )
-    nBatches = None
+    nBatches = config_dict['meta_data']['batch_dict']['nBatches']
     print(config_dict.keys())
-    for process in config_dict["processes"]:
-        if (nBatches is None) or (
-            (process["nBatches"] <= nBatches) and (process["nBatches"] != 0)
-        ):
-            nBatches = process["nBatches"]
+    #for process in config_dict["processes"]:
+    #    if (nBatches is None) or (
+    #        (process["nBatches"] <= nBatches) and (process["nBatches"] != 0)
+    #    ):
+    #        nBatches = process["nBatches"]
 
     print(f"Going to make {nBatches} batches")
     batch_size = config_dict["meta_data"]["batch_dict"]["batch_size"]
@@ -93,7 +52,8 @@ def create_file(
         df_in = ROOT.RDataFrame("Events", process_filelist)
 
         # Filter for nLeps and Parity (iterate cut in config)
-        df_in = df_in.Filter(config_dict["meta_data"]["iterate_cut"])
+        if 'iterate_cut' in config_dict["meta_data"].keys():
+            df_in = df_in.Filter(config_dict["meta_data"]["iterate_cut"])
 
         nEntriesPerBatch = process["batch_size"]
         nBatchStart = process["batch_start"]
@@ -181,6 +141,8 @@ def create_file(
 
         step_idx += 1
 
+        os.system(f"rm {tmp_filename}")
+
     print("Finished create file loop, now we must add the DNN variables")
     # Increment the name indexes before I embarass myself again
     tmp_filename = os.path.join(output_folder, f"tmp{step_idx}.root")
@@ -201,7 +163,7 @@ def create_file(
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
     dfw_out = analysis.PrepareDfForNNInputs(dfw_out)
     dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
-    col_to_save = AddColumnsToSave(general_cfg_dict)
+    col_to_save = parse_column_names(general_cfg_dict)
 
     dfw_out.df.Snapshot(
         "Events", tmpnext_filename, Utilities.ListToVector(col_to_save), snapshotOptions
@@ -209,23 +171,34 @@ def create_file(
 
     print(f"Finished create file, will copy tmp file to final output {out_filename}")
     print(f"cp {tmpnext_filename} {out_filename}")
-    print(f"cm {tmp_filename}")
+    print(f"rm {tmp_filename}")
     print(f"rm {tmpnext_filename}")
     os.system(f"cp {tmpnext_filename} {out_filename}")
     os.system(f"rm {tmp_filename}")
     os.system(f"rm {tmpnext_filename}")
 
+def set_environ_vars():
+    sys.path.append(os.environ["ANALYSIS_PATH"])
+    ana_path = os.environ["ANALYSIS_PATH"]
+    for header in [
+        "FLAF/include/Utilities.h",
+        "include/Helper.h",
+        "include/HmumuCore.h",
+        "FLAF/include/AnalysisTools.h",
+        "FLAF/include/AnalysisMath.h",
+    ]:
+        DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
 
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Create TrainTest Files for DNN.")
+def get_args():
+    parser = argparse.ArgumentParser(description="Create train/test file(s) for DNN.")
     parser.add_argument(
-        "--config-folder", required=True, type=str, help="Config Folder from Step1"
+        "--config-folder", required=True, type=str, help="Config Folder containing batch_config_x.yaml file(s)"
     )
     parser.add_argument("--period", required=True, type=str, help="period")
     args = parser.parse_args()
+    return args
 
+def load_headers():
     headers_dir = os.path.dirname(os.path.abspath(__file__))
     # headers = [ 'AnalysisTools.h', 'TupleMaker.h' ] #Order here matters since TupleMaker requires AnalysisTools
     headers = [
@@ -236,36 +209,35 @@ if __name__ == "__main__":
         if not ROOT.gInterpreter.Declare(f'#include "{header_path}"'):
             raise RuntimeError(f"Failed to load {header_path}")
 
-    output_folder = args.config_folder
-    print(
-        f"Starting the create file loop. Memory usage in MB is {psutil.Process(os.getpid()).memory_info()[0] / float(2 ** 20)}"
-    )
+def get_memory_usage():
+    return psutil.Process(os.getpid()).memory_info()[0] / float(2 ** 20)
 
-    yaml_list = [
-        fname
-        for fname in os.listdir(output_folder)
-        if ((".yaml" in fname) and ("batch_config_parity" in fname))
-    ]
-    yaml_list.sort()
-    for i, yamlname in enumerate(yaml_list):
-        print(f"Starting batch {i} with yaml {yamlname}")
-        config_dict = {}
-        global_cfg_dict = {}
-        general_cfg_dict = {}
+def yaml_to_config(yamlname):
 
-        with open(os.path.join(output_folder, yamlname), "r") as file:
-            config_dict = yaml.safe_load(file)
-            glb_cfg_dict_name = config_dict["meta_data"]["global_config"]
-            with open(glb_cfg_dict_name, "r") as glb_cfg_file:
-                global_cfg_dict = yaml.safe_load(glb_cfg_file)
-            general_cfg_dict_name = config_dict["meta_data"]["general_config"]
-            with open(general_cfg_dict_name, "r") as general_cfg_dict_file:
-                general_cfg_dict = yaml.safe_load(general_cfg_dict_file)
+    with open(yamlname, "r") as file:
+        config_dict = yaml.safe_load(file)
+    glb_cfg_dict_name = config_dict["meta_data"]["global_config"]
+    with open(glb_cfg_dict_name, "r") as glb_cfg_file:
+        global_cfg_dict = yaml.safe_load(glb_cfg_file)
+    general_cfg_dict_name = config_dict["meta_data"]["general_config"]
+    with open(general_cfg_dict_name, "r") as general_cfg_dict_file:
+        general_cfg_dict = yaml.safe_load(general_cfg_dict_file)
+
+    return config_dict, global_cfg_dict, general_cfg_dict
+
+if __name__ == "__main__":
+
+    set_environ_vars()
+    args = get_args()
+    load_headers()
+
+    for yamlname in glob(os.path.join(args.config_folder, "batch_config*.yaml")):
+        config_dict, global_cfg_dict, general_cfg_dict = yaml_to_config(yamlname)
         create_file(
             config_dict,
             global_cfg_dict,
             general_cfg_dict,
             args.period,
-            output_folder,
+            args.config_folder,
             f"{config_dict['meta_data']['output_folder']}/{config_dict['meta_data']['output_name']}"
         )
