@@ -58,10 +58,10 @@ def VBFJetSelection(df):
     # https://btv-wiki.docs.cern.ch/ScaleFactors/Run3Summer22EE/#ak4-b-tagging
     df = df.Define("Jet_Veto_loose", "SelectedJet_btagPNetB >= 0.0499")  # 0.0499 is the loose working point for PNet B-tagging in Run3
     df = df.Define("Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605")  # 0.2605 is the medium working point for PNet B-tagging in Run3
+    # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
 
-    # df = df.Filter("SelectedJet_p4[Jet_Veto_loose].size() > 0 || SelectedJet_p4[Jet_Veto_medium].size() > 0 ", "Remove events with at least one medium b-tagged jet")
-    df = df.Filter("SelectedJet_p4[Jet_Veto_medium].size() < 1 ", "Remove events with at least one medium b-tagged jet")
-    df = df.Filter("SelectedJet_p4[Jet_Veto_loose].size() < 2", "Remove events with at least two loose b-tagged jets")
+    df = df.Define("Jet_preselection","SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2") # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
+
     df = df.Define("VBFJetCand","FindVBFJets(SelectedJet_p4)")
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
     df = df.Define("m_jj", "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f")
@@ -236,13 +236,14 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
 
-    def __init__(self, df, config, period, isData=False, isCentral=False, colToSave=[]):
+    def __init__(self, df, config, period, isData=False, isCentral=False, wantTriggerSFErrors=False, colToSave=[]):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
         self.isData = isData
         self.period = period
         self.isCentral = isCentral
         self.colToSave = colToSave
+        self.wantTriggerSFErrors = wantTriggerSFErrors
         # self.region = region
         #  deepTauVersion='v2p1', bTagWPString = "Medium", pNetWPstring="Loose", region="SR", , wantTriggerSFErrors=False, whichType=3, wantScales=True
         # self.deepTauVersion = deepTauVersion
@@ -251,7 +252,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         # self.pNetWP = WorkingPointsParticleNet[period][pNetWPstring]
         # self.bTagWP = WorkingPointsDeepFlav[period][bTagWPString]
         # self.whichType = whichType
-        # self.wantTriggerSFErrors = wantTriggerSFErrors
         # self.wantScales = isCentral and wantScales
 
 
@@ -266,8 +266,8 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
     if not dfForHistograms.isData:
         defineTriggerWeights(dfForHistograms)
-        # if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
-        #     defineTriggerWeightsErrors(dfForHistograms)
+        if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
+            defineTriggerWeightsErrors(dfForHistograms)
     dfForHistograms.SignRegionDef()
     dfForHistograms.defineRegions()
     dfForHistograms.defineCategories()

@@ -92,14 +92,14 @@ ZZto2L2Q_amcatnloFXFX:
   sampleType: VV
 
 # ############## VVV inclusive ##############
-# WWW_4F:
-#   sampleType: VVV
-# WWZ_4F:
-#   sampleType: VVV
-# WZZ:
-#   sampleType: VVV
-# ZZZ:
-#   sampleType: VVV
+WWW_4F:
+  sampleType: VVV
+WWZ_4F:
+  sampleType: VVV
+WZZ:
+  sampleType: VVV
+ZZZ:
+  sampleType: VVV
 
 # ############## ST #############
 # ST_t_channel_antitop_4f_InclusiveDecays:
