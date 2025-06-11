@@ -63,15 +63,10 @@ class Tester:
         plt.clf()
         df = self.testing_df
         # Add individual hist curves
-        hists = []
-        labels=[]
         for p in sorted(pd.unique(df.sample_type)):
-            selected = df[df.sample_type == p]
-            h = np.histogram(selected.NN_Output, bins=50, range=(0,1))
-            hists.append(h)
-            labels.append(lookup[p])
-        # Create plot
-        mplhep.histplot(hists, label=labels, stack=True)
+            selected = df[df.sample_type == p].NN_Output
+            h = np.histogram(selected, range=(0,1), bins=50)
+            plt.stairs(*h, label=lookup[p])
         # Plot config
         if log:
             plt.yscale("log")
