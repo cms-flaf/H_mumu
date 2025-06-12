@@ -45,8 +45,9 @@ def create_file(
     for process in config_dict["processes"]:
         process_filelist = [f"{x}/*.root" for x in process["datasets"]]
 
-        tmp_filename = os.path.join(output_folder, f"tmp{step_idx}.root")
-        tmpnext_filename = os.path.join(output_folder, f"tmp{step_idx+1}.root")
+        tmp_dir = config_dict['meta_data']['temp_folder']
+        tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
+        tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
 
         # print(process_filelist)
         df_in = ROOT.RDataFrame("Events", process_filelist)
@@ -145,8 +146,9 @@ def create_file(
 
     print("Finished create file loop, now we must add the DNN variables")
     # Increment the name indexes before I embarass myself again
-    tmp_filename = os.path.join(output_folder, f"tmp{step_idx}.root")
-    tmpnext_filename = os.path.join(output_folder, f"tmp{step_idx+1}.root")
+    tmp_dir = config_dict['meta_data']['temp_folder']
+    tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
+    tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
 
     df_out = ROOT.RDataFrame("Events", tmp_filename)
 
@@ -163,7 +165,8 @@ def create_file(
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
     dfw_out = analysis.PrepareDfForNNInputs(dfw_out)
     dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
-    col_to_save = parse_column_names(general_cfg_dict)
+    header_columns, data_columns, aux_columns = parse_column_names(general_cfg_dict['vars_to_save'])
+    col_to_save = list(set(header_columns + data_columns + aux_columns))
 
     dfw_out.df.Snapshot(
         "Events", tmpnext_filename, Utilities.ListToVector(col_to_save), snapshotOptions

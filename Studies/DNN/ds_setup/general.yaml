@@ -1,0 +1,68 @@
+vars_to_save:
+  Muon:
+    - mu{}_eta
+    - mu{}_pt
+  SoftJet:
+    - Et # transverse energy
+    - HtCh_fraction # hadronic transverse energy fraction from charged particles
+    - HtHF_fraction # hadronic transverse energy fraction in the HF calorimeter
+    - HtNe_fraction # hadronic transverse energy fraction from neutral particles
+    - energy
+  VBFJet: # j1 and j2, separated in eta ecc.. in VBF events (single jet observables)
+    - eta
+    - pt
+    - btagPNetQvG
+  VBFJetPair:
+    - m_jj
+    - delta_eta_jj
+    - pt_jj
+  MuJet:
+    - R_pt
+    - minDeltaEta
+    - minDeltaEtaSigned
+    - minDeltaPhi
+    - Zepperfield_Var
+    - pt_centrality
+  MuPair:
+    - dR_mumu
+    - m_mumu
+    - eta_mumu
+    - cosTheta_CS
+    - phi_mumu
+    - pt_mumu
+    - y_mumu
+    - phi_CS
+  Global:
+    ### evt info ###
+    - FullEventId
+    - luminosityBlock
+    - isData
+    - event
+    - period
+    - run
+    - sample_type
+  Categories:
+    - HasVBF
+    - baseline
+#    - baseline_Zmumu
+    - ggH
+#    - ggH_Zmumu
+#    - ggH_Zmumu_JetVeto
+    - VBF
+    - VBF_JetVeto
+#    - VBF_Zmumu
+#    - VBF_Zmumu_JetVeto
+#  Regions:
+#    - DYEnriched
+  Sign:
+    - OS
+  nJets:
+    - nJet
+    - nSelectedJet 
+  Weight:
+    ## trigger ##
+    - HLT_singleMu
+    ### global event weight ###
+    - weight_EWKCorr_VptCentral
+    - weight_EWKCorr_ewcorrCentral
+    - weight_MC_Lumi_pu
