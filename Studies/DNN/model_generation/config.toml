@@ -8,46 +8,19 @@ additional_cut = 'VBF_JetVeto'
 valid_size = 0.15
 test_size = 0.40
 signal_types = [31]
-columns_to_use = [
-        "m_mumu",
-        "phi_CS",
-        "j2_btagPNetQvG",
-        "minDeltaEta",
-        "mu1_eta",
-        "y_mumu",
-        "j1_eta",
-        "m_jj",
-        "delta_eta_jj",
-        "R_pt",
-        "j1_btagPNetQvG",
-        "mu1_pt",
-        "phi_mumu",
-        "minDeltaPhi",
-        "pt_mumu",
-        "pt_jj",
-        "pt_centrality",
-        "j2_pt",
-        "mu2_pt",
-        "eta_mumu",
-        "j2_eta",
-        "cosTheta_CS",
-        "mu2_eta",
-        "dR_mumu",
-        "j1_pt",
-        "Zepperfield_Var"
-]
+columns_config = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/ds_setup/general.yaml'
 
 [network]
-layer_list = [26, 60, 60, 60, 30, 1]
+layer_list = [60, 60, 60, 30, 1]
 
 [training]
 batch_size = 500
-epochs = 500
+epochs = 3000
 early_stop = false
-patience = 20
+patience = 10
 
 [optimizer]
 lr = 1e-05
-momentum = 0.0
-dampening = 0.0
+momentum = 0.7
+dampening = 0.2
 weight_decay = 0.0

@@ -74,6 +74,7 @@ if __name__ == "__main__":
         device = None
 
     # Init objects
+    config['network']['layer_list'] = [len(dataloader.data_columns)] + config['network']['layer_list']
     model = Network(device=device, **config["network"])
     trainer = Trainer(train_data, valid_data, config["optimizer"], **config["training"], device=device)
     tester = Tester(test_data, test_df, device=device)

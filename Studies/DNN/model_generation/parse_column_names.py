@@ -1,5 +1,5 @@
 
-def parse_column_names(config):
+def parse_column_names(config, column_type='all'):
     """
     Takes a config file specifying which columns to save in the NN sample sets.
     Generally this would be ds_setup/general.yaml.
@@ -33,4 +33,10 @@ def parse_column_names(config):
     header_columns = Global_vars + Category_vars
     aux_columns = Sign_vars + nJet_vars + Weight_vars
 
-    return data_columns, header_columns, aux_columns
+    if column_type == 'all':
+        return data_columns + header_columns + aux_columns
+    elif column_type == 'data':
+        return data_columns
+    elif column_type == 'header':
+        return header_columns
+

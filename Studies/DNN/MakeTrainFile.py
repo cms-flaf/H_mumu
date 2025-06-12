@@ -9,7 +9,7 @@ import psutil
 import ROOT
 import yaml
 
-from utils.parse_column_names import parse_column_names
+from model_generation.parse_column_names import parse_column_names
 
 ROOT.gROOT.SetBatch(True)
 ROOT.EnableThreadSafety()
@@ -165,8 +165,7 @@ def create_file(
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
     dfw_out = analysis.PrepareDfForNNInputs(dfw_out)
     dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
-    header_columns, data_columns, aux_columns = parse_column_names(general_cfg_dict['vars_to_save'])
-    col_to_save = list(set(header_columns + data_columns + aux_columns))
+    col_to_save = parse_column_names(general_cfg_dict['vars_to_save'],  column_type='all')
 
     dfw_out.df.Snapshot(
         "Events", tmpnext_filename, Utilities.ListToVector(col_to_save), snapshotOptions
