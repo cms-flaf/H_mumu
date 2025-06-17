@@ -2,19 +2,22 @@ norm:
   PileUp_Lumi_MC:
     expression: weight_MC_Lumi_pu{scale}_rel  * final_weight
     name: CMS_pileup_{}
-  # MuonID_TightID:
-  #   expression: weight_mu1_MuonID_SF_TightID_Trk{scale}_rel * weight_mu2_MuonID_SF_TightID_Trk{scale}_rel * final_weight
-  #   name: MuonID_TightID
-  # MuonID_TightIDIso:
-  #   expression: weight_mu1_MuonID_SF_LoosePFIso{scale}_rel * weight_mu2_MuonID_SF_LoosePFIso{scale}_rel * final_weight
-  #   name: MuonID_TightIDIso
-  MuonID_MediumIDLooseIso:
-    expression: weight_mu1_MuonID_SF_MediumIDLooseIso{scale}_rel * weight_mu2_MuonID_SF_MediumIDLooseIso{scale}_rel * final_weight
-    name: MuonID_MediumIDLooseIso
-  MediumID_Trk:
-    expression: weight_mu1_MuonID_SF_MediumID_Trk{scale}_rel * weight_mu2_MuonID_SF_MediumID_Trk{scale}_rel * final_weight
-    name: MediumID_Trk
-  HLT_singleMu:
-    expression: weight_trigSF_singleMu{scale}_rel * final_weight
-shape: []
+  # MuonID_MediumIDLooseIso:
+  #   expression: weight_mu1_MuonID_SF_MediumIDLooseIso{scale}_rel * weight_mu2_MuonID_SF_MediumIDLooseIso{scale}_rel * final_weight
+  #   name: MuonID_MediumIDLooseIso
+  # MediumID_Trk:
+  #   expression: weight_mu1_MuonID_SF_MediumID_Trk{scale}_rel * weight_mu2_MuonID_SF_MediumID_Trk{scale}_rel * final_weight
+  #   name: MediumID_Trk
+  # HLT_singleMu:
+  #   expression: weight_trigSF_singleMu_IsoMu24{scale}_rel * final_weight
+  # EWKCorr_Vpt:
+  #   expression: weight_EWKCorr_Vpt{scale}_rel * final_weight
+  # EWKCorr_ewcorr:
+  #   expression: weight_EWKCorr_ewcorr{scale}_rel * final_weight
+
+
+shape:
+  # - JEC
+  - JER
+
 
