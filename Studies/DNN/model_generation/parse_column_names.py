@@ -25,18 +25,21 @@ def parse_column_names(config, column_type='all'):
     MuPair_vars = config["MuPair"]
     Global_vars = config["Global"]
     Category_vars = config["Categories"]
+    Region_vars = config["Regions"]
     Sign_vars = config["Sign"]
     nJet_vars = config["nJets"]
     Weight_vars = config["Weight"]
 
     data_columns = VBFJetPair_vars + MuJet_vars + MuPair_vars
-    header_columns = Global_vars + Category_vars
-    aux_columns = Sign_vars + nJet_vars + Weight_vars
+    header_columns = Global_vars + Weight_vars
+    selection_columns = Sign_vars + Region_vars + Category_vars
 
     if column_type == 'all':
-        return data_columns + header_columns + aux_columns
+        return header_columns + selection_columns + data_columns
     elif column_type == 'data':
         return data_columns
     elif column_type == 'header':
         return header_columns
+    elif column_type == 'selection':
+        return selection_columns
 
