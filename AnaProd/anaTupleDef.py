@@ -58,11 +58,14 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
                 define_expr = f'{cond} ? ({define_expr}) : {default}'
             dfw.DefineAndAppend( f"mu{leg_idx+1}_{var_name}", define_expr)
 
+
         LegVar('legType', f"HttCandidate.leg_type[{leg_idx}]", check_leg_type=False)
         for var in [ 'pt', 'eta', 'phi', 'mass' ]:
             LegVar(var, f'HttCandidate.leg_p4[{leg_idx}].{var}()', var_type='float', default='-1.f')
         LegVar('charge', f'HttCandidate.leg_charge[{leg_idx}]', var_type='int')
-
+        LegVar( f"pt_nano", f"static_cast<float>(Muon_p4_nano.at(HttCandidate.leg_index[{leg_idx}]).pt())")
+        # dfw.df.Display("mu1_pt_nano").Print()
+        # print(dfw.df.GetColumnNames())
         dfw.Define(f"mu{leg_idx+1}_recoJetMatchIdx", f"""HttCandidate.leg_type[{leg_idx}] != Leg::none
                                                           ? FindMatching(HttCandidate.leg_p4[{leg_idx}], Jet_p4, 0.3)
                                                           : -1""")
@@ -101,6 +104,7 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
 
         #Save the lep* p4 and index directly to avoid using HwwCandidate in SF LUTs
         dfw.Define( f"mu{leg_idx+1}_p4", f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_p4.at({leg_idx}) : LorentzVectorM()")
+        dfw.Define( f"mu{leg_idx+1}_p4_nano", f"Muon_p4_nano.at(HttCandidate.leg_index[{leg_idx}])")
         dfw.Define( f"mu{leg_idx+1}_index", f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_index.at({leg_idx}) : -1")
         dfw.Define( f"mu{leg_idx+1}_type", f"HttCandidate.leg_type.size() > {leg_idx} ? static_cast<int>(HttCandidate.leg_type.at({leg_idx})) : -1")
 

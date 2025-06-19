@@ -30,6 +30,7 @@ corrections:
   - mu
   - Vpt
   - pu
+  - muonScaRe
 
 region: All
 region_default: All
