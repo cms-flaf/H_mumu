@@ -9,7 +9,7 @@ meta_data:
   - weight_MC_Lumi_pu
   - event
   # for the moment, keep only event parity
-  selection_cut: (tree['event']%4 == 1 )
+  selection_cut: (tree['event']%4 == 0 )
   iterate_cut: (event%4 == 0 )
   # examples of other cut and iterative cuts --> difference? we will figure out
   # selection_cut: (tree['lep1_type'] >= 0) & (tree['lep2_type'] >= 0) & (tree['event']%4 == 0)
