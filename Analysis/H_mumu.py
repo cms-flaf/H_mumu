@@ -190,7 +190,7 @@ def GetWeight(channel, cat, boosted_categories):
         'muMu':["weight_trigSF_singleMu"],
     }
     ID_weights_dict = {
-        "muMu": ["weight_mu1_MuonID_SF_LoosePFIsoCentral","weight_mu2_MuonID_SF_LoosePFIsoCentral","weight_mu1_MuonID_SF_MediumID_TrkCentral","weight_mu2_MuonID_SF_MediumID_TrkCentral"]
+        "muMu": ["weight_mu1_MuonID_SF_LoosePFIsoCentral","weight_mu1_MuonID_SF_MediumIDLooseIsoCentral","weight_mu1_MuonID_SF_MediumID_TrkCentral","weight_mu1_LowPt_MuonID_SF_MediumIDCentral","weight_mu2_MuonID_SF_LoosePFIsoCentral","weight_mu2_MuonID_SF_MediumIDLooseIsoCentral", "weight_mu2_MuonID_SF_MediumID_TrkCentral","weight_mu2_LowPt_MuonID_SF_MediumIDCentral"]
         }
 
     weights_to_apply.extend(ID_weights_dict[channel])
