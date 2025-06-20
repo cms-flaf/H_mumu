@@ -2,7 +2,7 @@ import torch
 
 
 class Network(torch.nn.Module):
-    def __init__(self, device, layer_list, **kwargs):
+    def __init__(self, device, layer_list, dropout=None, **kwargs):
         """
         Create a linear network with hidden layers
         """
@@ -10,6 +10,10 @@ class Network(torch.nn.Module):
         self.activation = torch.nn.ReLU()
         self.final_activation = torch.nn.Sigmoid()
         self.layers = self._build_layers(layer_list)
+        if dropout is not None:
+            self.dropout = torch.nn.Dropout(p=dropout)
+        else:
+            self.dropout = None
         if device is not None:
             self.to(device)
             self.double()
@@ -29,6 +33,8 @@ class Network(torch.nn.Module):
         https://docs.pytorch.org/docs/stable/generated/torch.nn.BCEWithLogitsLoss.html
         """
         for layer in self.layers[:-1]:
+            if self.dropout:
+                x = self.dropout(x)
             x = layer(x)
             x = self.activation(x)
         x = self.layers[-1](x)

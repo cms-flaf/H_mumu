@@ -5,14 +5,13 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
-from sample_type_lookup import lookup
-
 mplhep.style.use(mplhep.styles.CMS)
+
 
 class Tester:
 
     def __init__(self, testing_data, testing_df, device=None):
-        self.x_data, self.y_data = testing_data
+        (self.x_data, self.y_data), _ = testing_data
         self.testing_df = testing_df
         self.device = device
 
@@ -29,51 +28,83 @@ class Tester:
                     x = torch.Tensor(sample)
                 guess = model.predict(x).item()
                 outputs[i] = guess
-        self.testing_df["Label"] = self.y_data
         self.testing_df["NN_Output"] = outputs
 
-    def make_hist(self, log=False, show=False):
+    def make_hist(self, weight=False, log=False, show=False):
         """
-        Saves a histo
+        Saves a histo of all signal vs all background
         """
         plt.clf()
         results = self.testing_df
-        signal = results[results.Label == 1].NN_Output
-        background = results[results.Label == 0].NN_Output
-        h1 = np.histogram(signal, range=(0, 1), bins=50)
-        h2 = np.histogram(background, range=(0, 1), bins=50)
-        mplhep.histplot([h1,h2], label=['Signal','Background'], stack=True)
+        signal = results[results.Label == 1]
+        background = results[results.Label == 0]
+        if weight:
+            h1 = np.histogram(
+                signal.NN_Output, range=(0, 1), bins=50, weights=signal.Class_Weight
+            )
+            h2 = np.histogram(
+                background.NN_Output,
+                range=(0, 1),
+                bins=50,
+                weights=background.Class_Weight,
+            )
+        else:
+            h1 = np.histogram(signal.NN_Output, range=(0, 1), bins=50)
+            h2 = np.histogram(background.NN_Output, range=(0, 1), bins=50)
+        mplhep.histplot([h1, h2], label=["Signal", "Background"], stack=True)
+        # Set plot parameters based on boolean options
         if log:
             plt.yscale("log")
-        plt.xlabel("Network output")
-        plt.ylabel("Events")
-        plt.legend()
-        if log:
-            output_name = "model_hist_log.png"
+            output_name = "model_hist_log"
         else:
-            output_name = "model_hist_lin.png"
+            output_name = "model_hist_lin"
+        if weight:
+            plt.ylabel("Weight")
+            output_name += "_weighted"
+        else:
+            plt.ylabel("Events")
+        # Set rest of plot and save/show
+        plt.xlabel("Network output")
+        plt.legend()
         if show:
             plt.show()
         else:
-            plt.savefig(output_name, bbox_inches="tight")
+            plt.savefig(output_name + ".png", bbox_inches="tight")
 
-
-    def make_stackplot(self, log=False, show=False):
+    def make_stackplot(self, weight=False, log=False, show=False):
+        """
+        Saves a histo with the different processes draw independently
+        """
         # Init plot
         plt.clf()
         df = self.testing_df
         # Add individual hist curves
-        for p in sorted(pd.unique(df.sample_type)):
-            selected = df[df.sample_type == p].NN_Output
-            h = np.histogram(selected, range=(0,1), bins=50)
-            plt.stairs(*h, label=lookup[p])
-        # Plot config
+        for p in sorted(pd.unique(df.sample_name)):
+            selected = df[df.sample_name == p]
+            if weight:
+                h = np.histogram(
+                    selected.NN_Output,
+                    weights=selected.Class_Weight,
+                    range=(0, 1),
+                    bins=50,
+                )
+            else:
+                h = np.histogram(selected.NN_Output, range=(0, 1), bins=50)
+            plt.stairs(*h, label=p)
+        # Plot config from boolean parameters
+        output_name = "stackplot"
         if log:
             plt.yscale("log")
+        if weight:
+            output_name += "_weighted"
+            plt.ylabel("Weight")
+        else:
+            plt.ylabel("Events")
+        # Finish plot config
         plt.xlabel("Network output")
-        plt.ylabel("Events")
         plt.legend()
+        # Out (save or show)
         if show:
             plt.show()
         else:
-            plt.savefig("stackplot.png", bbox_inches="tight")
+            plt.savefig(output_name + ".png", bbox_inches="tight")

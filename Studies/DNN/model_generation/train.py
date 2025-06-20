@@ -1,10 +1,10 @@
 import os
 import pickle as pkl
-import tomllib
 from datetime import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
+import tomllib
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
@@ -21,19 +21,18 @@ class Trainer:
         epochs,
         early_stop=False,
         patience=None,
-        device=None
+        device=None,
     ):
 
         # Training data as a tuple of NumPy arrays (x_data, y_data)
         self.training_data = training_data
         # Convert the data to a Torch DataLoader, for optimal training
         self.train_dataloader = self._make_dataloader(training_data, batch_size, device)
-        self.valid_dataloader = self._make_dataloader(validation_data, batch_size, device)
+        self.valid_dataloader = self._make_dataloader(
+            validation_data, batch_size, device
+        )
 
-        self.weight = self._get_pos_weight()
-        if device is not None:
-            self.weight = self.weight.to(device)
-        self.loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=self.weight)
+        self.loss_fn = torch.nn.BCEWithLogitsLoss(reduction="none")
 
         self.hyperparams = hyperparams
 
@@ -53,25 +52,31 @@ class Trainer:
         """
         Converts the data (tuple of Numpy arrays) into a DataLoader object
         """
-        x_data, y_data = self.training_data
+        (x_data, y_data), weights = data
         if device is not None:
             x_data = torch.tensor(x_data, device=device)
             y_data = torch.tensor(y_data, device=device)
-            dataset = TensorDataset(x_data, y_data)
+            weights = torch.tensor(weights, device=device)
+            dataset = TensorDataset(x_data, y_data, weights)
         else:
-            dataset = TensorDataset(torch.Tensor(x_data), torch.Tensor(y_data))
+            dataset = TensorDataset(
+                torch.Tensor(x_data), torch.Tensor(y_data), torch.Tensor(weights)
+            )
         dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         return dataloader
-
-    def _get_pos_weight(self):
-        """
-        Calculates the loss weight of the signal samples (label = 1)
-        vs the background samples (label = 0)
-        """
-        # https://discuss.pytorch.org/t/use-class-weight-with-binary-cross-entropy-loss/125265/2
-        _, y_data = self.training_data
-        w = (len(y_data) - sum(y_data)) / sum(y_data)
-        return torch.Tensor(w)
+    
+    def _set_optimizer(self, model):
+        algo = self.hyperparams['algo']
+        hypers = {k : v for k, v in self.hyperparams.items() if k != 'algo'}
+        # Case switch
+        if algo == 'SGD':
+            opt = torch.optim.SGD
+        elif algo == 'Adam':
+            opt = torch.optim.Adam
+        else:
+            raise ValueError("Optimizer config should speficy SGD or Adam as algo.")
+        # Actually init and set
+        self.optimizer = opt(model.parameters(), **hypers)
 
     ### Utility functions ###
 
@@ -83,7 +88,9 @@ class Trainer:
         """
         plt.clf()
         if valid:
-            plt.plot(self.validation_loss, color="tab:red", marker="o", label="validation")
+            plt.plot(
+                self.validation_loss, color="tab:red", marker="o", label="validation"
+            )
             filename = "training_loss_plot_with_valid.png"
         else:
             filename = "training_loss_plot.png"
@@ -107,13 +114,14 @@ class Trainer:
         model.train()
         for sample in tqdm(self.train_dataloader):
             # Every data instance is an input + label pair
-            inputs, labels = sample
+            inputs, labels, weights = sample
             # Zero your gradients for every batch!
             self.optimizer.zero_grad()
             # Make predictions for this batch
             outputs = model(inputs)
             # Compute the loss and its gradients
             loss = self.loss_fn(outputs, labels)
+            loss = (loss * weights).mean()
             epoch_loss += loss.item()
             loss.backward()
             # Adjust learning weights
@@ -135,9 +143,10 @@ class Trainer:
         model.eval()
         with torch.no_grad():
             for sample in self.valid_dataloader:
-                x, y = sample
+                x, y, weight = sample
                 guess = model(x)
                 loss = self.loss_fn(guess, y)
+                loss = (weight * loss).mean()
                 total_loss += loss.item()
         avg_loss = total_loss / len(self.valid_dataloader)
         return avg_loss
@@ -176,7 +185,7 @@ class Trainer:
     ### Main (call this function) ###
 
     def train(self, model):
-        self.optimizer = torch.optim.SGD(model.parameters(), **self.hyperparams)
+        self._set_optimizer(model)
         if self.early_stop and self.patience is not None:
             model = self.train_early_stop(model)
         else:

@@ -1,46 +1,38 @@
 meta_data:
   batch_dict: # here go samples for training
-    batch_size: 1000
-    nBatches: 250
-  selection_branches: # here go the branches for selection, currently I comment it
-  # - lep1_type
-  # - lep2_type
-  #- weight_MC_Lumi_pu
-  #- event
-  # for the moment, keep only event parity
-  #selection_cut: (tree['event']%4 == 0 )
-  #iterate_cut: (event%4 == 0 )
-  # examples of other cut and iterative cuts --> difference? we will figure out
-  # selection_cut: (tree['lep1_type'] >= 0) & (tree['lep2_type'] >= 0) & (tree['event']%4 == 0)
+    batch_size: 12970
+    nBatches: 1000
   # iterate_cut: (lep1_type >= 0) & (lep2_type >= 0) & (event%4 == 0)
   global_config: /afs/cern.ch/user/a/ayeagle/H_mumu/config/global.yaml
   general_config: /afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/ds_setup/general.yaml
-  storage_folder: /eos/user/a/ayeagle/H_mumu/Run3_2022EE/Run3_2022EE/datasets
   temp_folder: /eos/user/a/ayeagle/H_mumu/temp_files/
-  output_folder: /eos/user/a/ayeagle/H_mumu/root_files/
-  output_name: GluGluHto2Mu.root
-  # empty_dict_example: /afs/cern.ch/work/d/daebi/diHiggs/HH_bbWW/Studies/DNN/DNN_dataset_2024-09-13-13-56-15/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined.root
+  output_folder: /eos/user/a/ayeagle/H_mumu/root_files/run_2_v2/
+  output_name: TTto2L2Nu.root
 
 processes:
-#- batch_size: 1000
-#  batch_start: 0
-#  datasets:
-#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v1/Run3_2022EE/TTto2L2Nu
-#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v1/Run3_2022EE/TTto2L2Nu_ext1
-#- batch_size: 1000
-#  batch_start: 0
-#  datasets:
-#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v1/Run3_2022EE/TTtoLNu2Q
-#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v1/Run3_2022EE/TTtoLNu2Q_ext1
-#- batch_size: 1000
-#  batch_start: 0
-#  datasets:
-#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v1/Run3_2022EE/DYto2L_M_50_amcatnloFXFX
-#- batch_size: 1000
-#  batch_start: 0
-#  datasets:
-#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v1/Run3_2022EE/ZZto2L2Nu_powheg
-- batch_size: 1000
+- batch_size: 12961
   batch_start: 0
   datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v1/Run3_2022EE/GluGluHto2Mu
+  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto2L2Nu
+  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto2L2Nu_ext1
+#- batch_size: 1086
+#  batch_start: 0
+#  datasets:
+#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTtoLNu2Q
+#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTtoLNu2Q_ext1
+#- batch_size: 14790
+#  batch_start: 0
+#  datasets:
+#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/DYto2L_M_50_amcatnloFXFX
+#- batch_size: 2969
+#  batch_start: 0
+#  datasets:
+#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/ZZto2L2Nu_powheg
+#- batch_size: 248
+#  batch_start: 0
+#  datasets:
+#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/GluGluHto2Mu
+#- batch_size: 866
+#  batch_start: 0
+#  datasets:
+#  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/VBFHto2Mu

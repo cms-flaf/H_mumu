@@ -1,7 +1,7 @@
 import argparse
-from glob import glob
 import os
 import sys
+from glob import glob
 
 import Analysis.H_mumu as analysis
 import FLAF.Common.Utilities as Utilities
@@ -9,12 +9,11 @@ import psutil
 import ROOT
 import yaml
 
-from model_generation.parse_column_names import parse_column_names
+from utils.parse_column_names import parse_column_names
 
 ROOT.gROOT.SetBatch(True)
 ROOT.EnableThreadSafety()
 from FLAF.Common.Utilities import DeclareHeader
-
 
 
 def create_file(
@@ -163,8 +162,8 @@ def create_file(
     # Only need to save the prexisting columns plus the new DNN variables
     # to add kwargset for isData
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
-    dfw_out = analysis.PrepareDfForNNInputs(dfw_out)
-    dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
+    dfw_out = analysis.PrepareDfForHistograms(dfw_out)
+    #dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
     col_to_save = parse_column_names(general_cfg_dict['vars_to_save'],  column_type='all')
 
     dfw_out.df.Snapshot(

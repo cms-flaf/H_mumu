@@ -56,7 +56,6 @@ vars_to_save:
     - Signal_ext
     - H_sideband
     - Signal_Fit
-#    - DYEnriched
   Sign:
     - OS
 #  nJets:
