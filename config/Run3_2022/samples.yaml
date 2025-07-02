@@ -11,6 +11,7 @@ GLOBAL:
     # - keep WW
     # - keep WZ
     # - keep ZZ
+    - keep DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
     - keep DYto2L_M_50_amcatnloFXFX
     - keep DYto2Mu_MLL_120to200_powheg
     - keep DYto2Mu_MLL_50to120_powheg
@@ -43,6 +44,63 @@ GLOBAL:
     # - keep ^MET_.*
   use_stitching: false
   triggerFile: config/Run3_2022/triggers.yaml
+
+
+# DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8:
+#   sampleType: DY
+#   crossSection: DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
+#   generator: pythia
+#   isPrivate: True
+#   fs_nanoAOD_private: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
+#   dir_to_list: "0000"
+
+# DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8_ext1:
+#   sampleType: DY
+#   crossSection: DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
+#   generator: pythia
+#   isPrivate: True
+#   fs_nanoAOD_private: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
+#   dir_to_list: "0001"
+
+# DYToMuMu-M50_13p6TeV_MiNNLO_pythia8:
+#   sampleType: DY
+#   crossSection: DYto2Mu_MLL_50to120_powheg # eh for the moment..
+#   generator: pythia
+#   isPrivate: True
+#   fs_nanoAOD_private: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
+#   dir_to_list: "0000"
+
+# DYToMuMu-M50_13p6TeV_MiNNLO_pythia8_ext1:
+#   sampleType: DY
+#   crossSection: DYto2Mu_MLL_50to120_powheg # eh for the moment..
+#   generator: pythia
+#   isPrivate: True
+#   fs_nanoAOD_private: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
+#   dir_to_list: "0001"
+
+# VBFHto2Mu_M-125_13p6TeV_powheg-herwig7:
+#   sampleType: VBFH
+#   crossSection: VBFHto2Mu
+#   generator: pythia
+    # nano_version: v12
+#   fs: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/VBFHto2Mu_M-125_13p6TeV_powheg-herwig7/Run3Summer2022-NANOAODSIMv12/241010_115528/
+#   dir_to_list: "0000"
+
+# VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1:
+#   sampleType: VBFH
+#   crossSection: VBFHto2Mu
+#   generator: pythia
+#   isPrivate: True
+#   fs_nanoAOD_private: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/VBFHto2Mu_M-125_13p6TeV_powheg-herwig7/Run3Summer2022-NANOAODSIMv12/241010_115528/
+#   dir_to_list: "0001"
+
+# VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2:
+#   sampleType: VBFH
+#   crossSection: VBFHto2Mu
+#   generator: pythia
+#   isPrivate: True
+#   fs_nanoAOD_private: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/VBFHto2Mu_M-125_13p6TeV_powheg-herwig7/Run3Summer2022-NANOAODSIMv12/241010_115528/
+#   dir_to_list: "0002"
 
 GluGluHto2Mu:
   sampleType: ggH

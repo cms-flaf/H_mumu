@@ -54,13 +54,13 @@ def VBFJetSelection(df):
         print("SelectedJet_idx not in df.GetColumnNames")
         df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
     df = df.Define(f"SelectedJet_p4", f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)")
-    df = df.Define(f"JetVeto", f"SelectedJet_btagDeepFlavB")
+    # df = df.Define(f"JetVeto", f"SelectedJet_btagDeepFlavB")
     # https://btv-wiki.docs.cern.ch/ScaleFactors/Run3Summer22EE/#ak4-b-tagging
     df = df.Define("Jet_Veto_loose", "SelectedJet_btagPNetB >= 0.0499")  # 0.0499 is the loose working point for PNet B-tagging in Run3
     df = df.Define("Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605")  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
 
-    df = df.Define("Jet_preselection","SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2") # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
+    df = df.Define("Jet_preselection","SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap].size()>0 ") # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
 
     df = df.Define("VBFJetCand","FindVBFJets(SelectedJet_p4)")
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
@@ -190,9 +190,14 @@ def GetWeight(channel, cat, boosted_categories):
         'muMu':["weight_trigSF_singleMu"],
     }
     ID_weights_dict = {
-        "muMu": ["weight_mu1_MuonID_SF_LoosePFIsoCentral","weight_mu1_MuonID_SF_MediumIDLooseIsoCentral","weight_mu1_MuonID_SF_MediumID_TrkCentral","weight_mu1_LowPt_MuonID_SF_MediumIDCentral","weight_mu2_MuonID_SF_LoosePFIsoCentral","weight_mu2_MuonID_SF_MediumIDLooseIsoCentral", "weight_mu2_MuonID_SF_MediumID_TrkCentral","weight_mu2_LowPt_MuonID_SF_MediumIDCentral"]
+        "muMu": ["weight_mu1_HighPt_MuonID_SF_MediumIDCentral",  "weight_mu1_HighPt_MuonID_SF_RecoCentral",  "weight_mu1_LowPt_MuonID_SF_MediumIDCentral",  "weight_mu1_MuonID_SF_LoosePFIsoCentral",  "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",  "weight_mu1_MuonID_SF_MediumID_TrkCentral",  "weight_mu2_HighPt_MuonID_SF_MediumIDCentral",  "weight_mu2_HighPt_MuonID_SF_RecoCentral",  "weight_mu2_LowPt_MuonID_SF_MediumIDCentral",  "weight_mu2_MuonID_SF_LoosePFIsoCentral",  "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",  "weight_mu2_MuonID_SF_MediumID_TrkCentral"]
         }
-
+    # should be moved to config
+    # what about :
+    #   weight_mu1_HighPt_MuonID_SF_MediumIDLooseRelIsoHLTCentral ?
+    #   weight_mu2_HighPt_MuonID_SF_MediumIDLooseRelIsoHLTCentral
+    #   weight_mu1_HighPt_MuonID_SF_MediumIdLooseRelTkIsoCentral ?
+    #   weight_mu2_HighPt_MuonID_SF_MediumIdLooseRelTkIsoCentral ?
     weights_to_apply.extend(ID_weights_dict[channel])
     weights_to_apply.extend(trg_weights_dict[channel])
     # if cat not in boosted_categories:
