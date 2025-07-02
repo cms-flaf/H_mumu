@@ -30,7 +30,7 @@ corrections:
   - mu
   - Vpt
   - pu
-  - muonScaRe
+  - muScaRe
 
 region: All
 region_default: All
@@ -74,6 +74,8 @@ singleMu_th:
   "Run2_2018": 26
   "Run3_2022": 26
   "Run3_2022EE": 26
+  "Run3_2023": 26
+  "Run3_2023BPix": 26
 
 scales:
   - Up

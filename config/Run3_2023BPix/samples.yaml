@@ -35,7 +35,8 @@ GLOBAL:
     - keep WWZ_4F
     - keep WZZ
     - keep ZZZ
-    - keep ^Muon_.*
+    # - keep ^Muon0*
+    - keep ^Muon*
     # - keep ^Tau_.*
     # - keep ^EGamma_.*
     # - keep ^MuonEG_.*
