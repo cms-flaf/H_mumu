@@ -43,7 +43,8 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
     dfw.Apply(Corrections.getGlobal().btag.getWPid)
     dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
-    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
+    dfw.Apply(CommonBaseline.Jet_insideVetoRegion)
+    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap, "Jet_vetoMapLooseRegion")
     dfw.Apply(AnaBaseline.GetMuMuCandidate)
     n_legs = 2
 

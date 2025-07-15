@@ -144,7 +144,7 @@ dR_mumu:
 eta_mumu:
   x_bins: "200|-5.:5."
   # x_rebin: [-2.5, -2.3, -2.1, -1.9, -1.7, -1.5, -1.3, -1.1, -0.9, -0.7, -0.5, -0.3, -0.1, 0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5]
-  x_title: \eta(\mu_{1}, \mu_{2})
+  x_title: \eta(\mu\mu)
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -153,7 +153,7 @@ eta_mumu:
 y_mumu:
   x_bins: "150|-3.:3."
   x_rebin: [-2.5, -2.3, -2.1, -1.9, -1.7, -1.5, -1.3, -1.1, -0.9, -0.7, -0.5, -0.3, -0.1, 0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5]
-  x_title: y(\mu_{1}, \mu_{2})
+  x_title: y(\mu\mu)
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -162,7 +162,7 @@ y_mumu:
 phi_mumu:
   x_bins: "260|-6.5:6.5"
   x_rebin: [-2.5, -2.3, -2.1, -1.9, -1.7, -1.5, -1.3, -1.1, -0.9, -0.7, -0.5, -0.3, -0.1, 0.1, 0.3, 0.5, 0.7, 0.9, 1.1, 1.3, 1.5, 1.7, 1.9, 2.1, 2.3, 2.5]
-  x_title: \phi(\mu_{1}, \mu_{2})
+  x_title: \phi(\mu\mu)
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -310,7 +310,7 @@ Zepperfield_Var:
   x_bins: "100|0:2"
   x_rebin:
     other:  [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0]
-  x_title: M(j_{2},j_{2}) (GeV)
+  x_title: Z(\mu\mu,jj)
   # y_title: Events
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
   use_log_x: False
@@ -326,8 +326,7 @@ pt_centrality:
   x_bins: "100|0:10"
   x_rebin:
     other: [0., 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0]
-  x_title: M(j_{2},j_{2}) (GeV)
-  # y_title: Events
+  x_title: "C(p_{T})"
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
   use_log_x: False
   use_log_y: False
@@ -340,8 +339,8 @@ pt_centrality:
 R_pt:
   x_bins: "100|0:10"
   x_rebin:
-    other: [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1]
-  x_title: R (p_{T})
+    other: [0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+  x_title: "R(p_{T})"
   # y_title: Events
   y_title: "#frac{Events}{bin width}"
   use_log_x: False
@@ -361,7 +360,7 @@ m_jj:
     # ggH_Zmumu: [  70, 71, 72, 73, 74,75,76,77,78,79, 80,81,82,83,84,85,86,87,88,89, 90,91,92,93,94,95,96,97,98,99, 100] # ,105, 110,115,120,125, 130,135,140,145, 150]
     # VBF_Z\mu\mu_JetVeto: [  70, 71, 72, 73, 74,75,76,77,78,79, 80,81,82,83,84,85,86,87,88,89, 90,91,92,93,94,95,96,97,98,99, 100] # ,105, 110,115,120,125, 130,135,140,145, 150]
     # ggH_Z\mu\mu_JetVeto: [  70, 71, 72, 73, 74,75,76,77,78,79, 80,81,82,83,84,85,86,87,88,89, 90,91,92,93,94,95,96,97,98,99, 100] # ,105, 110,115,120,125, 130,135,140,145, 150]
-  x_title: M(j_{2},j_{2}) (GeV)
+  x_title: m(jj) (GeV)
   # y_title: Events
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
   use_log_x: False
@@ -383,8 +382,8 @@ delta_eta_jj:
 
 minDeltaEta:
   x_bins: "400|-10.:10."
-  x_rebin: [2.5,3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.,8.5]
-  x_title: min(\Delta\eta(\mu\mu, j))
+  x_rebin: [0., 0.5,1.0, 1.5, 2.0,2.5,3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.,8.5]
+  x_title: min(|\Delta\eta(\mu\mu, j)|)
   y_title: Events
   use_log_y: False
   max_y_sf: 1.8
@@ -392,7 +391,7 @@ minDeltaEta:
 
 minDeltaEtaSigned:
   x_bins: "400|-10.:10."
-  x_rebin: [-8.5, -8.,-7.5,-7.0,-6.5,-6.0,-5.5,-5.0,-4.5,-4.0,-3.5,-3.0, -2.5, 2.5,3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.,8.5]
+  x_rebin: [-8.5, -8.,-7.5,-7.0,-6.5,-6.0,-5.5,-5.0,-4.5,-4.0,-3.5,-3.0, -2.5, -2., -1.5, -1., -0.5, 0., 0.5, 1.0, 1.5, 2.0,2.5,3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.,8.5]
   x_title: min(\Delta\eta(\mu\mu, j))
   y_title: Events
   use_log_y: False

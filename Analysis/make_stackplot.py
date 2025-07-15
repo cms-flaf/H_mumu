@@ -20,6 +20,7 @@ if __name__ == '__main__':
     using_uncertainties = args.use_unc #True #When we turn on Up/Down, the file storage changes due to renameHists.py
 
     varnames = args.var.split(",")
+    # categories = ["VBF_JetVeto"]
     categories = ["baseline", "VBF", "ggH", "VBF_JetVeto"]
     if args.categories:
         categories = args.categories.split(",")

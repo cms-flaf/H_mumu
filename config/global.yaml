@@ -24,6 +24,7 @@ channelDefinition:
 
 corrections:
   - JEC
+  - Jet_horns_fix
   - JER
   - trgSF
   # - btagWP
