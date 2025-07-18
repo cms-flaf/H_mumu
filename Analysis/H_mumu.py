@@ -109,6 +109,13 @@ def GetMuMuObservables(df):
     df = df.Define("phi_CS", "static_cast<float>(std::get<1>(cosTheta_Phi_CS))")
     return df
 
+def GetMuMuMassResolution(df):
+    delta_mu_expr = "sqrt( 0.5 * (pow( ({0}/{1}), 2) + pow( ({2}/{3}), 2) ) ) "
+    df = df.Define("m_mumu_resolution", delta_mu_expr.format("mu1_pt", "(mu1_pt-mu1_pt_nano)/mu1_pt", "mu2_pt", "(mu2_pt-mu2_pt_nano)/mu2_pt"))
+    df = df.Define("m_mumu_resolution_relerr", delta_mu_expr.format("mu1_pt", "(mu1_pt-mu1_pt_nano)", "mu2_pt", "(mu2_pt-mu2_pt_nano)"))
+    df = df.Define("m_mumu_resolution_bsConstrained", delta_mu_expr.format("mu1_bsConstrainedPt", "mu1_bsConstrainedPtErr", "mu2_bsConstrainedPt", "mu2_bsConstrainedPtErr"))
+    return df
+
 def VBFJetMuonsObservables(df):
     df = df.Define("Zepperfield_Var", "if (HasVBF) return static_cast<float>((y_mumu - 0.5*(j1_y+j2_y))/std::abs(j1_y - j2_y)); return -10000.f;")
     df = df.Define("pT_all_sum", "if(HasVBF) return static_cast<float>(pT_sum ({mu1_p4, mu2_p4, VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1]})); return -10000.f;")
@@ -184,7 +191,7 @@ def SaveVarsForNNInput(vars_to_save):
 
 
 def GetWeight(channel, cat, boosted_categories):
-    weights_to_apply = ["weight_MC_Lumi_pu", "weight_EWKCorr_VptCentral"]#,"weight_EWKCorr_ewcorrCentral"] #
+    weights_to_apply = ["weight_MC_Lumi_pu", "weight_EWKCorr_VptCentral", "weight_DYw_DYWeightCentral"]#,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
         'muMu':["weight_trigSF_singleMu"],
@@ -266,6 +273,7 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
+    dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
@@ -281,6 +289,7 @@ def PrepareDfForHistograms(dfForHistograms):
 
 def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.df = GetMuMuObservables(dfBuilder.df)
+    dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
     dfBuilder.defineSignRegions()
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
