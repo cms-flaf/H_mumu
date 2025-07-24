@@ -7,8 +7,13 @@ class Network(torch.nn.Module):
         Create a linear network with hidden layers
         """
         super().__init__()
-        self.activation = torch.nn.ReLU()
-        self.final_activation = torch.nn.Sigmoid()
+        self.activation = torch.nn.LeakyReLU()
+        #self.activation = torch.nn.ReLU()
+        self.binary_classification = layer_list[-1] == 1
+        if self.binary_classification:
+            self.final_activation = torch.nn.Sigmoid()
+        else:
+            self.final_activation = torch.nn.Softmax(dim=-1)
         self.layers = self._build_layers(layer_list)
         if dropout is not None:
             self.dropout = torch.nn.Dropout(p=dropout)

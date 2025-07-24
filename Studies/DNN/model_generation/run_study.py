@@ -2,6 +2,7 @@ import argparse
 import os
 import pickle as pkl
 from datetime import datetime
+from itertools import product
 from pprint import pprint
 from test import Tester
 from uuid import uuid1 as uuid
@@ -59,18 +60,18 @@ def write_parameters(start, end, config, dataset):
         pprint(config, stream=f)
 
 
-if __name__ == "__main__":
+def main(config, df):
+    dataloader = DataLoader(**config['dataloader'])
 
-    # Read the CLI arguments
-    args = get_arguments()
+    df = dataloader.label_and_reweight(df)
+    train_df, valid_df, test_df = dataloader._split_dataframe(df)
+    if dataloader.downsample_upweight:
+        train_df = dataloader._downsample_and_upweight(train_df)
+        valid_df = dataloader._downsample_and_upweight(valid_df)
+    train_data = dataloader._df_to_dataset(train_df)
+    valid_data = dataloader._df_to_dataset(valid_df)
+    test_data = dataloader._df_to_dataset(test_df)
 
-    # Read in config and datasets from args
-    with open(args.config, "rb") as f:
-        config = tomllib.load(f)
-
-    dataloader = DataLoader(**config["dataloader"])
-
-    train_data, valid_data, test_data, test_df = dataloader.gen_datasets(args.rootfile)
     print("*** Running with the following parameters: ***")
     pprint(config)
 
@@ -82,14 +83,6 @@ if __name__ == "__main__":
         print(f"Current device: {torch.cuda.current_device()}")
     else:
         device = None
-
-    # Modify layer_list to have input and output layers
-    layer_list = config["network"]["layer_list"]
-    # Look at the number of data columns
-    input_size = len(dataloader.data_columns)
-    # Look at first y (label) element shape
-    output_size = len(train_data[0][1][0])
-    config["network"]["layer_list"] = [input_size] + layer_list + [output_size]
 
     # Init objects
     model = Network(device=device, **config["network"])
@@ -104,28 +97,58 @@ if __name__ == "__main__":
     end = datetime.now()
     tester.test(model)
 
-    # Prepare the output directory to save files
-    os.chdir(config["meta"]["results_dir"])
-    run_name = str(uuid())
-    if args.label:
-        run_name += f"_{args.label}"
-    os.mkdir(run_name)
-    os.chdir(run_name)
-    print("Saving outputs to", run_name)
-
     # Save output files
     trainer.plot_losses()
-    trainer.plot_losses(valid=False)
-    trainer.plot_losses(valid=True, log=True)
     trainer.write_loss_data()
-    tester.make_hist(log=False, weight=True)
-    tester.make_hist(log=True, weight=True, norm=True)
     tester.make_hist(log=False, weight=True, norm=True)
     tester.make_hist(log=True, weight=True)
-    tester.make_stackplot(log=True)
     tester.make_stackplot(log=True, weight=True)
     tester.make_roc_plot()
     tester.testing_df.to_pickle("evaluated_testing_df.pkl")
     with open("trained_model.torch", "wb") as f:
         torch.save(model, f)
     write_parameters(start, end, config, args.rootfile)
+
+
+if __name__ == "__main__":
+
+    # Read the CLI arguments
+    args = get_arguments()
+
+    # Read in config and datasets from args
+    with open(args.config, "rb") as f:
+        config = tomllib.load(f)
+
+    dataloader = DataLoader(**config["dataloader"])
+    base_df = dataloader.build_master_df(args.rootfile)
+    base_df = dataloader._apply_gauss_renorm(base_df)
+
+    batch_sizes = [1]
+    #batch_sizes = [10, 50, 100, 500]
+    target_ratios = [40, 20, 10, 5, 1]
+
+    run_name = str(uuid())
+    os.mkdir(run_name)
+    os.chdir(run_name)
+    base_dir = os.getcwd()
+
+    # Modify layer_list to have input and output layers
+    layer_list = config["network"]["layer_list"]
+    # Look at the number of data columns
+    input_size = len(dataloader.data_columns)
+    # Look at first y (label) element shape
+    output_size = len(pd.unique(base_df.sample_name))
+    config["network"]["layer_list"] = [input_size] + layer_list + [output_size]
+
+    for t, b in product(target_ratios, batch_sizes):
+        config['dataloader']['target_ratio'] = t
+        config['training']['batch_size'] = b
+        dirname = f"{b}batch_{t}target"
+        os.mkdir(dirname)
+        os.chdir(dirname)
+        main(config, base_df.copy())
+        os.chdir(base_dir)
+
+        
+
+    

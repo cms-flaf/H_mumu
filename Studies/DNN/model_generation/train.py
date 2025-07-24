@@ -21,6 +21,7 @@ class Trainer:
         epochs,
         early_stop=False,
         patience=None,
+        early_threshold=0,
         device=None,
     ):
 
@@ -32,7 +33,13 @@ class Trainer:
             validation_data, batch_size, device
         )
 
-        self.loss_fn = torch.nn.BCEWithLogitsLoss(reduction="none")
+        self.binary_classification = len(self.training_data[0][1][0]) == 1
+
+        if self.binary_classification:
+            self.loss_fn = torch.nn.BCEWithLogitsLoss(reduction="none")
+        else:
+            #self.loss_fn = torch.nn.NLLLoss(reduction="none")
+            self.loss_fn = torch.nn.CrossEntropyLoss(reduction="none")
 
         self.hyperparams = hyperparams
 
@@ -41,6 +48,7 @@ class Trainer:
         self.early_stop = early_stop
         if patience:
             self.patience = patience
+        self.threshold = early_threshold
 
         # Lists to store average epoch losses
         self.training_loss = []
@@ -62,7 +70,10 @@ class Trainer:
             dataset = TensorDataset(
                 torch.Tensor(x_data), torch.Tensor(y_data), torch.Tensor(weights)
             )
-        dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
+        if batch_size == 0:
+            dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=True)
+        else:
+            dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         return dataloader
     
     def _set_optimizer(self, model):
@@ -80,7 +91,7 @@ class Trainer:
 
     ### Utility functions ###
 
-    def plot_losses(self, valid=True, show=False):
+    def plot_losses(self, valid=True, log=False, show=False):
         """
         Creates a scatter plot showing the average epoch loss
         for both training and validation. Saves to file, unless
@@ -91,17 +102,29 @@ class Trainer:
             plt.plot(
                 self.validation_loss, color="tab:red", marker="o", label="validation"
             )
-            filename = "training_loss_plot_with_valid.png"
+            filename = "training_loss_plot_with_valid"
         else:
-            filename = "training_loss_plot.png"
+            filename = "training_loss_plot"
         plt.plot(self.training_loss, color="tab:green", marker="o", label="training")
-        plt.legend()
+        if self.early_stop:
+            i = np.argmin(self.validation_loss)
+            plt.scatter(i, self.validation_loss[i], label='min', color='black', marker="D", zorder=6)
+        if log:
+            plt.yscale("log")
+            filename += "_log"
         plt.xlabel("Training epoch")
         plt.ylabel("Avg. loss")
+        plt.legend()
         if show:
             plt.show()
         else:
-            plt.savefig(filename)
+            plt.savefig(filename + ".svg", bbox_inches="tight")
+
+
+    def write_loss_data(self, output_name="epoch+valid_loss"):
+        data = (self.training_loss, self.validation_loss)
+        with open(output_name + ".pkl", 'wb') as f:
+            pkl.dump(data, f)
 
     ### Main training functions ###
 
@@ -112,7 +135,7 @@ class Trainer:
         """
         epoch_loss = 0
         model.train()
-        for sample in tqdm(self.train_dataloader):
+        for sample in self.train_dataloader:
             # Every data instance is an input + label pair
             inputs, labels, weights = sample
             # Zero your gradients for every batch!
@@ -138,7 +161,6 @@ class Trainer:
         """
         Runs the model on non-training data to evaluate progress
         """
-        print("Validating...")
         total_loss = 0
         model.eval()
         with torch.no_grad():
@@ -157,8 +179,7 @@ class Trainer:
         """
         Runs the training loop for a fixed number of epochs
         """
-        for i in range(self.epochs):
-            print("On epoch:", i)
+        for i in tqdm(range(self.epochs), unit='epochs'):
             model = self.train_single_epoch(model)
         return model
 
@@ -166,21 +187,23 @@ class Trainer:
         """
         Runs the training loop until the validation data performs worse
         """
-        best_model = None
+        best_model = model.state_dict()
         bad_trains = 0
         i = 0
-        while True:
-            print("On epoch", i)
-            model = self.train_single_epoch(model)
-            i += 1
-            if self.validation_loss[-1] > min(self.validation_loss):
-                bad_trains += 1
-            else:
-                best_model = model
-                bad_trains = 0
-            if bad_trains > self.patience:
-                break
-        return best_model
+        with tqdm(desc="Training in early stop mode", unit="epochs") as pbar:
+            while True:
+                model = self.train_single_epoch(model)
+                if self.validation_loss[-1] <= min(self.validation_loss) - self.threshold:
+                    best_model = model.state_dict()
+                    bad_trains = 0
+                else:
+                    bad_trains += 1
+                if bad_trains > self.patience:
+                    break
+                i += 1
+                pbar.update(1)
+        model.load_state_dict(best_model)
+        return model
 
     ### Main (call this function) ###
 
