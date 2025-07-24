@@ -1,12 +1,14 @@
 anaTupleDef: AnaProd/anaTupleDef.py
+HistTupleDef: AnaProd/HistTupleDef.py
 analysis_import: Analysis.H_mumu
+
 signal_types:
   - ggH
   - VBFH
   # - ttH
   # - VH
-storeFatJets: False
 
+storeFatJets: False
 bjet_preselection_branch : "Jet_B1"
 tagger_name: particleNet
 met_type: "PuppiMET"
@@ -22,32 +24,30 @@ channelDefinition:
   eMu: 12
   muMu: 22
 
-corrections:
-  - JEC
-  - Jet_horns_fix
-  - JER
-  - trgSF
-  # - btagWP
-  - mu
-  - Vpt
-  - pu
-  - muScaRe
-
 region: All
 region_default: All
 
-QCDRegions:
+MuMuMassRegions:
   Z_sideband: "m_mumu > 70 && m_mumu < 110"
   Signal_Fit: "m_mumu > 115 && m_mumu < 135"
   H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
   Signal_ext: "m_mumu > 110 && m_mumu < 150"
 
-ApplyBweight: False
 triggers:
   muMu: [singleMu]
 hist_triggers:
   muMu:
-    default:  (HLT_singleMu)
+    default: (HLT_singleMu)
+
+singleMu_th:
+  "Run2_2016": 26
+  "Run2_2016_HIPM": 26
+  "Run2_2017": 29
+  "Run2_2018": 26
+  "Run3_2022": 26
+  "Run3_2022EE": 26
+  "Run3_2023": 26
+  "Run3_2023BPix": 26
 
 categories:
   - baseline
@@ -68,19 +68,22 @@ category_definition:
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
   # non-physics dependent, but related to Jet Energy Correction and Scale
 
-singleMu_th:
-  "Run2_2016": 26
-  "Run2_2016_HIPM": 26
-  "Run2_2017": 29
-  "Run2_2018": 26
-  "Run3_2022": 26
-  "Run3_2022EE": 26
-  "Run3_2023": 26
-  "Run3_2023BPix": 26
+corrections:
+  - JEC
+  - Jet_horns_fix
+  - JER
+  - trgSF
+  # - btagWP
+  - mu
+  - Vpt
+  - pu
+  - muScaRe
 
 scales:
   - Up
   - Down
+
+ApplyBweight: False
 
 sample_types_to_merge:
   - DY

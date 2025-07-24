@@ -23,11 +23,6 @@ def getChannelLegs(channel):
 
 
 def RecoHttCandidateSelection(df, config):
-    df = df.Define("Muon_iso", "Muon_pfRelIso04_all")
-    df = df.Define("Muon_B0", f"""
-        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""") # && abs(Muon_dz) < 0.2 && abs(Muon_dxy) < 0.024 # in future: Muon_bsConstrainedPt, Muon_bsConstrainedChi2, and Muon_bsConstrainedPtErr
-    df = df.Define("Electron_B0_veto", f"""
-        v_ops::pt(Electron_p4) > 20 && abs(v_ops::eta(Electron_p4)) < 2.5  && ( Electron_mvaIso_WP90 == true )""") # && abs(Electron_dz) < 0.2 && abs(Electron_dxy) < 0.024
     df = df.Define("Muon_B2_muMu_1", "Muon_B0 && Muon_idx[Muon_B0].size()==2")
     df = df.Define("Muon_B2_muMu_2", "Muon_B0  && Muon_idx[Muon_B0].size()==2")
 
@@ -47,7 +42,12 @@ def RecoHttCandidateSelection(df, config):
 
 
 def LeptonVeto(df):
+    df = df.Define("Muon_iso", "Muon_pfRelIso04_all")
+    df = df.Define("Muon_B0", f"""
+        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""") # && abs(Muon_dz) < 0.2 && abs(Muon_dxy) < 0.024 # in future: Muon_bsConstrainedPt, Muon_bsConstrainedChi2, and Muon_bsConstrainedPtErr
     df = df.Filter("Muon_idx[Muon_B0].size()==2",'No extra muons')
+    df = df.Define("Electron_B0_veto", f"""
+        v_ops::pt(Electron_p4) > 20 && abs(v_ops::eta(Electron_p4)) < 2.5  && ( Electron_mvaIso_WP90 == true )""") # && abs(Electron_dz) < 0.2 && abs(Electron_dxy) < 0.024
     df = df.Filter("Electron_idx[Electron_B0_veto].size() == 0", "No extra electrons")
     return df
 

@@ -3,29 +3,46 @@ import sys
 if __name__ == "__main__":
     sys.path.append(os.environ['ANALYSIS_PATH'])
 
-from FLAF.Analysis.HistHelper import *
-from Analysis.GetTriggerWeights import *
+from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
+from Analysis.GetTriggerWeights import *
 
-Muon_observables = ["IP_cov00","IP_cov10","IP_cov11","IP_cov20","IP_cov21","IP_cov22","IPx","IPy","IPz","bField_z","bsConstrainedChi2","bsConstrainedPt","bsConstrainedPtErr","charge","dxy","dxyErr","dxybs","dz","dzErr","eta","fsrPhotonIdx","genPartFlav","genPartIdx","highPtId","highPurity","inTimeMuon","ip3d","ipLengthSig","isGlobal","isPFcand","isStandalone","isTracker","jetIdx","jetNDauCharged","jetPtRelv2","jetRelIso","looseId","mass","mediumId","mediumPromptId","miniIsoId","miniPFRelIso_all","miniPFRelIso_chg","multiIsoId","mvaLowPt","mvaMuID","mvaMuID_WP","nStations","nTrackerLayers","pdgId","pfIsoId","pfRelIso03_all","pfRelIso03_chg","pfRelIso04_all","phi","promptMVA","pt","ptErr","puppiIsoId","segmentComp","sip3d","softId","softMva","softMvaId","softMvaRun3","svIdx","tightCharge","tightId","tkIsoId","tkRelIso","track_cov00","track_cov10","track_cov11","track_cov20","track_cov21","track_cov22","track_cov30","track_cov31","track_cov32","track_cov33","track_cov40","track_cov41","track_cov42","track_cov43","track_cov44","track_dsz","track_dxy","track_lambda","track_phi","track_qoverp","triggerIdLoose","tunepRelPt"]
+
 JetObservables = ["PNetRegPtRawCorr","PNetRegPtRawCorrNeutrino","PNetRegPtRawRes","area","btagDeepFlavB","btagDeepFlavCvB","btagDeepFlavCvL","btagDeepFlavQG","btagPNetB","btagPNetCvB","btagPNetCvL","btagPNetCvNotB","btagPNetQvG","btagPNetTauVJet","chEmEF","chHEF","chMultiplicity","electronIdx1","electronIdx2","eta","hfEmEF","hfHEF","hfadjacentEtaStripsSize","hfcentralEtaStripSize","hfsigmaEtaEta","hfsigmaPhiPhi","jetId","mass","muEF","muonIdx1","muonIdx2","muonSubtrFactor","nConstituents","nElectrons","nMuons","nSVs","neEmEF","neHEF","neMultiplicity","partonFlavour","phi","pt","rawFactor","svIdx1","svIdx2"]
 JetObservablesMC = ["hadronFlavour","partonFlavour", "genJetIdx"]
 
-defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type", "period", "isData","PuppiMET_pt", "PuppiMET_phi", "nJet","DeepMETResolutionTune_pt", "DeepMETResolutionTune_phi","DeepMETResponseTune_pt", "DeepMETResponseTune_phi","PV_npvs"]
+# def createKeyFilterDict(global_params):
+#     filter_dict = {}
+#     filter_str = ""
+#     channels_to_consider = global_params['channels_to_consider']
+#     sign_regions_to_consider = global_params['MuMuMassRegions']
+#     categories_to_consider = global_params["categories"]
+#     triggers_dict = global_params['hist_triggers']
+#     period = global_params["era"]
+#     for ch in channels_to_consider:
+#         triggers = triggers_dict[ch]['default']
+#         if period in triggers_dict[ch].keys():
+#             triggers = triggers_dict[ch][period]
+#         for reg in sign_regions_to_consider:
+#             for cat in categories_to_consider:
+#                 filter_base = f" ({ch} && {triggers}&& {reg} && {cat})"
+#                 filter_str = f"(" + filter_base
+#                 filter_str += ")"
+#                 key = (ch, reg, cat)
+#                 filter_dict[key] = filter_str
+#     return filter_dict
 
-
-
-def createKeyFilterDict(global_cfg_dict, year):
+def createKeyFilterDict(global_params, period):
     filter_dict = {}
     filter_str = ""
-    channels_to_consider = global_cfg_dict['channels_to_consider']
-    sign_regions_to_consider = global_cfg_dict['QCDRegions']
-    categories_to_consider = global_cfg_dict["categories"]
-    triggers_dict = global_cfg_dict['hist_triggers']
+    channels_to_consider = global_params['channels_to_consider']
+    sign_regions_to_consider = global_params['MuMuMassRegions']
+    categories_to_consider = global_params["categories"]
+    triggers_dict = global_params['hist_triggers']
     for ch in channels_to_consider:
         triggers = triggers_dict[ch]['default']
-        if year in triggers_dict[ch].keys():
-            triggers = triggers_dict[ch][year]
+        if period in triggers_dict[ch].keys():
+            triggers = triggers_dict[ch][period]
         for reg in sign_regions_to_consider:
             for cat in categories_to_consider:
                 filter_base = f" ({ch} && {triggers}&& {reg} && {cat})"
@@ -34,7 +51,6 @@ def createKeyFilterDict(global_cfg_dict, year):
                 key = (ch, reg, cat)
                 filter_dict[key] = filter_str
     return filter_dict
-
 
 def GetBTagWeight(global_cfg_dict,cat,applyBtag=False):
     btag_weight = "1"
@@ -49,7 +65,6 @@ def GetBTagWeight(global_cfg_dict,cat,applyBtag=False):
     return f'{btag_weight}*{btagshape_weight}'
 
 def VBFJetSelection(df):
-
     if "SelectedJet_idx" not in df.GetColumnNames():
         print("SelectedJet_idx not in df.GetColumnNames")
         df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
@@ -190,7 +205,7 @@ def SaveVarsForNNInput(vars_to_save):
     return vars_to_save
 
 
-def GetWeight(channel, cat, boosted_categories):
+def GetWeight(channel, A, B):
     weights_to_apply = ["weight_MC_Lumi_pu", "weight_EWKCorr_VptCentral", "weight_DYw_DYWeightCentral"]#,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
@@ -207,10 +222,7 @@ def GetWeight(channel, cat, boosted_categories):
     #   weight_mu2_HighPt_MuonID_SF_MediumIdLooseRelTkIsoCentral ?
     weights_to_apply.extend(ID_weights_dict[channel])
     weights_to_apply.extend(trg_weights_dict[channel])
-    # if cat not in boosted_categories:
-    #      weights_to_apply.extend(["weight_Jet_PUJetID_Central_b1_2", "weight_Jet_PUJetID_Central_b2_2"])
-    # else:
-    #     weights_to_apply.extend(["weight_pNet_Central"])
+
     total_weight = '*'.join(weights_to_apply)
     return total_weight
 
@@ -220,22 +232,23 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         for ch in self.config['channelSelection']:
             for trg in self.config['triggers'][ch]:
                 trg_name = 'HLT_'+trg
+                self.colToSave.append(trg_name)
                 if trg_name not in self.df.GetColumnNames():
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
 
     def defineRegions(self):
-        region_defs = self.config['QCDRegions']
+        region_defs = self.config['MuMuMassRegions']
         for reg_name, reg_cut in region_defs.items():
             self.df = self.df.Define(reg_name, reg_cut)
-
-
+            self.colToSave.append(reg_name)
 
     def SignRegionDef(self):
         self.df = self.df.Define("OS", "mu1_charge*mu2_charge < 0")
         self.colToSave.append("OS")
         self.df = self.df.Define("SS", "!OS")
+        self.colToSave.append("SS")
 
     def defineCategories(self): # needs lot of stuff --> at the end
         singleMuTh = self.config["singleMu_th"][self.period]
@@ -247,6 +260,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
+        self.colToSave.append("muMu")
 
     def __init__(self, df, config, period, isData=False, isCentral=False, wantTriggerSFErrors=False, colToSave=[]):
         super(DataFrameBuilderForHistograms, self).__init__(df)
@@ -256,16 +270,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.isCentral = isCentral
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
-        # self.region = region
-        #  deepTauVersion='v2p1', bTagWPString = "Medium", pNetWPstring="Loose", region="SR", , wantTriggerSFErrors=False, whichType=3, wantScales=True
-        # self.deepTauVersion = deepTauVersion
-        # self.bTagWPString = bTagWPString
-        # self.pNetWPstring = pNetWPstring
-        # self.pNetWP = WorkingPointsParticleNet[period][pNetWPstring]
-        # self.bTagWP = WorkingPointsDeepFlav[period][bTagWPString]
-        # self.whichType = whichType
-        # self.wantScales = isCentral and wantScales
-
 
 
 def PrepareDfForHistograms(dfForHistograms):
