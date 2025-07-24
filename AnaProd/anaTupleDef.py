@@ -9,27 +9,24 @@ loadTF = False
 loadHHBtag = False
 
 
-Muon_observables = ["IP_cov00","IP_cov10","IP_cov11","IP_cov20","IP_cov21","IP_cov22","IPx","IPy","IPz","bField_z","bsConstrainedChi2","bsConstrainedPt","bsConstrainedPtErr","charge","dxy","dxyErr","dxybs","dz","dzErr","eta","fsrPhotonIdx","genPartFlav","genPartIdx","highPtId","highPurity","inTimeMuon","ip3d","ipLengthSig","isGlobal","isPFcand","isStandalone","isTracker","jetIdx","jetNDauCharged","jetPtRelv2","jetRelIso","looseId","mass","mediumId","mediumPromptId","miniIsoId","miniPFRelIso_all","miniPFRelIso_chg","multiIsoId","mvaLowPt","mvaMuID","mvaMuID_WP","nStations","nTrackerLayers","pdgId","pfIsoId","pfRelIso03_all","pfRelIso03_chg","pfRelIso04_all","phi","promptMVA","pt","ptErr","puppiIsoId","segmentComp","sip3d","softId","softMva","softMvaId","softMvaRun3","svIdx","tightCharge","tightId","tkIsoId","tkRelIso","track_cov00","track_cov10","track_cov11","track_cov20","track_cov21","track_cov22","track_cov30","track_cov31","track_cov32","track_cov33","track_cov40","track_cov41","track_cov42","track_cov43","track_cov44","track_dsz","track_dxy","track_lambda","track_phi","track_qoverp","triggerIdLoose","tunepRelPt"]
-# Electron_observables = ["Electron_mvaNoIso_WP80", "Electron_mvaIso_WP80","Electron_pfRelIso03_all"]
-JetObservables = ["PNetRegPtRawCorr","PNetRegPtRawCorrNeutrino","PNetRegPtRawRes","area","btagDeepFlavB","btagDeepFlavCvB","btagDeepFlavCvL","btagDeepFlavQG","btagPNetB","btagPNetCvB","btagPNetCvL","btagPNetCvNotB","btagPNetQvG","btagPNetTauVJet","chEmEF","chHEF","chMultiplicity","electronIdx1","electronIdx2","eta","genJetIdx","hadronFlavour","hfEmEF","hfHEF","hfadjacentEtaStripsSize","hfcentralEtaStripSize","hfsigmaEtaEta","hfsigmaPhiPhi","jetId","mass","muEF","muonIdx1","muonIdx2","muonSubtrFactor","nConstituents","nElectrons","nMuons","nSVs","neEmEF","neHEF","neMultiplicity","partonFlavour","phi","pt","rawFactor","svIdx1","svIdx2", "ptRes","vetoMap"]
+Muon_observables = ["IP_cov00", "IP_cov10", "IP_cov11", "IP_cov20", "IP_cov21", "IP_cov22", "IPx", "IPy", "IPz", "bField_z", "bsConstrainedChi2", "bsConstrainedPt", "bsConstrainedPtErr", "charge", "dxy", "dxyErr", "dxybs", "dz", "dzErr", "eta", "fsrPhotonIdx", "genPartFlav", "genPartIdx", "highPtId", "highPurity", "inTimeMuon", "ip3d", "ipLengthSig", "isGlobal", "isPFcand", "isStandalone", "isTracker", "jetIdx", "jetNDauCharged", "jetPtRelv2", "jetRelIso", "looseId", "mass", "mediumId", "mediumPromptId", "miniIsoId", "miniPFRelIso_all", "miniPFRelIso_chg", "multiIsoId", "mvaLowPt", "mvaMuID", "mvaMuID_WP", "nStations", "nTrackerLayers", "pdgId", "pfIsoId", "pfRelIso03_all", "pfRelIso03_chg", "pfRelIso04_all", "phi", "promptMVA", "pt", "ptErr", "puppiIsoId", "segmentComp", "sip3d", "softId", "softMva", "softMvaId", "softMvaRun3", "svIdx", "tightCharge", "tightId", "tkIsoId", "tkRelIso", "track_cov00", "track_cov10", "track_cov11", "track_cov20", "track_cov21", "track_cov22", "track_cov30", "track_cov31", "track_cov32", "track_cov33", "track_cov40", "track_cov41", "track_cov42", "track_cov43", "track_cov44", "track_dsz", "track_dxy", "track_lambda", "track_phi", "track_qoverp", "triggerIdLoose", "tunepRelPt"]
+
+PrimaryVertexObservables = ["PVBS_chi2", "PVBS_cov00", "PVBS_cov10", "PVBS_cov11", "PVBS_cov20", "PVBS_cov21", "PVBS_cov22", "PVBS_x", "PVBS_y", "PVBS_z", "PV_score", "PV_z", "PV_chi2", "PV_ndof", "PV_npvs", "PV_npvsGood", "PV_score", "PV_sumpt2", "PV_sumpx", "PV_sumpy", "PV_x", "PV_y", "PV_z"]
+
+SecondaryVertexObservables = ["SV_jetIdx","SV_sVIdx","SV_charge","SV_chi2","SV_dlen","SV_dlenSig","SV_dxy","SV_dxySig","SV_eta","SV_mass","SV_ndof","SV_ntracks","SV_pAngle","SV_phi","SV_pt","SV_x","SV_y","SV_z"]
+
+PUObservables = ["Pileup_gpudensity","Pileup_nPU","Pileup_pthatmax","Pileup_pudensity","Pileup_sumEOOT","Pileup_sumLOOT"]
+
+JetObservables = ["PNetRegPtRawCorr", "PNetRegPtRawCorrNeutrino", "PNetRegPtRawRes", "UParTAK4RegPtRawCorr", "UParTAK4RegPtRawCorrNeutrino", "UParTAK4RegPtRawRes", "area", "btagDeepFlavB", "btagDeepFlavCvB", "btagDeepFlavCvL", "btagDeepFlavQG", "btagPNetB", "btagPNetCvB", "btagPNetCvL", "btagPNetCvNotB", "btagPNetQvG", "btagPNetTauVJet", "btagUParTAK4B", "btagUParTAK4CvB", "btagUParTAK4CvL", "btagUParTAK4CvNotB", "btagUParTAK4QvG", "btagUParTAK4TauVJet", "chEmEF", "chHEF", "chMultiplicity", "electronIdx1", "electronIdx2", "eta", "genJetIdx", "hfEmEF", "hfHEF", "hfadjacentEtaStripsSize", "hfcentralEtaStripSize", "hfsigmaEtaEta", "hfsigmaPhiPhi", "jetId", "mass", "muEF", "muonIdx1", "muonIdx2", "muonSubtrFactor", "nConstituents", "nElectrons", "nMuons", "nSVs", "neEmEF", "neHEF", "neMultiplicity", "phi", "pt", "puIdDisc", "puId_beta", "puId_dR2Mean", "puId_frac01", "puId_frac02", "puId_frac03", "puId_frac04", "puId_jetR", "puId_jetRchg", "puId_majW", "puId_minW", "puId_nCharged", "puId_ptD", "puId_pull", "rawFactor", "svIdx1", "svIdx2", "ptRes","vetoMap"]
 
 JetObservablesMC = ["hadronFlavour","partonFlavour"]
 
-FatJetObservables = ["area", "btagCSVV2", "btagDDBvLV2", "btagDeepB", "btagHbb", "deepTagMD_HbbvsQCD",
-                     "deepTagMD_ZHbbvsQCD", "deepTagMD_ZbbvsQCD", "deepTagMD_bbvsLight", "deepTag_H",
-                     "jetId", "msoftdrop", "nBHadrons", "nCHadrons", "nConstituents","rawFactor",
-                      "particleNetMD_QCD", "particleNetMD_Xbb", "particleNet_HbbvsQCD", "particleNet_mass", # 2018
-                     "particleNet_QCD","particleNet_XbbVsQCD", # 2016
-                     "particleNetLegacy_QCD", "particleNetLegacy_Xbb", "particleNetLegacy_mass", # 2016
-                     "particleNetWithMass_QCD", "particleNetWithMass_HbbvsQCD", "particleNet_massCorr", # 2016
-                     "ptRes", "idbtagPNetB"]
+FSRPhotonObservables = ["FsrPhoton_dROverEt2","FsrPhoton_electronIdx","FsrPhoton_eta","FsrPhoton_muonIdx","FsrPhoton_phi","FsrPhoton_pt","FsrPhoton_relIso03"]
 
-FatJetObservablesMC = ["hadronFlavour","partonFlavour"]
+SoftActivityJetObservables = ["SoftActivityJet_eta","SoftActivityJet_phi","SoftActivityJet_pt", "SoftActivityJetHT","SoftActivityJetHT10","SoftActivityJetHT2","SoftActivityJetHT5","SoftActivityJetNjets10","SoftActivityJetNjets2","SoftActivityJetNjets5"]
 
-SubJetObservables = ["btagDeepB", "eta", "mass", "phi", "pt", "rawFactor"]
-SubJetObservablesMC = ["hadronFlavour","partonFlavour"]
 
-defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type", "period", "isData","PuppiMET_pt", "PuppiMET_phi", "nJet","DeepMETResolutionTune_pt", "DeepMETResolutionTune_phi","DeepMETResponseTune_pt", "DeepMETResponseTune_phi","PV_npvs"]
+defaultColToSave = ["FullEventId","luminosityBlock", "run","event", "sample_type", "period", "isData","PV_npvs", "BeamSpot_sigmaZ", "BeamSpot_sigmaZError", "BeamSpot_type", "BeamSpot_z", "BeamSpot_zError"]
 
 def getDefaultColumnsToSave(isData):
     colToSave = defaultColToSave.copy()
@@ -38,14 +35,24 @@ def getDefaultColumnsToSave(isData):
     return colToSave
 
 def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal, applyTriggerFilter, global_params, channels):
-    dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
+
+
     dfw.Apply(AnaBaseline.LeptonVeto)
-    dfw.Apply(Corrections.getGlobal().btag.getWPid)
+
+    dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
+
+    # dfw.Apply(Corrections.getGlobal().btag.getWPid)
+
     dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
-    dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
-    dfw.Apply(CommonBaseline.Jet_insideVetoRegion)
-    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap, "Jet_vetoMapLooseRegion")
-    dfw.Apply(AnaBaseline.GetMuMuCandidate)
+
+    dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution) # nothing should change
+
+    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap) # nothing should change
+
+    dfw.Apply(CommonBaseline.ApplyJetVetoMap) # nothing should change
+
+    dfw.Apply(AnaBaseline.GetMuMuCandidate) # nothing should change
+
     n_legs = 2
 
     for leg_idx in range(n_legs):
@@ -109,6 +116,11 @@ def addAllVariables(dfw, syst_name, isData, trigger_class, lepton_legs, isSignal
         jet_obs_name = f"Jet_{jetobs}"
         if jet_obs_name in dfw.df.GetColumnNames():
             dfw.DefineAndAppend(f"SelectedJet_{jetobs}", f"Jet_{jetobs}[Jet_B1]")
+    if global_params['nano_version'] == 'v15':
+        if not isData:
+            dfw.colToSave.extend(PUObservables)
+        dfw.colToSave.extend(FSRPhotonObservables)
+        dfw.colToSave.extend(SoftActivityJetObservables)
 
     # pf_str = global_params["met_type"]
     # dfw.DefineAndAppend(f"met_pt_nano", f"static_cast<float>({pf_str}_p4_nano.pt())")
