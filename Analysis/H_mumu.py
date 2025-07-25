@@ -75,7 +75,7 @@ def VBFJetSelection(df):
     df = df.Define("Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605")  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
 
-    df = df.Define("Jet_preselection","SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap].size()>0 ") # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
+    df = df.Define("SelectedJet_vetoMap_inverted", "!SelectedJet_vetoMap").Define("Jet_preselection","SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ") # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
 
     df = df.Define("VBFJetCand","FindVBFJets(SelectedJet_p4)")
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")

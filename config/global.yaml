@@ -57,12 +57,16 @@ categories:
   # - ggH_JetVeto
 
 category_definition:
-  baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})"
+  baseline: "OS && ((mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu))"
   VBF_def: "HasVBF && Jet_preselection && j1_pt > 25 && j2_pt > 25"
   VBF: "baseline && VBF_def"
   ggH: "baseline && !(VBF_def)"
   VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
   VBF_JetVeto: "baseline && VBF_JetVeto_def"
+  etamm_0p9: "baseline && abs(eta_mumu) < 0.9"
+  etamm_1p4: "baseline && abs(eta_mumu) >= 0.9 && abs(eta_mumu) < 1.4"
+  etamm_2p4: "baseline && abs(eta_mumu) >= 1.4 && abs(eta_mumu) < 2.4"
+
   # ggH_JetVeto: "baseline && !VBF_JetVeto_def"
   # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
