@@ -1,5 +1,5 @@
 anaTupleDef: AnaProd/anaTupleDef.py
-HistTupleDef: AnaProd/HistTupleDef.py
+histTupleDef: Analysis/histTupleDef.py
 analysis_import: Analysis.H_mumu
 
 signal_types:
@@ -13,6 +13,7 @@ bjet_preselection_branch : "Jet_B1"
 tagger_name: particleNet
 met_type: "PuppiMET"
 
+treeName: "Events"
 channelSelection:
   - muMu
 
