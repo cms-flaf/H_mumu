@@ -96,6 +96,6 @@ sample_types_to_merge:
   - W
   - VVV
   - VV
-  - ttH
-  # - ST
-  # - TTVV
+  - ST
+  - TW
+  - TTX

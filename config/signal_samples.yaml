@@ -6,6 +6,12 @@ TTH_Hto2Mu:
 
 VBFHto2Mu:
   sampleType: VBFH
+VBFHto2Mu_M-125_13p6TeV_powheg-herwig7:
+  sampleType: VBFH
+# VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1:
+#   sampleType: VBFH
+# VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2:
+#   sampleType: VBFH
 
 WminusH_Hto2Mu_WtoAll:
   sampleType: VH
