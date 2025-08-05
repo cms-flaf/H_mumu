@@ -121,9 +121,9 @@ pt_mumu:
 m_mumu:
   x_bins: "1000|0:1000"
   x_rebin: [69,70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111]
-  x_title: M(\mu\mu) (GeV)
+  x_title: "$m(\\mu\\mu) (\\mathrm{GeV})$"
   # y_title: Events
-  y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
+  y_title: "$\\frac{\\mathrm{Events}}{\\mathrm{bin\\ width}}\\,\\left(\\frac{1}{\\mathrm{GeV}}\\right)$"
   use_log_x: False
   use_log_y: False
   max_y_sf: 1.8

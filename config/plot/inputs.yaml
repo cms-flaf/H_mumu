@@ -1,8 +1,8 @@
 - name: DY
   types:
     - DY
-  title: "DY #rightarrow ll + jets"
-  color: kAzure-9
+  title: "DY $\\rightarrow \\ell \\ell$ + jets"
+  color: cornflowerblue #kAzure-9colors = ["cornflowerblue", "salmon"]
 - name: VV
   types:
     - VV
