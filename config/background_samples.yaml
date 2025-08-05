@@ -11,12 +11,12 @@ WtoLNu_amcatnloFXFX:
 ############## TT ##############
 # TT:
 #   sampleType: TT
-TTto2L2Nu:
-  sampleType: TT
-TTto4Q:
-  sampleType: TT
-TTtoLNu2Q:
-  sampleType: TT
+# TTto2L2Nu:
+#   sampleType: TT
+# TTto4Q:
+#   sampleType: TT
+# TTtoLNu2Q:
+#   sampleType: TT
 
 # TT_ext1:
 #   sampleType: TT
@@ -165,12 +165,12 @@ WZtoLNu2Q_powheg:
 
 # ZZ:
 #   sampleType: VV
-ZZto2L2Nu_powheg:
-  sampleType: VV
+# ZZto2L2Nu_powheg:
+#   sampleType: VV
 # ZZto2L2Nu_powheg_ext1:
 #   sampleType: VV
-ZZto2L2Q_powheg:
-  sampleType: VV
+# ZZto2L2Q_powheg:
+#   sampleType: VV
 # ZZto2L2Q_powheg_ext1:
 #   sampleType: VV
 ZZto2Nu2Q_powheg:

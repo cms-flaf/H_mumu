@@ -162,7 +162,8 @@ def GetSoftJets(df):
     df = df.Define("SoftJet_Et", "v_ops::Et(SelectedJet_p4[SoftJet_def])")
     df = df.Define("SoftJet_HtCh_fraction", "SelectedJet_chHEF[SoftJet_def]")
     df = df.Define("SoftJet_HtNe_fraction", "SelectedJet_neHEF[SoftJet_def]")
-    df = df.Define("SoftJet_HtHF_fraction", "SelectedJet_hfHEF[SoftJet_def]")
+    if "SelectedJet_hfHEF" in df.GetColumnNames():
+        df = df.Define("SoftJet_HtHF_fraction", "SelectedJet_hfHEF[SoftJet_def]")
     for var in JetObservables:
         if f"SoftJet_{var}" not in df.GetColumnNames():
             if f"SoftJet_{var}" not in df.GetColumnNames() and f"SelectedJet_{var}" in df.GetColumnNames():
