@@ -9,7 +9,7 @@ signal_types:
   # - VH
 
 storeFatJets: False
-bjet_preselection_branch : "Jet_B1"
+bjet_preselection_branch: "Jet_B1"
 tagger_name: particleNet
 met_type: "PuppiMET"
 
@@ -35,7 +35,7 @@ MuMuMassRegions:
   Signal_ext: "m_mumu > 110 && m_mumu < 150"
 
 triggers:
-  muMu: [singleMu]
+  muMu: [ singleMu ]
 hist_triggers:
   muMu:
     default: (HLT_singleMu)

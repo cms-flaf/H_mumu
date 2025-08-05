@@ -53,7 +53,6 @@ DYto2L_M_50_amcatnloFXFX:
 #   sampleType: DY
 
 
-
 ############## EWK ##############
 # EWK_ZTo2L:
 #   sampleType: EWK
@@ -225,12 +224,9 @@ TbarWplusto2L2Nu:
 
 TBbarQ_t_channel_4FS:
   sampleType: ST
-TbarWplusto2L2Nu:
-  sampleType: ST
 TBbartoLplusNuBbar_s_channel_4FS:
   sampleType: ST
-TbarWplusto2L2Nu:
-  sampleType: ST
+
 
 # ############## TW ##############
 

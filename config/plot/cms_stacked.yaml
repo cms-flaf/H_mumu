@@ -1,7 +1,7 @@
 page_setup:
   canvas_size: [ 1000, 1000 ]
-  main_pad: [0.07, 0.25, 0.98, 0.95]  # Aumentato il primo valore (sinistra)
-  margins: [0.18, 0.12, 0.08, 0.05]  # Aumentato il margine sinistro
+  main_pad: [ 0.07, 0.25, 0.98, 0.95 ]  # Aumentato il primo valore (sinistra)
+  margins: [ 0.18, 0.12, 0.08, 0.05 ]  # Aumentato il margine sinistro
   paper_size: [ 20, 20 ]
   canvas_color: kWhite
   canvas_border_size: 10
@@ -44,8 +44,6 @@ page_setup:
     - ana_label
 
 
-
-
 legend:
   pos_ref: inner_right_top
   pos: [ 0.95, 0.98 ]
@@ -61,92 +59,87 @@ cms_label:
   type: cms_mplhep
   tag: "Preliminary"
   com: "13.6"
-  pos: [0.02, 1.05]   # in ax.transAxes
+  pos: [ 0.02, 1.05 ]   # in ax.transAxes
   ref: null           # riferimento assoluto
   text_size: 18
   font: 61
 
 ana_label:
   text: "$H \\rightarrow \\mu\\mu$"
-  pos: [0.1, 1.032]
+  pos: [ 0.1, 1.032 ]
   ref: null       # pos relativa a cms_label
   font: 61
   text_size: 16
 
-
-
 # cms_text:
 #   text: "CMS"
 #   pos_ref: inner_left_top
-#   pos: [0.05, -0.05]  # X, Y relative a inner_left_top
+#   pos: [ 0.05, -0.05]  # X, Y relative a inner_left_to p
 #   text_size: 0.05
 #   font: 61
 
 # scope_text:
 #   text: "Private Work"
 #   pos_ref: cms_text
-#   pos: [0.0, -0.06]
+#   pos: [ 0.0, -0.06 ]
 #   text_size: 0.04
 #   font: 52
 
 # ana_text:
 #   text: "$H\\rightarrow\\mu\\mu$"
 #   pos_ref: inner_left_top
-#   pos: [0.05, 1.]  # sotto a CMS
+#   pos: [ 0.05, 1.]  # sotto a CM S
 #   text_size: 0.04
 #   font: 61
 
 # lumi_text:
 #   text: "{lumi} ({year})"
 #   pos_ref: scope_text
-#   pos: [0.0, -0.06]
+#   pos: [ 0.0, -0.06 ]
 #   text_size: 0.04
 #   font: 42
 
 # com_text:
 #   text: "{com}"
 #   pos_ref: scope_text
-#   pos: [0.0, -0.06]
+#   pos: [ 0.0, -0.06 ]
 #   text_size: 0.04
 #   font: 42
 
 # cms_text:
 #   text: "CMS"
 #   pos_ref: inner_left_top
-#   pos: [0.05, -0.06]
+#   pos: [ 0.05, -0.06 ]
 #   text_size: 0.05
 #   font: 61
-
-
 
 # datasim_text:
 #   text: "#sqrt{s} = 13 TeV, L = 138 fb^{-1}"
 #   pos_ref: scope_text
-#   pos: [0.0, -0.06]
+#   pos: [ 0.0, -0.06 ]
 #   text_size: 0.04
 #   font: 42
 
 # ana_text:
 #   text: "$h\\rightarrow\\mu\\mu$"
 #   pos_ref: inner_left_top
-#   pos: [0.0, -0.06]
+#   pos: [ 0.0, -0.06 ]
 #   text_size: 0.035
 #   font: 62
 
 # cat_text:
 #   text: "Category: 1b-loose"
 #   pos_ref: ana_text
-#   pos: [0.0, -0.06]
+#   pos: [ 0.0, -0.06 ]
 #   text_size: 0.03
 #   font: 62
 
 # ch_text:
 #   text: "Channel: #mu#mu"
 #   pos_ref: cat_text
-#   pos: [0.0, -0.06]
+#   pos: [ 0.0, -0.06 ]
 #   text_size: 0.03
 #   font: 62
-
 
 bkg_hist:
   fill_style: 1001
