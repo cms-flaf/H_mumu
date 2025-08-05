@@ -1,5 +1,4 @@
 #https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauTrigger#Updates_for_2022_data_taking
-
 singleMu:
   channels:
     - muMu
