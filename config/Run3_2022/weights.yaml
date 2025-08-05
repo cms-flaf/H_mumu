@@ -5,19 +5,19 @@ norm:
 
   HighPt_MuonID_SF_MediumID:
     expression: weight_mu1_HighPt_MuonID_SF_MediumID{scale}_rel * weight_mu2_HighPt_MuonID_SF_MediumID{scale}_rel * final_weight
-    name:  CMS_eff_m_id_highpt_{}
+    name: CMS_eff_m_id_highpt_{}
   HighPt_MuonID_SF_MediumIDLooseRelIsoHLT:
     expression: weight_mu1_HighPt_MuonID_SF_MediumIDLooseRelIsoHLT{scale}_rel * weight_mu2_HighPt_MuonID_SF_MediumIDLooseRelIsoHLT{scale}_rel * final_weight
-    name:  CMS_eff_m_id_iso_hlt_highpt_{}
+    name: CMS_eff_m_id_iso_hlt_highpt_{}
   HighPt_MuonID_SF_MediumIdLooseRelTkIso:
     expression: weight_mu1_HighPt_MuonID_SF_MediumIdLooseRelTkIso{scale}_rel * weight_mu2_HighPt_MuonID_SF_MediumIdLooseRelTkIso{scale}_rel * final_weight
     name: CMS_eff_m_id_iso_highpt_{}
   HighPt_MuonID_SF_Reco:
     expression: weight_mu1_HighPt_MuonID_SF_Reco{scale}_rel * weight_mu2_HighPt_MuonID_SF_Reco{scale}_rel * final_weight
-    name:  CMS_eff_m_reco_highpt_{}
+    name: CMS_eff_m_reco_highpt_{}
   LowPt_MuonID_SF_MediumID:
     expression: weight_mu1_LowPt_MuonID_SF_MediumID{scale}_rel * weight_mu2_LowPt_MuonID_SF_MediumID{scale}_rel * final_weight
-    name:  CMS_eff_m_id_lowpt_{}
+    name: CMS_eff_m_id_lowpt_{}
   MuonID_SF_LoosePFIso:
     expression: weight_mu1_MuonID_SF_LoosePFIso{scale}_rel * weight_mu2_MuonID_SF_LoosePFIso{scale}_rel * final_weight
     name: CMS_eff_m_iso_{}
