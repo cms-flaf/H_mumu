@@ -2,11 +2,11 @@
 WtoLNu_amcatnloFXFX:
   sampleType: W
 # WtoLNu_0J_amcatnloFXFX:
-  # sampleType: W
+#   sampleType: W
 # WtoLNu_1J_amcatnloFXFX:
-  # sampleType: W
+#   sampleType: W
 # WtoLNu_2J_amcatnloFXFX:
-  # sampleType: W
+#   sampleType: W
 
 ############## TT ##############
 # TT:
@@ -38,7 +38,7 @@ WtoLNu_amcatnloFXFX:
 # DYto2L_M_50_1J_amcatnloFXFX:
 #   sampleType: DY
 # DYto2L_M_50_2J_amcatnloFXFX:
-  # sampleType: DY
+#   sampleType: DY
 DYto2L_M_50_amcatnloFXFX:
   sampleType: DY
 # DYto2L_M_50_amcatnloFXFX_ext1:
@@ -175,11 +175,11 @@ WZtoLNu2Q_powheg:
 ZZto2Nu2Q_powheg:
   sampleType: VV
 # ZZto2Nu2Q_powheg_ext1:
-  # sampleType: VV
+#   sampleType: VV
 ZZto4L_powheg:
   sampleType: VV
 # ZZto4L_powheg_ext1:
-  # sampleType: VV
+#   sampleType: VV
 
 # ############## VVV inclusive ##############
 WWW_4F:
@@ -233,15 +233,15 @@ TBbartoLplusNuBbar_s_channel_4FS:
 TWminusto2L2Nu:
   sampleType: TW
 # TWminusto2L2Nu_ext1:
-  # sampleType: TW
+#   sampleType: TW
 TWminusto4Q:
   sampleType: TW
 # TWminusto4Q_ext1:
-  # sampleType: TW
+#   sampleType: TW
 TWminustoLNu2Q:
   sampleType: TW
 # TWminustoLNu2Q_ext1:
-  # sampleType: TW
+#   sampleType: TW
 
 # ############## TTX inclusive ##############
 TTWW:

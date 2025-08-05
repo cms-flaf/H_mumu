@@ -18,7 +18,7 @@ GLOBAL:
     - keep DYto2Mu_MLL_105to160_amcatnloFXFX
     - keep DYto2Mu_MLL_120to200_powheg
     - keep DYto2Mu_MLL_200to400_powheg
-    - drop EWK_2L2J_madgraph_herwig #tmp
+    - drop EWK_2L2J_madgraph_herwig  # tmp
     - keep ^LLJJ.*
     - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
     - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1
@@ -41,8 +41,7 @@ GLOBAL:
     - keep ^Muon_.*
     # - keep ^MuonEG_.*
     - keep ^SingleMuon_.*
-
-  use_stitching: false
+  use_stitching: False
   triggerFile: config/Run3_2022/triggers.yaml
 
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole:
