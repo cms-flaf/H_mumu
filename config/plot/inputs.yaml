@@ -1,16 +1,16 @@
 - name: DY
   types:
     - DY
-  title: "DY #rightarrow ll + jets"
-  color: kAzure-9
+  title: "DY $\\rightarrow \\ell \\ell$ + jets"
+  color: cornflowerblue  #  kAzure-9colors = ["cornflowerblue", "salmon"]
 - name: VV
   types:
     - VV
   title: "VV"
-  color: kPink+2 # kOrange-4
+  color: kPink+2  #  kOrange-4
 - name: W
   types:
-   - W
+    - W
   title: "W #rightarrow l#nu + jets"
   color: kYellow-7
 - name: TT
@@ -57,7 +57,7 @@
 #     - ttH
 #     - VH
 #     - H
-  # color: kRed-10
+#   color: kRed-10
 # - name: Other
 #   title: "Other"
 #   types: []

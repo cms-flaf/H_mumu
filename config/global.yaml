@@ -1,16 +1,19 @@
 anaTupleDef: AnaProd/anaTupleDef.py
+histTupleDef: Analysis/histTupleDef.py
 analysis_import: Analysis.H_mumu
+
 signal_types:
   - ggH
   - VBFH
   # - ttH
   # - VH
-storeFatJets: False
 
-bjet_preselection_branch : "Jet_B1"
+storeFatJets: False
+bjet_preselection_branch: "Jet_B1"
 tagger_name: particleNet
 met_type: "PuppiMET"
 
+treeName: "Events"
 channelSelection:
   - muMu
 
@@ -22,30 +25,30 @@ channelDefinition:
   eMu: 12
   muMu: 22
 
-corrections:
-  - JEC
-  - JER
-  - trgSF
-  # - btagWP
-  - mu
-  - Vpt
-  - pu
-
 region: All
 region_default: All
 
-QCDRegions:
+MuMuMassRegions:
   Z_sideband: "m_mumu > 70 && m_mumu < 110"
   Signal_Fit: "m_mumu > 115 && m_mumu < 135"
   H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
   Signal_ext: "m_mumu > 110 && m_mumu < 150"
 
-ApplyBweight: False
 triggers:
-  muMu: [singleMu]
+  muMu: [ singleMu ]
 hist_triggers:
   muMu:
-    default:  (HLT_singleMu)
+    default: (HLT_singleMu)
+
+singleMu_th:
+  "Run2_2016": 26
+  "Run2_2016_HIPM": 26
+  "Run2_2017": 29
+  "Run2_2018": 26
+  "Run3_2022": 26
+  "Run3_2022EE": 26
+  "Run3_2023": 26
+  "Run3_2023BPix": 26
 
 categories:
   - baseline
@@ -55,28 +58,37 @@ categories:
   # - ggH_JetVeto
 
 category_definition:
-  baseline: "OS && (mu1_pt > {MuPtTh} && mu2_pt > {MuPtTh})"
+  baseline: "OS && ((mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu))"
   VBF_def: "HasVBF && Jet_preselection && j1_pt > 25 && j2_pt > 25"
   VBF: "baseline && VBF_def"
   ggH: "baseline && !(VBF_def)"
   VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
   VBF_JetVeto: "baseline && VBF_JetVeto_def"
+  etamm_0p9: "baseline && abs(eta_mumu) < 0.9"
+  etamm_1p4: "baseline && abs(eta_mumu) >= 0.9 && abs(eta_mumu) < 1.4"
+  etamm_2p4: "baseline && abs(eta_mumu) >= 1.4 && abs(eta_mumu) < 2.4"
+
   # ggH_JetVeto: "baseline && !VBF_JetVeto_def"
   # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
   # non-physics dependent, but related to Jet Energy Correction and Scale
 
-singleMu_th:
-  "Run2_2016": 26
-  "Run2_2016_HIPM": 26
-  "Run2_2017": 29
-  "Run2_2018": 26
-  "Run3_2022": 26
-  "Run3_2022EE": 26
+corrections:
+  - JEC
+  - Jet_horns_fix
+  - JER
+  - trgSF
+  # - btagWP
+  - mu
+  - Vpt
+  - pu
+  - muScaRe
 
 scales:
   - Up
   - Down
+
+ApplyBweight: False
 
 sample_types_to_merge:
   - DY
@@ -84,6 +96,6 @@ sample_types_to_merge:
   - W
   - VVV
   - VV
-  - ttH
-  # - ST
-  # - TTVV
+  - ST
+  - TW
+  - TTX

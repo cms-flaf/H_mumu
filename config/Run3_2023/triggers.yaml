@@ -1,73 +1,19 @@
-GLOBAL:
-  sampleSelection:
-    - drop ^.*
-    - keep ^TTto.*
-    - keep ^ttH.*
-    - keep ^.*Hto2Mu.*
-    # - keep ^[GluGluTTH_|VBF|WminusH_|WplusH_|ZH_]Hto2Mu*
-    # - keep ^EWK_.*
-    # - keep ^ST.*
-    # - keep DYto2L_M_10to50_amcatnloFXFX
-    # - keep WW
-    # - keep WZ
-    # - keep ZZ
-    - keep DYto2L_M_50_amcatnloFXFX
-    - keep DYto2Mu_MLL_120to200_powheg
-    - keep DYto2Mu_MLL_50to120_powheg
-    - keep WtoLNu_amcatnloFXFX
-    - keep WWto2L2Nu_powheg
-    # - keep WWto2L2Nu_powheg_ext1
-    - keep WZto3LNu_powheg
-    - keep WZto2L2Q_powheg
-    # - keep WZto2L2Q_powheg_ext1
-    - keep ZZto2L2Nu_powheg
-    # - keep ZZto2L2Nu_powheg_ext1
-    - keep ZZto2L2Q_powheg
-    # - keep ZZto2L2Q_powheg_ext1
-    - keep ZZto4L_powheg
-    # - keep ZZto4L_powheg_ext1
-    - keep ZZto2L2Q_amcatnloFXFX
-    - keep ST_tW_top_2L2Nu
-    # - keep ST_tW_top_2L2Nu_ext1
-    - keep ST_tW_antitop_2L2Nu
-    # - keep ST_tW_antitop_2L2Nu_ext1
-    - keep WWW_4F
-    - keep WWZ_4F
-    - keep WZZ
-    - keep ZZZ
-    - keep ^Muon_.*
-    # - keep ^Tau_.*
-    # - keep ^EGamma_.*
-    # - keep ^MuonEG_.*
-    # - keep ^Jet.*
-    # - keep ^MET_.*
-  use_stitching: false
-  triggerFile: config/Run3_2023/triggers.yaml
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauTrigger#Updates_for_2022_data_taking
 
-GluGluHto2Mu:
-  sampleType: ggH
-  crossSection: GluGluHto2Mu
-  generator: powheg
-
-TTH_Hto2Mu:
-  sampleType: ttH
-  crossSection: TTH_Hto2Mu
-  generator: powheg
-
-VBFHto2Mu:
-  sampleType: VBFH
-  crossSection: VBFHto2Mu
-  generator: powheg
-
-WminusH_Hto2Mu_WtoAll:
-  sampleType: VH
-  crossSection: WminusH_Hto2Mu_WtoAll
-  generator: powheg
-WplusH_Hto2Mu_WtoAll:
-  sampleType: VH
-  crossSection: WplusH_Hto2Mu_WtoAll
-  generator: powheg
-ZH_Hto2Mu_ZtoAll:
-  sampleType: VH
-  crossSection: ZH_Hto2Mu_ZtoAll
-  generator: powheg
+singleMu:
+  channels:
+    - muMu
+  path:
+    - HLT_IsoMu24
+  legs:
+    - offline_obj:
+        cut: "{obj}_legType == Leg::mu && {obj}_pt > 26"  # {obj}_pt > 26 && abs({obj}_eta) < 2.4
+      online_obj:
+        cut: TrigObj_id == 13 && (TrigObj_filterBits&8)!=0
+      doMatching: True
+      jsonTRGcorrection_key: { "2022_Summer22": "NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium",
+                               "2022_Summer22EE": "NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium",
+                               "2023_Summer23": "NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium",
+                               "2023_Summer23BPix": "NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium"
+      }
+      jsonTRGcorrection_elepath: "placeholder"
