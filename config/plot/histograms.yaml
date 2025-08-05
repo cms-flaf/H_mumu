@@ -1,5 +1,3 @@
-
-
 ########## \mu1 BEGIN ##########
 mu1_pt:
   x_bins: "200|0:1000"
@@ -47,9 +45,7 @@ mu1_phi:
   max_y_sf: 1.8
   divide_by_bin_width: False
 
-
 ########## \mu1 END ##########
-
 
 ########## mu2 BEGIN ##########
 mu2_pt:
@@ -101,16 +97,14 @@ mu2_phi:
 
 ########## mu2 END ##########
 
-
 ########## \mu\mu BEGIN ##########
-
 pt_mumu:
   x_bins: "200|0:1000"
   x_rebin:
     other: [ 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110, 115, 120, 125, 130, 135, 150, 165, 180, 200 ]
   x_title: p_{T}(\mu\mu) (GeV)
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
-  y_title: Events
+  # y_title: Events
   use_log_x: False
   use_log_y: False
   max_y_sf: 1.8
@@ -240,7 +234,6 @@ VBFjets_pt:
   divide_by_bin_width: True
   # divide_by_bin_width: False
 
-
 VBFjets_eta:
   x_bins: "192|-4.8:4.8"
   x_rebin: [ -4.8, -4.6, -4.4, -4.2, -4., -3.8, -3.6, -3.4, -3.2, -3., -2.8, -2.6, -2.4, -2.2, -2., -1.8, -1.6, -1.4, -1.2, -1., -0.8, -0.6, -0.4, -0.2, 0., 0.2, 0.4, 0.6, 0.8, 1., 1.2, 1.4, 1.6, 1.8, 2., 2.2, 2.4, 2.6, 2.8, 3., 3.2, 3.4, 3.6, 3.8, 4., 4.2, 4.4, 4.6, 4.8 ]
@@ -259,10 +252,7 @@ VBFjets_phi:
   max_y_sf: 1.8
   divide_by_bin_width: False
 
-
 ########## j1 END ##########
-
-
 
 ########## j1 BEGIN ##########
 j1_pt:
@@ -279,7 +269,6 @@ j1_pt:
   # max_y_sf: 20.2
   divide_by_bin_width: True
   # divide_by_bin_width: False
-
 
 j1_eta:
   x_bins: "192|-4.8:4.8"
@@ -299,15 +288,13 @@ j1_phi:
   max_y_sf: 1.8
   divide_by_bin_width: False
 
-
 ########## j1 END ##########
-
 
 ########## j2 BEGIN ##########
 j2_pt:
   x_bins: "200|0:1000"
   x_rebin:
-    other:  [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 350, 400, 500 ]
+    other: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 160, 180, 200, 220, 240, 260, 280, 300, 350, 400, 500 ]
   x_title: p_{T}(j_{2}) (GeV)
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
   # y_title: Events
@@ -337,15 +324,13 @@ j2_phi:
   max_y_sf: 1.8
   divide_by_bin_width: False
 
-
 ########## j2 END ##########
 
 ########## j system BEGIN ##########
-
 Zepperfield_Var:
   x_bins: "100|0:2"
   x_rebin:
-    other:  [ 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0 ]
+    other: [ 0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0 ]
   x_title: Z(\mu\mu, jj)
   # y_title: Events
   y_title: "#frac{Events}{bin width} #left(#frac{1}{GeV}#right) "
@@ -356,7 +341,6 @@ Zepperfield_Var:
   # max_y_sf: 20.2
   # divide_by_bin_width: False
   divide_by_bin_width: True
-
 
 pt_centrality:
   x_bins: "100|0:10"
@@ -433,7 +417,6 @@ minDeltaEtaSigned:
   use_log_y: False
   max_y_sf: 1.8
   divide_by_bin_width: False
-
 
 minDeltaPhi:
   x_bins: "100|-3.2:3.2"
