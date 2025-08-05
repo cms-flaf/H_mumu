@@ -36,7 +36,7 @@ norm:
   EWKCorr_ewcorr:
     expression: weight_EWKCorr_ewcorr{scale}_rel * final_weight
     name: CMS_ewkCorr_{}
-  # DYw_DYWeight:
+  # DYWeight:
   #   expression: weight_DYw_DYWeight{scale}_rel * final_weight
   #   name: CMS_dyweight_{}
 
