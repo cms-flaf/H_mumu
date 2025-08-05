@@ -29,8 +29,8 @@ norm:
     name: CMS_eff_m_id_iso_trk_{}
 
   # HLT_singleMu:
-    # expression: weight_trigSF_singleMu_IsoMu24{scale}_rel * final_weight
-    # name: CMS_trig_singleMu_{}
+  #   expression: weight_trigSF_singleMu_IsoMu24{scale}_rel * final_weight
+  #   name: CMS_trig_singleMu_{}
   EWKCorr_Vpt:
     expression: weight_EWKCorr_Vpt{scale}_rel * final_weight
     name: CMS_Vpt_{}

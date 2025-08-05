@@ -43,7 +43,7 @@ GLOBAL:
     # - keep ^MuonEG_.*
     # - keep ^Jet.*
     # - keep ^MET_.*
-  use_stitching: false
+  use_stitching: False
   triggerFile: config/Run3_2023/triggers.yaml
 
 GluGluHto2Mu:

@@ -8,8 +8,8 @@ page_setup:
   canvas_border_mode: 0
   palette: 1
   end_error_size: 0
-  grid_xy: [ false, false ]
-  tick_xy: [ false, false ]
+  grid_xy: [ False, False ]
+  tick_xy: [ False, False ]
   tick_length_xy: [ 0.03, 0.03 ]
   n_div_xy: [ 510, 510 ]
   y_min: 0
@@ -18,7 +18,7 @@ page_setup:
   axis_title_offsets: [ 0.8, 1.2 ]
   axis_label_sizes: [ 0.04, 0.04 ]
   axis_label_offsets: [ 0.005, 0.005 ]
-  draw_ratio: true
+  draw_ratio: True
   ratio_y_title: "Obs/Bkg"
   ratio_y_title_size: 0.055
   ratio_y_title_offset: 0.3
@@ -176,4 +176,4 @@ data_hist:
   marker_color: kBlack
   legend_style: PLE
   draw_opt: "0pe"
-  blind: true
+  blind: True
