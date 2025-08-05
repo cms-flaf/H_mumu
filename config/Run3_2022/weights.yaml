@@ -30,15 +30,15 @@ norm:
   # HLT_singleMu:
   #   expression: weight_trigSF_singleMu_IsoMu24{scale}_rel * final_weight
   #   name: CMS_trig_singleMu_{}
+  # DYWeight:
+  #   expression: weight_DYw_DYWeight{scale}_rel * final_weight
+  #   name: CMS_dyweight_{}
   EWKCorr_Vpt:
     expression: weight_EWKCorr_Vpt{scale}_rel * final_weight
     name: CMS_Vpt_{}
   EWKCorr_ewcorr:
     expression: weight_EWKCorr_ewcorr{scale}_rel * final_weight
     name: CMS_ewkCorr_{}
-  # DYWeight:
-  #   expression: weight_DYw_DYWeight{scale}_rel * final_weight
-  #   name: CMS_dyweight_{}
 
 shape:
   - JES_Total
