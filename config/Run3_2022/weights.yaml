@@ -27,7 +27,6 @@ norm:
   MuonID_SF_MediumID_Trk:
     expression: weight_mu1_MuonID_SF_MediumID_Trk{scale}_rel * weight_mu2_MuonID_SF_MediumID_Trk{scale}_rel * final_weight
     name: CMS_eff_m_id_iso_trk_{}
-
   # HLT_singleMu:
   #   expression: weight_trigSF_singleMu_IsoMu24{scale}_rel * final_weight
   #   name: CMS_trig_singleMu_{}
