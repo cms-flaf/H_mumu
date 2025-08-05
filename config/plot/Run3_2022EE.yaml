@@ -7,5 +7,4 @@ lumi_text:
   align: right_bottom
 
 channel_text:
-  # 'muMu': '#mu#mu'
-  'muMu': ''
+  'muMu': '#mu#mu'
