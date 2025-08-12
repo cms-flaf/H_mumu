@@ -2,12 +2,12 @@ vars_to_save:
   Muon:
     - mu{}_eta
     - mu{}_pt
-#  SoftJet:
-#    - Et # transverse energy
-#    - HtCh_fraction # hadronic transverse energy fraction from charged particles
-#    - HtHF_fraction # hadronic transverse energy fraction in the HF calorimeter
-#    - HtNe_fraction # hadronic transverse energy fraction from neutral particles
-#    - energy
+  # SoftJet:
+  #   - Et # transverse energy
+  #   - HtCh_fraction # hadronic transverse energy fraction from charged particles
+  #   - HtHF_fraction # hadronic transverse energy fraction in the HF calorimeter
+  #   - HtNe_fraction # hadronic transverse energy fraction from neutral particles
+  #   - energy
   VBFJet: # j1 and j2, separated in eta ecc.. in VBF events (single jet observables)
     - eta
     - pt
@@ -18,7 +18,7 @@ vars_to_save:
     - pt_jj
   MuJet:
     - R_pt
-    - minDeltaEta
+    # - minDeltaEta
     - minDeltaEtaSigned
     - minDeltaPhi
     - Zepperfield_Var

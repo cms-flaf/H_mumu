@@ -38,7 +38,7 @@ class Trainer:
         if self.binary_classification:
             self.loss_fn = torch.nn.BCEWithLogitsLoss(reduction="none")
         else:
-            #self.loss_fn = torch.nn.NLLLoss(reduction="none")
+            # self.loss_fn = torch.nn.NLLLoss(reduction="none")
             self.loss_fn = torch.nn.CrossEntropyLoss(reduction="none")
 
         self.hyperparams = hyperparams
@@ -75,14 +75,14 @@ class Trainer:
         else:
             dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
         return dataloader
-    
+
     def _set_optimizer(self, model):
-        algo = self.hyperparams['algo']
-        hypers = {k : v for k, v in self.hyperparams.items() if k != 'algo'}
+        algo = self.hyperparams["algo"]
+        hypers = {k: v for k, v in self.hyperparams.items() if k != "algo"}
         # Case switch
-        if algo == 'SGD':
+        if algo == "SGD":
             opt = torch.optim.SGD
-        elif algo == 'Adam':
+        elif algo == "Adam":
             opt = torch.optim.Adam
         else:
             raise ValueError("Optimizer config should speficy SGD or Adam as algo.")
@@ -108,7 +108,14 @@ class Trainer:
         plt.plot(self.training_loss, color="tab:green", marker="o", label="training")
         if self.early_stop:
             i = np.argmin(self.validation_loss)
-            plt.scatter(i, self.validation_loss[i], label='min', color='black', marker="D", zorder=6)
+            plt.scatter(
+                i,
+                self.validation_loss[i],
+                label="min",
+                color="black",
+                marker="D",
+                zorder=6,
+            )
         if log:
             plt.yscale("log")
             filename += "_log"
@@ -120,10 +127,9 @@ class Trainer:
         else:
             plt.savefig(filename + ".svg", bbox_inches="tight")
 
-
     def write_loss_data(self, output_name="epoch+valid_loss"):
         data = (self.training_loss, self.validation_loss)
-        with open(output_name + ".pkl", 'wb') as f:
+        with open(output_name + ".pkl", "wb") as f:
             pkl.dump(data, f)
 
     ### Main training functions ###
@@ -179,7 +185,7 @@ class Trainer:
         """
         Runs the training loop for a fixed number of epochs
         """
-        for i in tqdm(range(self.epochs), unit='epochs'):
+        for i in tqdm(range(self.epochs), unit="epochs"):
             model = self.train_single_epoch(model)
         return model
 
@@ -193,7 +199,10 @@ class Trainer:
         with tqdm(desc="Training in early stop mode", unit="epochs") as pbar:
             while True:
                 model = self.train_single_epoch(model)
-                if self.validation_loss[-1] <= min(self.validation_loss) - self.threshold:
+                if (
+                    self.validation_loss[-1]
+                    <= min(self.validation_loss) - self.threshold
+                ):
                     best_model = model.state_dict()
                     bad_trains = 0
                 else:

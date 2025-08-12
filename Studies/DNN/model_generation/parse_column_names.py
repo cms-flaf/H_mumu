@@ -1,5 +1,5 @@
-
 from itertools import chain
+
 
 def parse_column_names(config, column_type="all"):
     """
@@ -8,22 +8,25 @@ def parse_column_names(config, column_type="all"):
     Returns a list of all the (unique) column names.
     """
 
-    # Muon_vars = []
-    # for mu_idx in [1, 2]:
-    #     for mu_var in config["Muon"]:
-    #         Muon_vars.append(mu_var.format(mu_idx))
+    Muon_vars = []
+    for mu_idx in [1, 2]:
+        for mu_var in config["Muon"]:
+            Muon_vars.append(mu_var.format(mu_idx))
 
-    # VBFJet_vars = []
-    # for j_idx in [1, 2]:
-    #     for VBFJ_var in config["VBFJet"]:
-    #         VBFJet_vars.append(f"j{j_idx}_{VBFJ_var}")
-    # # SelectedJet_vars = config['vars_to_save']['SelectedJet']
-    # # for Jvar in SelectedJet_vars:
-    # #     col_to_save.append(f"SelectedJet_{Jvar}")
+    VBFJet_vars = []
+    for j_idx in [1, 2]:
+        for VBFJ_var in config["VBFJet"]:
+            VBFJet_vars.append(f"j{j_idx}_{VBFJ_var}")
+    # SelectedJet_vars = config['vars_to_save']['SelectedJet']
+    # for Jvar in SelectedJet_vars:
+    #     col_to_save.append(f"SelectedJet_{Jvar}")
 
-    # SoftJet_vars = []
-    # for SJvar in config['SoftJet']:
-    #     SoftJet_vars.append(f"SoftJet_{SJvar}")
+    SoftJet_vars = []
+    try:
+        for SJvar in config["SoftJet"]:
+            SoftJet_vars.append(f"SoftJet_{SJvar}")
+    except KeyError:
+        pass
 
     VBFJetPair_vars = config["VBFJetPair"]
     MuJet_vars = config["MuJet"]
@@ -35,15 +38,19 @@ def parse_column_names(config, column_type="all"):
     # nJet_vars = config["nJets"]
     Weight_vars = config["Weight"]
 
-    # data_columns = [
-    #     Muon_vars, MuPair_vars, MuJet_vars,
-    #     VBFJet_vars, VBFJetPair_vars, SoftJet_vars
-    # ]
-
     data_columns = [
-        MuPair_vars, MuJet_vars,
-        VBFJetPair_vars
+        Muon_vars,
+        MuPair_vars,
+        MuJet_vars,
+        VBFJet_vars,
+        VBFJetPair_vars,
+        SoftJet_vars,
     ]
+
+    # data_columns = [
+    #     MuPair_vars, MuJet_vars,
+    #     VBFJetPair_vars
+    # ]
 
     data_columns = list(chain.from_iterable(data_columns))
     header_columns = Global_vars + Weight_vars

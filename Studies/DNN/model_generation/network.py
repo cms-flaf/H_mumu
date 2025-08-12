@@ -8,7 +8,7 @@ class Network(torch.nn.Module):
         """
         super().__init__()
         self.activation = torch.nn.LeakyReLU()
-        #self.activation = torch.nn.ReLU()
+        # self.activation = torch.nn.ReLU()
         self.binary_classification = layer_list[-1] == 1
         if self.binary_classification:
             self.final_activation = torch.nn.Sigmoid()

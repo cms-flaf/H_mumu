@@ -10,9 +10,9 @@ import numpy as np
 import pandas as pd
 import tomllib
 import torch
-
 from dataloader import DataLoader
 from network import Network
+from preprocess import Preprocessor
 from train import Trainer
 
 
@@ -24,12 +24,7 @@ def get_arguments():
         prog="NN_Generator",
         description="For a given dataset and config file, creates a network, trains it, and runs testing",
     )
-    parser.add_argument(
-        "-c", 
-        "--config", 
-        required=True, 
-        help="the .toml config file"
-    )
+    parser.add_argument("-c", "--config", required=True, help="the .toml config file")
     parser.add_argument(
         "-r",
         "--rootfile",
@@ -68,9 +63,30 @@ if __name__ == "__main__":
     with open(args.config, "rb") as f:
         config = tomllib.load(f)
 
+    # Load in all train/valid/test entries as a big DF
+    # Sets initial things like class weight, sample_name, label
     dataloader = DataLoader(**config["dataloader"])
+    train_df, valid_df, test_df = dataloader.generate_dataframes(args.rootfile)
 
-    train_data, valid_data, test_data, test_df = dataloader.gen_datasets(args.rootfile)
+    # Add a Training_Weight column and apply any needed renorms
+    config["preprocess"]["classification"] = config["dataloader"]["classification"]
+    config["preprocess"]["signal_types"] = config["dataloader"]["signal_types"]
+    preprocessor = Preprocessor(**config["preprocess"])
+    pprint(vars(preprocessor))
+    train_df = preprocessor.add_train_weights(train_df)
+    valid_df = preprocessor.add_train_weights(valid_df)
+    
+    # Renorm sets to m=0 s=1 separately. 
+    # Don't want to leak info from test into train
+    train_df = dataloader._dispatch_input_renorm(train_df)
+    valid_df = dataloader._dispatch_input_renorm(valid_df)
+    test_df = dataloader._dispatch_input_renorm(test_df)
+
+    # Split into (x,y), w tuples
+    train_data = dataloader.df_to_dataset(train_df)
+    valid_data = dataloader.df_to_dataset(valid_df)
+    test_data = dataloader.df_to_dataset(test_df)
+
     print("*** Running with the following parameters: ***")
     pprint(config)
 
@@ -96,7 +112,9 @@ if __name__ == "__main__":
     trainer = Trainer(
         train_data, valid_data, config["optimizer"], **config["training"], device=device
     )
-    tester = Tester(test_data, test_df, device=device, **config['testing'] | config['dataloader'])
+    tester = Tester(
+        test_data, test_df, device=device, **config["testing"] | config["dataloader"]
+    )
 
     # Run the traininig and testing!
     start = datetime.now()
@@ -115,17 +133,15 @@ if __name__ == "__main__":
 
     # Save output files
     trainer.plot_losses()
-    trainer.plot_losses(valid=False)
-    trainer.plot_losses(valid=True, log=True)
+    trainer.plot_losses(valid=True)
     trainer.write_loss_data()
-    tester.make_hist(log=False, weight=True)
-    tester.make_hist(log=True, weight=True, norm=True)
     tester.make_hist(log=False, weight=True, norm=True)
-    tester.make_hist(log=True, weight=True)
+    tester.make_multihist(log=True, weight=True)
     tester.make_stackplot(log=True)
-    tester.make_stackplot(log=True, weight=True)
+    tester.make_transformed_stackplot()
     tester.make_roc_plot()
     tester.testing_df.to_pickle("evaluated_testing_df.pkl")
+    train_df.to_pickle("used_training_df.pkl")
     with open("trained_model.torch", "wb") as f:
         torch.save(model, f)
     write_parameters(start, end, config, args.rootfile)
