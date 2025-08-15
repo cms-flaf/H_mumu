@@ -9,8 +9,9 @@ import pandas as pd
 import toml
 import uproot
 import yaml
-from parse_column_names import parse_column_names
-from sample_type_lookup import lookup
+
+from model_generation.parse_column_names import parse_column_names
+from model_generation.sample_type_lookup import lookup
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
@@ -212,7 +213,7 @@ class DataLoader:
 
     def build_master_df(self, directory):
         """
-        Does over each input root file and builds one big Pandas Df.
+        Goes over each input root file and builds one big Pandas Df.
         """
         df = None
         for filename in glob(f"{directory}/*.root"):

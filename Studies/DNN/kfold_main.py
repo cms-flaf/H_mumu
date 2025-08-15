@@ -4,17 +4,18 @@ import pickle as pkl
 import tomllib
 from datetime import datetime
 from pprint import pprint
-from test import Tester
 from uuid import uuid1 as uuid
 
 import numpy as np
 import pandas as pd
 import torch
-from dataloader import DataLoader
-from kfold import KFolder
-from network import Network
-from preprocess import Preprocessor
-from train import Trainer
+
+from model_generation.test import Tester
+from model_generation.dataloader import DataLoader
+from model_generation.kfold import KFolder
+from model_generation.network import Network
+from model_generation.preprocess import Preprocessor
+from model_generation.train import Trainer
 
 """
 This is the high-level script describing a full train/test cycle.
@@ -38,7 +39,10 @@ def get_arguments():
         prog="NN_Generator",
         description="For a given dataset and config file, creates a network, trains it, and runs testing",
     )
-    parser.add_argument("-c", "--config", required=True, help="the .toml config file")
+    parser.add_argument(
+        "-c", "--config", 
+        required=True, 
+        help="the .toml config file")
     parser.add_argument(
         "-r",
         "--rootfile",
@@ -67,11 +71,11 @@ def write_parameters(start, end, config, dataset, variables_used):
         f.write("\n")
         pprint(config, stream=f)
         f.write("\n")
-        f.write("Variables used for network input vector:")
+        f.write("Variables used for network input vector:\n")
         pprint(variables_used, stream=f)
 
 
-def build_layer_list(config, dataloader):
+def build_layer_list(config, dataloader, p):
     # Modify layer_list to have input and output layers
     layer_list = config["network"]["layer_list"]
     # Look at the number of data columns
@@ -80,7 +84,7 @@ def build_layer_list(config, dataloader):
     if dataloader.classification == "binary":
         output_size = 1
     else:
-        raise ValueError("This is implemented for non-binary yet because I am lazy")
+        output_size = len(p)
     config["network"]["layer_list"] = [input_size] + layer_list + [output_size]
     return config
 
@@ -93,8 +97,7 @@ if __name__ == "__main__":
     with open(args.config, "rb") as f:
         config = tomllib.load(f)
     # Alter the dataloader config to set test_size to zero
-    # We can still split a validation piece off for k-fold,
-    # but we'll do all the testing later
+    # Testing size determined by fold
     config["dataloader"]["test_size"] = 0
 
     # Load in all train/valid/test entries as a big DF
@@ -107,7 +110,8 @@ if __name__ == "__main__":
     df = dataloader._add_class_weights(df)
 
     # Add the correct layer-list to the config (instead of just hidden)
-    config = build_layer_listig(config, dataloader)
+    p = pd.unique(df.sample_name)
+    config = build_layer_list(config, dataloader, p)
     # Init our other objects
     preprocessor = Preprocessor(**config["preprocess"] | config["dataloader"])
     kfold = KFolder(**config["kfold"])

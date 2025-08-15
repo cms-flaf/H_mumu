@@ -4,16 +4,17 @@ import pickle as pkl
 import tomllib
 from datetime import datetime
 from pprint import pprint
-from test import Tester
 from uuid import uuid1 as uuid
 
 import numpy as np
 import pandas as pd
 import torch
-from dataloader import DataLoader
-from network import Network
-from preprocess import Preprocessor
-from train import Trainer
+
+from model_generation.test import Tester
+from model_generation.dataloader import DataLoader
+from model_generation.network import Network
+from model_generation.preprocess import Preprocessor
+from model_generation.train import Trainer
 
 """
 This is the high-level script describing a full train/test cycle.
