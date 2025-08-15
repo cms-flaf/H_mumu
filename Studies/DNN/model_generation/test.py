@@ -1,8 +1,12 @@
+import os
+
 import matplotlib.pyplot as plt
 import mplhep
 import numpy as np
 import pandas as pd
+import ROOT as root
 import torch
+import uproot
 from sklearn.metrics import auc, roc_curve
 from tqdm import tqdm
 
@@ -10,7 +14,11 @@ mplhep.style.use(mplhep.styles.CMS)
 
 
 class Tester:
-
+    """
+    Runs inference on the provided data using the provided model.
+    Saves inference to self.testing_df, then produces plots.
+    All of the nice output plots are defined here.
+    """
 
     def __init__(
         self,
@@ -22,34 +30,39 @@ class Tester:
         device=None,
         **kwargs,
     ):
-
+        # Set self attrs
         self.testing_df = testing_df
         self.device = device
-        self.processes = sorted(pd.unique(testing_df.sample_name))
+        self.classification = classification
         self.signal_types = signal_types
         self.n_bins = n_bins
+        # Other on-the-fly ones
         self.hist_range = (0, 1)
-        self.classification = classification
+        self.processes = sorted(pd.unique(testing_df.sample_name))
 
+        # Just keep and convert the x_data.
+        # We'll run inference on this only then put back into self.testing_df
         (x_data, _), _ = testing_data
         self.x_data = torch.tensor(x_data, device=self.device)
 
+        # Define a mapping, so it is consistent across plots
         self.color_map = self._set_color_map()
 
     def _set_color_map(self):
         return {
-            'DY' : 'gold',
-            'TT' : 'blue',
-            'VV' : 'lightslategray',
-            'EWK' : 'magenta',
-            'VBFH' : 'green',
-            'ggH' : 'red' 
+            "DY": "gold",
+            "TT": "blue",
+            "VV": "lightslategray",
+            "EWK": "magenta",
+            "VBFH": "green",
+            "ggH": "red",
         }
-        # processes = sorted(pd.unique(self.testing_df.sample_name))
-        # colors = plt.color_sequences["tab10"]
-        # return {p: c for p, c in zip(processes, colors)}
 
     def prediction_to_prob(self, subdf):
+        """
+        Function for converting a a set of multiclass probabilities
+        into a single discriminant for plotting
+        """
         classes = [x.replace("Prob_", "") for x in subdf.columns]
         predictions = subdf.apply(np.argmax, axis=1).apply(lambda x: classes[x])
         maxima = subdf.apply(np.max, axis=1).values.copy()
@@ -58,22 +71,15 @@ class Tester:
         return predictions, maxima
 
     def test(self, model):
+        """
+        Run the inference, save to testing_df
+        """
         outputs = []
         model.eval()
         with torch.no_grad():
             print("Running testing...")
             total = len(self.x_data)
-            # for i, sample in tqdm(enumerate(self.x_data), total=total):
-            #     if self.device is not None:
-            #         x = torch.tensor(sample, device=self.device)
-            #     else:
-            #         x = torch.Tensor(sample)
-            #     guess = model.predict(x)
-            #     if self.classification == 'binary':
-            #         outputs.append(guess.item())
-            #     else:
-            #         outputs.append(guess.cpu().numpy())
-            outputs = model.predict(self.x_data)
+            outputs = model(self.x_data)
         if self.classification == "binary":
             self.testing_df["NN_Output"] = outputs.cpu().numpy()
         else:
@@ -84,17 +90,19 @@ class Tester:
             self.testing_df["NN_Output"] = probs
 
     ### Calculations of metrics and other ###
-    
+
     def get_roc_auc(self):
+        """
+        Area under curve for ROC
+        """
         df = self.testing_df
         fpr, tpr, _ = roc_curve(df.Label, df.NN_Output, sample_weight=df.Class_Weight)
-        score = np.trapz(1 - fpr, tpr)
+        score = np.trapz(x=tpr, y=fpr)
         return score
 
     def by_hand_roc_calc(self):
         """
-        Calculate signal efficiency and background rejection
-        from the class histogram/stackplot parameters
+        My quick implementation, just a check for the sklearn calc
         """
         df = self.testing_df
         sig = df[df.Label == 1]
@@ -111,18 +119,36 @@ class Tester:
             range=self.hist_range,
             bins=self.n_bins,
         )
-        sig_eff = 1 - np.cumsum(sig_hist) / np.sum(sig_hist)
-        bkg_rej = np.cumsum(bkg_hist) / np.sum(bkg_hist)
-        return sig_eff, bkg_rej
+        sig_eff = 1 - (np.cumsum(sig_hist) / np.sum(sig_hist))
+        bkg_eff = 1 - (np.cumsum(bkg_hist) / np.sum(bkg_hist))
+        return sig_eff, bkg_eff
+
+    def _calc_transformed_hist(self):
+        """
+        Counts the populations for the DNN' plots from AN2019_205, fig 14
+        """
+        df = self.testing_df
+        # Calculate bin edges for percentiles
+        signal = df[df.Label == 1]
+        q = np.linspace(0, 100, self.n_bins + 1)
+        bin_edges = np.percentile(signal.NN_Output, q)
+        # Calculate the bin populations for each process
+        counts_lookup = {}
+        for p in pd.unique(df.sample_name):
+            selected = df[df.sample_name == p]
+            counts, _ = np.histogram(
+                selected.NN_Output, weights=selected.Class_Weight, bins=bin_edges
+            )
+            counts_lookup[p] = counts
+        return bin_edges, counts_lookup
 
     @staticmethod
     def s2overb(signal_bins, background_bins):
         """
         Takes two np arrays. Precompute a histogram and pass the bins over here.
         """
-        x = (signal_bins**2)/background_bins
+        x = (signal_bins**2) / background_bins
         return np.sqrt(np.sum(x**2))
-
 
     ### PLOTTING ###
 
@@ -182,7 +208,7 @@ class Tester:
 
     def make_multihist(self, weight=True, log=False, show=False):
         """
-        Saves a histo with the different processes draw independently
+        Saves a histo with the different processes drawn independently
         """
         # Init plot
         plt.clf()
@@ -222,6 +248,9 @@ class Tester:
             plt.savefig(output_name + ".svg", bbox_inches="tight")
 
     def make_stackplot(self, log=True, show=False):
+        """
+        Regularly binned stackplot (x-axis is NN output 0 to 1)
+        """
         output_name = "stackplot"
         plt.clf()
         df = self.testing_df
@@ -277,97 +306,172 @@ class Tester:
         else:
             plt.savefig(output_name + ".svg", bbox_inches="tight")
 
-    def make_roc_plot(self, hist_points=True, show=False):
+    def make_roc_plot(self, log=True, hist_points=False, show=False):
+        """
+        Plot ROC and adds AUC calculation to plot
+        """
         plt.clf()
+        df = self.testing_df
         output_name = "roc"
         df = self.testing_df
+        # Calc curve from sklearn
         fpr, tpr, _ = roc_curve(df.Label, df.NN_Output, sample_weight=df.Class_Weight)
-        plt.plot(tpr, 1 - fpr, label="sklearn")
-        sig_eff, bkg_rej = self.by_hand_roc_calc()
+        plt.plot(tpr, fpr, label=r"$DNN$")
+        # Do a by hand calc (set hist_points to True to check the sklearn calc)
         if hist_points:
-            plt.scatter(sig_eff, bkg_rej, label="hists", color="tab:orange")
+            sig_eff, bkg_eff = self.by_hand_roc_calc()
+            plt.scatter(sig_eff, bkg_eff, label="hists", color="tab:orange")
             output_name += "_whp"
         # Add 45 deg
-        a = np.linspace(0, 1, 10)
-        plt.plot(a, 1 - a, color="black", linestyle="dashed", label="unskilled")
-        # Format and go!
-        plt.xlabel("Sig. Efficiency")
-        plt.ylabel("Bkg. Rejection")
-        try:
-            score = np.trapz(1 - fpr, tpr)
-        except AttributeError:
-            pass
+        a = np.linspace(0, 1, 1000)
+        plt.plot(a, a, color="black", linestyle="dashed", label="45°")
+        # Add score
+        auc = self.get_roc_auc()
+        x = 0.6
+        if log:
+            y = 3e-4
         else:
-            title = f"ROC, AUC = {round(score, 3)}"
-            plt.title(title)
-        # plt.legend()
+            y = 0
+        text = f"1 - AUC = {round(1-auc, 3)}"
+        plt.text(x, y, text)
+        # Format and go!
+        plt.xlabel(r"$\epsilon_{sig}$")
+        plt.ylabel(r"$\epsilon_{bkg}$")
+        mplhep.cms.label(com=13.6)
+        plt.grid()
+        plt.xlim(0, 1)
+        if log:
+            plt.yscale("log")
+            plt.ylim(1e-4, 1)
+            output_name += "_log"
+        plt.legend(loc="upper left")
         if show:
             plt.show()
         else:
             plt.savefig(output_name + ".svg", bbox_inches="tight")
 
-
-
-    def make_transformed_stackplot(self, log=True, show=False, min_power=-3, top_power=6):
+    def make_transformed_stackplot(
+        self, log=True, show=False, min_power=-3, top_power=6
+    ):
+        """
+        Replication for the DNN' plots from AN2019_205, fig 14
+        """
         plt.clf()
         df = self.testing_df
         output_name = "transformed_stack"
+        bin_edges, counts_lookup = self._calc_transformed_hist()
 
-        # Calculate bin edges for percentiles
-        signal = df[df.Label == 1]
-        q = np.linspace(0, 100, self.n_bins + 1)
-        bin_edges = np.percentile(signal.NN_Output, q)
-
-        # In a specific order for AN_205 replication
+        # HARDCODE WARNING! (Ricardo wants this plot in a specific order)
         stack_proc = ["VV", "TT", "EWK", "DY"]
         other_proc = [x for x in pd.unique(df.sample_name) if x not in stack_proc]
 
-        # Calculate the bin populations for each process
-        counts_lookup = {}
-        for p in pd.unique(df.sample_name):
-            selected = df[df.sample_name == p]
-            counts, _ = np.histogram(selected.NN_Output, weights=selected.Class_Weight, bins=bin_edges)
-            counts_lookup[p] = counts
-
         # Do the stacking
-        baseline = np.zeros(len(counts))
+        baseline = np.zeros(len(bin_edges) - 1)
         total = np.zeros(len(baseline))
-        x = np.linspace(0, 12, 13)
+        x = np.linspace(0, self.n_bins, self.n_bins + 1)
         for p in stack_proc:
             total += counts_lookup[p]
-            plt.stairs(total, x, label=p, color=self.color_map[p], baseline=baseline, fill=True)
+            plt.stairs(
+                total, x, label=p, color=self.color_map[p], baseline=baseline, fill=True
+            )
             baseline += counts_lookup[p]
         # and add the non-stackers
         for p in other_proc:
             plt.stairs(counts_lookup[p], x, label=p, color=self.color_map[p])
 
-        # Calc s2/b for title
-        sig = np.zeros(self.n_bins)
-        for p in self.signal_types:
-            sig += counts_lookup[p]
-        score = self.s2overb(sig, total)
-        text = r"$\frac{S^{2}}{B} =$"
-        text += "{:.3e}".format(score)
-        plt.text(1, 10**(top_power-1), text)
-            
         # Format
         if log:
             output_name += "_log"
             plt.yscale("log")
         plt.xlabel(r"$DNN^{\prime}$")
-        major_ticks = [1*10**x for x in range(min_power, top_power+1)]
-        minor_ticks = [y*10**x for y in range(2,10) for x in range(min_power, top_power-1)]
+        major_ticks = [1 * 10**x for x in range(min_power, top_power + 1)]
+        minor_ticks = [
+            y * 10**x for y in range(2, 10) for x in range(min_power, top_power - 1)
+        ]
         plt.ylim(10**min_power, 10**top_power)
         plt.ylabel("Events")
         plt.yticks(major_ticks)
         plt.yticks(minor_ticks, minor=True)
-        #plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+        # plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
         plt.legend()
         mplhep.cms.label(com=13.6)
         if show:
             plt.show()
         else:
             output_name += ".svg"
-            plt.savefig(output_name, bbox_inches='tight')
+            plt.savefig(output_name, bbox_inches="tight")
 
+    def plot_multiclass_probs(self, log=True, show=False):
+        """
+        Multiclass mode only!
+        Make a figure with a subplot for each process.
+        Shows the process population vs rest of population
+        as a function of that process discriminant (P_{process})
+        """
+        df = self.testing_df
+        proc = pd.unique(df.sample_name)
+        plt.clf()
+        fig, axs = plt.subplots(1, len(proc))
+        for p, ax in zip(proc, axs):
+            # for p in proc:
+            mask = df.sample_name == p
+            selected = df[mask]
+            other = df[~mask]
+            col = f"Prob_{p}"
+            ax.hist(
+                selected[col],
+                weights=selected.Class_Weight,
+                range=self.hist_range,
+                bins=self.n_bins,
+                label=p,
+                alpha=alpha,
+            )
+            ax.hist(
+                other[col],
+                weights=other.Class_Weight,
+                range=self.hist_range,
+                bins=self.n_bins,
+                label="other",
+                alpha=alpha,
+            )
+            ax.set_yscale("log")
+            ax.set_xticks([])
+            ax.set_yticks([])
+            ax.set_xticks([], minor=True)
+            ax.set_yticks([], minor=True)
+            ax.set_xlim(0, 1)
+            ax.set_title(p)
+        if show:
+            plt.show()
+        else:
+            plt.savefig("multiclass_probs.svg")
 
+    ### Functions for working with Combine
+
+    def make_thist(self):
+        """
+        Saves a THist to be used with combine.
+        Combine datacard expect two hists named:
+        "signal" and "background"
+        """
+        df = self.testing_df
+        bin_edges, counts_lookup = self._calc_transformed_hist()
+        # Calc sig and bkg totals
+        sig = np.zeros(len(bin_edges) - 1)
+        bkg = np.zeros(len(bin_edges) - 1)
+        for p in pd.unique(df.sample_name):
+            x = counts_lookup[p]
+            if p in self.signal_types:
+                sig += x
+            else:
+                bkg += x
+        # Make the histograms
+        sig_hist = root.TH1F("signal", "signal", self.n_bins, 0, self.n_bins)
+        bkg_hist = root.TH1F("background", "background", self.n_bins, 0, self.n_bins)
+        for i, (s, b) in enumerate(zip(sig, bkg)):
+            sig_hist.SetBinContent(i, s)
+            bkg_hist.SetBinContent(i, b)
+        # Save to a root file
+        with uproot.recreate("hists.root") as f:
+            f["signal"] = sig_hist
+            f["background"] = bkg_hist

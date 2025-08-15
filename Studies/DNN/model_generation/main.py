@@ -1,6 +1,7 @@
 import argparse
 import os
 import pickle as pkl
+import tomllib
 from datetime import datetime
 from pprint import pprint
 from test import Tester
@@ -8,12 +9,22 @@ from uuid import uuid1 as uuid
 
 import numpy as np
 import pandas as pd
-import tomllib
 import torch
 from dataloader import DataLoader
 from network import Network
 from preprocess import Preprocessor
 from train import Trainer
+
+"""
+This is the high-level script describing a full train/test cycle.
+Usual workflow is:
+    1) load config
+    2) create Dataloader and read in .root samples
+    3) create Preprocessor and set/transform training weights
+    3) create Trainer and run training. Plot losses.
+    4) create Tester and run inference. Produce all plots.
+    5) save a copy of the model and parameters used. Results location set in config. 
+"""
 
 
 def get_arguments():
@@ -41,7 +52,7 @@ def get_arguments():
     return args
 
 
-def write_parameters(start, end, config, dataset):
+def write_parameters(start, end, config, dataset, variables_used):
     """
     Writes the parameters used in this model generation run to a text file.
     """
@@ -52,10 +63,12 @@ def write_parameters(start, end, config, dataset):
         f.write(f"Dataset used: {dataset}\n")
         f.write("\n")
         pprint(config, stream=f)
+        f.write("\n")
+        f.write("Variables used for network input vector:")
+        pprint(variables_used, stream=f)
 
 
 if __name__ == "__main__":
-
     # Read the CLI arguments
     args = get_arguments()
 
@@ -75,8 +88,8 @@ if __name__ == "__main__":
     pprint(vars(preprocessor))
     train_df = preprocessor.add_train_weights(train_df)
     valid_df = preprocessor.add_train_weights(valid_df)
-    
-    # Renorm sets to m=0 s=1 separately. 
+
+    # Renorm sets to m=0 s=1 separately.
     # Don't want to leak info from test into train
     train_df = dataloader._dispatch_input_renorm(train_df)
     valid_df = dataloader._dispatch_input_renorm(valid_df)
@@ -139,9 +152,16 @@ if __name__ == "__main__":
     tester.make_multihist(log=True, weight=True)
     tester.make_stackplot(log=True)
     tester.make_transformed_stackplot()
-    tester.make_roc_plot()
+    tester.make_roc_plot(log=False)
+    tester.make_roc_plot(log=True)
+    if config["dataloader"]["classification"] == "multiclass":
+        tester.plot_multiclass_probs()
     tester.testing_df.to_pickle("evaluated_testing_df.pkl")
     train_df.to_pickle("used_training_df.pkl")
     with open("trained_model.torch", "wb") as f:
         torch.save(model, f)
-    write_parameters(start, end, config, args.rootfile)
+    write_parameters(start, end, config, args.rootfile, dataloader.data_columns)
+
+    # Save Combine outputs too
+    tester.make_thist()
+    # tester._run_combine()

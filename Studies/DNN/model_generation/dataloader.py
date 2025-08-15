@@ -16,6 +16,12 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 class DataLoader:
+    """
+    Class for doing the inital data reading and processing.
+    This sets the Labels and Class_Weights.
+    Additional Train_Weight preprocessing is done in Preprocessor.
+    This is usually the first workflow step (after reading configs and boilerplate)
+    """
 
     def __init__(
         self,
@@ -36,6 +42,7 @@ class DataLoader:
         self.selection_cut = selection_cut
         self.classification = classification
         self.renorm_inputs = renorm_inputs
+        # File stitching defines the MC_Lumi_pu -> Class_Weight corrections
         if file_stitching is not None:
             with open(file_stitching, "r") as f:
                 file_stitching = toml.load(f)
@@ -57,20 +64,32 @@ class DataLoader:
     ### Everything in this section takes a df and returns a df ###
 
     def _ensure_float(self, df):
+        """
+        Quick wrapper to make sure everything fed to the net is float (no ints!)
+        """
         df[self.data_columns] = df[self.data_columns].astype("float")
         return df
 
     def _add_sample_names(self, df):
+        """
+        Map sample_type to human friendly sample_names
+        """
         df["sample_name"] = df.sample_type.apply(lambda x: lookup[x])
         return df
 
     def _add_labels(self, df):
+        """
+        Adds the training labels [0, 1] for bkg and sig (resp.)
+        """
         df["Label"] = df.sample_name.apply(
             lambda x: 1 if x in self.signal_types else 0
         ).astype(float)
         return df
 
     def _add_multiclass_labels(self, df):
+        """
+        One-hot encoded label for multiclass
+        """
         all_process = sorted(pd.unique(df.sample_name))
         self.label_cols = []
         for p in all_process:
@@ -82,6 +101,9 @@ class DataLoader:
         return df
 
     def _add_class_weights(self, df):
+        """
+        Class_Weight is the corrected MC_Lumi_pu applied for all plotting
+        """
         df["Class_Weight"] = df.weight_MC_Lumi_pu.values.copy()
         if self.file_stitching is not None:
             df = self._renorm_class_weight(df)
@@ -116,9 +138,13 @@ class DataLoader:
         return df
 
     def _renorm_class_weight(self, df):
+        """
+        Does the actual rescaling of MC_Lumi_pu to Class_Weight
+        Can include other factors, but mostly for "source degeneracy"
+        """
         print("Applying class renorms per input file...")
         for source_file, factors in self.file_stitching.items():
-            # Factors is currently a list, in case there are multiple causes of adjustment 
+            # Factors is currently a list, in case there are multiple causes of adjustment
             factor = 1
             for entry in factors:
                 factor *= entry
@@ -130,6 +156,9 @@ class DataLoader:
         return df
 
     def _dispatch_input_renorm(self, df):
+        """
+        Simple switch for applying input renorms
+        """
         # Apply variables renorm
         if self.renorm_inputs == "no":
             return df
@@ -142,7 +171,7 @@ class DataLoader:
 
     def _root_to_dataframe(self, filename):
         """
-        A single .root file into a Pandas Df.
+        Turns a single .root file into a Pandas Df.
         """
         cols = self.all_columns
         with uproot.open(filename) as f:
@@ -154,8 +183,9 @@ class DataLoader:
     def _split_dataframe(self, data):
         """
         Turns the given (whole) Df into three Dfs,
-        each containing a relative portion of each process' events.
-        valid_size and traing_size dictate the fractional size of each new Df.
+        each containing a relative portion of each process' events (i.e., striated).
+        valid_size and train_size dictate the fractional size of each new Df.
+        test_size gets whatever is left in the Df.
         """
         training_df = pd.DataFrame(columns=data.columns)
         valid_df = pd.DataFrame(columns=data.columns)
@@ -181,6 +211,9 @@ class DataLoader:
         return training_df, valid_df, testing_df
 
     def build_master_df(self, directory):
+        """
+        Does over each input root file and builds one big Pandas Df.
+        """
         df = None
         for filename in glob(f"{directory}/*.root"):
             print(f"Generating testing/training samples sets from {filename}")
@@ -194,6 +227,11 @@ class DataLoader:
     ### Main runner function ###
 
     def generate_dataframes(self, directory):
+        """
+        The main function that should be called externally.
+        Takes a directory containing the input root files
+        and returns split Pandas Dfs for training, testing, validation
+        """
         # Build a single dataframe from root files
         df = self.build_master_df(directory)
         # Modify the main dataframe
@@ -206,6 +244,12 @@ class DataLoader:
         return train_df, valid_df, test_df
 
     def df_to_dataset(self, df):
+        """
+        Takes a Pandas Df and returns a "dataset"
+        A dataset is what Trainer and Validator expect.
+        It's a tuple of Numpy arrays of the form:
+        (x_data, y_data), weights
+        """
         # Get labels
         if self.classification == "binary":
             y = df.Label.values

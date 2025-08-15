@@ -1,16 +1,21 @@
 import os
 import pickle as pkl
+import tomllib
 from datetime import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
-import tomllib
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm
 
 
 class Trainer:
+    """
+    Class for doing the training on a provided model with the provided data.
+    See "Train" section of model_generation/config.toml for definition of the input vars.
+    Returns a finished model and saves loss plots.
+    """
 
     def __init__(
         self,
@@ -22,10 +27,10 @@ class Trainer:
         early_stop=False,
         patience=None,
         early_threshold=0,
+        label_smoothing=0,
         device=None,
     ):
-
-        # Training data as a tuple of NumPy arrays (x_data, y_data)
+        # Training data as a tuple of NumPy arrays (x_data, y_data), weights
         self.training_data = training_data
         # Convert the data to a Torch DataLoader, for optimal training
         self.train_dataloader = self._make_dataloader(training_data, batch_size, device)
@@ -33,14 +38,18 @@ class Trainer:
             validation_data, batch_size, device
         )
 
+        # Determine from y_data shape if we're training in binary or multiclass mode
         self.binary_classification = len(self.training_data[0][1][0]) == 1
-
         if self.binary_classification:
-            self.loss_fn = torch.nn.BCEWithLogitsLoss(reduction="none")
+            # self.loss_fn = torch.nn.BCEWithLogitsLoss(reduction="none")
+            self.loss_fn = torch.nn.BCELoss(reduction="none")
         else:
             # self.loss_fn = torch.nn.NLLLoss(reduction="none")
-            self.loss_fn = torch.nn.CrossEntropyLoss(reduction="none")
+            self.loss_fn = torch.nn.CrossEntropyLoss(
+                reduction="none", label_smoothing=label_smoothing
+            )
 
+        # Any config parameters specific for the optimizer
         self.hyperparams = hyperparams
 
         self.batch_size = batch_size
@@ -77,6 +86,9 @@ class Trainer:
         return dataloader
 
     def _set_optimizer(self, model):
+        """
+        Inits the optimizer.
+        """
         algo = self.hyperparams["algo"]
         hypers = {k: v for k, v in self.hyperparams.items() if k != "algo"}
         # Case switch
@@ -128,6 +140,9 @@ class Trainer:
             plt.savefig(filename + ".svg", bbox_inches="tight")
 
     def write_loss_data(self, output_name="epoch+valid_loss"):
+        """
+        Write the loss data to pickle (in case wanted to investigate after the fact)
+        """
         data = (self.training_loss, self.validation_loss)
         with open(output_name + ".pkl", "wb") as f:
             pkl.dump(data, f)
@@ -217,6 +232,10 @@ class Trainer:
     ### Main (call this function) ###
 
     def train(self, model):
+        """
+        Main externally called function.
+        Simple switch to dispatch a training run.
+        """
         self._set_optimizer(model)
         if self.early_stop and self.patience is not None:
             model = self.train_early_stop(model)

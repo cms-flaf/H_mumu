@@ -1,6 +1,7 @@
 import argparse
 import os
 import pickle as pkl
+import tomllib
 from dataclasses import dataclass
 from datetime import datetime
 from pprint import pprint
@@ -10,7 +11,6 @@ from uuid import uuid1 as uuid
 import numpy as np
 import optuna
 import pandas as pd
-import tomllib
 import torch
 from dataloader import DataLoader
 from network import Network
@@ -61,9 +61,9 @@ def objective(trial, config, train_data, valid_data, test_data, test_df, device=
     hidden_layers = trial.suggest_int("hidden_layers", 1, 6)
     batch_size = trial.suggest_int("batch_size", 10, 3000)
     lr = trial.suggest_float("lr", 1e-6, 1e-2)
-    epochs = trial.suggest_int('epochs', 50, 1000)
+    epochs = trial.suggest_int("epochs", 50, 1000)
     dropout = trial.suggest_float("dropout", 0, 0.4)
-    #weight_decay = trial.suggest_float("weight_decay", 0, 0.2)
+    # weight_decay = trial.suggest_float("weight_decay", 0, 0.2)
 
     # Update config dict with the study params
     input_size = config["network"]["input_size"]
@@ -76,7 +76,7 @@ def objective(trial, config, train_data, valid_data, test_data, test_df, device=
     config["optimizer"]["lr"] = lr
     config["training"]["epochs"] = epochs
     config["network"]["dropout"] = dropout
-    #config["optimizer"]["weight_decay"] = weight_decay
+    # config["optimizer"]["weight_decay"] = weight_decay
 
     # Init objects
     model = Network(device=device, **config["network"])
@@ -113,7 +113,7 @@ pprint(vars(preprocessor))
 train_df = preprocessor.add_train_weights(train_df)
 valid_df = preprocessor.add_train_weights(valid_df)
 
-# Renorm sets to m=0 s=1 separately. 
+# Renorm sets to m=0 s=1 separately.
 # Don't want to leak info from test into train
 train_df = dataloader._dispatch_input_renorm(train_df)
 valid_df = dataloader._dispatch_input_renorm(valid_df)
@@ -139,8 +139,10 @@ config["network"]["input_size"] = len(dataloader.data_columns)
 config["network"]["output_size"] = len(train_data[0][1][0])
 
 # Do the dang thing!
-study_name = 'multiclass_hyper_p_test1'
-study = optuna.create_study(study_name=study_name, storage="sqlite:///study_3.db", load_if_exists=True)
+study_name = "multiclass_hyper_p_test1"
+study = optuna.create_study(
+    study_name=study_name, storage="sqlite:///study_3.db", load_if_exists=True
+)
 f = lambda x: objective(x, config, train_data, valid_data, test_data, test_df, device)
 study.optimize(f, n_trials=100)
 

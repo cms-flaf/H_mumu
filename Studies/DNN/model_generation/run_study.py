@@ -1,6 +1,7 @@
 import argparse
 import os
 import pickle as pkl
+import tomllib
 from datetime import datetime
 from itertools import product
 from pprint import pprint
@@ -9,9 +10,7 @@ from uuid import uuid1 as uuid
 
 import numpy as np
 import pandas as pd
-import tomllib
 import torch
-
 from dataloader import DataLoader
 from network import Network
 from train import Trainer
@@ -25,12 +24,7 @@ def get_arguments():
         prog="NN_Generator",
         description="For a given dataset and config file, creates a network, trains it, and runs testing",
     )
-    parser.add_argument(
-        "-c", 
-        "--config", 
-        required=True, 
-        help="the .toml config file"
-    )
+    parser.add_argument("-c", "--config", required=True, help="the .toml config file")
     parser.add_argument(
         "-r",
         "--rootfile",
@@ -61,7 +55,7 @@ def write_parameters(start, end, config, dataset):
 
 
 def main(config, df):
-    dataloader = DataLoader(**config['dataloader'])
+    dataloader = DataLoader(**config["dataloader"])
 
     df = dataloader.label_and_reweight(df)
     train_df, valid_df, test_df = dataloader._split_dataframe(df)
@@ -89,7 +83,9 @@ def main(config, df):
     trainer = Trainer(
         train_data, valid_data, config["optimizer"], **config["training"], device=device
     )
-    tester = Tester(test_data, test_df, device=device, **config['testing'] | config['dataloader'])
+    tester = Tester(
+        test_data, test_df, device=device, **config["testing"] | config["dataloader"]
+    )
 
     # Run the traininig and testing!
     start = datetime.now()
@@ -111,7 +107,6 @@ def main(config, df):
 
 
 if __name__ == "__main__":
-
     # Read the CLI arguments
     args = get_arguments()
 
@@ -124,7 +119,7 @@ if __name__ == "__main__":
     base_df = dataloader._apply_gauss_renorm(base_df)
 
     batch_sizes = [1]
-    #batch_sizes = [10, 50, 100, 500]
+    # batch_sizes = [10, 50, 100, 500]
     target_ratios = [40, 20, 10, 5, 1]
 
     run_name = str(uuid())
@@ -141,14 +136,10 @@ if __name__ == "__main__":
     config["network"]["layer_list"] = [input_size] + layer_list + [output_size]
 
     for t, b in product(target_ratios, batch_sizes):
-        config['dataloader']['target_ratio'] = t
-        config['training']['batch_size'] = b
+        config["dataloader"]["target_ratio"] = t
+        config["training"]["batch_size"] = b
         dirname = f"{b}batch_{t}target"
         os.mkdir(dirname)
         os.chdir(dirname)
         main(config, base_df.copy())
         os.chdir(base_dir)
-
-        
-
-    
