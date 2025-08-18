@@ -3,13 +3,13 @@ import os
 import sys
 from glob import glob
 
-import Analysis.H_mumu as analysis
-import FLAF.Common.Utilities as Utilities
 import psutil
 import ROOT
 import yaml
-
 from utils.parse_column_names import parse_column_names
+
+import Analysis.H_mumu as analysis
+import FLAF.Common.Utilities as Utilities
 
 ROOT.gROOT.SetBatch(True)
 ROOT.EnableThreadSafety()
@@ -19,12 +19,10 @@ from FLAF.Common.Utilities import DeclareHeader
 def create_file(
     config_dict, global_cfg_dict, general_cfg_dict, period, output_folder, out_filename
 ):
-    print(
-        f"Starting create file. Memory usage in MB is {get_memory_usage()}"
-    )
-    nBatches = config_dict['meta_data']['batch_dict']['nBatches']
+    print(f"Starting create file. Memory usage in MB is {get_memory_usage()}")
+    nBatches = config_dict["meta_data"]["batch_dict"]["nBatches"]
     print(config_dict.keys())
-    #for process in config_dict["processes"]:
+    # for process in config_dict["processes"]:
     #    if (nBatches is None) or (
     #        (process["nBatches"] <= nBatches) and (process["nBatches"] != 0)
     #    ):
@@ -44,7 +42,7 @@ def create_file(
     for process in config_dict["processes"]:
         process_filelist = [f"{x}/*.root" for x in process["datasets"]]
 
-        tmp_dir = config_dict['meta_data']['temp_folder']
+        tmp_dir = config_dict["meta_data"]["temp_folder"]
         tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
         tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
 
@@ -52,7 +50,7 @@ def create_file(
         df_in = ROOT.RDataFrame("Events", process_filelist)
 
         # Filter for nLeps and Parity (iterate cut in config)
-        if 'iterate_cut' in config_dict["meta_data"].keys():
+        if "iterate_cut" in config_dict["meta_data"].keys():
             df_in = df_in.Filter(config_dict["meta_data"]["iterate_cut"])
 
         nEntriesPerBatch = process["batch_size"]
@@ -145,7 +143,7 @@ def create_file(
 
     print("Finished create file loop, now we must add the DNN variables")
     # Increment the name indexes before I embarass myself again
-    tmp_dir = config_dict['meta_data']['temp_folder']
+    tmp_dir = config_dict["meta_data"]["temp_folder"]
     tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
     tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
 
@@ -163,8 +161,10 @@ def create_file(
     # to add kwargset for isData
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
     dfw_out = analysis.PrepareDfForHistograms(dfw_out)
-    #dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
-    col_to_save = parse_column_names(general_cfg_dict['vars_to_save'],  column_type='all')
+    # dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
+    col_to_save = parse_column_names(
+        general_cfg_dict["vars_to_save"], column_type="all"
+    )
 
     dfw_out.df.Snapshot(
         "Events", tmpnext_filename, Utilities.ListToVector(col_to_save), snapshotOptions
@@ -178,6 +178,7 @@ def create_file(
     os.system(f"rm {tmp_filename}")
     os.system(f"rm {tmpnext_filename}")
 
+
 def set_environ_vars():
     sys.path.append(os.environ["ANALYSIS_PATH"])
     ana_path = os.environ["ANALYSIS_PATH"]
@@ -190,14 +191,19 @@ def set_environ_vars():
     ]:
         DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
 
+
 def get_args():
     parser = argparse.ArgumentParser(description="Create train/test file(s) for DNN.")
     parser.add_argument(
-        "--config-folder", required=True, type=str, help="Config Folder containing batch_config_x.yaml file(s)"
+        "--config-folder",
+        required=True,
+        type=str,
+        help="Config Folder containing batch_config_x.yaml file(s)",
     )
     parser.add_argument("--period", required=True, type=str, help="period")
     args = parser.parse_args()
     return args
+
 
 def load_headers():
     headers_dir = os.path.dirname(os.path.abspath(__file__))
@@ -210,8 +216,10 @@ def load_headers():
         if not ROOT.gInterpreter.Declare(f'#include "{header_path}"'):
             raise RuntimeError(f"Failed to load {header_path}")
 
+
 def get_memory_usage():
-    return psutil.Process(os.getpid()).memory_info()[0] / float(2 ** 20)
+    return psutil.Process(os.getpid()).memory_info()[0] / float(2**20)
+
 
 def yaml_to_config(yamlname):
 
@@ -225,6 +233,7 @@ def yaml_to_config(yamlname):
         general_cfg_dict = yaml.safe_load(general_cfg_dict_file)
 
     return config_dict, global_cfg_dict, general_cfg_dict
+
 
 if __name__ == "__main__":
 
@@ -240,5 +249,5 @@ if __name__ == "__main__":
             general_cfg_dict,
             args.period,
             args.config_folder,
-            f"{config_dict['meta_data']['output_folder']}/{config_dict['meta_data']['output_name']}"
+            f"{config_dict['meta_data']['output_folder']}/{config_dict['meta_data']['output_name']}",
         )

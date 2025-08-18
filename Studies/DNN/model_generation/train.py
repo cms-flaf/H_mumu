@@ -1,10 +1,10 @@
 import os
 import pickle as pkl
-import tomllib
 from datetime import datetime
 
 import matplotlib.pyplot as plt
 import numpy as np
+import tomllib
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 from tqdm import tqdm

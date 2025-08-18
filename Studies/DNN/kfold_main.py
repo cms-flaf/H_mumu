@@ -1,20 +1,19 @@
 import argparse
 import os
 import pickle as pkl
-import tomllib
 from datetime import datetime
 from pprint import pprint
 from uuid import uuid1 as uuid
 
 import numpy as np
 import pandas as pd
+import tomllib
 import torch
-
-from model_generation.test import Tester
 from model_generation.dataloader import DataLoader
 from model_generation.kfold import KFolder
 from model_generation.network import Network
 from model_generation.preprocess import Preprocessor
+from model_generation.test import Tester
 from model_generation.train import Trainer
 
 """
@@ -39,10 +38,7 @@ def get_arguments():
         prog="NN_Generator",
         description="For a given dataset and config file, creates a network, trains it, and runs testing",
     )
-    parser.add_argument(
-        "-c", "--config", 
-        required=True, 
-        help="the .toml config file")
+    parser.add_argument("-c", "--config", required=True, help="the .toml config file")
     parser.add_argument(
         "-r",
         "--rootfile",

@@ -9,7 +9,6 @@ import pandas as pd
 import toml
 import uproot
 import yaml
-
 from model_generation.parse_column_names import parse_column_names
 from model_generation.sample_type_lookup import lookup
 

@@ -1,7 +1,6 @@
 import argparse
 import os
 import pickle as pkl
-import tomllib
 from dataclasses import dataclass
 from datetime import datetime
 from pprint import pprint
@@ -11,8 +10,8 @@ from uuid import uuid1 as uuid
 import numpy as np
 import optuna
 import pandas as pd
+import tomllib
 import torch
-
 from model_generation.dataloader import DataLoader
 from model_generation.network import Network
 from model_generation.preprocess import Preprocessor
