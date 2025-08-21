@@ -426,3 +426,11 @@ minDeltaPhi:
   use_log_y: False
   max_y_sf: 1.8
   divide_by_bin_width: False
+
+DNN_NNOutput:
+  x_bins: "12|0:1"
+  x_title: DNN_Output
+  y_title: Events
+  use_log_y: True
+  max_y_sf: 1.8
+  divide_by_bin_width: False
