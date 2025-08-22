@@ -65,6 +65,7 @@ vars_to_save:
     ## trigger ##
 #    - HLT_singleMu
     ### global event weight ###
+    - m_mumu_resolution
     - weight_EWKCorr_VptCentral
     - weight_EWKCorr_ewcorrCentral
     - weight_MC_Lumi_pu

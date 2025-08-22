@@ -19,6 +19,8 @@ class DNNProducer:
 
     def __init__(self, cfg, payload_name):
 
+        print("************** Init DNNProducer")
+
         # cfg is H_mumu/configs/global.yaml
         self.cfg = cfg
         self.payload_name = payload_name
