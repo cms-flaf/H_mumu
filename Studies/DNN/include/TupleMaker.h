@@ -18,8 +18,9 @@ using RVecULL = ROOT::VecOps::RVec<unsigned long long>;
 using RVecShort = ROOT::VecOps::RVec<short>;
 using RVecB = ROOT::VecOps::RVec<bool>;
 
+
 namespace analysis {
-typedef std::variant<int,float,bool, unsigned long,unsigned long long,long,unsigned int, unsigned char, RVecI, RVecF, RVecUC, RVecShort,RVecUL,RVecULL,RVecB> MultiType;
+typedef std::variant<int,float,bool, unsigned long,unsigned long long,long,unsigned int, unsigned char, short, Char_t, RVecI, RVecF, RVecUC, RVecShort,RVecUL,RVecULL,RVecB> MultiType;
 
 struct Entry{
     std::vector<MultiType> var_values;

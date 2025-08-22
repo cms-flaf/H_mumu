@@ -565,7 +565,7 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.SignRegionDef()
     dfBuilder.defineRegions()
     dfBuilder.defineCategories()
-    dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
+    #dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder
 
 
