@@ -14,6 +14,7 @@ tagger_name: particleNet
 met_type: "PuppiMET"
 
 treeName: "Events"
+
 channelSelection:
   - muMu
 
@@ -103,9 +104,9 @@ sample_types_to_merge:
 payload_producers:
   DNN:
     producers_module_name: Analysis.DNN_Application
-    producer_name: 
+    producer_name: DNNProducer
     columns:
-      - NetworkOutput
+      - NNOutput
     dependencies:
     # - DoubleLepHME
     n_cpus: 4

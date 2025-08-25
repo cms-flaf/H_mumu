@@ -27,6 +27,7 @@ class Preprocessor:
         equalize_class_weights,
         downsample_upweight,
         target_ratio,
+        use_mass_resolution,
         **kwargs,
     ):
         self.signal_types = signal_types
@@ -36,6 +37,7 @@ class Preprocessor:
         self.equalize_class_weights = equalize_class_weights
         self.downsample_upweight = downsample_upweight
         self.target_ratio = target_ratio
+        self.use_mass_resolution = use_mass_resolution
 
     ### Functions for modifying the loaded dataframe ###
 
@@ -114,6 +116,12 @@ class Preprocessor:
                 # Done!
         return df
 
+    def _apply_mass_resolution(self, df):
+        new_weight = df.Training_Weight.values.copy()/df.m_mumu_resolution
+        factor = sum(df.Training_Weight)/sum(new_weight)
+        df['Training_Weight'] = factor * new_weight
+        return df
+
     ### Main runner function ###
 
     def add_train_weights(self, df):
@@ -132,6 +140,8 @@ class Preprocessor:
         # Now apply any df transforms
         if self.zero_negative_weights:
             df = self._apply_zero_neg_weight(df)
+        if self.use_mass_resolution:
+            df = self._apply_mass_resolution(df)
         if self.downsample_upweight:
             df = self._downsample_and_upweight(df)
         if self.equalize_class_weights:

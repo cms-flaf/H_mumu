@@ -27,6 +27,7 @@ equalize_class_weights = true      # Sets each class weight to be equal (trainin
 renorm_inputs = 'gauss'            # Apply some scaling/renorm to the input columns. Can be 'no', 'linear', or 'gauss'
 downsample_upweight = false        # Whether or not to downsample majority classes
 target_ratio = 10                  # New N_{majority_class}/N_{minority_class} ratio (if using downsample)
+use_mass_resolution = false
 
 [kfold]
 k = 4
@@ -34,7 +35,7 @@ k = 4
 [network]  
 # Hidden layers only
 # Input layer size pulled from the used columns
-layer_list = [65, 65]
+layer_list = [52,52,52]
 dropout = 0.10
 
 [training]
@@ -48,7 +49,7 @@ label_smoothing = 0.0
 
 [optimizer]
 algo = "Adam"   # Currently, SGD and Adam are supported
-lr = 1e-04
+lr = 5e-05
 weight_decay = 0.0
 #momentum = 0.7
 #dampening = 0.2

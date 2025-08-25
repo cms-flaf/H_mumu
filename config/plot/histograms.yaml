@@ -429,7 +429,7 @@ minDeltaPhi:
 
 DNN_NNOutput:
   x_bins: "12|0:1"
-  x_title: DNN_Output
+  x_title: DNN_NNOutput
   y_title: Events
   use_log_y: True
   max_y_sf: 1.8
