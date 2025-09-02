@@ -29,7 +29,7 @@ region: All
 region_default: All
 custom_regions: MuMuMassRegions
 custom_categories: ""
-custom_subcategories: []
+custom_subcategories: [ ]
 
 # further_cuts:
 #   etamm_0p9: ["eta_mumu","abs(eta_mumu) < 0.9"]
