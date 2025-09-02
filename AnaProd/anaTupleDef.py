@@ -275,7 +275,42 @@ defaultColToSave = [
     "BeamSpot_zError",
 ]
 
-additional_VBFStudies_vars = ["GenJet_eta","GenJet_hadronFlavour","GenJet_mass","GenJet_nBHadrons","GenJet_nCHadrons","GenJet_partonFlavour","GenJet_phi","GenJet_pt","LHEPart_eta","LHEPart_incomingpz","LHEPart_mass","LHEPart_pdgId","LHEPart_phi","LHEPart_pt","LHEPart_spin","LHEPart_status","GenPart_eta","GenPart_genPartIdxMother","GenPart_iso","GenPart_mass","GenPart_pdgId","GenPart_phi","GenPart_pt","GenPart_status","GenPart_statusFlags","GenPart_vx","GenPart_vy","GenPart_vz","GenProton_isPU","GenProton_px","GenProton_py","GenProton_pz","GenProton_vz"]
+additional_VBFStudies_vars = [
+    "GenJet_eta",
+    "GenJet_hadronFlavour",
+    "GenJet_mass",
+    "GenJet_nBHadrons",
+    "GenJet_nCHadrons",
+    "GenJet_partonFlavour",
+    "GenJet_phi",
+    "GenJet_pt",
+    "LHEPart_eta",
+    "LHEPart_incomingpz",
+    "LHEPart_mass",
+    "LHEPart_pdgId",
+    "LHEPart_phi",
+    "LHEPart_pt",
+    "LHEPart_spin",
+    "LHEPart_status",
+    "GenPart_eta",
+    "GenPart_genPartIdxMother",
+    "GenPart_iso",
+    "GenPart_mass",
+    "GenPart_pdgId",
+    "GenPart_phi",
+    "GenPart_pt",
+    "GenPart_status",
+    "GenPart_statusFlags",
+    "GenPart_vx",
+    "GenPart_vy",
+    "GenPart_vz",
+    "GenProton_isPU",
+    "GenProton_px",
+    "GenProton_py",
+    "GenProton_pz",
+    "GenProton_vz",
+]
+
 
 def getDefaultColumnsToSave(isData):
     colToSave = defaultColToSave.copy()
@@ -299,7 +334,6 @@ def addAllVariables(
     dfw.Apply(AnaBaseline.LeptonVeto)
 
     dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
-
 
     dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
 
@@ -401,7 +435,9 @@ def addAllVariables(
         jet_obs_name = f"Jet_{jetobs}"
         if jet_obs_name in dfw.df.GetColumnNames():
             dfw.DefineAndAppend(f"SelectedJet_{jetobs}", f"Jet_{jetobs}[Jet_B0]")
-    for recoObsNew in PUObservables + FSRPhotonObservables + SoftActivityJetObservables: # additional_VBFStudies_vars+
+    for recoObsNew in (
+        PUObservables + FSRPhotonObservables + SoftActivityJetObservables
+    ):  # additional_VBFStudies_vars+
         if recoObsNew in dfw.df.GetColumnNames():
             dfw.colToSave.extend([recoObsNew])
 

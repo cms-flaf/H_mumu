@@ -116,19 +116,19 @@ def createKeyFilterDict(global_params, period):
             triggers = triggers_dict[ch][period]
         for reg in custom_regions:
             for cat in all_categories:
-                    filter_base = f" ( {ch} && {triggers} && {reg} && {cat} ) "
-                    if custom_subcategories:
-                        for subcat in custom_subcategories:
-                            # filter_base += f"&& {custom_subcat}"
-                            filter_str = f"(" + filter_base + f" && {subcat}"
-                            filter_str += ")"
-                            key = (ch, reg, cat, subcat)
-                            filter_dict[key] = filter_str
-                    else:
-                        filter_str = f"(" + filter_base
+                filter_base = f" ( {ch} && {triggers} && {reg} && {cat} ) "
+                if custom_subcategories:
+                    for subcat in custom_subcategories:
+                        # filter_base += f"&& {custom_subcat}"
+                        filter_str = f"(" + filter_base + f" && {subcat}"
                         filter_str += ")"
-                        key = (ch, reg, cat)
+                        key = (ch, reg, cat, subcat)
                         filter_dict[key] = filter_str
+                else:
+                    filter_str = f"(" + filter_base
+                    filter_str += ")"
+                    key = (ch, reg, cat)
+                    filter_dict[key] = filter_str
     return filter_dict
 
 
@@ -283,12 +283,16 @@ def GetMuMuObservables(df):
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
     df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
     df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
-    df = df.Define("m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())")
+    df = df.Define(
+        "m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())"
+    )
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
         df = df.Define(f"mu{idx+1}_pt_rel_BS", f"mu{idx+1}_bsConstrainedPt/m_mumu_BS")
         df = df.Define(f"mu{idx+1}_pt_rel_nano", f"mu{idx+1}_pt_nano/m_mumu_nano")
-        df = df.Define(f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe")
+        df = df.Define(
+            f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe"
+        )
 
     df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
 
@@ -546,34 +550,37 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
     def AddScaReOnBS(self):
         import correctionlib
+
         period_files = {
-            'Run3_2022': '2022_Summer22',
-            'Run3_2022EE': '2022_Summer22EE',
-            'Run3_2023': '2023_Summer23',
-            'Run3_2023BPix':'2023_Summer23BPix',
+            "Run3_2022": "2022_Summer22",
+            "Run3_2022EE": "2022_Summer22EE",
+            "Run3_2023": "2023_Summer23",
+            "Run3_2023BPix": "2023_Summer23BPix",
         }
         correctionlib.register_pyroot_binding()
         file_name = period_files.get(self.period, "")
         ROOT.gROOT.ProcessLine(
             f'auto cset = correction::CorrectionSet::from_file("/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/corrections/{file_name}.json");'
         )
-        ROOT.gROOT.ProcessLine('#include "/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/scripts/MuonScaRe.cc"')
+        ROOT.gROOT.ProcessLine(
+            '#include "/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/scripts/MuonScaRe.cc"'
+        )
         for mu_idx in [1, 2]:
             if self.isData:
                 # Data apply scale correction
                 self.df = self.df.Define(
-                    f'mu{mu_idx}_BS_pt_1_corr',
-                    f'pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)'
+                    f"mu{mu_idx}_BS_pt_1_corr",
+                    f"pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
                 )
             else:
                 self.df = self.df.Define(
-                    f'mu{mu_idx}_BS_pt_1_scale_corr',
-                    f'pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)'
+                    f"mu{mu_idx}_BS_pt_1_scale_corr",
+                    f"pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
                 )
 
                 self.df = self.df.Define(
-                    f'mu{mu_idx}_BS_pt_1_corr',
-                    f'pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))'
+                    f"mu{mu_idx}_BS_pt_1_corr",
+                    f"pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
                 )
                 # # MC evaluate scale uncertainty
                 # df_mc = df_mc.Define(
