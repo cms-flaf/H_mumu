@@ -98,7 +98,6 @@ scales:
 
 ApplyBweight: False
 
-
 sample_types_to_merge:
   - DY
   - TT

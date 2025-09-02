@@ -4,7 +4,6 @@ import sys
 if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
-# from FLAF.Common.HistHelper import *
 from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
