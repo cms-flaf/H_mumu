@@ -9,7 +9,7 @@ signal_types:
   # - VH
 
 storeFatJets: False
-bjet_preselection_branch: "Jet_B1"
+bjet_preselection_branch: "Jet_B0"
 tagger_name: particleNet
 met_type: "PuppiMET"
 
@@ -27,12 +27,23 @@ channelDefinition:
 
 region: All
 region_default: All
+custom_regions: MuMuMassRegions
+custom_categories: ""
+custom_subcategories: []
+
+# further_cuts:
+#   etamm_0p9: ["eta_mumu","abs(eta_mumu) < 0.9"]
+#   etamm_1p4: ["eta_mumu","abs(eta_mumu) >= 0.9 && abs(eta_mumu) < 1.4"]
+#   etamm_2p4: ["eta_mumu","abs(eta_mumu) >= 1.4 && abs(eta_mumu) < 2.4"]
+#   etamm_above2p4: ["eta_mumu","abs(eta_mumu) > 2.4"]
+#   eta_incl: ["eta_mumu","abs(eta_mumu) >= 0."]
 
 MuMuMassRegions:
   Z_sideband: "m_mumu > 70 && m_mumu < 110"
   Signal_Fit: "m_mumu > 115 && m_mumu < 135"
   H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
   Signal_ext: "m_mumu > 110 && m_mumu < 150"
+  mass_inclusive: "true"
 
 triggers:
   muMu: [ singleMu ]
@@ -64,9 +75,6 @@ category_definition:
   ggH: "baseline && !(VBF_def)"
   VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
   VBF_JetVeto: "baseline && VBF_JetVeto_def"
-  etamm_0p9: "baseline && abs(eta_mumu) < 0.9"
-  etamm_1p4: "baseline && abs(eta_mumu) >= 0.9 && abs(eta_mumu) < 1.4"
-  etamm_2p4: "baseline && abs(eta_mumu) >= 1.4 && abs(eta_mumu) < 2.4"
 
   # ggH_JetVeto: "baseline && !VBF_JetVeto_def"
   # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
@@ -90,10 +98,12 @@ scales:
 
 ApplyBweight: False
 
+
 sample_types_to_merge:
   - DY
   - TT
   - W
+  - EWK
   - VVV
   - VV
   - ST

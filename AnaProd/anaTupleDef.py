@@ -275,6 +275,7 @@ defaultColToSave = [
     "BeamSpot_zError",
 ]
 
+additional_VBFStudies_vars = ["GenJet_eta","GenJet_hadronFlavour","GenJet_mass","GenJet_nBHadrons","GenJet_nCHadrons","GenJet_partonFlavour","GenJet_phi","GenJet_pt","LHEPart_eta","LHEPart_incomingpz","LHEPart_mass","LHEPart_pdgId","LHEPart_phi","LHEPart_pt","LHEPart_spin","LHEPart_status","GenPart_eta","GenPart_genPartIdxMother","GenPart_iso","GenPart_mass","GenPart_pdgId","GenPart_phi","GenPart_pt","GenPart_status","GenPart_statusFlags","GenPart_vx","GenPart_vy","GenPart_vz","GenProton_isPU","GenProton_px","GenProton_py","GenProton_pz","GenProton_vz"]
 
 def getDefaultColumnsToSave(isData):
     colToSave = defaultColToSave.copy()
@@ -299,7 +300,6 @@ def addAllVariables(
 
     dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
 
-    # dfw.Apply(Corrections.getGlobal().btag.getWPid)
 
     dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
 
@@ -380,24 +380,7 @@ def addAllVariables(
                 var_cond=f"mu{leg_idx+1}_genMatchIdx>=0",
                 default="-10",
             )
-        # if not isData:
-        #     for var in [ 'pt', 'eta', 'phi', 'mass' ]:
-        #         LegVar(f'gen_vis_{var}', f'genLeptons.at(tau{leg_idx+1}_genMatchIdx).visibleP4().{var}()',
-        #                var_type='float', var_cond=f"tau{leg_idx+1}_genMatchIdx>=0", default='-1.f')
-        #     LegVar('gen_nChHad', f'genLeptons.at(tau{leg_idx+1}_genMatchIdx).nChargedHadrons()',
-        #            var_type='int', var_cond=f"tau{leg_idx+1}_genMatchIdx>=0", default='-1')
-        #     LegVar('gen_nNeutHad', f'genLeptons.at(tau{leg_idx+1}_genMatchIdx).nNeutralHadrons()',
-        #            var_type='int', var_cond=f"tau{leg_idx+1}_genMatchIdx>=0", default='-1')
-        #     LegVar('seedingJet_partonFlavour', f'Jet_partonFlavour.at(tau{leg_idx+1}_recoJetMatchIdx)',
-        #            var_type='int', var_cond=f"tau{leg_idx+1}_recoJetMatchIdx>=0", default='-10')
-        #     LegVar('seedingJet_hadronFlavour', f'Jet_hadronFlavour.at(tau{leg_idx+1}_recoJetMatchIdx)',
-        #            var_type='int', var_cond=f"tau{leg_idx+1}_recoJetMatchIdx>=0", default='-10')
 
-        # for var in [ 'pt', 'eta', 'phi', 'mass' ]:
-        #     LegVar(f'seedingJet_{var}', f"Jet_p4.at(tau{leg_idx+1}_recoJetMatchIdx).{var}()",
-        #            var_type='float', var_cond=f"tau{leg_idx+1}_recoJetMatchIdx>=0", default='-1.f')
-
-        # Save the lep* p4 and index directly to avoid using HwwCandidate in SF LUTs
         dfw.Define(
             f"mu{leg_idx+1}_p4",
             f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_p4.at({leg_idx}) : LorentzVectorM()",
@@ -418,12 +401,10 @@ def addAllVariables(
     for jetobs in JetObservables + ["idx"]:
         jet_obs_name = f"Jet_{jetobs}"
         if jet_obs_name in dfw.df.GetColumnNames():
-            dfw.DefineAndAppend(f"SelectedJet_{jetobs}", f"Jet_{jetobs}[Jet_B1]")
-    if global_params["nano_version"] == "v15":
-        if not isData:
-            dfw.colToSave.extend(PUObservables)
-        dfw.colToSave.extend(FSRPhotonObservables)
-        dfw.colToSave.extend(SoftActivityJetObservables)
+            dfw.DefineAndAppend(f"SelectedJet_{jetobs}", f"Jet_{jetobs}[Jet_B0]")
+    for recoObsNew in PUObservables + FSRPhotonObservables + SoftActivityJetObservables: # additional_VBFStudies_vars+
+        if recoObsNew in dfw.df.GetColumnNames():
+            dfw.colToSave.extend([recoObsNew])
 
     # pf_str = global_params["met_type"]
     # dfw.DefineAndAppend(f"met_pt_nano", f"static_cast<float>({pf_str}_p4_nano.pt())")
