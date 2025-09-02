@@ -5,7 +5,7 @@ if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
 # from FLAF.Common.HistHelper import *
-from FLAF.Analysis.HistHelper import *
+from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
 
@@ -85,20 +85,51 @@ def createKeyFilterDict(global_params, period):
     filter_dict = {}
     filter_str = ""
     channels_to_consider = global_params["channels_to_consider"]
-    sign_regions_to_consider = global_params["MuMuMassRegions"]
-    categories_to_consider = global_params["categories"]
+    # sign_regions_to_consider = global_params["MuMuMassRegions"]
+    categories = global_params["categories"]
+
+    ### add custom categories eventually:
+    custom_categories = []
+    custom_categories_name = global_params.get(
+        "custom_categories", None
+    )  # can be extended to list of names
+    if custom_categories_name:
+        custom_categories = list(global_params.get(custom_categories_name, []))
+        if not custom_categories:
+            print("No custom categories found")
+
+    ### regions
+    custom_regions = []
+    custom_regions_name = global_params.get(
+        "custom_regions", None
+    )  # can be extended to list of names, if for example adding QCD regions + other control regions
+    if custom_regions_name:
+        custom_regions = list(global_params.get(custom_regions_name, []))
+        if not custom_regions:
+            print("No custom regions found")
+
+    all_categories = categories + custom_categories
+    custom_subcategories = list(global_params.get("custom_subcategories", []))
     triggers_dict = global_params["hist_triggers"]
     for ch in channels_to_consider:
         triggers = triggers_dict[ch]["default"]
         if period in triggers_dict[ch].keys():
             triggers = triggers_dict[ch][period]
-        for reg in sign_regions_to_consider:
-            for cat in categories_to_consider:
-                filter_base = f" ({ch} && {triggers}&& {reg} && {cat})"
-                filter_str = f"(" + filter_base
-                filter_str += ")"
-                key = (ch, reg, cat)
-                filter_dict[key] = filter_str
+        for reg in custom_regions:
+            for cat in all_categories:
+                    filter_base = f" ( {ch} && {triggers} && {reg} && {cat} ) "
+                    if custom_subcategories:
+                        for subcat in custom_subcategories:
+                            # filter_base += f"&& {custom_subcat}"
+                            filter_str = f"(" + filter_base + f" && {subcat}"
+                            filter_str += ")"
+                            key = (ch, reg, cat, subcat)
+                            filter_dict[key] = filter_str
+                    else:
+                        filter_str = f"(" + filter_base
+                        filter_str += ")"
+                        key = (ch, reg, cat)
+                        filter_dict[key] = filter_str
     return filter_dict
 
 
@@ -231,13 +262,27 @@ def VBFJetSelection(df):
 def GetMuMuObservables(df):
     for idx in [0, 1]:
         df = Utilities.defineP4(df, f"mu{idx+1}")
+        df = df.Define(
+            f"mu{idx+1}_p4_BS",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_bsConstrainedPt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
+        df = df.Define(
+            f"mu{idx+1}_p4_nano",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
+    df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
+    df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
     df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
     df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
     df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
+    df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
+    df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
+        df = df.Define(f"mu{idx+1}_pt_rel_BS", f"mu{idx+1}_bsConstrainedPt/m_mumu_BS")
+        df = df.Define(f"mu{idx+1}_pt_rel_nano", f"mu{idx+1}_pt_nano/m_mumu_nano")
     df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
 
     df = df.Define("Ebeam", "13600.0/2")
@@ -523,7 +568,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         config,
         period,
         isData=False,
-        isCentral=False,
         wantTriggerSFErrors=False,
         colToSave=[],
     ):
@@ -531,7 +575,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.config = config
         self.isData = isData
         self.period = period
-        self.isCentral = isCentral
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
 
@@ -547,7 +590,7 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
     if not dfForHistograms.isData:
         defineTriggerWeights(dfForHistograms)
-        if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
+        if dfForHistograms.wantTriggerSFErrors:
             defineTriggerWeightsErrors(dfForHistograms)
     dfForHistograms.SignRegionDef()
     dfForHistograms.defineRegions()
