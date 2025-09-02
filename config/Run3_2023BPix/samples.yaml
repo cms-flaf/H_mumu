@@ -14,7 +14,7 @@ GLOBAL:
     - keep ^DYToMuMu-M50_13p6TeV_MiNNLO_pythia8.*
     - keep ^GluGlutoContinto.*
     - drop ^GluGlutoContinto2Zto2E2Nu  # missing XS
-    - drop ^GluGlutoContinto2Zto2Mu2Nu # missing XS
+    - drop ^GluGlutoContinto2Zto2Mu2Nu  # missing XS
     - keep ^ggZH*
     - keep ^Tbar*
     - keep ^TBbar*
@@ -41,9 +41,9 @@ GLOBAL:
     - drop ^.*ext*
     - keep ^LLJJ.*
     - drop EWK_2L2J_madgraph_herwig  # tmp - missing XS
-    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7 # missing gen info
-    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1 # missing gen info
-    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2 # missing gen info
+    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7  # missing gen info
+    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1  # missing gen info
+    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2  # missing gen info
 
   use_stitching: False
   triggerFile: config/Run3_2023BPix/triggers.yaml
