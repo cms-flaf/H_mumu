@@ -380,7 +380,6 @@ def addAllVariables(
                 var_cond=f"mu{leg_idx+1}_genMatchIdx>=0",
                 default="-10",
             )
-
         dfw.Define(
             f"mu{leg_idx+1}_p4",
             f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_p4.at({leg_idx}) : LorentzVectorM()",

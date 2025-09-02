@@ -16,6 +16,8 @@ TTto4Q:
 TTtoLNu2Q:
   sampleType: TT
 
+# TT_ext1:
+#   sampleType: TT
 # TTto2L2Nu_ext1:
 #   sampleType: TT
 # TTto4Q_ext1:
@@ -23,7 +25,10 @@ TTtoLNu2Q:
 # TTtoLNu2Q_ext1:
 #   sampleType: TT
 
+# TTH_Hto2Mu
 ############## DY ##############
+
+
 # DYto2L_M_10to50_amcatnloFXFX:
 #   sampleType: DY
 # DYto2L_M_50_amcatnloFXFX:
@@ -132,7 +137,6 @@ WplusH_Hto2B_WtoLNu:
 # ZZ:
 #   sampleType: VV
 ############## VV non inclusive ##############
-
 WWto2L2Nu_powheg:
   sampleType: VV
 # WWto2L2Nu_powheg_ext1:
