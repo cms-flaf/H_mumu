@@ -270,19 +270,27 @@ def GetMuMuObservables(df):
             f"mu{idx+1}_p4_nano",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
+        df = df.Define(
+            f"mu{idx+1}_p4_BS_ScaRe",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
     df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
     df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
+    df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
     df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
     df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
     df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
     df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
     df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
+    df = df.Define("m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())")
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
         df = df.Define(f"mu{idx+1}_pt_rel_BS", f"mu{idx+1}_bsConstrainedPt/m_mumu_BS")
         df = df.Define(f"mu{idx+1}_pt_rel_nano", f"mu{idx+1}_pt_nano/m_mumu_nano")
+        df = df.Define(f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe")
+
     df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
 
     df = df.Define("Ebeam", "13600.0/2")
@@ -318,6 +326,7 @@ def GetMuMuMassResolution(df):
             "mu2_bsConstrainedPtErr",
         ),
     )
+    # to def m_mumu_resolution_BS+Scare
     return df
 
 
@@ -536,6 +545,57 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
+    def AddScaReOnBS(self):
+        import correctionlib
+        period_files = {
+            'Run3_2022': '2022_Summer22',
+            'Run3_2022EE': '2022_Summer22EE',
+            'Run3_2023': '2023_Summer23',
+            'Run3_2023BPix':'2023_Summer23BPix',
+        }
+        correctionlib.register_pyroot_binding()
+        file_name = period_files.get(self.period, "")
+        ROOT.gROOT.ProcessLine(
+            f'auto cset = correction::CorrectionSet::from_file("/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/corrections/{file_name}.json");'
+        )
+        ROOT.gROOT.ProcessLine('#include "/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/scripts/MuonScaRe.cc"')
+        for mu_idx in [1, 2]:
+            if self.isData:
+                # Data apply scale correction
+                self.df = self.df.Define(
+                    f'mu{mu_idx}_BS_pt_1_corr',
+                    f'pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)'
+                )
+            else:
+                self.df = self.df.Define(
+                    f'mu{mu_idx}_BS_pt_1_scale_corr',
+                    f'pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)'
+                )
+
+                self.df = self.df.Define(
+                    f'mu{mu_idx}_BS_pt_1_corr',
+                    f'pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))'
+                )
+                # # MC evaluate scale uncertainty
+                # df_mc = df_mc.Define(
+                #     'pt_1_scale_corr_up',
+                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "up")'
+                # )
+                # df_mc = df_mc.Define(
+                #     'pt_1_scale_corr_dn',
+                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "dn")'
+                # )
+
+                # # MC evaluate resolution uncertainty
+                # df_mc = df_mc.Define(
+                #     "pt_1_corr_resolup",
+                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "up")'
+                # )
+                # df_mc = df_mc.Define(
+                #     "pt_1_corr_resoldn",
+                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "dn")'
+                # )
+
     def defineRegions(self):
         region_defs = self.config["MuMuMassRegions"]
         for reg_name, reg_cut in region_defs.items():
@@ -583,6 +643,7 @@ def PrepareDfForHistograms(dfForHistograms):
     # dfForHistograms.df = defineP4AndInvMass(dfForHistograms.df)
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
+    dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
