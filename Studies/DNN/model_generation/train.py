@@ -71,9 +71,9 @@ class Trainer:
         """
         (x_data, y_data), weights = data
         if device is not None:
-            x_data = torch.tensor(x_data, device=device)
-            y_data = torch.tensor(y_data, device=device)
-            weights = torch.tensor(weights, device=device)
+            x_data = torch.tensor(x_data, device=device, dtype=torch.double)
+            y_data = torch.tensor(y_data, device=device, dtype=torch.double)
+            weights = torch.tensor(weights, device=device, dtype=torch.double)
             dataset = TensorDataset(x_data, y_data, weights)
         else:
             dataset = TensorDataset(

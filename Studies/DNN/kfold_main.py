@@ -200,9 +200,21 @@ if __name__ == "__main__":
         with open(outname + ".torch", "wb") as f:
             torch.save(model, f)
         (x_data, _), _ = train_data
-        x = torch.tensor(x_data[0], device=device)
-        torch.onnx.export(model, x, outname + ".onnx")
-
+        if device is None:
+            x = torch.tensor(x_data, device=device)
+        else:
+            x = torch.tensor(x_data, device=device, dtype=torch.double)
+        torch.onnx.export(
+                model=model, 
+                args=(x[0:3]), 
+                f = outname + ".onnx",
+                input_names=['x'],
+                output_names=['y'],
+                dynamic_axes={
+                    'x' : [0],
+                    'y' : [0]
+                }
+            )
         # Back to the main kfold dir
         os.chdir(base_dir)
 
@@ -217,9 +229,9 @@ if __name__ == "__main__":
     # Plot/save
     tester.testing_df = df
     tester.make_hist(log=False, weight=True, norm=True)
-    tester.make_multihist(log=True, weight=True)
-    tester.make_stackplot(log=True)
-    tester.make_transformed_stackplot()
+    #tester.make_multihist(log=True, weight=True)
+    #tester.make_stackplot(log=True)
+    #tester.make_transformed_stackplot()
     tester.make_roc_plot(log=True)
     tester.make_roc_plot(log=False)
     tester.make_thist()

@@ -43,8 +43,10 @@ class Tester:
         # Just keep and convert the x_data.
         # We'll run inference on this only then put back into self.testing_df
         (x_data, _), _ = testing_data
-        self.x_data = torch.tensor(x_data, device=self.device)
-
+        if self.device is None:
+            self.x_data = torch.tensor(x_data, device=self.device)
+        else:
+            self.x_data = torch.tensor(x_data, device=self.device, dtype=torch.double)
         # Define a mapping, so it is consistent across plots
         self.color_map = self._set_color_map()
 

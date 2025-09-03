@@ -1,4 +1,5 @@
 from itertools import chain
+from pprint import pprint
 
 
 def parse_column_names(config, column_type="all"):
@@ -47,14 +48,31 @@ def parse_column_names(config, column_type="all"):
         SoftJet_vars,
     ]
 
-    # data_columns = [
-    #     MuPair_vars, MuJet_vars,
-    #     VBFJetPair_vars
-    # ]
+    header_columns = [
+        Global_vars,
+        Weight_vars,
+    ]
+
+    selection_columns = [
+        Sign_vars,
+        Region_vars,
+        Category_vars
+    ]
+
+    data_columns = [x for x in data_columns if x is not None]
+    header_columns = [x for x in header_columns if x is not None]
+    selection_columns = [x for x in selection_columns if x is not None]
 
     data_columns = list(chain.from_iterable(data_columns))
-    header_columns = Global_vars + Weight_vars
-    selection_columns = Sign_vars + Region_vars + Category_vars
+    header_columns = list(chain.from_iterable(header_columns))
+    selection_columns = list(chain.from_iterable(selection_columns))
+
+    print("Data columns:")
+    pprint(data_columns)
+    print("Header columns:")
+    pprint(header_columns)
+    print("Selection columns:")
+    pprint(selection_columns)
 
     if column_type == "all":
         return header_columns + selection_columns + data_columns

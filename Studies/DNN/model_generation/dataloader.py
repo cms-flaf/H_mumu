@@ -39,10 +39,14 @@ class DataLoader:
         self.signal_types = signal_types
         self.valid_size = valid_size
         self.test_size = test_size
+        if selection_cut == '':
+            selection_cut = None
         self.selection_cut = selection_cut
         self.classification = classification
         self.renorm_inputs = renorm_inputs
         # File stitching defines the MC_Lumi_pu -> Class_Weight corrections
+        if file_stitching == '':
+            file_stitching = None
         if file_stitching is not None:
             with open(file_stitching, "r") as f:
                 file_stitching = toml.load(f)

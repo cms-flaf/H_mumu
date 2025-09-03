@@ -1,0 +1,30 @@
+vars_to_save:
+  Muon:
+    - mu{}_eta
+    - mu{}_pt
+  VBFJet: # j1 and j2, separated in eta ecc.. in VBF events (single jet observables)
+    - eta
+    - pt
+  VBFJetPair:
+  MuJet:
+  MuPair:
+  Global:
+    ### evt info ###
+    - FullEventId
+    - luminosityBlock
+    - isData
+    - event
+    - period
+    - run
+    - sample_type
+  Categories:
+  Regions:
+  Sign:
+  Weight:
+    ## trigger ##
+#    - HLT_singleMu
+    ### global event weight ###
+    - m_mumu_resolution
+    - weight_EWKCorr_VptCentral
+    - weight_EWKCorr_ewcorrCentral
+    - weight_MC_Lumi_pu

@@ -5,17 +5,17 @@ use_cuda = true
 
 [dataloader]
 # Events selection
-selection_cut = '(VBF_JetVeto) & (Signal_Fit)'
+selection_cut = "(Signal_Fit) & (j1_pt != -1000) & (j2_pt != -1000)"
 # Event splitting (traing_size is what's left)
-valid_size = 0.20
-test_size = 0.4
+valid_size = 0.25
+test_size = 0.0
 # Input vector def
-columns_config = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/ds_setup/general.yaml'
-signal_types = ['VBFH', 'ggH']
+columns_config = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/ds_setup/vbfnet_general.yaml'
+signal_types = ['VBFH']
 # Binary or multiclass
 classification = 'binary'          
 # Per file stitching
-file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights.toml'
+file_stitching = ''
 renorm_inputs = 'gauss'
 
 
@@ -35,8 +35,8 @@ k = 4
 [network]  
 # Hidden layers only
 # Input layer size pulled from the used columns
-layer_list = [75, 75]
-dropout = 0.07
+layer_list = [32, 32, 32]
+dropout = 0
 
 [training]
 # batch_size = 0 means use the whole set (1 batch per epoch)

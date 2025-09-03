@@ -13,6 +13,7 @@ from pprint import pprint
 from Studies.DNN.model_generation.parse_column_names import parse_column_names
 import FLAF.Common.Utilities as Utilities
 import Analysis.H_mumu as analysis
+from FLAF.Common.Utilities import DeclareHeader
 
 
 class DNNProducer:
@@ -31,8 +32,10 @@ class DNNProducer:
         self._set_environ_vars()
         self.parity, self.input_features = self._load_dnn_config()
         self.corrected_input_features = [f"{x}_renorm" for x in self.input_features]
-        self.vars_to_save = [f"{self.payload_name}_{col}" for col in self.corrected_input_features]
-        self.cols_to_save = [f"{self.payload_name}_{col}" for col in self.input_features]
+        # Columns for tmp file
+        self.vars_to_save = self.input_features + self.corrected_input_features
+        # Final columns
+        self.cols_to_save = [ f"{self.payload_name}_{col}" for col in self.cfg['columns'] ]
         self.models = self._load_models()
 
     ### Init helpers ###
@@ -65,6 +68,7 @@ class DNNProducer:
         for i in range(self.parity):
             filename = os.path.join(directory, f"trained_model_{i}.onnx")
             model = ort.InferenceSession(filename)
+            models.append(model)
         return models
 
 
@@ -101,13 +105,14 @@ class DNNProducer:
     ### Functions for running the inference ###
 
     def prepare_dfw(self, dfw):
+        print("*********** Running prepare_dfw...")
         dfw = analysis.DataFrameBuilderForHistograms(dfw.df, self.global_cfg, self.period)
         dfw = analysis.PrepareDfForHistograms(dfw)
         # This is probably where I need to do the input renorming?
         for col in self.input_features:
-            m = dfw.Mean(col).GetValue()
-            s = dfw.StdDev(col).GetValues()
-            dfw.Define("{col}_renorm", f"({col} - {m})/{s}")
+            m = dfw.df.Mean(col).GetValue()
+            s = dfw.df.StdDev(col).GetValue()
+            dfw.df = dfw.df.Define(f"{col}_renorm", f"({col} - {m})/{s}")
         return dfw
 
 
@@ -116,25 +121,40 @@ class DNNProducer:
         nEvents = len(branches)
         print(f"Running DNN Over {nEvents} events")
 
-        all_predictions = np.zeros(nEvents)
         event_number = np.array(getattr(branches, 'FullEventId'))
         input_array = np.array([getattr(branches, feature_name) for feature_name in self.corrected_input_features]).transpose()
-        all_predictions = np.zeros(nEvents, nParity)
-        for parityIdx, sess in enumerate(models):
-
-            predictions = sess.run(input_array) 
+        all_predictions = np.zeros([nEvents, self.parity])
+        for parityIdx, sess in enumerate(self.models):
+            pprint(vars(sess))
+            pprint(sess.get_inputs)
+            print(input_array.shape)
+            input_name = sess.get_inputs()[0].name
+            label_name = sess.get_outputs()[0].name
+            predictions = sess.run([label_name], {input_name: input_array})[0]
+            print(predictions)
+            print(type(predictions))
+            print(predictions.shape)
             # Mask entries that shouldn't be evaluated by this model to 0
-            predictions = np.where(
-                    event_number % self.parity != parityIdx,
-                    predictions,
-                    0.0
-                )
-            all_predictions[parityIdx,:] = predictions
+            # predictions = np.where(
+            #         event_number % self.parity != parityIdx,
+            #         predictions,
+            #         0.0
+            #     )
+            mask = (event_number % self.parity) != parityIdx
+            predictions[mask] = 0
+            all_predictions[:, parityIdx] = predictions.reshape(predictions.shape[0])
+        
+        print(all_predictions)
 
-        final_predictions = np.sum(all_predictions, axis=2)
+        final_predictions = np.sum(all_predictions, axis=1)
+
+        print(final_predictions)
+        print(np.mean(final_predictions))
+
+
 
         # Last save the branches
-        branches['NNOutput'] = final_predictions.transpose()[class_idx].astype(np.float32)
+        branches['NNOutput'] = final_predictions.transpose().astype(np.float32)
 
         print("Finishing call, memory?")
         process = psutil.Process(os.getpid())
@@ -149,7 +169,7 @@ class DNNProducer:
         array = self.ApplyDNN(array)
         # Delete not-needed branches
         for col in array.fields:
-            if col not in self.vars_to_save and col not in self.cols_to_save:
+            if col not in self.cfg['columns']:
                 if col != 'FullEventId':
                     del array[col]
         # Rename the branches
