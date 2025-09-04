@@ -165,14 +165,20 @@ def VBFJetSelection(df):
         "Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605"
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
-
     df = df.Define("SelectedJet_vetoMap_inverted", "!SelectedJet_vetoMap").Define(
         "Jet_preselection",
         "SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ",
     )  # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
 
     df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4)")
-    df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
+    df = df.Define("HasVBF_0", "return static_cast<bool>(VBFJetCand.isVBF)")
+    df = df.Define("HasVBF", "HasVBF_0 && Jet_preselection")
+    df = df.Define("NoOverlapWithMuons",f"""
+                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu1_p4) >= std::pow(0.4, 2) &&
+                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu1_p4) >= std::pow(0.4, 2) &&
+                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu2_p4) >= std::pow(0.4, 2) &&
+                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu2_p4) >= std::pow(0.4, 2)
+                   """)
     df = df.Define(
         "m_jj",
         "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f",
@@ -225,6 +231,7 @@ def VBFJetSelection(df):
         "delta_phi_jj",
         "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;",
     )
+
     df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Phi()")
     df = df.Define(
         "VBFjets_pt",
@@ -255,6 +262,7 @@ def VBFJetSelection(df):
                 "j2_" + var,
                 f"if (HasVBF && j2_idx >= 0) return static_cast<float>(SelectedJet_{var}[j2_idx]); return -1000.f;",
             )
+
     return df
 
 

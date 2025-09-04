@@ -17,7 +17,10 @@ norm:
 
 
 shape:
-  # - JEC
-  - JER
-
+  JES_Total:
+    name: CMS_scale_j_{}
+  JER:
+    name: CMS_res_j_{}
+  ScaRe:
+    name: CMS_ScaRe_mu_{}
 
