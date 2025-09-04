@@ -173,12 +173,15 @@ def VBFJetSelection(df):
     df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4)")
     df = df.Define("HasVBF_0", "return static_cast<bool>(VBFJetCand.isVBF)")
     df = df.Define("HasVBF", "HasVBF_0 && Jet_preselection")
-    df = df.Define("NoOverlapWithMuons",f"""
+    df = df.Define(
+        "NoOverlapWithMuons",
+        f"""
                    ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu1_p4) >= std::pow(0.4, 2) &&
                    ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu1_p4) >= std::pow(0.4, 2) &&
                    ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu2_p4) >= std::pow(0.4, 2) &&
                    ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu2_p4) >= std::pow(0.4, 2)
-                   """)
+                   """,
+    )
     df = df.Define(
         "m_jj",
         "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f",
