@@ -2,11 +2,14 @@ import argparse
 import os
 import sys
 from glob import glob
+from math import ceil
 
 import psutil
 import ROOT
 import yaml
-from utils.parse_column_names import parse_column_names
+import uproot
+
+from model_generation.parse_column_names import parse_column_names
 
 import Analysis.H_mumu as analysis
 import FLAF.Common.Utilities as Utilities
@@ -15,21 +18,25 @@ ROOT.gROOT.SetBatch(True)
 ROOT.EnableThreadSafety()
 from FLAF.Common.Utilities import DeclareHeader
 
+def get_entries_per_batch(directory, nBatches):
+    total = 0
+    pattern = os.path.join(directory, "*.root")
+    for filename in glob(pattern):
+        with uproot.open(filename) as f:
+            total += f['Events'].num_entries
+    return ceil(total/nBatches)
+
 
 def create_file(
-    config_dict, global_cfg_dict, general_cfg_dict, period, output_folder, out_filename
+    config_dict, global_cfg_dict, general_cfg_dict, period, out_filename, dataset
 ):
     print(f"Starting create file. Memory usage in MB is {get_memory_usage()}")
-    nBatches = config_dict["meta_data"]["batch_dict"]["nBatches"]
-    print(config_dict.keys())
-    # for process in config_dict["processes"]:
-    #    if (nBatches is None) or (
-    #        (process["nBatches"] <= nBatches) and (process["nBatches"] != 0)
-    #    ):
-    #        nBatches = process["nBatches"]
 
-    print(f"Going to make {nBatches} batches")
-    batch_size = config_dict["meta_data"]["batch_dict"]["batch_size"]
+    # Set the batch params for this anaTuple directory
+    nBatches = config_dict["meta_data"]["nBatches"]
+    nEntriesPerBatch = get_entries_per_batch(dataset, nBatches)
+    nBatchStart = 0
+    nBatchEnd = nBatchStart + nEntriesPerBatch
 
     step_idx = 0
 
@@ -37,109 +44,104 @@ def create_file(
     master_column_names = []
     master_column_types = []
     master_column_names_vec = ROOT.std.vector("string")()
-    # Assume master(signal) is saved first and use idx==0 entry to fill
+ 
+    # Init temp
+    tmp_dir = config_dict["meta_data"]["temp_folder"]
+    tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
+    tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
 
-    for process in config_dict["processes"]:
-        process_filelist = [f"{x}/*.root" for x in process["datasets"]]
+    # Load in the RDataFrame
+    pattern = os.path.join(dataset, "*.root")
+    process_filelist = glob(pattern)
+    df_in = ROOT.RDataFrame("Events", process_filelist)
 
-        tmp_dir = config_dict["meta_data"]["temp_folder"]
-        tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
-        tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
+    # Filter for nLeps and Parity (iterate cut in config)
+    if "iterate_cut" in config_dict["meta_data"].keys():
+        df_in = df_in.Filter(config_dict["meta_data"]["iterate_cut"])
 
-        # print(process_filelist)
-        df_in = ROOT.RDataFrame("Events", process_filelist)
+    # Load df_out, if first iter then load an empty, otherwise load the past file
+    if step_idx == 0:
+        df_out = ROOT.RDataFrame(nBatches * nEntriesPerBatch)
+        df_out = df_out.Define("is_valid", "false")
 
-        # Filter for nLeps and Parity (iterate cut in config)
-        if "iterate_cut" in config_dict["meta_data"].keys():
-            df_in = df_in.Filter(config_dict["meta_data"]["iterate_cut"])
+        # Fill master column nametype
+        master_column_names = df_in.GetColumnNames()
+        master_column_types = [
+            str(df_in.GetColumnType(str(c))) for c in master_column_names
+        ]
+        for name in master_column_names:
+            master_column_names_vec.push_back(name)
+    else:
+        df_out = ROOT.RDataFrame("Events", tmp_filename)
 
-        nEntriesPerBatch = process["batch_size"]
-        nBatchStart = process["batch_start"]
-        nBatchEnd = nBatchStart + nEntriesPerBatch
+    local_column_names = df_in.GetColumnNames()
+    local_column_types = [
+        str(df_in.GetColumnType(str(c))) for c in local_column_names
+    ]
+    local_column_names_vec = ROOT.std.vector("string")()
+    for name in local_column_names:
+        local_column_names_vec.push_back(name)
 
-        # Load df_out, if first iter then load an empty, otherwise load the past file
+    # Need a local_to_master_map so that local columns keep the same index as the master columns
+    local_to_master_map = [
+        list(master_column_names).index(local_name)
+        for local_name in local_column_names
+    ]
+    master_size = len(master_column_names)
+
+    queue_size = 10
+    max_entries = nEntriesPerBatch * nBatches
+
+    tuple_maker = ROOT.analysis.TupleMaker(*local_column_types)(
+        queue_size, max_entries
+    )
+
+    df_out = tuple_maker.FillDF(
+        ROOT.RDF.AsRNode(df_out),
+        ROOT.RDF.AsRNode(df_in),
+        local_to_master_map,
+        master_size,
+        local_column_names_vec,
+        nBatchStart,
+        nBatchEnd,
+        nEntriesPerBatch,
+    )
+
+    for column_idx, column_name in enumerate(master_column_names):
+        column_type = master_column_types[column_idx]
+
         if step_idx == 0:
-            df_out = ROOT.RDataFrame(nBatches * batch_size)
-            df_out = df_out.Define("is_valid", "false")
-
-            # Fill master column nametype
-            master_column_names = df_in.GetColumnNames()
-            master_column_types = [
-                str(df_in.GetColumnType(str(c))) for c in master_column_names
-            ]
-            for name in master_column_names:
-                master_column_names_vec.push_back(name)
+            df_out = df_out.Define(
+                str(column_name),
+                f"_entry ? _entry->GetValue<{column_type}>({column_idx}) : {column_type}() ",
+            )
         else:
-            df_out = ROOT.RDataFrame("Events", tmp_filename)
+            if column_name not in local_column_names:
+                continue
+            df_out = df_out.Redefine(
+                str(column_name),
+                f"_entry ? _entry->GetValue<{column_type}>({column_idx}) : {column_name} ",
+            )
 
-        local_column_names = df_in.GetColumnNames()
-        local_column_types = [
-            str(df_in.GetColumnType(str(c))) for c in local_column_names
-        ]
-        local_column_names_vec = ROOT.std.vector("string")()
-        for name in local_column_names:
-            local_column_names_vec.push_back(name)
+    df_out = df_out.Redefine("is_valid", "(is_valid) || (_entry)")
 
-        # Need a local_to_master_map so that local columns keep the same index as the master columns
-        local_to_master_map = [
-            list(master_column_names).index(local_name)
-            for local_name in local_column_names
-        ]
-        master_size = len(master_column_names)
+    snapshotOptions = ROOT.RDF.RSnapshotOptions()
+    # snapshotOptions.fOverwriteIfExists=False
+    # snapshotOptions.fLazy=True
+    snapshotOptions.fMode = "RECREATE"
+    snapshotOptions.fCompressionAlgorithm = getattr(ROOT.ROOT, "k" + "ZLIB")
+    snapshotOptions.fCompressionLevel = 4
+    ROOT.RDF.Experimental.AddProgressBar(df_out)
+    print("Going to snapshot")
+    save_column_names = ROOT.std.vector("string")(master_column_names)
+    save_column_names.push_back("is_valid")
+    df_out.Snapshot("Events", tmpnext_filename, save_column_names, snapshotOptions)
 
-        queue_size = 10
-        max_entries = nEntriesPerBatch * nBatches
+    tuple_maker.join()
 
-        tuple_maker = ROOT.analysis.TupleMaker(*local_column_types)(
-            queue_size, max_entries
-        )
+    step_idx += 1
 
-        df_out = tuple_maker.FillDF(
-            ROOT.RDF.AsRNode(df_out),
-            ROOT.RDF.AsRNode(df_in),
-            local_to_master_map,
-            master_size,
-            local_column_names_vec,
-            nBatchStart,
-            nBatchEnd,
-            batch_size,
-        )
-
-        for column_idx, column_name in enumerate(master_column_names):
-            column_type = master_column_types[column_idx]
-
-            if step_idx == 0:
-                df_out = df_out.Define(
-                    str(column_name),
-                    f"_entry ? _entry->GetValue<{column_type}>({column_idx}) : {column_type}() ",
-                )
-            else:
-                if column_name not in local_column_names:
-                    continue
-                df_out = df_out.Redefine(
-                    str(column_name),
-                    f"_entry ? _entry->GetValue<{column_type}>({column_idx}) : {column_name} ",
-                )
-
-        df_out = df_out.Redefine("is_valid", "(is_valid) || (_entry)")
-
-        snapshotOptions = ROOT.RDF.RSnapshotOptions()
-        # snapshotOptions.fOverwriteIfExists=False
-        # snapshotOptions.fLazy=True
-        snapshotOptions.fMode = "RECREATE"
-        snapshotOptions.fCompressionAlgorithm = getattr(ROOT.ROOT, "k" + "ZLIB")
-        snapshotOptions.fCompressionLevel = 4
-        ROOT.RDF.Experimental.AddProgressBar(df_out)
-        print("Going to snapshot")
-        save_column_names = ROOT.std.vector("string")(master_column_names)
-        save_column_names.push_back("is_valid")
-        df_out.Snapshot("Events", tmpnext_filename, save_column_names, snapshotOptions)
-
-        tuple_maker.join()
-
-        step_idx += 1
-
-        os.system(f"rm {tmp_filename}")
+    os.system(f"rm {tmp_filename}")
 
     print("Finished create file loop, now we must add the DNN variables")
     # Increment the name indexes before I embarass myself again
@@ -195,10 +197,10 @@ def set_environ_vars():
 def get_args():
     parser = argparse.ArgumentParser(description="Create train/test file(s) for DNN.")
     parser.add_argument(
-        "--config-folder",
+        "--config",
         required=True,
         type=str,
-        help="Config Folder containing batch_config_x.yaml file(s)",
+        help="The configuration yaml specifiying the samples and batches",
     )
     parser.add_argument("--period", required=True, type=str, help="period")
     args = parser.parse_args()
@@ -241,13 +243,17 @@ if __name__ == "__main__":
     args = get_args()
     load_headers()
 
-    for yamlname in glob(os.path.join(args.config_folder, "batch_config*.yaml")):
-        config_dict, global_cfg_dict, general_cfg_dict = yaml_to_config(yamlname)
+    config_dict, global_cfg_dict, general_cfg_dict = yaml_to_config(args.config)
+
+    for dataset in config_dict['dataset_list']:
+        anaTuples_directory = os.path.join(config_dict['meta_data']['input_folder'], dataset)
+        output_name = os.path.join(config_dict['meta_data']['output_folder'], dataset)
+        output_name += ".root"
         create_file(
             config_dict,
             global_cfg_dict,
             general_cfg_dict,
             args.period,
-            args.config_folder,
-            f"{config_dict['meta_data']['output_folder']}/{config_dict['meta_data']['output_name']}",
+            output_name,
+            anaTuples_directory
         )
