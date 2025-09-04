@@ -41,8 +41,8 @@ TTtoLNu2Q:
 #   sampleType: DY
 # DYto2Mu_MLL_50to120_powheg:
 #   sampleType: DY
-# DYToMuMu-M50_13p6TeV_MiNNLO_pythia8:
-#   sampleType: DY
+DYToMuMu-M50_13p6TeV_MiNNLO_pythia8:
+  sampleType: DY_MiNNLO
 DYto2L_M_50_amcatnloFXFX:
   sampleType: DY
 

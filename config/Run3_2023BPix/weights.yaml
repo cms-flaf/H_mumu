@@ -15,9 +15,12 @@ norm:
   # EWKCorr_ewcorr:
   #   expression: weight_EWKCorr_ewcorr{scale}_rel * final_weight
 
-
 shape:
-  # - JEC
-  - JER
+  JES_Total:
+    name: CMS_scale_j_{}
+  JER:
+    name: CMS_res_j_{}
+  ScaRe:
+    name: CMS_ScaRe_mu_{}
 
 
