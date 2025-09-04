@@ -19,7 +19,7 @@
   # title: t#bar{t} #
   title: "t $\\bar{t}$"
   color: kSpring+5
-  color_mplhep: darkblue #turquoise
+  color_mplhep: darkblue  # turquoise
 
 - name: W
   types:
@@ -35,8 +35,6 @@
   title: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-
-
 
 - name: VVV
   types:
