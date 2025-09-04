@@ -70,7 +70,7 @@ categories:
 
 category_definition:
   baseline: "OS && ((mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu))"
-  VBF_def: "HasVBF && Jet_preselection && NoOverlapWithMuons && j1_pt > 35 && j2_pt > 25" # no change in efficiency when changing the j1_pt threshold, Jet_preselection should be redundant
+  VBF_def: "HasVBF && Jet_preselection && NoOverlapWithMuons && j1_pt > 35 && j2_pt > 25"  # no change in efficiency when changing the j1_pt threshold, Jet_preselection should be redundant
   VBF: "baseline && VBF_def"
   ggH: "baseline && !(VBF_def)"
   VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"

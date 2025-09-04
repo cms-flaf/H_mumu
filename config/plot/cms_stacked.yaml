@@ -76,14 +76,14 @@ cms_label:
 category_label:
   type: custom
   text: "Cat: {category}"
-  pos: [0.02, 0.9]
+  pos: [ 0.02, 0.9 ]
   ref: null
   text_size: 14
 
 channel_label:
   type: custom
   text: "Channel: {channel}"
-  pos: [0.02, 0.85]
+  pos: [ 0.02, 0.85 ]
   ref: null
   text_size: 14
 
@@ -117,13 +117,13 @@ datasim_text:
 
 cat_text:
   pos_ref: datasim_text
-  pos: [0.05, -0.079 ]
+  pos: [ 0.05, -0.079 ]
   text_size: 0.026
   font: 62
 
 ch_text:
   pos_ref: datasim_text
-  pos: [0.01, -0.08]
+  pos: [ 0.01, -0.08 ]
   text_size: 0.026
   font: 62
 
@@ -131,7 +131,7 @@ bkg_hist:
   fill_style: 1001
   line_style: 1
   line_width: 1
-  line_color: kBlack # black #
+  line_color: kBlack  # black
   legend_style: F
   draw_opt: HIST
   unc_hist: bkg_unc_hist
@@ -148,7 +148,7 @@ bkg_unc_hist:
 sgn_hist:
   fill_style: 1001
   fill_color: kWhite
-  fill_color_mplhep: white #kWhite
+  fill_color_mplhep: white  # kWhite
   line_style: 2
   line_width: 3
   legend_style: F
@@ -158,10 +158,10 @@ data_hist:
   fill_style: 0
   line_style: 1
   line_width: 2
-  line_color: kBlack #black #
+  line_color: kBlack  # black
   marker_style: 20
   marker_size: 1.1
-  marker_color: kBlack #black #
+  marker_color: kBlack  # black
   legend_style: PLE
   draw_opt: "0pe"
   blind: true
@@ -242,7 +242,7 @@ data_hist:
 # cms_text:
 #   text: "CMS"
 #   pos_ref: inner_left_top
-#   pos: [ 0.05, -0.05]  # X, Y relative a inner_left_to p
+#   pos: [ 0.05, -0.05]  # X, Y relative a inner_left_to  p
 #   text_size: 0.05
 #   font: 61
 
@@ -256,7 +256,7 @@ data_hist:
 # ana_text:
 #   text: "$H\\rightarrow\\mu\\mu$"
 #   pos_ref: inner_left_top
-#   pos: [ 0.05, 1.]  # sotto a CM S
+#   pos: [ 0.05, 1.]  # sotto a CM  S
 #   text_size: 0.04
 #   font: 61
 
