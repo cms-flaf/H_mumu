@@ -68,11 +68,11 @@ def JetSelection(df, era):
     # jet_puID_cut = ""
     # jet_puID_cut = "&& (Jet_puId>0 || v_ops::pt(Jet_p4)>50)" if era.startswith("Run2") else ""
     df = df.Define(
-        "Jet_B0",
-        f"""v_ops::pt(Jet_p4) > 25 && abs(v_ops::eta(Jet_p4))< 4.7 && ( Jet_jetId & 2 )""",
+        "Jet_B0", f"""v_ops::pt(Jet_p4) > 20 && abs(v_ops::eta(Jet_p4))< 4.7 """
     )
-    df = df.Define("Jet_B1", "RemoveOverlaps(Jet_p4, Jet_B0,{{Muon_p4},}, 2, 0.4)")
-    df = df.Define("JetSel", "Jet_idx[Jet_B1].size()>0")
+    df = df.Define("Jet_B0p1", "Jet_B0 && ( Jet_jetId & 2 )" "")
+    df = df.Define("JetSel", "Jet_idx[Jet_B0p1].size()>0")
+    # df = df.Define("Jet_B1", "RemoveOverlaps(Jet_p4, Jet_B0p1,{{Muon_p4},}, 2, 0.4)") # will be done later when defining histTuples
     df = df.Filter(
         "JetSel", "excl. events with at least one jet passing loose selection"
     )

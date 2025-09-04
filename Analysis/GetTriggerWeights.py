@@ -1,7 +1,8 @@
 import math
 import ROOT
+
 if __name__ == "__main__":
-    sys.path.append(os.environ['ANALYSIS_PATH'])
+    sys.path.append(os.environ["ANALYSIS_PATH"])
 
 ROOT.gInterpreter.Declare(
     """
@@ -59,36 +60,47 @@ ROOT.gInterpreter.Declare(
     """
 )
 
+
 def get_scale_factor_error(eff_data, eff_mc, err_data, err_mc):
-        SF_error = 0.0
+    SF_error = 0.0
 
-        if err_data == 0. and err_mc == 0.:
-            print("WARNING: uncertainty on data and MC = 0, cannot calculate uncertainty on scale factor. Uncertainty set to 0.")
+    if err_data == 0.0 and err_mc == 0.0:
+        print(
+            "WARNING: uncertainty on data and MC = 0, cannot calculate uncertainty on scale factor. Uncertainty set to 0."
+        )
 
-        if eff_data == 0. or eff_mc == 0.:
-            print("WARNING: efficiency in data or MC = 0, cannot calculate uncertainty on scale factor. Uncertainty set to 0.")
-            return 0.0
-        else:
-            SF_error = math.pow((err_data / eff_data), 2) + math.pow((err_mc / eff_mc), 2)
-            SF_error = math.sqrt(SF_error) * (eff_data / eff_mc)
+    if eff_data == 0.0 or eff_mc == 0.0:
+        print(
+            "WARNING: efficiency in data or MC = 0, cannot calculate uncertainty on scale factor. Uncertainty set to 0."
+        )
+        return 0.0
+    else:
+        SF_error = math.pow((err_data / eff_data), 2) + math.pow((err_mc / eff_mc), 2)
+        SF_error = math.sqrt(SF_error) * (eff_data / eff_mc)
 
-        return SF_error
+    return SF_error
 
-def defineTriggerWeights(dfBuilder): # needs application region def
-    dfBuilder.df = dfBuilder.df.Define(f"weight_trigSF_singleMu", "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TrgSF_singleMu_Central,mu2_pt, mu2_eta, mu2_HasMatching_singleMu, weight_mu2_TrgSF_singleMu_Central) ;} return 1.f;")
+
+def defineTriggerWeights(dfBuilder):  # needs application region def
+    dfBuilder.df = dfBuilder.df.Define(
+        f"weight_trigSF_singleMu",
+        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TrgSF_singleMu_Central,mu2_pt, mu2_eta, mu2_HasMatching_singleMu, weight_mu2_TrgSF_singleMu_Central) ;} return 1.f;",
+    )
 
 
 def defineTriggerWeightsErrors(dfBuilder):
-    for scale in ['Up','Down']:
+    for scale in ["Up", "Down"]:
         trg_name = "singleMu_IsoMu24"
-        dfBuilder.df = dfBuilder.df.Define(f"weight_trigSF_{trg_name}{scale}_rel", f"""if (HLT_singleMu && muMu) {{return getCorrectSingleLepWeight(mu1_pt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TrgSF_{trg_name}{scale}_rel,mu2_pt, mu2_eta, mu2_HasMatching_singleMu, weight_mu2_TrgSF_{trg_name}{scale}_rel) ;}} return 1.f;""")
+        dfBuilder.df = dfBuilder.df.Define(
+            f"weight_trigSF_{trg_name}{scale}_rel",
+            f"""if (HLT_singleMu && muMu) {{return getCorrectSingleLepWeight(mu1_pt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TrgSF_{trg_name}{scale}_rel,mu2_pt, mu2_eta, mu2_HasMatching_singleMu, weight_mu2_TrgSF_{trg_name}{scale}_rel) ;}} return 1.f;""",
+        )
 
 
-def AddTriggerWeightsAndErrors(dfBuilder,WantErrors):
+def AddTriggerWeightsAndErrors(dfBuilder, WantErrors):
     defineTriggerWeights(dfBuilder)
     if WantErrors:
         defineTriggerWeightsErrors(dfBuilder)
-
 
 
 # def defineTauTauTriggerWeightsErrors(dfBuilder):
