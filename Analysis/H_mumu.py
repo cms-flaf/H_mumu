@@ -4,8 +4,7 @@ import sys
 if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
-# from FLAF.Common.HistHelper import *
-from FLAF.Analysis.HistHelper import *
+from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
 
@@ -85,20 +84,51 @@ def createKeyFilterDict(global_params, period):
     filter_dict = {}
     filter_str = ""
     channels_to_consider = global_params["channels_to_consider"]
-    sign_regions_to_consider = global_params["MuMuMassRegions"]
-    categories_to_consider = global_params["categories"]
+    # sign_regions_to_consider = global_params["MuMuMassRegions"]
+    categories = global_params["categories"]
+
+    ### add custom categories eventually:
+    custom_categories = []
+    custom_categories_name = global_params.get(
+        "custom_categories", None
+    )  # can be extended to list of names
+    if custom_categories_name:
+        custom_categories = list(global_params.get(custom_categories_name, []))
+        if not custom_categories:
+            print("No custom categories found")
+
+    ### regions
+    custom_regions = []
+    custom_regions_name = global_params.get(
+        "custom_regions", None
+    )  # can be extended to list of names, if for example adding QCD regions + other control regions
+    if custom_regions_name:
+        custom_regions = list(global_params.get(custom_regions_name, []))
+        if not custom_regions:
+            print("No custom regions found")
+
+    all_categories = categories + custom_categories
+    custom_subcategories = list(global_params.get("custom_subcategories", []))
     triggers_dict = global_params["hist_triggers"]
     for ch in channels_to_consider:
         triggers = triggers_dict[ch]["default"]
         if period in triggers_dict[ch].keys():
             triggers = triggers_dict[ch][period]
-        for reg in sign_regions_to_consider:
-            for cat in categories_to_consider:
-                filter_base = f" ({ch} && {triggers}&& {reg} && {cat})"
-                filter_str = f"(" + filter_base
-                filter_str += ")"
-                key = (ch, reg, cat)
-                filter_dict[key] = filter_str
+        for reg in custom_regions:
+            for cat in all_categories:
+                filter_base = f" ( {ch} && {triggers} && {reg} && {cat} ) "
+                if custom_subcategories:
+                    for subcat in custom_subcategories:
+                        # filter_base += f"&& {custom_subcat}"
+                        filter_str = f"(" + filter_base + f" && {subcat}"
+                        filter_str += ")"
+                        key = (ch, reg, cat, subcat)
+                        filter_dict[key] = filter_str
+                else:
+                    filter_str = f"(" + filter_base
+                    filter_str += ")"
+                    key = (ch, reg, cat)
+                    filter_dict[key] = filter_str
     return filter_dict
 
 
@@ -135,14 +165,23 @@ def VBFJetSelection(df):
         "Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605"
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
-
     df = df.Define("SelectedJet_vetoMap_inverted", "!SelectedJet_vetoMap").Define(
         "Jet_preselection",
         "SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ",
     )  # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
 
     df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4)")
-    df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF)")
+    df = df.Define("HasVBF_0", "return static_cast<bool>(VBFJetCand.isVBF)")
+    df = df.Define("HasVBF", "HasVBF_0 && Jet_preselection")
+    df = df.Define(
+        "NoOverlapWithMuons",
+        f"""
+                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu1_p4) >= std::pow(0.4, 2) &&
+                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu1_p4) >= std::pow(0.4, 2) &&
+                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu2_p4) >= std::pow(0.4, 2) &&
+                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu2_p4) >= std::pow(0.4, 2)
+                   """,
+    )
     df = df.Define(
         "m_jj",
         "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f",
@@ -195,6 +234,7 @@ def VBFJetSelection(df):
         "delta_phi_jj",
         "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;",
     )
+
     df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Phi()")
     df = df.Define(
         "VBFjets_pt",
@@ -225,19 +265,46 @@ def VBFJetSelection(df):
                 "j2_" + var,
                 f"if (HasVBF && j2_idx >= 0) return static_cast<float>(SelectedJet_{var}[j2_idx]); return -1000.f;",
             )
+
     return df
 
 
 def GetMuMuObservables(df):
     for idx in [0, 1]:
         df = Utilities.defineP4(df, f"mu{idx+1}")
+        df = df.Define(
+            f"mu{idx+1}_p4_BS",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_bsConstrainedPt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
+        df = df.Define(
+            f"mu{idx+1}_p4_nano",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
+        df = df.Define(
+            f"mu{idx+1}_p4_BS_ScaRe",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
+    df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
+    df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
+    df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
     df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
     df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
     df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
+    df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
+    df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
+    df = df.Define(
+        "m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())"
+    )
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
+        df = df.Define(f"mu{idx+1}_pt_rel_BS", f"mu{idx+1}_bsConstrainedPt/m_mumu_BS")
+        df = df.Define(f"mu{idx+1}_pt_rel_nano", f"mu{idx+1}_pt_nano/m_mumu_nano")
+        df = df.Define(
+            f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe"
+        )
+
     df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
 
     df = df.Define("Ebeam", "13600.0/2")
@@ -273,6 +340,7 @@ def GetMuMuMassResolution(df):
             "mu2_bsConstrainedPtErr",
         ),
     )
+    # to def m_mumu_resolution_BS+Scare
     return df
 
 
@@ -491,6 +559,60 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
+    def AddScaReOnBS(self):
+        import correctionlib
+
+        period_files = {
+            "Run3_2022": "2022_Summer22",
+            "Run3_2022EE": "2022_Summer22EE",
+            "Run3_2023": "2023_Summer23",
+            "Run3_2023BPix": "2023_Summer23BPix",
+        }
+        correctionlib.register_pyroot_binding()
+        file_name = period_files.get(self.period, "")
+        ROOT.gROOT.ProcessLine(
+            f'auto cset = correction::CorrectionSet::from_file("/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/corrections/{file_name}.json");'
+        )
+        ROOT.gROOT.ProcessLine(
+            '#include "/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/scripts/MuonScaRe.cc"'
+        )
+        for mu_idx in [1, 2]:
+            if self.isData:
+                # Data apply scale correction
+                self.df = self.df.Define(
+                    f"mu{mu_idx}_BS_pt_1_corr",
+                    f"pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
+                )
+            else:
+                self.df = self.df.Define(
+                    f"mu{mu_idx}_BS_pt_1_scale_corr",
+                    f"pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
+                )
+
+                self.df = self.df.Define(
+                    f"mu{mu_idx}_BS_pt_1_corr",
+                    f"pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
+                )
+                # # MC evaluate scale uncertainty
+                # df_mc = df_mc.Define(
+                #     'pt_1_scale_corr_up',
+                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "up")'
+                # )
+                # df_mc = df_mc.Define(
+                #     'pt_1_scale_corr_dn',
+                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "dn")'
+                # )
+
+                # # MC evaluate resolution uncertainty
+                # df_mc = df_mc.Define(
+                #     "pt_1_corr_resolup",
+                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "up")'
+                # )
+                # df_mc = df_mc.Define(
+                #     "pt_1_corr_resoldn",
+                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "dn")'
+                # )
+
     def defineRegions(self):
         region_defs = self.config["MuMuMassRegions"]
         for reg_name, reg_cut in region_defs.items():
@@ -523,7 +645,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         config,
         period,
         isData=False,
-        isCentral=False,
         wantTriggerSFErrors=False,
         colToSave=[],
     ):
@@ -531,7 +652,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.config = config
         self.isData = isData
         self.period = period
-        self.isCentral = isCentral
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
 
@@ -540,6 +660,7 @@ def PrepareDfForHistograms(dfForHistograms):
     # dfForHistograms.df = defineP4AndInvMass(dfForHistograms.df)
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
+    dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
@@ -547,7 +668,7 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
     if not dfForHistograms.isData:
         defineTriggerWeights(dfForHistograms)
-        if dfForHistograms.wantTriggerSFErrors and dfForHistograms.isCentral:
+        if dfForHistograms.wantTriggerSFErrors:
             defineTriggerWeightsErrors(dfForHistograms)
     dfForHistograms.SignRegionDef()
     dfForHistograms.defineRegions()

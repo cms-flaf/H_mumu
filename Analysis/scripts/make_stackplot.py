@@ -14,6 +14,9 @@ if __name__ == "__main__":
         "--region", required=False, type=str, default="Z_sideband", help="region"
     )
     parser.add_argument(
+        "--subregion", required=False, type=str, default="", help="eventual sub region"
+    )
+    parser.add_argument(
         "--histDir",
         required=False,
         type=str,

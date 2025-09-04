@@ -3,44 +3,49 @@ GLOBAL:
     - drop ^.*
     - keep ^.*Hto2Mu.*
     - keep ^EWK_.*
-    # - keep DYto2L_M_10to50_amcatnloFXFX
-    # - keep DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
     - keep ^DYto2L_M_10to50_amcatnloFXFX.*
-    - keep ^DYto2L_M_50_.*amcatnloFXFX.*
-    # - drop DYto2L_M_50_amcatnloFXFX_ext1
-    # - keep ^DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8.*
-    - keep ^DYto2Mu_MLL_.*powheg.*
-    - keep ^DYto2Mu_MLL_105to160_amcatnloFXFX.*
-    - keep ^WtoLNu_.*amcatnloFXFX.*
+    - keep ^DYto2L_M_50_amcatnloFXFX.*
     - drop ^DYto2L_M_50_PTLL_.*
     - drop ^DYto2Mu_MLL_*
     - keep DYto2Mu_MLL_50to120_powheg
     - keep DYto2Mu_MLL_105to160_amcatnloFXFX
     - keep DYto2Mu_MLL_120to200_powheg
     - keep DYto2Mu_MLL_200to400_powheg
-    - drop EWK_2L2J_madgraph_herwig  # tmp
-    - keep ^LLJJ.*
-    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
-    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1
-    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2
+    - keep ^DYToMuMu-M50_13p6TeV_MiNNLO_pythia8.*
+    - keep ^GluGlutoContinto.*
+    - drop ^GluGlutoContinto2Zto2E2Nu  # missing XS
+    - drop ^GluGlutoContinto2Zto2Mu2Nu  # missing XS
+    - keep ^ggZH*
+    - keep ^Tbar*
+    - keep ^TBbar*
+    - keep ^TW*
+    - keep ^TT.*
+    - keep ^TTto.*
+    - keep ^TTH.*
+    - keep ^WminusH*
+    - keep ^WplusH*
+    - keep ^WtoLNu_.*amcatnloFXFX.*
     - keep ^WW.*
     - keep ^WZ.*
     - keep ^ZZ.*
-    - keep ^Tbar.*
-    - keep ^TBbar.*
-    - keep ^TTto.*
-    - keep ^ttH.*
-    - keep ^TT.*
-    - keep ^TW.*
-    - keep ^VBFHto2Wto2L2Nu_M125.*
-    - keep ^Zto.*
-    - drop ^Zto2Nu.*
-    - drop ^Zto2Q.*
-    - keep ^GluGluHto2Wto2L2Nu_M125.*
-    - keep ^GluGlutoContinto2Zto2E2Nu.*
+    - keep ^ZH*
+    - keep ^VBFH.*
+    - keep ^GluGluH.*
+    - drop Zto2(Nu|Q)_.*
+    - drop ^.*Run2023*
     - keep ^Muon_.*
+    - keep ^Muon0_.*
+    - keep ^Muon1_.*
     # - keep ^MuonEG_.*
     - keep ^SingleMuon_.*
+    - drop ^.*ext*
+    - keep ^LLJJ.*
+    - drop EWK_2L2J_madgraph_herwig  # tmp - missing XS
+    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7  # missing gen info
+    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1  # missing gen info
+    - drop LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2  # missing gen info
+
+
   use_stitching: False
   triggerFile: config/Run3_2022/triggers.yaml
 
@@ -172,8 +177,19 @@ LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9:
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dir_to_list: "0009"
 
+DYto2Mu_MLL_105to160_amcatnloFXFX:
+  crossSection: DYto2Mu_MLL_105to160_amcatnloFXFX
+  crossSectionStitch: DYto2Mu_MLL_105to160_amcatnloFXFX
+  generator: amcatnloFXFX
+  miniAOD: /DYto2Mu_MLL_105to160_amcatnloFXFX/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v1/MINIAODSIM
+  sampleType: DY
+
+# missing entries to add:
 # DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
 # DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
+# dymumu012j_5f_NLO_FXFX_M105to180 # no xs available
+# dymumu012j_5f_NLO_FXFX_M105to180_vbffilter # no xs available
+# DY012j_NLO_5f # no xs available
 
 # DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8:
 #   sampleType: DY
@@ -189,19 +205,19 @@ LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9:
 #   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
 #   dir_to_list: "0001"
 
-# DYToMuMu-M50_13p6TeV_MiNNLO_pythia8:
-#   sampleType: DY
-#   crossSection: DYto2Mu_MLL_50to120_powheg # eh for the moment..
-#   generator: pythia
-#   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
-#   dir_to_list: "0000"
+DYToMuMu-M50_13p6TeV_MiNNLO_pythia8:
+  sampleType: DY
+  crossSection: DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
+  generator: pythia
+  fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
+  dir_to_list: "0000"
 
-# DYToMuMu-M50_13p6TeV_MiNNLO_pythia8_ext1:
-#   sampleType: DY
-#   crossSection: DYto2Mu_MLL_50to120_powheg # eh for the moment..
-#   generator: pythia
-#   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
-#   dir_to_list: "0001"
+DYToMuMu-M50_13p6TeV_MiNNLO_pythia8_ext1:
+  sampleType: DY
+  crossSection: DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
+  generator: pythia
+  fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
+  dir_to_list: "0001"
 
 VBFHto2Mu_M-125_13p6TeV_powheg-herwig7:
   sampleType: VBFH
