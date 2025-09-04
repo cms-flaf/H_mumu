@@ -5,7 +5,7 @@ use_cuda = true
 
 [dataloader]
 # Events selection
-selection_cut = "(Signal_Fit) & (j1_pt != -1000) & (j2_pt != -1000)"
+selection_cut = "(Signal_Fit | Signal_ext) & (j1_pt != -1000) & (j2_pt != -1000)"
 # Event splitting (traing_size is what's left)
 valid_size = 0.25
 test_size = 0.0
@@ -36,7 +36,7 @@ k = 4
 # Hidden layers only
 # Input layer size pulled from the used columns
 layer_list = [32, 32, 32]
-dropout = 0
+dropout = 0.05
 
 [training]
 # batch_size = 0 means use the whole set (1 batch per epoch)

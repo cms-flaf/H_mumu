@@ -9,6 +9,7 @@ import os
 import ROOT
 import tomllib
 from pprint import pprint
+import pickle as pkl
 
 from Studies.DNN.model_generation.parse_column_names import parse_column_names
 import FLAF.Common.Utilities as Utilities
@@ -31,12 +32,12 @@ class DNNProducer:
         self._load_framework()
         self._set_environ_vars()
         self.parity, self.input_features = self._load_dnn_config()
-        self.corrected_input_features = [f"{x}_renorm" for x in self.input_features]
+        #self.corrected_input_features = [f"{x}_renorm" for x in self.input_features]
         # Columns for tmp file
-        self.vars_to_save = self.input_features + self.corrected_input_features
+        self.vars_to_save = self.input_features #+ self.corrected_input_features
         # Final columns
         self.cols_to_save = [ f"{self.payload_name}_{col}" for col in self.cfg['columns'] ]
-        self.models = self._load_models()
+        self.models, self.renorm_vars = self._load_models()
 
     ### Init helpers ###
 
@@ -65,11 +66,18 @@ class DNNProducer:
         """
         directory = os.path.join(os.environ["ANALYSIS_PATH"], "Analysis", "models")
         models = []
+        renorm_vars = []
         for i in range(self.parity):
+            # The model itself
             filename = os.path.join(directory, f"trained_model_{i}.onnx")
             model = ort.InferenceSession(filename)
             models.append(model)
-        return models
+            # Renorm variables
+            filename = os.path.join(directory, f"renorm_variables_{i}.pkl")
+            with open(filename, 'rb') as f:
+                v = pkl.load(f)
+            renorm_vars.append(v)
+        return models, renorm_vars
 
 
     def _load_dnn_config(self):
@@ -109,10 +117,10 @@ class DNNProducer:
         dfw = analysis.DataFrameBuilderForHistograms(dfw.df, self.global_cfg, self.period)
         dfw = analysis.PrepareDfForHistograms(dfw)
         # This is probably where I need to do the input renorming?
-        for col in self.input_features:
-            m = dfw.df.Mean(col).GetValue()
-            s = dfw.df.StdDev(col).GetValue()
-            dfw.df = dfw.df.Define(f"{col}_renorm", f"({col} - {m})/{s}")
+        # for col in self.input_features:
+        #     m = dfw.df.Mean(col).GetValue()
+        #     s = dfw.df.StdDev(col).GetValue()
+        #     dfw.df = dfw.df.Define(f"{col}_renorm", f"({col} - {m})/{s}")
         return dfw
 
 
@@ -122,24 +130,23 @@ class DNNProducer:
         print(f"Running DNN Over {nEvents} events")
 
         event_number = np.array(getattr(branches, 'FullEventId'))
-        input_array = np.array([getattr(branches, feature_name) for feature_name in self.corrected_input_features]).transpose()
+        input_array = np.array([getattr(branches, feature_name) for feature_name in self.input_features]).transpose()
         all_predictions = np.zeros([nEvents, self.parity])
-        for parityIdx, sess in enumerate(self.models):
+        for parityIdx, (sess, (m, s)) in enumerate(zip(self.models, self.renorm_vars)):
             pprint(vars(sess))
             pprint(sess.get_inputs)
-            print(input_array.shape)
+            print("Input array shape:", input_array.shape)
+            print("Mean shape:", m.shape)
+            print("StDev shape:", s.shape)
+            m = np.repeat(m[np.newaxis, :], input_array.shape[0], axis=0)
+            s = np.repeat(s[np.newaxis, :], input_array.shape[0], axis=0)
+            print("New Mean shape:", m.shape)
+            print(m)
+            print("New StDev shape:", s.shape)
             input_name = sess.get_inputs()[0].name
             label_name = sess.get_outputs()[0].name
-            predictions = sess.run([label_name], {input_name: input_array})[0]
-            print(predictions)
-            print(type(predictions))
-            print(predictions.shape)
-            # Mask entries that shouldn't be evaluated by this model to 0
-            # predictions = np.where(
-            #         event_number % self.parity != parityIdx,
-            #         predictions,
-            #         0.0
-            #     )
+            x = (input_array - m)/s
+            predictions = sess.run([label_name], {input_name: x})[0]
             mask = (event_number % self.parity) != parityIdx
             predictions[mask] = 0
             all_predictions[:, parityIdx] = predictions.reshape(predictions.shape[0])

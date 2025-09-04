@@ -113,33 +113,23 @@ class DataLoader:
             df = self._renorm_class_weight(df)
         return df
 
-    def _apply_linear_renorm(self, df):
-        """
-        Takes a data column and maps all values
-        to the range [-1, 1]
-        """
-        print("Applying linear renorm...")
-        for col in self.data_columns:
-            data = df[col].values
-            M = max(data)
-            m = min(data)
-            print(f"{col} - Min: {m}, Max: {M}")
-            df[col] = 2 * (data - m) / (M - m) - 1
-        return dflabel
-
     def _apply_gauss_renorm(self, df):
         """
         Takes a data column and maps all values
         to average = 0 and std = 1
         """
         print("Applying gaussian renorm...")
-        for col in self.data_columns:
+        means = np.zeros(len(self.data_columns)) 
+        stds = np.zeros(len(self.data_columns)) 
+        for i, col in enumerate(self.data_columns):
             data = df[col].values.copy()
             m = np.mean(data)
             s = np.std(data)
+            means[i] = m
+            stds[i] = s
             print(f"{col} - Mean: {m}, StDev: {s}")
             df[col] = (data - m) / s
-        return df
+        return df, (means, stds)
 
     def _renorm_class_weight(self, df):
         """
@@ -165,11 +155,11 @@ class DataLoader:
         """
         # Apply variables renorm
         if self.renorm_inputs == "no":
-            return df
-        elif self.renorm_inputs == "linear":
-            return self._apply_linear_renorm(df)
+            return df, (None, None)
         elif self.renorm_inputs == "gauss":
             return self._apply_gauss_renorm(df)
+        else:
+            raise ValueError("no or gauss only options for input renorming")
 
     ### Primary worker functions ###
 

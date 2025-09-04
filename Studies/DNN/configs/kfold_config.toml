@@ -6,7 +6,7 @@ use_cuda = true
 [dataloader]
 # Events selection
 selection_cut = '(VBF_JetVeto) & (Signal_Fit)'
-# Event splitting (traing_size is what's left)
+# Event splitting (training_size is what's left)
 valid_size = 0.20
 test_size = 0.4
 # Input vector def
@@ -24,7 +24,7 @@ renorm_inputs = 'gauss'
 uniform_train_weight = false       # If true, all train weights (prenorm) = 1
 zero_negative_weights = true       # Remove the effect of negative weights for training only
 equalize_class_weights = true      # Sets each class weight to be equal (training only!)
-renorm_inputs = 'gauss'            # Apply some scaling/renorm to the input columns. Can be 'no', 'linear', or 'gauss'
+renorm_inputs = 'gauss'            # Apply some scaling/renorm to the input columns. Can be 'no' or 'gauss'
 downsample_upweight = false        # Whether or not to downsample majority classes
 target_ratio = 10                  # New N_{majority_class}/N_{minority_class} ratio (if using downsample)
 use_mass_resolution = false

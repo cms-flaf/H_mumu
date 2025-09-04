@@ -96,6 +96,15 @@ if __name__ == "__main__":
     # Testing size determined by fold
     config["dataloader"]["test_size"] = 0
 
+    # Init the output directory
+    run_name = str(uuid())
+    if args.label:
+        run_name += f"_{args.label}"
+    os.chdir(config["meta"]["results_dir"])
+    os.mkdir(run_name)
+    os.chdir(run_name)
+    base_dir = os.getcwd()
+
     # Load in all train/valid/test entries as a big DF
     # Sets initial things like class weight, sample_name, label
     dataloader = DataLoader(**config["dataloader"])
@@ -121,14 +130,6 @@ if __name__ == "__main__":
     else:
         device = None
 
-    # Init the output directory
-    run_name = str(uuid())
-    if args.label:
-        run_name += f"_{args.label}"
-    os.chdir(config["meta"]["results_dir"])
-    os.mkdir(run_name)
-    os.chdir(run_name)
-    base_dir = os.getcwd()
 
     # Start the k-fold training loop
     models = {}
@@ -145,9 +146,9 @@ if __name__ == "__main__":
 
         # Renorm sets to m=0 s=1 separately.
         # Don't want to leak info from test into train
-        train_df = dataloader._dispatch_input_renorm(train_df)
-        valid_df = dataloader._dispatch_input_renorm(valid_df)
-        test_df = dataloader._dispatch_input_renorm(test_df)
+        train_df, (m,s) = dataloader._dispatch_input_renorm(train_df)
+        valid_df, _ = dataloader._dispatch_input_renorm(valid_df)
+        test_df, _  = dataloader._dispatch_input_renorm(test_df)
 
         # Parse into (x,y), w tuples (aka "datasets")
         train_data = dataloader.df_to_dataset(train_df)
@@ -190,6 +191,11 @@ if __name__ == "__main__":
         os.chdir(run_name)
         print("Saving outputs to", run_name)
 
+        # Save the input renorm variables
+        if m is not None and s is not None:
+            with open(f'renorm_variables_{i}.pkl', 'wb') as f:
+                pkl.dump((m, s), f)
+
         # Save output files
         trainer.plot_losses()
         trainer.plot_losses(valid=True)
@@ -229,7 +235,7 @@ if __name__ == "__main__":
     # Plot/save
     tester.testing_df = df
     tester.make_hist(log=False, weight=True, norm=True)
-    #tester.make_multihist(log=True, weight=True)
+    tester.make_multihist(log=True, weight=True)
     #tester.make_stackplot(log=True)
     #tester.make_transformed_stackplot()
     tester.make_roc_plot(log=True)
