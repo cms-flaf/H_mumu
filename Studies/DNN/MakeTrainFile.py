@@ -26,24 +26,24 @@ initialized = True # ??
 
 def AddColumnsToSave(config):
     col_to_save = []
-    muon_vars = config['variables']['Muon']
-    VBFJet_vars = config['variables']['VBFJet']
+    muon_vars = config['vars_to_save']['Muon']
+    VBFJet_vars = config['vars_to_save']['VBFJet']
     for mu_idx in [1,2]:
         for mu_var in muon_vars:
             col_to_save.append(mu_var.format(mu_idx))
     for j_idx in [1,2]:
         for VBFJ_var in VBFJet_vars:
             col_to_save.append(f"j{j_idx}_{VBFJ_var}")
-    # SelectedJet_vars = config['variables']['SelectedJet']
+    # SelectedJet_vars = config['vars_to_save']['SelectedJet']
     # for Jvar in SelectedJet_vars:
     #     col_to_save.append(f"SelectedJet_{Jvar}")
-    SoftJet_vars = config['variables']['SoftJet']
+    SoftJet_vars = config['vars_to_save']['SoftJet']
     for SJvar in SoftJet_vars:
         col_to_save.append(f"SoftJet_{SJvar}")
-    VBFJetPair_vars = config['variables']['VBFJetPair']
-    MuJet_vars = config['variables']['MuJet']
-    MuPair_vars = config['variables']['MuPair']
-    Global_vars = config['variables']['Global']
+    VBFJetPair_vars = config['vars_to_save']['VBFJetPair']
+    MuJet_vars = config['vars_to_save']['MuJet']
+    MuPair_vars = config['vars_to_save']['MuPair']
+    Global_vars = config['vars_to_save']['Global']
     for var in VBFJetPair_vars + MuJet_vars + MuPair_vars + Global_vars:
         col_to_save.append(var)
     return list(set(col_to_save))
