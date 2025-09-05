@@ -570,11 +570,12 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         }
         correctionlib.register_pyroot_binding()
         file_name = period_files.get(self.period, "")
+        analysis_path = os.environ["ANALYSIS_PATH"]
         ROOT.gROOT.ProcessLine(
-            f'auto cset = correction::CorrectionSet::from_file("{os.environ['ANALYSIS_PATH']}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
+            f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
         )
         ROOT.gROOT.ProcessLine(
-            f'#include "{os.environ['ANALYSIS_PATH']}/Corrections/MuonScaReProvider.h"'
+            f'#include "{analysis_path}/Corrections/MuonScaReProvider.h"'
         )
         for mu_idx in [1, 2]:
             if self.isData:
