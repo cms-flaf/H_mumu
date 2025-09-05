@@ -38,7 +38,7 @@ Repository for the Hmumu analysis
     store_noncentral: False
     compute_unc_histograms: False
 
-    vars_to_plot:
+    variables:
         - mu1_pt
     ```
 
