@@ -452,7 +452,7 @@ def defineP4AndInvMass(df):
     return df
 
 
-def SaveVarsForNNInput(vars_to_save):
+def SaveVarsForNNInput(variables):
     mumu_vars = [
         "pt_mumu",
         "y_mumu",
@@ -505,8 +505,8 @@ def SaveVarsForNNInput(vars_to_save):
     ]  # ,"PV_npvs"
     # global_vars = ["FullEventId","luminosityBlock", "run","event", "sample_type", "sample_name", "period", "isData", "nJet"] # ,"PV_npvs"
     for var in global_vars + mumu_vars + jj_vars + mumu_jj_vars + softJets_vars:
-        vars_to_save.append(var)
-    return vars_to_save
+        variables.append(var)
+    return variables
 
 
 def GetWeight(channel, A, B):
@@ -571,10 +571,10 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         correctionlib.register_pyroot_binding()
         file_name = period_files.get(self.period, "")
         ROOT.gROOT.ProcessLine(
-            f'auto cset = correction::CorrectionSet::from_file("/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/corrections/{file_name}.json");'
+            f'auto cset = correction::CorrectionSet::from_file("{os.environ['ANALYSIS_PATH']}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
         )
         ROOT.gROOT.ProcessLine(
-            '#include "/afs/cern.ch/work/v/vdamante/H_mumu/Analysis/muonscarekit/scripts/MuonScaRe.cc"'
+            f'#include "{os.environ['ANALYSIS_PATH']}/Corrections/MuonScaReProvider.h"'
         )
         for mu_idx in [1, 2]:
             if self.isData:
