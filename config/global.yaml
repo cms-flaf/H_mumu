@@ -1,7 +1,7 @@
 anaTupleDef: AnaProd/anaTupleDef.py
 histTupleDef: Analysis/histTupleDef.py
 analysis_import: Analysis.H_mumu
-
+phys_model: BaseModel
 signal_types:
   - ggH
   - VBFH
