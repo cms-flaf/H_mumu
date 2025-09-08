@@ -574,9 +574,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         ROOT.gROOT.ProcessLine(
             f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
         )
-        ROOT.gROOT.ProcessLine(
-            f'#include "{analysis_path}/include/MuonScaRe.cc"'
-        )
+        ROOT.gROOT.ProcessLine(f'#include "{analysis_path}/include/MuonScaRe.cc"')
         for mu_idx in [1, 2]:
             if self.isData:
                 # Data apply scale correction
