@@ -144,6 +144,12 @@ def VBFJetSelection(df):
         "Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605"
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
+    # tmp patch:
+    if "JetSel" not in df.GetColumnNames():
+        print("JetSel not in df.GetColumnNames")
+        df = df.Define(
+            "JetSel", "SelectedJet_p4[SelectedJet_jetId>=2 && SelectedJet_pt>20 && abs(SelectedJet_eta)<4.7].size()>0"
+        )
     df = df.Define("SelectedJet_vetoMap_inverted", "!SelectedJet_vetoMap").Define(
         "Jet_preselection",
         "JetSel && SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ",
@@ -360,7 +366,7 @@ def GetSoftJets(df):
     # )  # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
     df = df.Define(
         "SoftJet_def_muon",
-        "(SelectedJet_muonIdx1 != mu1_index && SelectedJet_muonIdx2 != mu2_index && Jet_muonIdx2 != mu1_index && Jet_muonIdx2 != mu2_index)",
+        "(SelectedJet_muonIdx1 != mu1_index && SelectedJet_muonIdx2 != mu2_index && SelectedJet_muonIdx2 != mu1_index && SelectedJet_muonIdx2 != mu2_index)",
     )  # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
 
     df = df.Define(
