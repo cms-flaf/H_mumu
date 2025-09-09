@@ -59,7 +59,6 @@ JetObservables = [
 JetObservablesMC = ["hadronFlavour", "partonFlavour", "genJetIdx"]
 
 
-
 def createKeyFilterDict(global_params, period):
     filter_dict = {}
     filter_str = ""
@@ -359,7 +358,10 @@ def GetSoftJets(df):
     #     "SoftJet_def_muon",
     #     "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)",
     # )  # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
-    df = df.Define("SoftJet_def_muon", "(SelectedJet_muonIdx1 != mu1_index && SelectedJet_muonIdx2 != mu2_index && Jet_muonIdx2 != mu1_index && Jet_muonIdx2 != mu2_index)") # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
+    df = df.Define(
+        "SoftJet_def_muon",
+        "(SelectedJet_muonIdx1 != mu1_index && SelectedJet_muonIdx2 != mu2_index && Jet_muonIdx2 != mu1_index && Jet_muonIdx2 != mu2_index)",
+    )  # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
 
     df = df.Define(
         "SoftJet_def_VBF",
@@ -592,4 +594,3 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.defineCategories()
     dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder
-
