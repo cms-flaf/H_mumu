@@ -58,26 +58,6 @@ JetObservables = [
 ]
 JetObservablesMC = ["hadronFlavour", "partonFlavour", "genJetIdx"]
 
-# def createKeyFilterDict(global_params):
-#     filter_dict = {}
-#     filter_str = ""
-#     channels_to_consider = global_params['channels_to_consider']
-#     sign_regions_to_consider = global_params['MuMuMassRegions']
-#     categories_to_consider = global_params["categories"]
-#     triggers_dict = global_params['hist_triggers']
-#     period = global_params["era"]
-#     for ch in channels_to_consider:
-#         triggers = triggers_dict[ch]['default']
-#         if period in triggers_dict[ch].keys():
-#             triggers = triggers_dict[ch][period]
-#         for reg in sign_regions_to_consider:
-#             for cat in categories_to_consider:
-#                 filter_base = f" ({ch} && {triggers}&& {reg} && {cat})"
-#                 filter_str = f"(" + filter_base
-#                 filter_str += ")"
-#                 key = (ch, reg, cat)
-#                 filter_dict[key] = filter_str
-#     return filter_dict
 
 
 def createKeyFilterDict(global_params, period):
@@ -167,7 +147,7 @@ def VBFJetSelection(df):
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
     df = df.Define("SelectedJet_vetoMap_inverted", "!SelectedJet_vetoMap").Define(
         "Jet_preselection",
-        "SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ",
+        "JetSel && ctedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ",
     )  # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
 
     df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4)")
@@ -280,30 +260,19 @@ def GetMuMuObservables(df):
             f"mu{idx+1}_p4_nano",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
-        # df = df.Define(
-        #     f"mu{idx+1}_p4_BS_ScaRe",
-        #     f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        # )
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
     df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
     df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
-    # df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
     df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
     df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
     df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
     df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
     df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
-    # df = df.Define(
-    #     "m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())"
-    # )
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
         df = df.Define(f"mu{idx+1}_pt_rel_BS", f"mu{idx+1}_bsConstrainedPt/m_mumu_BS")
         df = df.Define(f"mu{idx+1}_pt_rel_nano", f"mu{idx+1}_pt_nano/m_mumu_nano")
-        # df = df.Define(
-        #     f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe"
-        # )
 
     df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
 
@@ -340,7 +309,6 @@ def GetMuMuMassResolution(df):
             "mu2_bsConstrainedPtErr",
         ),
     )
-    # to def m_mumu_resolution_BS+Scare
     return df
 
 
@@ -387,12 +355,11 @@ def GetSoftJets(df):
         "SoftJet_def_vtx", "(SelectedJet_svIdx1 < 0 && SelectedJet_svIdx2< 0 ) "
     )  # no secondary vertex associated
     df = df.Define("SoftJet_def_pt", " (SelectedJet_pt>2) ")  # pT > 2 GeV
-    df = df.Define(
-        "SoftJet_def_muon",
-        "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)",
-    )  # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
-
-    # df = df.Define("SoftJet_def_muon", "(Jet_muonIdx1 != mu1_idx && Jet_muonIdx1 != mu2_idx && Jet_muonIdx2 != mu1_idx && Jet_muonIdx2 != mu2_idx)") # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
+    # df = df.Define(
+    #     "SoftJet_def_muon",
+    #     "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)",
+    # )  # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
+    df = df.Define("SoftJet_def_muon", "(SelectedJet_muonIdx1 != mu1_index && SelectedJet_muonIdx2 != mu2_index && Jet_muonIdx2 != mu1_index && Jet_muonIdx2 != mu2_index)") # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
 
     df = df.Define(
         "SoftJet_def_VBF",
@@ -438,12 +405,6 @@ def defineP4AndInvMass(df):
     )
     for idx in [0, 1]:
         df = Utilities.defineP4(df, f"mu{idx+1}")
-    # for met_var in ['met','metnomu']:
-    #     df = df.Define(f"{met_var}_p4", f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>({met_var}_pt,0.,{met_var}_phi,0.)")
-    #     for leg_idx in [0,1]:
-    #         df = df.Define(f"deltaPhi_{met_var}_tau{leg_idx+1}",f"ROOT::Math::VectorUtil::DeltaPhi({met_var}_p4,tau{leg_idx+1}_p4)")
-    # df = df.Define(f"deltaPhi_{met_var}_b{leg_idx+1}",f"ROOT::Math::VectorUtil::DeltaPhi({met_var}_p4,b{leg_idx+1}_p4)")
-    # df = df.Define(f"met_nano_p4", f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(met_pt_nano,0.,met_phi_nano,0.)")
     df = df.Define(f"pt_ll", "(mu1_p4+mu2_p4).Pt()")
 
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
@@ -559,59 +520,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
-    # def AddScaReOnBS(self):
-    #     import correctionlib
-
-    #     period_files = {
-    #         "Run3_2022": "2022_Summer22",
-    #         "Run3_2022EE": "2022_Summer22EE",
-    #         "Run3_2023": "2023_Summer23",
-    #         "Run3_2023BPix": "2023_Summer23BPix",
-    #     }
-    #     correctionlib.register_pyroot_binding()
-    #     file_name = period_files.get(self.period, "")
-    #     analysis_path = os.environ["ANALYSIS_PATH"]
-    #     ROOT.gROOT.ProcessLine(
-    #         f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
-    #     )
-    #     ROOT.gROOT.ProcessLine(f'#include "{analysis_path}/include/MuonScaRe.cc"')
-    #     for mu_idx in [1, 2]:
-    #         if self.isData:
-    #             # Data apply scale correction
-    #             self.df = self.df.Define(
-    #                 f"mu{mu_idx}_BS_pt_1_corr",
-    #                 f"pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
-    #             )
-    #         else:
-    #             self.df = self.df.Define(
-    #                 f"mu{mu_idx}_BS_pt_1_scale_corr",
-    #                 f"pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
-    #             )
-
-    #             self.df = self.df.Define(
-    #                 f"mu{mu_idx}_BS_pt_1_corr",
-    #                 f"pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
-    #             )
-    #             # # MC evaluate scale uncertainty
-    #             # df_mc = df_mc.Define(
-    #             #     'pt_1_scale_corr_up',
-    #             #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "up")'
-    #             # )
-    #             # df_mc = df_mc.Define(
-    #             #     'pt_1_scale_corr_dn',
-    #             #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "dn")'
-    #             # )
-
-    #             # # MC evaluate resolution uncertainty
-    #             # df_mc = df_mc.Define(
-    #             #     "pt_1_corr_resolup",
-    #             #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "up")'
-    #             # )
-    #             # df_mc = df_mc.Define(
-    #             #     "pt_1_corr_resoldn",
-    #             #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "dn")'
-    #             # )
-
     def defineRegions(self):
         region_defs = self.config["MuMuMassRegions"]
         for reg_name, reg_cut in region_defs.items():
@@ -624,7 +532,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.df = self.df.Define("SS", "!OS")
         self.colToSave.append("SS")
 
-    def defineCategories(self):  # needs lot of stuff --> at the end
+    def defineCategories(self):  # at the end
         singleMuTh = self.config["singleMu_th"][self.period]
         for category_to_def in self.config["category_definition"].keys():
             category_name = category_to_def
@@ -656,10 +564,8 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-    # dfForHistograms.df = defineP4AndInvMass(dfForHistograms.df)
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
-    # dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
@@ -687,27 +593,3 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder
 
-
-# def addNewCols(self):
-#     self.colNames = []
-#     self.colTypes = []
-#     colNames = [str(c) for c in self.df.GetColumnNames()] #if 'kinFit_result' not in str(c)]
-#     cols_to_remove = []
-#     for colName in colNames:
-#         col_name_split = colName.split("_")
-#         if "p4" in col_name_split or "vec" in col_name_split:
-#             cols_to_remove.append(colName)
-#     for col_to_remove in cols_to_remove:
-#         colNames.remove(col_to_remove)
-#     FullEventIdIdx = colNames.index("FullEventId")
-#     runIdx = colNames.index("run")
-#     eventIdx = colNames.index("event")
-#     lumiIdx = colNames.index("luminosityBlock")
-#     colNames[FullEventIdIdx], colNames[0] = colNames[0], colNames[FullEventIdIdx]
-#     colNames[runIdx], colNames[1] = colNames[1], colNames[runIdx]
-#     colNames[eventIdx], colNames[2] = colNames[2], colNames[eventIdx]
-#     colNames[lumiIdx], colNames[3] = colNames[3], colNames[lumiIdx]
-#     self.colNames = colNames
-#     self.colTypes = [str(self.df.GetColumnType(c)) for c in self.colNames]
-#     for colName,colType in zip(self.colNames,self.colTypes):
-#         print(colName,colType)
