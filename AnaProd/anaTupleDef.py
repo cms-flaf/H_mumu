@@ -273,6 +273,7 @@ defaultColToSave = [
     "BeamSpot_type",
     "BeamSpot_z",
     "BeamSpot_zError",
+    "JetSel",
 ]
 
 additional_VBFStudies_vars = [
@@ -357,7 +358,6 @@ def addAllVariables(
             check_leg_type=True,
             default=0,
         ):
-            print(f"mu{leg_idx+1}_{var_name}")
             cond = var_cond
             if check_leg_type:
                 type_cond = f"HttCandidate.leg_type[{leg_idx}] != Leg::none"
@@ -380,11 +380,11 @@ def addAllVariables(
         # fix: add muon index:
 
         LegVar(
-                f"index",
-                f"HttCandidate.leg_index[{leg_idx}]",
-                var_type="int",
-                default="-1",
-            )
+            f"index",
+            f"HttCandidate.leg_index[{leg_idx}]",
+            var_type="int",
+            default="-1",
+        )
 
         LegVar("charge", f"HttCandidate.leg_charge[{leg_idx}]", var_type="int")
         LegVar(
