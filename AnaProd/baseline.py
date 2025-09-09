@@ -40,7 +40,7 @@ def RecoHttCandidateSelection(df, config):
         cand_columns.append(cand_column)
     cand_filters = [f"{c}.size() > 0" for c in cand_columns]
     stringfilter = " || ".join(cand_filters)
-    df = df.Filter(" || ".join(cand_filters), "Reco Baseline 2")
+    df = df.Filter(" || ".join(cand_filters), "Hmm candidate selection")
     cand_list_str = ", ".join(["&" + c for c in cand_columns])
     return df.Define(
         "HttCandidate", f"GetBestHTTCandidate<2>({{ {cand_list_str} }}, event)"
@@ -73,9 +73,9 @@ def JetSelection(df, era):
     df = df.Define("Jet_B0p1", "Jet_B0 && ( Jet_jetId & 2 )" "")
     df = df.Define("JetSel", "Jet_idx[Jet_B0p1].size()>0")
     # df = df.Define("Jet_B1", "RemoveOverlaps(Jet_p4, Jet_B0p1,{{Muon_p4},}, 2, 0.4)") # will be done later when defining histTuples
-    df = df.Filter(
-        "JetSel", "excl. events with at least one jet passing loose selection"
-    )
+    # df = df.Filter(
+    #     "JetSel", "excl. events with at least one jet passing loose selection"
+    # )
     # df = df.Define(f"vetoMapLooseRegion", "Jet_pt > 15 && ( Jet_jetId & 2 ) && Jet_chHEF + Jet_neHEF < 0.9 ") #  (Jet_puId > 0 || Jet_pt >50) &&  for CHS jets
     # df = df.Define(f"vetoMapLooseRegionNonOverlapping", " RemoveOverlaps(Jet_p4, vetoMapLooseRegion, Muon_p4, 0.2)")
     return df
