@@ -357,6 +357,7 @@ def addAllVariables(
             check_leg_type=True,
             default=0,
         ):
+            print(f"mu{leg_idx+1}_{var_name}")
             cond = var_cond
             if check_leg_type:
                 type_cond = f"HttCandidate.leg_type[{leg_idx}] != Leg::none"
@@ -376,6 +377,15 @@ def addAllVariables(
                 var_type="float",
                 default="-1.f",
             )
+        # fix: add muon index:
+
+        LegVar(
+                f"index",
+                f"HttCandidate.leg_index[{leg_idx}]",
+                var_type="int",
+                default="-1",
+            )
+
         LegVar("charge", f"HttCandidate.leg_charge[{leg_idx}]", var_type="int")
         LegVar(
             f"pt_nano",
@@ -422,10 +432,10 @@ def addAllVariables(
             f"mu{leg_idx+1}_p4_nano",
             f"Muon_p4_nano.at(HttCandidate.leg_index[{leg_idx}])",
         )
-        dfw.Define(
-            f"mu{leg_idx+1}_index",
-            f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_index.at({leg_idx}) : -1",
-        )
+        # dfw.Define(
+        #     f"mu{leg_idx+1}_index",
+        #     f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_index.at({leg_idx}) : -1",
+        # )
         dfw.Define(
             f"mu{leg_idx+1}_type",
             f"HttCandidate.leg_type.size() > {leg_idx} ? static_cast<int>(HttCandidate.leg_type.at({leg_idx})) : -1",
