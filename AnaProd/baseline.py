@@ -24,6 +24,9 @@ def getChannelLegs(channel):
 
 
 def RecoHttCandidateSelection(df, config):
+    ####  COMPARISON WITH RUN2 ####
+    # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246
+    # these variables are needed to define the H(mumu) candidate structure
     df = df.Define("Muon_B2_muMu_1", "Muon_B0 && Muon_idx[Muon_B0].size()==2")
     df = df.Define("Muon_B2_muMu_2", "Muon_B0  && Muon_idx[Muon_B0].size()==2")
 
@@ -49,17 +52,25 @@ def RecoHttCandidateSelection(df, config):
 
 def LeptonVeto(df):
     df = df.Define("Muon_iso", "Muon_pfRelIso04_all")
+    ####  COMPARISON WITH RUN2 ####
+    # pT > 10 is a GENERAL preselection cut, then the muon matching to the offline one (which is the "leading" in Run2 analysis, in this case can be either the first or the second) has the offline pT threshold driven by the trigger. The eta, ID and iso cuts are the same w.r.t. Run 2 -- See AN/2019_185 lines 123 - 130
     df = df.Define(
         "Muon_B0",
         f"""
         v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""",
-    )  # && abs(Muon_dz) < 0.2 && abs(Muon_dxy) < 0.024 # in future: Muon_bsConstrainedPt, Muon_bsConstrainedChi2, and Muon_bsConstrainedPtErr
+    )
+    ####  COMPARISON WITH RUN2 ####
+    # # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246
     df = df.Filter("Muon_idx[Muon_B0].size()==2", "No extra muons")
+    ####  COMPARISON WITH RUN2 ####
+    # Same electron selection w.r.t. Run 2 -- See AN/2019_185 lines 114 - 116
     df = df.Define(
         "Electron_B0_veto",
         f"""
         v_ops::pt(Electron_p4) > 20 && abs(v_ops::eta(Electron_p4)) < 2.5  && ( Electron_mvaIso_WP90 == true )""",
     )  # && abs(Electron_dz) < 0.2 && abs(Electron_dxy) < 0.024
+    ####  COMPARISON WITH RUN2 ####
+    # electron veto, same w.r.t. Run3 - See AN/2019_205 lines 246 - 248
     df = df.Filter("Electron_idx[Electron_B0_veto].size() == 0", "No extra electrons")
     return df
 
@@ -67,17 +78,19 @@ def LeptonVeto(df):
 def JetSelection(df, era):
     # jet_puID_cut = ""
     # jet_puID_cut = "&& (Jet_puId>0 || v_ops::pt(Jet_p4)>50)" if era.startswith("Run2") else ""
+    ####  COMPARISON WITH RUN2 ####
+    # JetPUID  this is not applied because the PUID is no longer used in Run3
     df = df.Define(
         "Jet_B0", f"""v_ops::pt(Jet_p4) > 20 && abs(v_ops::eta(Jet_p4))< 4.7 """
     )
-    df = df.Define("Jet_B0p1", "Jet_B0 && ( Jet_jetId & 2 )" "")
+    ####  COMPARISON WITH RUN2 ####
+    # pT > 20 is a GENERAL preselection cut, In Run2 it was set to 25 as default. See AN/2019_185 lines 89-91 . CAVEAT: In Run3 the PUPPI AK4 jets are used, not the CHS ones as in Run2
+    df = df.Define(
+        "Jet_B0p1", "Jet_B0 && ( Jet_jetId & 2 )" ""
+    )  # loose jet ID as it was done in Run2, see AN/2019_185 lines 98-100
+
     df = df.Define("JetSel", "Jet_idx[Jet_B0p1].size()>0")
-    # df = df.Define("Jet_B1", "RemoveOverlaps(Jet_p4, Jet_B0p1,{{Muon_p4},}, 2, 0.4)") # will be done later when defining histTuples
-    # df = df.Filter(
-    #     "JetSel", "excl. events with at least one jet passing loose selection"
-    # )
-    # df = df.Define(f"vetoMapLooseRegion", "Jet_pt > 15 && ( Jet_jetId & 2 ) && Jet_chHEF + Jet_neHEF < 0.9 ") #  (Jet_puId > 0 || Jet_pt >50) &&  for CHS jets
-    # df = df.Define(f"vetoMapLooseRegionNonOverlapping", " RemoveOverlaps(Jet_p4, vetoMapLooseRegion, Muon_p4, 0.2)")
+    # IN THIS CASE, NO FILTER IS APPLIED. This is the Jet Selection definition, but it will be used for later cuts.
     return df
 
 
@@ -86,10 +99,6 @@ def GetMuMuCandidate(df):
     return df
 
 
-# def GenRecoJetMatching(df):
-#     df = df.Define("Jet_genJetIdx_matched", "GenRecoJetMatching(event,Jet_idx, GenJet_idx, Jet_bCand, GenJet_B2, GenJet_p4, Jet_p4 , 0.3)")
-#     df = df.Define("Jet_genMatched", "Jet_genJetIdx_matched>=0")
-#     return df.Filter("Jet_genJetIdx_matched[Jet_genMatched].size()>=2", "Two different gen-reco jet matches at least")
 """
 
 def getChannelLegs(channel):

@@ -338,13 +338,13 @@ def addAllVariables(
 
     dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
 
-    dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)  # nothing should change
+    dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
 
-    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)  # nothing should change
+    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
-    dfw.Apply(CommonBaseline.ApplyJetVetoMap)  # nothing should change
+    dfw.Apply(CommonBaseline.ApplyJetVetoMap)
 
-    dfw.Apply(AnaBaseline.GetMuMuCandidate)  # nothing should change
+    dfw.Apply(AnaBaseline.GetMuMuCandidate)
 
     n_legs = 2
 
@@ -440,7 +440,6 @@ def addAllVariables(
             f"mu{leg_idx+1}_type",
             f"HttCandidate.leg_type.size() > {leg_idx} ? static_cast<int>(HttCandidate.leg_type.at({leg_idx})) : -1",
         )
-
     for jetobs in JetObservables + ["idx"]:
         jet_obs_name = f"Jet_{jetobs}"
         if jet_obs_name in dfw.df.GetColumnNames():

@@ -137,6 +137,9 @@ def VBFJetSelection(df):
     )
     # df = df.Define(f"JetVeto", f"SelectedJet_btagDeepFlavB")
     # https://btv-wiki.docs.cern.ch/ScaleFactors/Run3Summer22EE/#ak4-b-tagging
+
+    ####  COMPARISON WITH RUN2 ####
+    # In Run2, the DeepCSV Algorithm was used (see AN/2019_185 lines 106 - 112 ). In Run3 the ParticleNet is recommended in place of DeepCSV/DeepJet
     df = df.Define(
         "Jet_Veto_loose", "SelectedJet_btagPNetB >= 0.0499"
     )  # 0.0499 is the loose working point for PNet B-tagging in Run3
@@ -144,12 +147,9 @@ def VBFJetSelection(df):
         "Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605"
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
-    # tmp patch:
-    if "JetSel" not in df.GetColumnNames():
-        print("JetSel not in df.GetColumnNames")
-        df = df.Define(
-            "JetSel", "SelectedJet_p4[SelectedJet_jetId>=2 && SelectedJet_pt>20 && abs(SelectedJet_eta)<4.7].size()>0"
-        )
+
+    ####  COMPARISON WITH RUN2 ####
+    # in Run2 there was not this JetVetoMap for or at least it's not described in the AN.
     df = df.Define("SelectedJet_vetoMap_inverted", "!SelectedJet_vetoMap").Define(
         "Jet_preselection",
         "JetSel && SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ",
@@ -158,6 +158,8 @@ def VBFJetSelection(df):
     df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4)")
     df = df.Define("HasVBF_0", "return static_cast<bool>(VBFJetCand.isVBF)")
     df = df.Define("HasVBF", "HasVBF_0 && Jet_preselection")
+    ####  COMPARISON WITH RUN2 ####
+    # No overlap between VBF Jet Candidates and muons AN/2019_185 lines 103-104 - in future it will be extended to any jet, but it's fine to keep as it is now as the selection is applied when VBF jet candidates are defined
     df = df.Define(
         "NoOverlapWithMuons",
         f"""
@@ -360,14 +362,14 @@ def GetSoftJets(df):
         "SoftJet_def_vtx", "(SelectedJet_svIdx1 < 0 && SelectedJet_svIdx2< 0 ) "
     )  # no secondary vertex associated
     df = df.Define("SoftJet_def_pt", " (SelectedJet_pt>2) ")  # pT > 2 GeV
-    # df = df.Define(
-    #     "SoftJet_def_muon",
-    #     "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)",
-    # )  # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
     df = df.Define(
         "SoftJet_def_muon",
-        "(SelectedJet_muonIdx1 != mu1_index && SelectedJet_muonIdx2 != mu2_index && SelectedJet_muonIdx2 != mu1_index && SelectedJet_muonIdx2 != mu2_index)",
-    )  # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
+        "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)",
+    )  # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
+    # df = df.Define(
+    #     "SoftJet_def_muon",
+    #     "(SelectedJet_muonIdx1 != mu1_index && SelectedJet_muonIdx2 != mu2_index && SelectedJet_muonIdx2 != mu1_index && SelectedJet_muonIdx2 != mu2_index)",
+    # )  # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
 
     df = df.Define(
         "SoftJet_def_VBF",
