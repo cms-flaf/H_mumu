@@ -1,0 +1,52 @@
+TT:
+  name: "t#bar{t}"
+  color: "kGreen-3"  # eliminates need for plot.yaml
+  datasets:
+    - TTto2L2Nu
+    - TTtoLNu2Q
+    - TTto4Q
+
+TT_Inclusive:
+  name: "t#bar{t} Inclusive"
+  color: "kGreen-3"
+  datasets:
+    - TT
+
+VBFHto2Mu:
+  name: "VBFHto2Mu"
+  color: "kBlack"
+  datasets:
+    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
+    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
+    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
+
+Data_Full:
+  name: "Data"
+  datasets:
+    - EGamma_Run2022C
+    - EGamma_Run2022D
+    - Muon_Run2022C
+    - Muon_Run2022D
+    - SingleMuon_Run2022C
+    - DoubleMuon_Run2022C
+    - MuonEG_Run2022C
+    - MuonEG_Run2022D
+
+Data_EGamma:
+  name: "Data EGamma"
+  datasets:
+    - EGamma_Run2022C
+    - EGamma_Run2022D
+
+Data_Muon:
+  name: "Data Muon"
+  datasets:
+    - SingleMuon_Run2022C
+    - DoubleMuon_Run2022C
+    - Muon_Run2022C
+    - Muon_Run2022D
+
+Data_MuonEG:
+  name: "Data MuonEG"
+  datasets:
+    - MuonEG_Run2022C
