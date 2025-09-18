@@ -3,21 +3,19 @@
 results_dir = "/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/results"
 use_cuda = true
 
-
 [dataloader]
 # Events selection
 selection_cut = '(VBF_JetVeto) & (Signal_Fit)'
-# Event splitting (traing_size is what's left)
+# Event splitting (training_size is what's left)
 valid_size = 0.20
-test_size = 0.40
+test_size = 0.0
 # Input vector def
 columns_config = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/ds_setup/general.yaml'
-signal_types = ['VBFH']
-# Network related
+signal_types = ['VBFH', 'ggH']
 # Binary or multiclass
 classification = 'binary'          
 # Per file stitching
-file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights.toml'
+file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights_hleprarev1p1.toml'
 renorm_inputs = 'gauss'
 
 
@@ -26,31 +24,32 @@ renorm_inputs = 'gauss'
 uniform_train_weight = false       # If true, all train weights (prenorm) = 1
 zero_negative_weights = true       # Remove the effect of negative weights for training only
 equalize_class_weights = true      # Sets each class weight to be equal (training only!)
-renorm_inputs = 'gauss'            # Apply some scaling/renorm to the input columns. Can be 'no', 'linear', or 'gauss'
+renorm_inputs = 'gauss'            # Apply some scaling/renorm to the input columns. Can be 'no' or 'gauss'
 downsample_upweight = false        # Whether or not to downsample majority classes
 target_ratio = 10                  # New N_{majority_class}/N_{minority_class} ratio (if using downsample)
+use_mass_resolution = false
 
 [kfold]
-k = 5
+k = 4
 
 [network]  
 # Hidden layers only
 # Input layer size pulled from the used columns
-layer_list = [65, 65]
-dropout = 0.09
+layer_list = [26, 18, 9]
+dropout = 0.1
 
 [training]
 # batch_size = 0 means use the whole set (1 batch per epoch)
 batch_size = 2500
-epochs = 2500
+epochs = 250
 early_stop = true
 early_threshold = 0
-patience = 25
+patience = 100
 label_smoothing = 0.0
 
 [optimizer]
 algo = "Adam"   # Currently, SGD and Adam are supported
-lr = 5e-04
+lr = 1.5E-4
 weight_decay = 0.0
 #momentum = 0.7
 #dampening = 0.2

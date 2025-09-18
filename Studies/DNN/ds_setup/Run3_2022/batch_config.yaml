@@ -1,50 +1,39 @@
 meta_data:
-  batch_dict: # here go samples for training
-    GluGluHto2Mu: 100
-    TT: 400
-    batch_size: 500
-  selection_branches: # here go the branches for selection, currently I comment it
-  # - lep1_type
-  # - lep2_type
-  - weight_MC_Lumi_pu
-  - event
-  # for the moment, keep only event parity
-  selection_cut: (tree['event']%4 == 0 )
-  iterate_cut: (event%4 == 0 )
-  # examples of other cut and iterative cuts --> difference? we will figure out
-  # selection_cut: (tree['lep1_type'] >= 0) & (tree['lep2_type'] >= 0) & (tree['event']%4 == 0)
-  # iterate_cut: (lep1_type >= 0) & (lep2_type >= 0) & (event%4 == 0)
-  global_config: /afs/cern.ch/work/v/vdamante/H_mumu/config/global.yaml
-  general_config: /afs/cern.ch/work/v/vdamante/H_mumu/Studies/DNN/ds_setup/Run3_2022EE/general.yaml
-  storage_folder: /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/dev
-  # empty_dict_example: /afs/cern.ch/work/d/daebi/diHiggs/HH_bbWW/Studies/DNN/DNN_dataset_2024-09-13-13-56-15/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined.root
+  nBatches: 1000
+  global_config: /afs/cern.ch/user/a/ayeagle/H_mumu/config/global.yaml
+  general_config: /afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/ds_setup/general.yaml
+  temp_folder: /eos/user/a/ayeagle/H_mumu/temp_files/
+  output_folder: /eos/user/a/ayeagle/H_mumu/root_files/v2vbfselnew/Run3_2022/
+  input_folder: /eos/user/v/vdamante/H_mumu/anaTuples/v2_VBFSel_Studies_new/Run3_2022
 
-processes:
-- batch_size: 377
-  batch_start: 0
-  class_value: 1
-  datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto2L2Nu
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto2L2Nu_ext1
-  nBatches: 43284
-- batch_size: 0
-  batch_start: 377
-  class_value: 1
-  datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto4Q
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto4Q_ext1
-  nBatches: 0
-- batch_size: 23
-  batch_start: 377
-  class_value: 1
-  datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTtoLNu2Q
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTtoLNu2Q_ext1
-  nBatches: 5208
-- batch_size: 100
-  batch_start: 400
-  class_value: 0
-  datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/GluGluHto2Mu
-  # - /afs/cern.ch/work/d/daebi/diHiggs/HH_bbWW/Studies/DNN/DNN_dataset_2024-09-13-13-56-15/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined
-  nBatches: 100 #3956
+dataset_list:
+ - WWto2L2Nu_powheg
+ - WWto4Q_powheg
+ - WWtoLNu2Q_powheg
+ - WZto2L2Q_powheg
+ - WZto3LNu_powheg
+ - WZtoLNu2Q_powheg
+
+ - ZZto2L2Nu_powheg
+ - ZZto2L2Q_powheg
+ - ZZto2Nu2Q_powheg
+ - ZZto4L_powheg
+
+ - TTto2L2Nu
+ - TTto4Q
+ - TTtoLNu2Q
+
+ - DYto2L_M_10to50_amcatnloFXFX
+ - DYto2L_M_50_amcatnloFXFX
+ - DYto2Mu_MLL_105to160_amcatnloFXFX
+ - DYto2Mu_MLL_50to120_powheg
+ - DYto2Mu_MLL_120to200_powheg
+ - DYto2Mu_MLL_200to400_powheg
+
+ - GluGluHto2Mu
+ - VBFHto2Mu
+
+ - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
+ - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1
+ - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole
+ - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole_ext1
