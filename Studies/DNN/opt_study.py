@@ -4,8 +4,8 @@ import pickle as pkl
 from dataclasses import dataclass
 from datetime import datetime
 from pprint import pprint
-from test import Tester
 from uuid import uuid1 as uuid
+from statistics import mean
 
 import numpy as np
 import optuna
@@ -16,6 +16,7 @@ from model_generation.dataloader import DataLoader
 from model_generation.network import Network
 from model_generation.preprocess import Preprocessor
 from model_generation.train import Trainer
+from model_generation.test import Tester
 
 
 @dataclass
@@ -25,34 +26,9 @@ class Args:
 
 
 args = Args(
-    "/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/model_generation/config.toml",
-    "/eos/user/a/ayeagle/H_mumu/root_files/v2/Run3_2022/test1/",
+    "/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/config.toml",
+    "/eos/user/a/ayeagle/H_mumu/root_files/hlrp_v1p1/Run3_2022",
 )
-
-
-def get_arguments():
-    """
-    Builds an argument parser to get CLI arguments for the config file and dataset directory.
-    """
-    parser = argparse.ArgumentParser(
-        prog="NN_Generator",
-        description="For a given dataset and config file, creates a network, trains it, and runs testing",
-    )
-    parser.add_argument("-c", "--config", required=True, help="the .toml config file")
-    parser.add_argument(
-        "-r",
-        "--rootfile",
-        required=True,
-        help="the .root file to use for testing and training events",
-    )
-    parser.add_argument(
-        "-l",
-        "--label",
-        required=False,
-        help="some string to append to the output folder name",
-    )
-    args = parser.parse_args()
-    return args
 
 
 def objective(trial, config, train_data, valid_data, test_data, test_df, device=None):
@@ -87,12 +63,17 @@ def objective(trial, config, train_data, valid_data, test_data, test_df, device=
     # Run the traininig and testing!
     model = trainer.train(model)
 
-    # Evaluate based off of ROC auc
-    return trainer.validation_loss[-1]
+    tester = Tester(
+        test_data,
+        test_df,
+        device=device,
+        **config["testing"] | config["dataloader"],
+    )
+    tester.test(model)
 
+    # Evaluate
+    return tester.get_roc_auc()
 
-# Read the CLI arguments
-# args = get_arguments()
 
 # Read in config and datasets from args
 with open(args.config, "rb") as f:
@@ -115,9 +96,9 @@ valid_df = preprocessor.add_train_weights(valid_df)
 
 # Renorm sets to m=0 s=1 separately.
 # Don't want to leak info from test into train
-train_df = dataloader._dispatch_input_renorm(train_df)
-valid_df = dataloader._dispatch_input_renorm(valid_df)
-test_df = dataloader._dispatch_input_renorm(test_df)
+train_df, _ = dataloader._dispatch_input_renorm(train_df)
+valid_df, _ = dataloader._dispatch_input_renorm(valid_df)
+test_df, _ = dataloader._dispatch_input_renorm(test_df)
 
 # Split into (x,y), w tuples
 train_data = dataloader.df_to_dataset(train_df)
@@ -139,11 +120,13 @@ config["network"]["input_size"] = len(dataloader.data_columns)
 config["network"]["output_size"] = len(train_data[0][1][0])
 
 # Do the dang thing!
-study_name = "multiclass_hyper_p_test1"
+study_name = "hyper_p_test1"
 study = optuna.create_study(
-    study_name=study_name, storage="sqlite:///study_3.db", load_if_exists=True
+    study_name=study_name,
+    storage=f"sqlite:///study_{study_name}.db",
+    load_if_exists=True,
 )
 f = lambda x: objective(x, config, train_data, valid_data, test_data, test_df, device)
-study.optimize(f, n_trials=100)
+study.optimize(f, n_trials=500)
 
 pprint(study.best_params)

@@ -39,13 +39,13 @@ class DataLoader:
         self.signal_types = signal_types
         self.valid_size = valid_size
         self.test_size = test_size
-        if selection_cut == '':
+        if selection_cut == "":
             selection_cut = None
         self.selection_cut = selection_cut
         self.classification = classification
         self.renorm_inputs = renorm_inputs
         # File stitching defines the MC_Lumi_pu -> Class_Weight corrections
-        if file_stitching == '':
+        if file_stitching == "":
             file_stitching = None
         if file_stitching is not None:
             with open(file_stitching, "r") as f:
@@ -119,8 +119,8 @@ class DataLoader:
         to average = 0 and std = 1
         """
         print("Applying gaussian renorm...")
-        means = np.zeros(len(self.data_columns)) 
-        stds = np.zeros(len(self.data_columns)) 
+        means = np.zeros(len(self.data_columns))
+        stds = np.zeros(len(self.data_columns))
         for i, col in enumerate(self.data_columns):
             data = df[col].values.copy()
             m = np.mean(data)

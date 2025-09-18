@@ -84,7 +84,7 @@ class Tester:
             outputs = model(self.x_data)
         if self.classification == "binary":
             outputs = outputs.cpu().numpy()
-            self.testing_df['NN_Output'] = outputs
+            self.testing_df["NN_Output"] = outputs
         else:
             cols = [f"Prob_{x}" for x in self.processes]
             self.testing_df[cols] = outputs.cpu().numpy()

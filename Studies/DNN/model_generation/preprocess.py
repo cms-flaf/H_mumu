@@ -117,9 +117,9 @@ class Preprocessor:
         return df
 
     def _apply_mass_resolution(self, df):
-        new_weight = df.Training_Weight.values.copy()/df.m_mumu_resolution
-        factor = sum(df.Training_Weight)/sum(new_weight)
-        df['Training_Weight'] = factor * new_weight
+        new_weight = df.Training_Weight.values.copy() / df.m_mumu_resolution
+        factor = sum(df.Training_Weight) / sum(new_weight)
+        df["Training_Weight"] = factor * new_weight
         return df
 
     ### Main runner function ###

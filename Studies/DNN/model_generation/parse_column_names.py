@@ -53,11 +53,7 @@ def parse_column_names(config, column_type="all"):
         Weight_vars,
     ]
 
-    selection_columns = [
-        Sign_vars,
-        Region_vars,
-        Category_vars
-    ]
+    selection_columns = [Sign_vars, Region_vars, Category_vars]
 
     data_columns = [x for x in data_columns if x is not None]
     header_columns = [x for x in header_columns if x is not None]

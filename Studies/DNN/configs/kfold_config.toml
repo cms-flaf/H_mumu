@@ -8,14 +8,14 @@ use_cuda = true
 selection_cut = '(VBF_JetVeto) & (Signal_Fit)'
 # Event splitting (training_size is what's left)
 valid_size = 0.20
-test_size = 0.4
+test_size = 0.0
 # Input vector def
 columns_config = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/ds_setup/general.yaml'
 signal_types = ['VBFH', 'ggH']
 # Binary or multiclass
 classification = 'binary'          
 # Per file stitching
-file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights.toml'
+file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights_hleprarev1p1.toml'
 renorm_inputs = 'gauss'
 
 
@@ -35,21 +35,21 @@ k = 4
 [network]  
 # Hidden layers only
 # Input layer size pulled from the used columns
-layer_list = [75, 75]
-dropout = 0.07
+layer_list = [26, 18, 9]
+dropout = 0.1
 
 [training]
 # batch_size = 0 means use the whole set (1 batch per epoch)
 batch_size = 2500
-epochs = 700
+epochs = 250
 early_stop = true
 early_threshold = 0
-patience = 75
+patience = 100
 label_smoothing = 0.0
 
 [optimizer]
 algo = "Adam"   # Currently, SGD and Adam are supported
-lr = 1e-04
+lr = 1.5E-4
 weight_decay = 0.0
 #momentum = 0.7
 #dampening = 0.2

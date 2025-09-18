@@ -130,7 +130,6 @@ if __name__ == "__main__":
     else:
         device = None
 
-
     # Start the k-fold training loop
     models = {}
     start = datetime.now()
@@ -146,9 +145,9 @@ if __name__ == "__main__":
 
         # Renorm sets to m=0 s=1 separately.
         # Don't want to leak info from test into train
-        train_df, (m,s) = dataloader._dispatch_input_renorm(train_df)
+        train_df, (m, s) = dataloader._dispatch_input_renorm(train_df)
         valid_df, _ = dataloader._dispatch_input_renorm(valid_df)
-        test_df, _  = dataloader._dispatch_input_renorm(test_df)
+        test_df, _ = dataloader._dispatch_input_renorm(test_df)
 
         # Parse into (x,y), w tuples (aka "datasets")
         train_data = dataloader.df_to_dataset(train_df)
@@ -193,7 +192,7 @@ if __name__ == "__main__":
 
         # Save the input renorm variables
         if m is not None and s is not None:
-            with open(f'renorm_variables_{i}.pkl', 'wb') as f:
+            with open(f"renorm_variables_{i}.pkl", "wb") as f:
                 pkl.dump((m, s), f)
 
         # Save output files
@@ -211,16 +210,13 @@ if __name__ == "__main__":
         else:
             x = torch.tensor(x_data, device=device, dtype=torch.double)
         torch.onnx.export(
-                model=model, 
-                args=(x[0:3]), 
-                f = outname + ".onnx",
-                input_names=['x'],
-                output_names=['y'],
-                dynamic_axes={
-                    'x' : [0],
-                    'y' : [0]
-                }
-            )
+            model=model,
+            args=(x[0:3]),
+            f=outname + ".onnx",
+            input_names=["x"],
+            output_names=["y"],
+            dynamic_axes={"x": [0], "y": [0]},
+        )
         # Back to the main kfold dir
         os.chdir(base_dir)
 
@@ -235,9 +231,10 @@ if __name__ == "__main__":
     # Plot/save
     tester.testing_df = df
     tester.make_hist(log=False, weight=True, norm=True)
+    tester.make_hist(log=True, weight=True, norm=False)
     tester.make_multihist(log=True, weight=True)
-    #tester.make_stackplot(log=True)
-    #tester.make_transformed_stackplot()
+    tester.make_stackplot(log=True)
+    tester.make_transformed_stackplot()
     tester.make_roc_plot(log=True)
     tester.make_roc_plot(log=False)
     tester.make_thist()
