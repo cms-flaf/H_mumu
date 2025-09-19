@@ -18,7 +18,8 @@ VBFJets FindVBFJets(const RVecLV& Jet_p4) {
     float eta_th = VBF_jets_collection.eta_th;
 
     for (size_t i = 0; i < Jet_p4.size(); i++) {
-        for (size_t j = i + 1; j < Jet_p4.size(); j++) {  // j > i per evitare doppioni
+        for (size_t j = i + 1; j < Jet_p4.size(); j++) {  // j > i to avoid duplicates
+            // comparison with Run2: same selection. Since there could be MORE than one jet pair, the one with highest invariant mass is excluded, keeping the DeltaEta threshold fixed to 2.5
             float inv_mass = (Jet_p4.at(i) + Jet_p4.at(j)).M();
             float eta = Jet_p4.at(i).Eta() - Jet_p4.at(j).Eta();
             if (inv_mass >= inv_mass_th && std::abs(eta) >= eta_th) {
