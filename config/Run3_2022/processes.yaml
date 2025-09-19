@@ -85,7 +85,7 @@ EWK:
   color: kMagenta+3
   color_mplhep: darkmagenta
   datasets:
-  - EWK_2L2J_madgraph_herwig
+    - EWK_2L2J_madgraph_herwig
 
 # EWK_LLJJ_herwig:
 #   name: "EWK"
