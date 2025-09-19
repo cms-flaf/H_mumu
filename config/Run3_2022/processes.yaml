@@ -1,3 +1,4 @@
+############## TT ##############
 TT:
   name: "t#bar{t}"
   color: "kGreen-3"  # eliminates need for plot.yaml
@@ -12,13 +13,282 @@ TT_Inclusive:
   datasets:
     - TT
 
-VBFHto2Mu:
+############## DY ##############
+# DY:
+#   name: "DY M50"
+#   # cross_section_correction: 12/ 11  # NLO -> NNLO
+#   color: kAzure-9
+#   color_mplhep: lightskyblue
+#   datasets:
+#     - DYto2E_M_50_amcatnloFXFX
+#     - DYto2E_M_50_amcatnloFXFX_ext1
+#     - DYto2Mu_M_50_amcatnloFXFX
+#     - DYto2Mu_M_50_amcatnloFXFX_ext1
+
+DY:
+  name: "DY M50"
+  cross_section_correction: 12/ 11  # NLO -> NNLO
+  color: "kAzure+7"
+  datasets:
+    - DYto2E_M_50_0J_amcatnloFXFX
+    - DYto2Mu_M_50_0J_amcatnloFXFX
+    - DYto2Tau_M_50_0J_amcatnloFXFX
+    - DYto2E_M_50_1J_amcatnloFXFX
+    - DYto2Mu_M_50_1J_amcatnloFXFX
+    - DYto2Tau_M_50_1J_amcatnloFXFX
+    - DYto2E_M_50_2J_amcatnloFXFX
+    - DYto2Mu_M_50_2J_amcatnloFXFX
+    - DYto2Tau_M_50_2J_amcatnloFXFX
+
+DYToMuMu_amcatnloFXFX:
+  name: "DY M50"
+  # cross_section_correction: 12/ 11  # NLO -> NNLO
+  color: kAzure-9
+  color_mplhep: lightskyblue
+  datasets:
+    - DYto2Mu_M_50_amcatnloFXFX
+    - DYto2Mu_M_50_amcatnloFXFX_ext1
+
+DYToMuMu_MiNNLO:
+  name: "DY $\\rightarrow \\ell \\ell$ + jets"
+  color: kAzure-9
+  color_mplhep: lightskyblue
+  datasets:
+    - DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
+    - DYToMuMu-M50_13p6TeV_MiNNLO_pythia8_ext1
+
+############## WJetsToLNu ##############
+W:
+  name: "W"
+  color: "kGreen"  # eliminates need for plot.yaml
+  datasets:
+    - WtoLNu_amcatnloFXFX
+
+W_NJets:
+  name: "W"
+  color: "kGreen"  # eliminates need for plot.yaml
+  datasets:
+    - WtoLNu_0J_amcatnloFXFX
+    - WtoLNu_1J_amcatnloFXFX
+    - WtoLNu_2J_amcatnloFXFX
+
+EWK_LLJJ:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets:
+    - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole
+    - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole_ext1
+
+EWK:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets:
+  - EWK_2L2J_madgraph_herwig
+
+# EWK_LLJJ_herwig:
+#   name: "EWK"
+#   color: kMagenta+3
+#   color_mplhep: darkmagenta
+#   datasets:
+#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
+#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1
+#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2
+
+
+EWK_LLJJ_M105_160:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets:
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext2
+
+EWK_LLJJ_M105_160_VBFFilter:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets:
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext1
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext2
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext3
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext4
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext5
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext6
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext7
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext8
+    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9
+
+############## Other single H  ##############
+H:
+  name: "Single H"
+  color: kPink
+  color_mplhep: darkgreen
+  datasets:
+    - GluGluHto2Tau_M125
+    - GluGluHto2B_M125
+    - VBFHto2B_M125
+    - VBFHto2Tau_UncorrelatedDecay_UnFiltered
+    - VBFHto2Tau_UncorrelatedDecay_Filtered
+    - GluGluHto2Wto2L2Nu_M125
+    - ggZH_Hto2B_Zto2L
+    - ggZH_Hto2B_Zto2L_ext1
+    - ggZH_Hto2B_Zto2Q
+    - ggZH_Hto2B_Zto2Q_ext1
+    - WminusH_Hto2B_WtoLNu
+    - WminusH_Hto2B_WtoLNu_ext1
+    - WminusH_Hto2B_Wto2Q
+    - WminusH_Hto2B_Wto2Q_ext1
+    - WminusHto2Tau_UncorrelatedDecay_Filtered
+    - WminusHto2Tau_UncorrelatedDecay_UnFiltered
+    - WplusH_Hto2B_WtoLNu
+    - WplusH_Hto2B_WtoLNu_ext1
+    - WplusH_Hto2B_Wto2Q
+    - WplusH_Hto2B_Wto2Q_ext1
+    - WplusHto2Tau_UncorrelatedDecay_Filtered
+    - WplusHto2Tau_UncorrelatedDecay_UnFiltered
+    - TTHtoNon2B_M125
+    - TTHto2B_M125
+
+############## VV ##############
+VV_Inclusive:
+  name: "VV Inclusive"
+  color: kPink+2
+  color_mplhep: tomato
+  datasets:
+    - WW
+    - WZ
+    - ZZ
+
+VV:
+  name: "VV"
+  color: kPink+2
+  color_mplhep: tomato
+  datasets:
+    - WWto2L2Nu_powheg
+    - WWto4Q_powheg
+    - WWtoLNu2Q_powheg
+    - WZto3LNu_powheg
+    - WZto2L2Q_powheg
+    - WZtoLNu2Q_powheg
+    - ZZto2L2Nu_powheg
+    - ZZto2L2Q_powheg
+    - ZZto2Nu2Q_powheg
+    - ZZto4L_powheg
+
+############## VH non-inclusive ##############
+VH:
+  name: "VH"
+  color: kPink+2
+  color_mplhep: pink
+  datasets:
+    - ZH_Hto2B_Zto2L
+    - ZH_Hto2B_Zto2Q
+    - ggZH_Hto2B_Zto2L
+    - ggZH_Hto2B_Zto2Q
+    - WminusH_Hto2B_Wto2Q
+    - WminusH_Hto2B_WtoLNu
+    - WplusH_Hto2B_Wto2Q
+    - WplusH_Hto2B_WtoLNu
+
+############## VVV inclusive ##############
+VVV:
+  name: "VVV"
+  color: kOrange-4
+  color_mplhep: plum
+  datasets:
+    - WWW_4F
+    - WWZ_4F
+    - WZZ
+    - ZZZ
+
+############## ST ##############
+ST:
+  name: "ST"
+  color: kCyan-1
+  color_mplhep: green
+  datasets:
+    - TbarBtoLminusNuB_s_channel_4FS
+    - TBbartoLplusNuBbar_s_channel_4FS
+    - TbarBQ_t_channel_4FS
+    - TBbarQ_t_channel_4FS
+
+TTX:
+  name: "TT+X"
+  color: kBlue-10
+  color_mplhep: pink
+  datasets:
+    - TTWH
+    - TTWW
+    - TTZH
+    - TTZZ
+    - TTZ_Zto2Q
+
+############## TW ##############
+TW:
+  name: "TW"
+  color: kCyan-1
+  color_mplhep: green
+  datasets:
+    - TWminusto2L2Nu
+    - TWminusto4Q
+    - TWminustoLNu2Q
+    - TbarWplusto2L2Nu
+    - TbarWplusto4Q
+    - TbarWplustoLNu2Q
+
+############## VBF signal ##############
+
+VBFHto2Mu_Herwig:
   name: "VBFHto2Mu"
-  color: "kBlack"
+  color: "kPink"
+  color_mplhep: red
   datasets:
     - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
     - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
     - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
+
+VBFHto2Mu:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: red
+  datasets:
+    - VBFHto2Mu
+
+############## ggH signal ##############
+
+GluGluHto2Mu:
+  name: "GluGluHto2Mu"
+  color: "kCyan"
+  color_mplhep: cyan
+  datasets:
+    - VBFHto2Mu
+
+############## VH signal ##############
+
+VHto2Mu:
+  name: "VHto2Mu"
+  color: "kPink"
+  color_mplhep: red
+  datasets:
+    - WminusH_Hto2Mu_WtoAll
+    - WplusH_Hto2Mu_WtoAll
+    - ZH_Hto2Mu_ZtoAll
+
+############## TTH signal ##############
+
+TTHto2Mu:
+  name: "TTHto2Mu"
+  color: "kPink"
+  color_mplhep: red
+  datasets:
+    - WminusH_Hto2Mu_WtoAll
+    - WplusH_Hto2Mu_WtoAll
+    - ZH_Hto2Mu_ZtoAll
+
 
 Data_Full:
   name: "Data"
@@ -41,8 +311,8 @@ Data_EGamma:
 Data_Muon:
   name: "Data Muon"
   datasets:
-    - SingleMuon_Run2022C
-    - DoubleMuon_Run2022C
+    # - SingleMuon_Run2022C
+    # - DoubleMuon_Run2022C
     - Muon_Run2022C
     - Muon_Run2022D
 
