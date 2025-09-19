@@ -38,7 +38,7 @@ custom_subcategories: [ ]
 #   etamm_above2p4: ["eta_mumu","abs(eta_mumu) > 2.4"]
 #   eta_incl: ["eta_mumu","abs(eta_mumu) >= 0."]
 
-MuMuMassRegions: ### ALL same w.r.t. Run 2 ###
+MuMuMassRegions:  ### ALL same w.r.t. Run 2 ###
   Z_sideband: "m_mumu > 70 && m_mumu < 110"
   Signal_Fit: "m_mumu > 115 && m_mumu < 135"
   H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
