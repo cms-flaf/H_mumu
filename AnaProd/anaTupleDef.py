@@ -273,6 +273,7 @@ defaultColToSave = [
     "BeamSpot_type",
     "BeamSpot_z",
     "BeamSpot_zError",
+    "JetSel",
 ]
 
 additional_VBFStudies_vars = [
@@ -337,13 +338,13 @@ def addAllVariables(
 
     dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
 
-    dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)  # nothing should change
+    dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
 
-    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)  # nothing should change
+    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
-    dfw.Apply(CommonBaseline.ApplyJetVetoMap)  # nothing should change
+    dfw.Apply(CommonBaseline.ApplyJetVetoMap)
 
-    dfw.Apply(AnaBaseline.GetMuMuCandidate)  # nothing should change
+    dfw.Apply(AnaBaseline.GetMuMuCandidate)
 
     n_legs = 2
 
@@ -376,6 +377,15 @@ def addAllVariables(
                 var_type="float",
                 default="-1.f",
             )
+        # fix: add muon index:
+
+        LegVar(
+            f"index",
+            f"HttCandidate.leg_index[{leg_idx}]",
+            var_type="int",
+            default="-1",
+        )
+
         LegVar("charge", f"HttCandidate.leg_charge[{leg_idx}]", var_type="int")
         LegVar(
             f"pt_nano",
@@ -422,15 +432,14 @@ def addAllVariables(
             f"mu{leg_idx+1}_p4_nano",
             f"Muon_p4_nano.at(HttCandidate.leg_index[{leg_idx}])",
         )
-        dfw.Define(
-            f"mu{leg_idx+1}_index",
-            f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_index.at({leg_idx}) : -1",
-        )
+        # dfw.Define(
+        #     f"mu{leg_idx+1}_index",
+        #     f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_index.at({leg_idx}) : -1",
+        # )
         dfw.Define(
             f"mu{leg_idx+1}_type",
             f"HttCandidate.leg_type.size() > {leg_idx} ? static_cast<int>(HttCandidate.leg_type.at({leg_idx})) : -1",
         )
-
     for jetobs in JetObservables + ["idx"]:
         jet_obs_name = f"Jet_{jetobs}"
         if jet_obs_name in dfw.df.GetColumnNames():

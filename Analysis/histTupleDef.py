@@ -63,9 +63,7 @@ def GetDfw(
         {}
     )  # here go the customisations for each analysis eventually extrcting stuff from the global params
     kwargset["isData"] = global_params["dataset"] == "data"
-    kwargset["wantTriggerSFErrors"] = (
-        global_params["dataset"] != "data"
-    )  # already set not in data
+    kwargset["wantTriggerSFErrors"] = global_params["wantTriggerSFErrors"]
     kwargset["colToSave"] = []
 
     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
