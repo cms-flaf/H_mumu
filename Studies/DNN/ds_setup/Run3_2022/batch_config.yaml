@@ -13,7 +13,6 @@ dataset_list:
  - WZto2L2Q_powheg
  - WZto3LNu_powheg
  - WZtoLNu2Q_powheg
-
  - ZZto2L2Nu_powheg
  - ZZto2L2Q_powheg
  - ZZto2Nu2Q_powheg
@@ -23,12 +22,18 @@ dataset_list:
  - TTto4Q
  - TTtoLNu2Q
 
+#  - DYto2Mu_M_50_0J_amcatnloFXFX
+#  - DYto2Mu_M_50_1J_amcatnloFXFX
+#  - DYto2Mu_M_50_2J_amcatnloFXFX
+#  - DYto2Mu_M_50_amcatnloFXFX
+#  - DYto2Mu_M_50_amcatnloFXFX_ext1
+
  - DYto2L_M_10to50_amcatnloFXFX
  - DYto2L_M_50_amcatnloFXFX
  - DYto2Mu_MLL_105to160_amcatnloFXFX
- - DYto2Mu_MLL_50to120_powheg
  - DYto2Mu_MLL_120to200_powheg
  - DYto2Mu_MLL_200to400_powheg
+ - DYto2Mu_MLL_50to120_powheg
 
  - GluGluHto2Mu
  - VBFHto2Mu

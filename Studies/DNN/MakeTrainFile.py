@@ -54,6 +54,9 @@ def create_file(
     # Load in the RDataFrame
     pattern = os.path.join(dataset, "*.root")
     process_filelist = glob(pattern)
+    if len(process_filelist) == 0:
+        print('No root files for pattern', pattern)
+        return
     df_in = ROOT.RDataFrame("Events", process_filelist)
 
     # Filter for nLeps and Parity (iterate cut in config)
@@ -159,10 +162,19 @@ def create_file(
     # to add kwargset for isData
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
     dfw_out = analysis.PrepareDfForHistograms(dfw_out)
+
+    total_weight_expression = (
+        analysis.GetWeight("muMu", "", "")
+    )  # are we sure?
+    weight_name = "final_weight"
+    dfw_out.df = dfw_out.df.Define(weight_name, total_weight_expression)
+
+
     # dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
     col_to_save = parse_column_names(
         general_cfg_dict["vars_to_save"], column_type="all"
     )
+    col_to_save.append(weight_name)
 
     dfw_out.df.Snapshot(
         "Events", tmpnext_filename, Utilities.ListToVector(col_to_save), snapshotOptions

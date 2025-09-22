@@ -8,7 +8,6 @@ import yaml
 import os
 import ROOT
 import tomllib
-from pprint import pprint
 import pickle as pkl
 
 from Studies.DNN.model_generation.parse_column_names import parse_column_names
@@ -21,9 +20,6 @@ class DNNProducer:
 
 
     def __init__(self, cfg, payload_name):
-
-        print("************** Init DNNProducer")
-
         # cfg is H_mumu/configs/global.yaml
         self.cfg = cfg
         self.global_cfg = self._load_global_config()
@@ -116,33 +112,18 @@ class DNNProducer:
         print("*********** Running prepare_dfw...")
         dfw = analysis.DataFrameBuilderForHistograms(dfw.df, self.global_cfg, self.period)
         dfw = analysis.PrepareDfForHistograms(dfw)
-        # This is probably where I need to do the input renorming?
-        # for col in self.input_features:
-        #     m = dfw.df.Mean(col).GetValue()
-        #     s = dfw.df.StdDev(col).GetValue()
-        #     dfw.df = dfw.df.Define(f"{col}_renorm", f"({col} - {m})/{s}")
         return dfw
 
 
     def ApplyDNN(self, branches):
         print("*********** Running ApplyDNN...")
         nEvents = len(branches)
-        print(f"Running DNN Over {nEvents} events")
-
         event_number = np.array(getattr(branches, 'FullEventId'))
         input_array = np.array([getattr(branches, feature_name) for feature_name in self.input_features]).transpose()
         all_predictions = np.zeros([nEvents, self.parity])
         for parityIdx, (sess, (m, s)) in enumerate(zip(self.models, self.renorm_vars)):
-            pprint(vars(sess))
-            pprint(sess.get_inputs)
-            print("Input array shape:", input_array.shape)
-            print("Mean shape:", m.shape)
-            print("StDev shape:", s.shape)
             m = np.repeat(m[np.newaxis, :], input_array.shape[0], axis=0)
             s = np.repeat(s[np.newaxis, :], input_array.shape[0], axis=0)
-            print("New Mean shape:", m.shape)
-            print(m)
-            print("New StDev shape:", s.shape)
             input_name = sess.get_inputs()[0].name
             label_name = sess.get_outputs()[0].name
             x = (input_array - m)/s
@@ -150,24 +131,13 @@ class DNNProducer:
             mask = (event_number % self.parity) != parityIdx
             predictions[mask] = 0
             all_predictions[:, parityIdx] = predictions.reshape(predictions.shape[0])
-        
-        print(all_predictions)
-
         final_predictions = np.sum(all_predictions, axis=1)
-
-        print(final_predictions)
-        print(np.mean(final_predictions))
-
-
-
         # Last save the branches
         branches['NNOutput'] = final_predictions.transpose().astype(np.float32)
-
         print("Finishing call, memory?")
         process = psutil.Process(os.getpid())
         mem_mb = process.memory_info().rss / 1024 / 1024
         print(f"Current memory usage: {mem_mb:.2f} MB")
-
         return branches
 
 

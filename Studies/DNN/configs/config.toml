@@ -15,7 +15,7 @@ signal_types = ['VBFH', 'ggH']
 # Binary or multiclass
 classification = 'binary'          
 # Per file stitching
-file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights_hleprarev1p1.toml'
+file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights.toml'
 renorm_inputs = 'gauss'
 
 
