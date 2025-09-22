@@ -6,7 +6,6 @@ if __name__ == "__main__":
 
 
 from FLAF.Common.HistHelper import *
-from FLAF.Analysis.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
 
