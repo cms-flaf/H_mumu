@@ -16,9 +16,7 @@ VBFHto2Mu:
   name: "VBFHto2Mu"
   color: "kBlack"
   datasets:
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
+    - VBFHto2Mu
 
 Data_Full:
   name: "Data"
