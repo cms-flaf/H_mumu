@@ -10,20 +10,24 @@ from FLAF.RunKit.crabLaw import update_kinit
 from FLAF.RunKit.law_wlcg import WLCGFileTarget
 from FLAF.Common.Setup import Setup
 
+
 class Task(law.Task):
     """
     Base task that we use to force a version parameter on all inheriting tasks, and that provides
     some convenience methods to create local file and directory targets at the default data path.
     """
+
     version = luigi.Parameter()
-    prefer_params_cli = [ 'version' ]
+    prefer_params_cli = ["version"]
     period = luigi.Parameter()
-    customisations =luigi.Parameter(default="")
+    customisations = luigi.Parameter(default="")
     test = luigi.BoolParameter(default=False)
 
     def __init__(self, *args, **kwargs):
         super(Task, self).__init__(*args, **kwargs)
-        self.setup = Setup.getGlobal(os.getenv("ANALYSIS_PATH"), self.period, self.customisations)
+        self.setup = Setup.getGlobal(
+            os.getenv("ANALYSIS_PATH"), self.period, self.customisations
+        )
 
     def store_parts(self):
         return (self.__class__.__name__, self.version, self.period)
@@ -42,15 +46,15 @@ class Task(law.Task):
 
     @property
     def fs_nanoAOD(self):
-        return self.setup.get_fs('nanoAOD')
+        return self.setup.get_fs("nanoAOD")
 
     @property
     def fs_anaCache(self):
-        return self.setup.get_fs('anaCache')
+        return self.setup.get_fs("anaCache")
 
     @property
     def fs_anaTuple(self):
-        return self.setup.get_fs('anaTuple')
+        return self.setup.get_fs("anaTuple")
 
     # @property
     # def fs_anaCacheTuple(self):
@@ -61,12 +65,11 @@ class Task(law.Task):
     #     return self.setup.get_fs('nnCacheTuple')
     @property
     def fs_NNInputTuple(self):
-        return self.setup.get_fs('NNInputTuple')
-
+        return self.setup.get_fs("NNInputTuple")
 
     @property
     def fs_histograms(self):
-        return self.setup.get_fs('histograms')
+        return self.setup.get_fs("histograms")
 
     def ana_path(self):
         return os.getenv("ANALYSIS_PATH")
@@ -90,8 +93,8 @@ class Task(law.Task):
         return WLCGFileTarget(path, fs)
 
     def law_job_home(self):
-        if 'LAW_JOB_HOME' in os.environ:
-            return os.environ['LAW_JOB_HOME'], False
+        if "LAW_JOB_HOME" in os.environ:
+            return os.environ["LAW_JOB_HOME"], False
         os.makedirs(self.local_path(), exist_ok=True)
         return tempfile.mkdtemp(dir=self.local_path()), True
 
@@ -101,5 +104,3 @@ class Task(law.Task):
     def iter_samples(self):
         for sample_id, sample_name in enumerate(natural_sort(self.samples.keys())):
             yield sample_id, sample_name
-
-

@@ -247,9 +247,7 @@ VBFHto2Mu_Herwig:
   color: "kPink"
   color_mplhep: red
   datasets:
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
+    - VBFHto2Mu
 
 VBFHto2Mu:
   name: "VBFHto2Mu"

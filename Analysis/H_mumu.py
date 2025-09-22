@@ -7,6 +7,7 @@ if __name__ == "__main__":
 # from FLAF.Analysis.HistHelper import *
 
 from FLAF.Common.HistHelper import *
+from FLAF.Analysis.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
 
@@ -269,19 +270,30 @@ def GetMuMuObservables(df):
             f"mu{idx+1}_p4_nano",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
+        # df = df.Define(
+        #     f"mu{idx+1}_p4_BS_ScaRe",
+        #     f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        # )
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
     df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
     df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
+    # df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
     df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
     df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
     df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
     df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
     df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
+    # df = df.Define(
+    #     "m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())"
+    # )
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
         df = df.Define(f"mu{idx+1}_pt_rel_BS", f"mu{idx+1}_bsConstrainedPt/m_mumu_BS")
         df = df.Define(f"mu{idx+1}_pt_rel_nano", f"mu{idx+1}_pt_nano/m_mumu_nano")
+        # df = df.Define(
+        #     f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe"
+        # )
 
     df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
 
@@ -489,9 +501,7 @@ def GetWeight(channel, A, B):
         "weight_DYw_DYWeightCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
 
-    trg_weights_dict = {
-        "muMu": ["weight_trigSF_singleMu"],
-    }
+    trg_weights_dict = {"muMu": []}  # ["weight_trigSF_singleMu"],
     ID_weights_dict = {
         "muMu": [
             "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
@@ -579,15 +589,16 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
+    # dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
-    if not dfForHistograms.isData:
-        defineTriggerWeights(dfForHistograms)
-        if dfForHistograms.wantTriggerSFErrors:
-            defineTriggerWeightsErrors(dfForHistograms)
+    # if not dfForHistograms.isData:
+    #     defineTriggerWeights(dfForHistograms)
+    #     if dfForHistograms.wantTriggerSFErrors:
+    #         defineTriggerWeightsErrors(dfForHistograms)
     dfForHistograms.SignRegionDef()
     dfForHistograms.defineRegions()
     dfForHistograms.defineCategories()
