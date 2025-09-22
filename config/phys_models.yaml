@@ -2,7 +2,22 @@ BaseModel:
   name: "Base Model"
   backgrounds:
     - TT
+    - DY
+    - DYToMuMu_MiNNLO
+    - DYToMuMu_amcatnloFXFX
+    - W
+    - W_NJets
+    # - EWK
+    - EWK_LLJJ
+    # - EWK_LLJJ_herwig
+    - VV
+    - VVV
+    - VH
+    - ST
+    - TW
+    - TTX
   signals:
     - VBFHto2Mu
+    - GluGluHto2Mu
   data:
-    - Data_Full
+    - Data_Muon
