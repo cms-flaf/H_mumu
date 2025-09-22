@@ -4,10 +4,10 @@ meta_data:
     TT: 400
     batch_size: 500
   selection_branches: # here go the branches for selection, currently I comment it
-  # - lep1_type
-  # - lep2_type
-  - weight_MC_Lumi_pu
-  - event
+    # - lep1_type
+    # - lep2_type
+    - weight_MC_Lumi_pu
+    - event
   # for the moment, keep only event parity
   selection_cut: (tree['event']%4 == 1 )
   iterate_cut: (event%4 == 0 )
@@ -20,31 +20,31 @@ meta_data:
   # empty_dict_example: /afs/cern.ch/work/d/daebi/diHiggs/HH_bbWW/Studies/DNN/DNN_dataset_2024-09-13-13-56-15/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined.root
 
 processes:
-- batch_size: 377
-  batch_start: 0
-  class_value: 1
-  datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto2L2Nu
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto2L2Nu_ext1
-  nBatches: 43284
-- batch_size: 0
-  batch_start: 377
-  class_value: 1
-  datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto4Q
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto4Q_ext1
-  nBatches: 0
-- batch_size: 23
-  batch_start: 377
-  class_value: 1
-  datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTtoLNu2Q
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTtoLNu2Q_ext1
-  nBatches: 5208
-- batch_size: 100
-  batch_start: 400
-  class_value: 0
-  datasets:
-  - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/GluGluHto2Mu
-  # - /afs/cern.ch/work/d/daebi/diHiggs/HH_bbWW/Studies/DNN/DNN_dataset_2024-09-13-13-56-15/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined
-  nBatches: 100 #3956
+  - batch_size: 377
+    batch_start: 0
+    class_value: 1
+    datasets:
+      - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto2L2Nu
+      - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto2L2Nu_ext1
+    nBatches: 43284
+  - batch_size: 0
+    batch_start: 377
+    class_value: 1
+    datasets:
+      - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto4Q
+      - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTto4Q_ext1
+    nBatches: 0
+  - batch_size: 23
+    batch_start: 377
+    class_value: 1
+    datasets:
+      - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTtoLNu2Q
+      - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/TTtoLNu2Q_ext1
+    nBatches: 5208
+  - batch_size: 100
+    batch_start: 400
+    class_value: 0
+    datasets:
+      - /eos/user/v/vdamante/H_mumu/anaTuples/Run3_2022EE_Hmumu_v2/Run3_2022EE/GluGluHto2Mu
+      # - /afs/cern.ch/work/d/daebi/diHiggs/HH_bbWW/Studies/DNN/DNN_dataset_2024-09-13-13-56-15/GluGlutoRadiontoHHto2B2Vto2B2L2Nu_Combined
+    nBatches: 100 # 3956

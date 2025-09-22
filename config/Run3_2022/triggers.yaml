@@ -1,4 +1,5 @@
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauTrigger#Updates_for_2022_data_taking
+# https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauTrigger#Updates_for_2022_data_taking
 
 singleMu:
   channels:
@@ -11,9 +12,10 @@ singleMu:
       online_obj:
         cut: TrigObj_id == 13 && (TrigObj_filterBits&8)!=0  # selection for online object matching to the trigger, same w.r.t. run2
       doMatching: True
-      jsonTRGcorrection_key: { "2022_Summer22":"NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium",
-                               "2022_Summer22EE":"NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium",
-                               "2023_Summer23":"NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium",
-                               "2023_Summer23BPix":"NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium",
-      }
+      jsonTRGcorrection_key:
+        2022_Summer22: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
+        2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
+        2023_Summer23: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
+        2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
       jsonTRGcorrection_elepath: "placeholder"
+
