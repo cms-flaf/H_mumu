@@ -516,9 +516,7 @@ def GetWeight(channel, A, B):
         "weight_DYw_DYWeightCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
 
-    trg_weights_dict = {
-        "muMu": [] # ["weight_trigSF_singleMu"],
-    }
+    trg_weights_dict = {"muMu": []}  # ["weight_trigSF_singleMu"],
     ID_weights_dict = {
         "muMu": [
             "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
