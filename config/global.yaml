@@ -39,7 +39,7 @@ custom_subcategories: [ ]
 #   etamm_above2p4: ["eta_mumu","abs(eta_mumu) > 2.4"]
 #   eta_incl: ["eta_mumu","abs(eta_mumu) >= 0."]
 
-MuMuMassRegions:
+MuMuMassRegions:  ### ALL same w.r.t. Run 2 ###
   Z_sideband: "m_mumu > 70 && m_mumu < 110"
   Signal_Fit: "m_mumu > 115 && m_mumu < 135"
   H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
@@ -67,18 +67,34 @@ categories:
   - VBF
   - ggH
   - VBF_JetVeto
-  # - ggH_JetVeto
 
 category_definition:
+  #### COMPARISON WITH RUN 2 ####
+  # the baseline selection requires OS -- > Opposite Sign of muons charge (as in Run2, obv), and either the first or the second muon matching the online object and passing the pT threshold driven by the trigger (which is always 26 GeV in Run3 up to now) -- See AN/2019_185 lines 123 - 130
   baseline: "OS && ((mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu))"
-  VBF_def: "HasVBF && Jet_preselection && NoOverlapWithMuons && j1_pt > 35 && j2_pt > 25"  # no change in efficiency when changing the j1_pt threshold, Jet_preselection should be redundant
+  #### COMPARISON WITH RUN 2 ####
+  # VBF category and def is the same w.r.t run 2
+  VBF_def: "HasVBF && Jet_preselection && NoOverlapWithMuons && j1_pt > 35 && j2_pt > 25"
+
   VBF: "baseline && VBF_def"
+  # ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
   ggH: "baseline && !(VBF_def)"
-  VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
-  VBF_JetVeto: "baseline && VBF_JetVeto_def"
+
+  # This is only introduced for Run3 jet horn issue!!
   # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
   # non-physics dependent, but related to Jet Energy Correction and Scale
+  VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
+  VBF_JetVeto: "baseline && VBF_JetVeto_def"
+
+# DIFFERENCES WITH RUN2:
+# - muon baseline pT cut (before requiring eventual matching to the trigger object) 20 --> 10 GeV
+# - FSR photon recovery for muons NOT YET INCLUDED
+# - b-jet tagging: In Run2, the DeepCSV Algorithm was used (see AN/2019_185 lines 106 - 112 ). In Run3 the ParticleNet is recommended in place of DeepCSV/DeepJet
+# - Jet PUID is no longer used in Run3 (see AnaProd/baseline.py)
+# - in Run2 there was not this JetVetoMap for or at least it's not described in the AN.
+# - no jet veto for jet horn spikes in Run 2
+# - VBF Jets selection compared to Run2. It is the same selection, but since there could be MORE than one jet pair, the one with highest invariant mass is excluded, keeping the DeltaEta threshold fixed to 2.5
 
 corrections:
   - JEC
