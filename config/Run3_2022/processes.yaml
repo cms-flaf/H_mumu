@@ -123,7 +123,7 @@ EWK_LLJJ_M105_160_VBFFilter:
     - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9
 
 ############## Other single H  ##############
-H:
+H_mainBckg:
   name: "Single H"
   color: kPink
   color_mplhep: darkgreen
@@ -134,24 +134,6 @@ H:
     - VBFHto2Tau_UncorrelatedDecay_UnFiltered
     - VBFHto2Tau_UncorrelatedDecay_Filtered
     - GluGluHto2Wto2L2Nu_M125
-    - ggZH_Hto2B_Zto2L
-    - ggZH_Hto2B_Zto2L_ext1
-    - ggZH_Hto2B_Zto2Q
-    - ggZH_Hto2B_Zto2Q_ext1
-    - WminusH_Hto2B_WtoLNu
-    - WminusH_Hto2B_WtoLNu_ext1
-    - WminusH_Hto2B_Wto2Q
-    - WminusH_Hto2B_Wto2Q_ext1
-    - WminusHto2Tau_UncorrelatedDecay_Filtered
-    - WminusHto2Tau_UncorrelatedDecay_UnFiltered
-    - WplusH_Hto2B_WtoLNu
-    - WplusH_Hto2B_WtoLNu_ext1
-    - WplusH_Hto2B_Wto2Q
-    - WplusH_Hto2B_Wto2Q_ext1
-    - WplusHto2Tau_UncorrelatedDecay_Filtered
-    - WplusHto2Tau_UncorrelatedDecay_UnFiltered
-    - TTHtoNon2B_M125
-    - TTHto2B_M125
 
 ############## VV ##############
 VV_Inclusive:
@@ -180,7 +162,7 @@ VV:
     - ZZto4L_powheg
 
 ############## VH non-inclusive ##############
-VH:
+VH_inclusive:
   name: "VH"
   color: kPink+2
   color_mplhep: pink
@@ -247,7 +229,9 @@ VBFHto2Mu_Herwig:
   color: "kPink"
   color_mplhep: red
   datasets:
-    - VBFHto2Mu
+    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
+    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
+    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
 
 VBFHto2Mu:
   name: "VBFHto2Mu"
@@ -263,7 +247,7 @@ GluGluHto2Mu:
   color: "kCyan"
   color_mplhep: cyan
   datasets:
-    - VBFHto2Mu
+    - GluGluHto2Mu
 
 ############## VH signal ##############
 
@@ -283,10 +267,15 @@ TTHto2Mu:
   color: "kPink"
   color_mplhep: red
   datasets:
-    - WminusH_Hto2Mu_WtoAll
-    - WplusH_Hto2Mu_WtoAll
-    - ZH_Hto2Mu_ZtoAll
+    - TTHto2Mu
 
+TTH_inclusive:
+  name: "ttH"
+  color: "kpink"
+  color_mplhep: red
+  datasets:
+    - TTHtoNon2B_M125
+    - TTHto2B_M125
 
 Data_Full:
   name: "Data"

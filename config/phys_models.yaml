@@ -5,19 +5,22 @@ BaseModel:
     - DY
     - DYToMuMu_MiNNLO
     - DYToMuMu_amcatnloFXFX
-    - W
+    # - W
     - W_NJets
     # - EWK
     - EWK_LLJJ
     # - EWK_LLJJ_herwig
-    - VV
-    - VVV
-    - VH
+    - H_mainBckg
     - ST
     - TW
+    - TTH_inclusive
     - TTX
+    - VH_inclusive
+    - VV
+    - VVV
   signals:
     - VBFHto2Mu
+    - VBFHto2Mu_Herwig
     - GluGluHto2Mu
   data:
     - Data_Muon

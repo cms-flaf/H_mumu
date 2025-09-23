@@ -207,14 +207,14 @@ DYto2Mu_MLL_105to160_amcatnloFXFX:
 
 DYToMuMu-M50_13p6TeV_MiNNLO_pythia8:
   sampleType: DY
-  crossSection: DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
+  crossSection: DYto2L_M_50_amcatnloFXFX #DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
   dirName: "0000"
 
 DYToMuMu-M50_13p6TeV_MiNNLO_pythia8_ext1:
   sampleType: DY
-  crossSection: DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
+  crossSection: DYto2L_M_50_amcatnloFXFX #DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
   dirName: "0001"
