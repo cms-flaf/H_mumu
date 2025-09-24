@@ -108,7 +108,7 @@ class DataLoader:
         """
         Class_Weight is the corrected MC_Lumi_pu applied for all plotting
         """
-        df["Class_Weight"] = df.final_weight.values.copy()
+        df["Class_Weight"] = df.weight_MC_Lumi_pu.values.copy()
         if self.file_stitching is not None:
             df = self._renorm_class_weight(df)
         return df

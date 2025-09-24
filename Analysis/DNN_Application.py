@@ -81,7 +81,7 @@ class DNNProducer:
         Read in the config used to train the network and input features used
         """
         directory = os.path.join(os.environ["ANALYSIS_PATH"], "Studies", "DNN")
-        filepath = os.path.join(directory, "configs", "kfold_config.toml")
+        filepath = os.path.join(directory, "configs", "config.toml")
         with open(filepath, 'rb') as f:
             config = tomllib.load(f)
         pairity = config['kfold']['k']
@@ -127,6 +127,9 @@ class DNNProducer:
             input_name = sess.get_inputs()[0].name
             label_name = sess.get_outputs()[0].name
             x = (input_array - m)/s
+            print("Input name:", input_name)
+            print("Label name:", label_name)
+            print("X:", x.shape)
             predictions = sess.run([label_name], {input_name: x})[0]
             mask = (event_number % self.parity) != parityIdx
             predictions[mask] = 0

@@ -14,6 +14,7 @@ using RVecUC = ROOT::VecOps::RVec<unsigned char>;
 using RVecUL = ROOT::VecOps::RVec<unsigned long>;
 using RVecULL = ROOT::VecOps::RVec<unsigned long long>;
 using RVecShort = ROOT::VecOps::RVec<short>;
+using RVecUShort = ROOT::VecOps::RVec<unsigned short>;
 using RVecB = ROOT::VecOps::RVec<bool>;
 
 
@@ -26,10 +27,12 @@ namespace analysis {
                          long,
                          unsigned int,
                          unsigned char,
+                         short, 
                          RVecI,
                          RVecF,
                          RVecUC,
                          RVecShort,
+                         RVecUShort,
                          RVecUL,
                          RVecULL,
                          RVecB>

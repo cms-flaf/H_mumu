@@ -18,66 +18,25 @@ ROOT.gROOT.SetBatch(True)
 ROOT.EnableThreadSafety()
 from FLAF.Common.Utilities import DeclareHeader
 
-sys.path.append(os.environ["ANALYSIS_PATH"])
-ana_path = os.environ["ANALYSIS_PATH"]
-for header in [
-    "FLAF/include/Utilities.h",
-    "include/Helper.h",
-    "include/HmumuCore.h",
-    "FLAF/include/AnalysisTools.h",
-    "FLAF/include/AnalysisMath.h",
-]:  # "FLAF/include/HistHelper.h",
-    DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
-
-
-lep1_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(lep1_pt,lep1_eta,lep1_phi,lep1_mass)"
-lep2_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(lep2_pt,lep2_eta,lep2_phi,lep2_mass)"
-MET_p4 = "ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(met_pt, 0., met_phi, 0.)"
-
-initialized = True  # ??
-
-
-def AddColumnsToSave(config):
-    col_to_save = []
-    muon_vars = config["vars_to_save"]["Muon"]
-    VBFJet_vars = config["vars_to_save"]["VBFJet"]
-    for mu_idx in [1, 2]:
-        for mu_var in muon_vars:
-            col_to_save.append(mu_var.format(mu_idx))
-    for j_idx in [1, 2]:
-        for VBFJ_var in VBFJet_vars:
-            col_to_save.append(f"j{j_idx}_{VBFJ_var}")
-    # SelectedJet_vars = config['vars_to_save']['SelectedJet']
-    # for Jvar in SelectedJet_vars:
-    #     col_to_save.append(f"SelectedJet_{Jvar}")
-    SoftJet_vars = config["vars_to_save"]["SoftJet"]
-    for SJvar in SoftJet_vars:
-        col_to_save.append(f"SoftJet_{SJvar}")
-    VBFJetPair_vars = config["vars_to_save"]["VBFJetPair"]
-    MuJet_vars = config["vars_to_save"]["MuJet"]
-    MuPair_vars = config["vars_to_save"]["MuPair"]
-    Global_vars = config["vars_to_save"]["Global"]
-    for var in VBFJetPair_vars + MuJet_vars + MuPair_vars + Global_vars:
-        col_to_save.append(var)
-    return list(set(col_to_save))
+def get_entries_per_batch(directory, nBatches):
+    total = 0
+    pattern = os.path.join(directory, "*.root")
+    for filename in glob(pattern):
+        with uproot.open(filename) as f:
+            total += f['Events'].num_entries
+    return ceil(total/nBatches)
 
 
 def create_file(
-    config_dict, global_cfg_dict, general_cfg_dict, period, output_folder, out_filename
+    config_dict, global_cfg_dict, general_cfg_dict, period, out_filename, dataset
 ):
-    print(
-        f"Starting create file. Memory usage in MB is {psutil.Process(os.getpid()).memory_info()[0] / float(2 ** 20)}"
-    )
-    nBatches = None
-    print(config_dict.keys())
-    for process in config_dict["processes"]:
-        if (nBatches is None) or (
-            (process["nBatches"] <= nBatches) and (process["nBatches"] != 0)
-        ):
-            nBatches = process["nBatches"]
+    print(f"Starting create file. Memory usage in MB is {get_memory_usage()}")
 
-    print(f"Going to make {nBatches} batches")
-    batch_size = config_dict["meta_data"]["batch_dict"]["batch_size"]
+    # Set the batch params for this anaTuple directory
+    nBatches = config_dict["meta_data"]["nBatches"]
+    nEntriesPerBatch = get_entries_per_batch(dataset, nBatches)
+    nBatchStart = 0
+    nBatchEnd = nBatchStart + nEntriesPerBatch
 
     step_idx = 0
 
@@ -85,101 +44,98 @@ def create_file(
     master_column_names = []
     master_column_types = []
     master_column_names_vec = ROOT.std.vector("string")()
-    # Assume master(signal) is saved first and use idx==0 entry to fill
+ 
+    # Init temp
+    tmp_dir = config_dict["meta_data"]["temp_folder"]
+    tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
+    tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
 
-    for process in config_dict["processes"]:
-        process_filelist = [f"{x}/*.root" for x in process["datasets"]]
+    # Load in the RDataFrame
+    pattern = os.path.join(dataset, "*.root")
+    process_filelist = glob(pattern)
+    df_in = ROOT.RDataFrame("Events", process_filelist)
 
-        tmp_filename = os.path.join(output_folder, f"tmp{step_idx}.root")
-        tmpnext_filename = os.path.join(output_folder, f"tmp{step_idx+1}.root")
-
-        # print(process_filelist)
-        df_in = ROOT.RDataFrame("Events", process_filelist)
-
-        # Filter for nLeps and Parity (iterate cut in config)
+    # Filter for nLeps and Parity (iterate cut in config)
+    if "iterate_cut" in config_dict["meta_data"].keys():
         df_in = df_in.Filter(config_dict["meta_data"]["iterate_cut"])
 
-        nEntriesPerBatch = process["batch_size"]
-        nBatchStart = process["batch_start"]
-        nBatchEnd = nBatchStart + nEntriesPerBatch
+    # Load df_out, if first iter then load an empty, otherwise load the past file
+    if step_idx == 0:
+        df_out = ROOT.RDataFrame(nBatches * nEntriesPerBatch)
+        df_out = df_out.Define("is_valid", "false")
 
-        # Load df_out, if first iter then load an empty, otherwise load the past file
-        if step_idx == 0:
-            df_out = ROOT.RDataFrame(nBatches * batch_size)
-            df_out = df_out.Define("is_valid", "false")
-
-            # Fill master column nametype
-            master_column_names = df_in.GetColumnNames()
-            master_column_types = [
-                str(df_in.GetColumnType(str(c))) for c in master_column_names
-            ]
-            for name in master_column_names:
-                master_column_names_vec.push_back(name)
-        else:
-            df_out = ROOT.RDataFrame("Events", tmp_filename)
-
-        local_column_names = df_in.GetColumnNames()
-        local_column_types = [
-            str(df_in.GetColumnType(str(c))) for c in local_column_names
+        # Fill master column nametype
+        master_column_names = df_in.GetColumnNames()
+        master_column_types = [
+            str(df_in.GetColumnType(str(c))) for c in master_column_names
         ]
-        local_column_names_vec = ROOT.std.vector("string")()
-        for name in local_column_names:
-            local_column_names_vec.push_back(name)
+        for name in master_column_names:
+            master_column_names_vec.push_back(name)
+    else:
+        df_out = ROOT.RDataFrame("Events", tmp_filename)
 
-        # Need a local_to_master_map so that local columns keep the same index as the master columns
-        local_to_master_map = [
-            list(master_column_names).index(local_name)
-            for local_name in local_column_names
-        ]
-        master_size = len(master_column_names)
+    local_column_names = df_in.GetColumnNames()
+    local_column_types = [
+        str(df_in.GetColumnType(str(c))) for c in local_column_names
+    ]
+    local_column_names_vec = ROOT.std.vector("string")()
+    for name in local_column_names:
+        local_column_names_vec.push_back(name)
 
-        queue_size = 10
-        max_entries = nEntriesPerBatch * nBatches
+    # Need a local_to_master_map so that local columns keep the same index as the master columns
+    local_to_master_map = [
+        list(master_column_names).index(local_name)
+        for local_name in local_column_names
+    ]
+    master_size = len(master_column_names)
 
-        tuple_maker = ROOT.analysis.TupleMaker(*local_column_types)(
-            queue_size, max_entries
-        )
+    queue_size = 10
+    max_entries = nEntriesPerBatch * nBatches
 
-        df_out = tuple_maker.FillDF(
-            ROOT.RDF.AsRNode(df_out),
-            ROOT.RDF.AsRNode(df_in),
-            local_to_master_map,
-            master_size,
-            local_column_names_vec,
-            nBatchStart,
-            nBatchEnd,
-            batch_size,
-        )
+    tuple_maker = ROOT.analysis.TupleMaker(*local_column_types)(
+        queue_size, max_entries
+    )
+
+    df_out = tuple_maker.FillDF(
+        ROOT.RDF.AsRNode(df_out),
+        ROOT.RDF.AsRNode(df_in),
+        local_to_master_map,
+        master_size,
+        local_column_names_vec,
+        nBatchStart,
+        nBatchEnd,
+        nEntriesPerBatch,
+    )
 
     for column_idx, column_name in enumerate(master_column_names):
         column_type = master_column_types[column_idx]
 
-            if step_idx == 0:
-                df_out = df_out.Define(
-                    str(column_name),
-                    f"_entry ? _entry->GetValue<{column_type}>({column_idx}) : {column_type}() ",
-                )
-            else:
-                if column_name not in local_column_names:
-                    continue
-                df_out = df_out.Redefine(
-                    str(column_name),
-                    f"_entry ? _entry->GetValue<{column_type}>({column_idx}) : {column_name} ",
-                )
+        if step_idx == 0:
+            df_out = df_out.Define(
+                str(column_name),
+                f"_entry ? _entry->GetValue<{column_type}>({column_idx}) : {column_type}() ",
+            )
+        else:
+            if column_name not in local_column_names:
+                continue
+            df_out = df_out.Redefine(
+                str(column_name),
+                f"_entry ? _entry->GetValue<{column_type}>({column_idx}) : {column_name} ",
+            )
 
-        df_out = df_out.Redefine("is_valid", "(is_valid) || (_entry)")
+    df_out = df_out.Redefine("is_valid", "(is_valid) || (_entry)")
 
-        snapshotOptions = ROOT.RDF.RSnapshotOptions()
-        # snapshotOptions.fOverwriteIfExists=False
-        # snapshotOptions.fLazy=True
-        snapshotOptions.fMode = "RECREATE"
-        snapshotOptions.fCompressionAlgorithm = getattr(ROOT.ROOT, "k" + "ZLIB")
-        snapshotOptions.fCompressionLevel = 4
-        ROOT.RDF.Experimental.AddProgressBar(df_out)
-        print("Going to snapshot")
-        save_column_names = ROOT.std.vector("string")(master_column_names)
-        save_column_names.push_back("is_valid")
-        df_out.Snapshot("Events", tmpnext_filename, save_column_names, snapshotOptions)
+    snapshotOptions = ROOT.RDF.RSnapshotOptions()
+    # snapshotOptions.fOverwriteIfExists=False
+    # snapshotOptions.fLazy=True
+    snapshotOptions.fMode = "RECREATE"
+    snapshotOptions.fCompressionAlgorithm = getattr(ROOT.ROOT, "k" + "ZLIB")
+    snapshotOptions.fCompressionLevel = 4
+    ROOT.RDF.Experimental.AddProgressBar(df_out)
+    print("Going to snapshot")
+    save_column_names = ROOT.std.vector("string")(master_column_names)
+    save_column_names.push_back("is_valid")
+    df_out.Snapshot("Events", tmpnext_filename, save_column_names, snapshotOptions)
 
     tuple_maker.join()
 
@@ -189,8 +145,9 @@ def create_file(
 
     print("Finished create file loop, now we must add the DNN variables")
     # Increment the name indexes before I embarass myself again
-    tmp_filename = os.path.join(output_folder, f"tmp{step_idx}.root")
-    tmpnext_filename = os.path.join(output_folder, f"tmp{step_idx+1}.root")
+    tmp_dir = config_dict["meta_data"]["temp_folder"]
+    tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
+    tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
 
     df_out = ROOT.RDataFrame("Events", tmp_filename)
 
@@ -205,9 +162,11 @@ def create_file(
     # Only need to save the prexisting columns plus the new DNN variables
     # to add kwargset for isData
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
-    dfw_out = analysis.PrepareDfForNNInputs(dfw_out)
-    dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
-    col_to_save = AddColumnsToSave(general_cfg_dict)
+    dfw_out = analysis.PrepareDfForHistograms(dfw_out)
+    # dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
+    col_to_save = parse_column_names(
+        general_cfg_dict["vars_to_save"], column_type="all"
+    )
 
     dfw_out.df.Snapshot(
         "Events", tmpnext_filename, Utilities.ListToVector(col_to_save), snapshotOptions
@@ -222,15 +181,31 @@ def create_file(
     os.system(f"rm {tmpnext_filename}")
 
 
-if __name__ == "__main__":
-    import argparse
+def set_environ_vars():
+    sys.path.append(os.environ["ANALYSIS_PATH"])
+    ana_path = os.environ["ANALYSIS_PATH"]
+    for header in [
+        "FLAF/include/Utilities.h",
+        "include/Helper.h",
+        "include/HmumuCore.h",
+        "FLAF/include/AnalysisTools.h",
+        "FLAF/include/AnalysisMath.h",
+    ]:
+        DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
 
-    parser = argparse.ArgumentParser(description="Create TrainTest Files for DNN.")
+
+def get_args():
+    parser = argparse.ArgumentParser(description="Create train/test file(s) for DNN.")
     parser.add_argument(
-        "--config-folder", required=True, type=str, help="Config Folder from Step1"
+        "--config",
+        required=True,
+        type=str,
+        help="The configuration yaml specifiying the samples and batches",
     )
     parser.add_argument("--period", required=True, type=str, help="period")
     args = parser.parse_args()
+    return args
+
 
 def load_headers():
     headers_dir = os.path.dirname(os.path.abspath(__file__))
@@ -243,36 +218,42 @@ def load_headers():
         if not ROOT.gInterpreter.Declare(f'#include "{header_path}"'):
             raise RuntimeError(f"Failed to load {header_path}")
 
-    output_folder = args.config_folder
-    print(
-        f"Starting the create file loop. Memory usage in MB is {psutil.Process(os.getpid()).memory_info()[0] / float(2 ** 20)}"
-    )
 
-    yaml_list = [
-        fname
-        for fname in os.listdir(output_folder)
-        if ((".yaml" in fname) and ("batch_config_parity" in fname))
-    ]
-    yaml_list.sort()
-    for i, yamlname in enumerate(yaml_list):
-        print(f"Starting batch {i} with yaml {yamlname}")
-        config_dict = {}
-        global_cfg_dict = {}
-        general_cfg_dict = {}
+def get_memory_usage():
+    return psutil.Process(os.getpid()).memory_info()[0] / float(2**20)
 
-        with open(os.path.join(output_folder, yamlname), "r") as file:
-            config_dict = yaml.safe_load(file)
-            glb_cfg_dict_name = config_dict["meta_data"]["global_config"]
-            with open(glb_cfg_dict_name, "r") as glb_cfg_file:
-                global_cfg_dict = yaml.safe_load(glb_cfg_file)
-            general_cfg_dict_name = config_dict["meta_data"]["general_config"]
-            with open(general_cfg_dict_name, "r") as general_cfg_dict_file:
-                general_cfg_dict = yaml.safe_load(general_cfg_dict_file)
+
+def yaml_to_config(yamlname):
+
+    with open(yamlname, "r") as file:
+        config_dict = yaml.safe_load(file)
+    glb_cfg_dict_name = config_dict["meta_data"]["global_config"]
+    with open(glb_cfg_dict_name, "r") as glb_cfg_file:
+        global_cfg_dict = yaml.safe_load(glb_cfg_file)
+    general_cfg_dict_name = config_dict["meta_data"]["general_config"]
+    with open(general_cfg_dict_name, "r") as general_cfg_dict_file:
+        general_cfg_dict = yaml.safe_load(general_cfg_dict_file)
+
+    return config_dict, global_cfg_dict, general_cfg_dict
+
+
+if __name__ == "__main__":
+
+    set_environ_vars()
+    args = get_args()
+    load_headers()
+
+    config_dict, global_cfg_dict, general_cfg_dict = yaml_to_config(args.config)
+
+    for dataset in config_dict['dataset_list']:
+        anaTuples_directory = os.path.join(config_dict['meta_data']['input_folder'], dataset)
+        output_name = os.path.join(config_dict['meta_data']['output_folder'], dataset)
+        output_name += ".root"
         create_file(
             config_dict,
             global_cfg_dict,
             general_cfg_dict,
             args.period,
-            output_folder,
-            "/afs/cern.ch/work/v/vdamante/H_mumu/Studies/DNN/test.root",
-        )  # config_dict['meta_data']['input_filename']))
+            output_name,
+            anaTuples_directory
+        )
