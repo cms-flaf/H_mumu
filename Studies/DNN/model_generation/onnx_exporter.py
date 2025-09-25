@@ -1,4 +1,3 @@
-
 import torch
 
 
@@ -14,8 +13,12 @@ class ExportNetwork(torch.nn.Module):
             self.to(device)
             self.double()
             if renorm_mean is not None and renorm_std is not None:
-                self.mean = torch.tensor(renorm_mean, device=self.device, dtype=torch.double)
-                self.std = torch.tensor(renorm_std, device=self.device, dtype=torch.double)
+                self.mean = torch.tensor(
+                    renorm_mean, device=self.device, dtype=torch.double
+                )
+                self.std = torch.tensor(
+                    renorm_std, device=self.device, dtype=torch.double
+                )
             else:
                 self.mean = None
                 self.std = None
@@ -27,20 +30,18 @@ class ExportNetwork(torch.nn.Module):
                 self.mean = None
                 self.std = None
 
-
     def forward(self, x):
         if self.mean is not None and self.std is not None:
             x = x.sub(self.mean).div(self.std)
         return self.model(x)
+
 
 def export_to_onnx(x_data, model, outname, device, renorm_mean, renorm_std):
     if device is None:
         x = torch.tensor(x_data, device=device)
     else:
         x = torch.tensor(x_data, device=device, dtype=torch.double)
-
     export_model = ExportNetwork(model, device, renorm_mean, renorm_std)
-
     torch.onnx.export(
         model=export_model,
         args=(x[0:3]),
