@@ -18,13 +18,14 @@ ROOT.gROOT.SetBatch(True)
 ROOT.EnableThreadSafety()
 from FLAF.Common.Utilities import DeclareHeader
 
+
 def get_entries_per_batch(directory, nBatches):
     total = 0
     pattern = os.path.join(directory, "*.root")
     for filename in glob(pattern):
         with uproot.open(filename) as f:
-            total += f['Events'].num_entries
-    return ceil(total/nBatches)
+            total += f["Events"].num_entries
+    return ceil(total / nBatches)
 
 
 def create_file(
@@ -44,7 +45,7 @@ def create_file(
     master_column_names = []
     master_column_types = []
     master_column_names_vec = ROOT.std.vector("string")()
- 
+
     # Init temp
     tmp_dir = config_dict["meta_data"]["temp_folder"]
     tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
@@ -75,26 +76,21 @@ def create_file(
         df_out = ROOT.RDataFrame("Events", tmp_filename)
 
     local_column_names = df_in.GetColumnNames()
-    local_column_types = [
-        str(df_in.GetColumnType(str(c))) for c in local_column_names
-    ]
+    local_column_types = [str(df_in.GetColumnType(str(c))) for c in local_column_names]
     local_column_names_vec = ROOT.std.vector("string")()
     for name in local_column_names:
         local_column_names_vec.push_back(name)
 
     # Need a local_to_master_map so that local columns keep the same index as the master columns
     local_to_master_map = [
-        list(master_column_names).index(local_name)
-        for local_name in local_column_names
+        list(master_column_names).index(local_name) for local_name in local_column_names
     ]
     master_size = len(master_column_names)
 
     queue_size = 10
     max_entries = nEntriesPerBatch * nBatches
 
-    tuple_maker = ROOT.analysis.TupleMaker(*local_column_types)(
-        queue_size, max_entries
-    )
+    tuple_maker = ROOT.analysis.TupleMaker(*local_column_types)(queue_size, max_entries)
 
     df_out = tuple_maker.FillDF(
         ROOT.RDF.AsRNode(df_out),
@@ -245,9 +241,11 @@ if __name__ == "__main__":
 
     config_dict, global_cfg_dict, general_cfg_dict = yaml_to_config(args.config)
 
-    for dataset in config_dict['dataset_list']:
-        anaTuples_directory = os.path.join(config_dict['meta_data']['input_folder'], dataset)
-        output_name = os.path.join(config_dict['meta_data']['output_folder'], dataset)
+    for dataset in config_dict["dataset_list"]:
+        anaTuples_directory = os.path.join(
+            config_dict["meta_data"]["input_folder"], dataset
+        )
+        output_name = os.path.join(config_dict["meta_data"]["output_folder"], dataset)
         output_name += ".root"
         create_file(
             config_dict,
@@ -255,5 +253,5 @@ if __name__ == "__main__":
             general_cfg_dict,
             args.period,
             output_name,
-            anaTuples_directory
+            anaTuples_directory,
         )

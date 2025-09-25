@@ -18,7 +18,6 @@ from FLAF.Common.Utilities import DeclareHeader
 
 class DNNProducer:
 
-
     def __init__(self, cfg, payload_name):
         # cfg is H_mumu/configs/global.yaml
         self.cfg = cfg
@@ -28,11 +27,13 @@ class DNNProducer:
         self._load_framework()
         self._set_environ_vars()
         self.parity, self.input_features = self._load_dnn_config()
-        #self.corrected_input_features = [f"{x}_renorm" for x in self.input_features]
+        # self.corrected_input_features = [f"{x}_renorm" for x in self.input_features]
         # Columns for tmp file
-        self.vars_to_save = self.input_features #+ self.corrected_input_features
+        self.vars_to_save = self.input_features  # + self.corrected_input_features
         # Final columns
-        self.cols_to_save = [ f"{self.payload_name}_{col}" for col in self.cfg['columns'] ]
+        self.cols_to_save = [
+            f"{self.payload_name}_{col}" for col in self.cfg["columns"]
+        ]
         self.models, self.renorm_vars = self._load_models()
 
     ### Init helpers ###
@@ -48,7 +49,6 @@ class DNNProducer:
             "FLAF/include/AnalysisMath.h",
         ]:
             DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
-
 
     def _load_global_config(self):
         filepath = os.path.join(os.environ["ANALYSIS_PATH"], "config", "global.yaml")
@@ -70,11 +70,10 @@ class DNNProducer:
             models.append(model)
             # Renorm variables
             filename = os.path.join(directory, f"renorm_variables_{i}.pkl")
-            with open(filename, 'rb') as f:
+            with open(filename, "rb") as f:
                 v = pkl.load(f)
             renorm_vars.append(v)
         return models, renorm_vars
-
 
     def _load_dnn_config(self):
         """
@@ -82,23 +81,24 @@ class DNNProducer:
         """
         directory = os.path.join(os.environ["ANALYSIS_PATH"], "Studies", "DNN")
         filepath = os.path.join(directory, "configs", "config.toml")
-        with open(filepath, 'rb') as f:
+        with open(filepath, "rb") as f:
             config = tomllib.load(f)
-        pairity = config['kfold']['k']
+        pairity = config["kfold"]["k"]
         # Input features
         filepath = os.path.join(directory, "ds_setup", "general.yaml")
         with open(filepath, "r") as f:
             columns_config = yaml.safe_load(f)
-        input_features = parse_column_names(columns_config['vars_to_save'], column_type="data")
+        input_features = parse_column_names(
+            columns_config["vars_to_save"], column_type="data"
+        )
         return pairity, input_features
-
 
     def _load_framework(self):
         """
         Load any needed files from FLAF
         """
-        sys.path.append(os.environ['ANALYSIS_PATH'])
-        ROOT.gROOT.ProcessLine(".include "+ os.environ['ANALYSIS_PATH'])
+        sys.path.append(os.environ["ANALYSIS_PATH"])
+        ROOT.gROOT.ProcessLine(".include " + os.environ["ANALYSIS_PATH"])
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/Utilities.h"')
         ROOT.gROOT.ProcessLine(f'#include "FLAF/include/HistHelper.h"')
         ROOT.gROOT.ProcessLine(f'#include "FLAF/include/AnalysisTools.h"')
@@ -110,23 +110,26 @@ class DNNProducer:
 
     def prepare_dfw(self, dfw):
         print("*********** Running prepare_dfw...")
-        dfw = analysis.DataFrameBuilderForHistograms(dfw.df, self.global_cfg, self.period)
+        dfw = analysis.DataFrameBuilderForHistograms(
+            dfw.df, self.global_cfg, self.period
+        )
         dfw = analysis.PrepareDfForHistograms(dfw)
         return dfw
-
 
     def ApplyDNN(self, branches):
         print("*********** Running ApplyDNN...")
         nEvents = len(branches)
-        event_number = np.array(getattr(branches, 'FullEventId'))
-        input_array = np.array([getattr(branches, feature_name) for feature_name in self.input_features]).transpose()
+        event_number = np.array(getattr(branches, "FullEventId"))
+        input_array = np.array(
+            [getattr(branches, feature_name) for feature_name in self.input_features]
+        ).transpose()
         all_predictions = np.zeros([nEvents, self.parity])
         for parityIdx, (sess, (m, s)) in enumerate(zip(self.models, self.renorm_vars)):
             m = np.repeat(m[np.newaxis, :], input_array.shape[0], axis=0)
             s = np.repeat(s[np.newaxis, :], input_array.shape[0], axis=0)
             input_name = sess.get_inputs()[0].name
             label_name = sess.get_outputs()[0].name
-            x = (input_array - m)/s
+            x = (input_array - m) / s
             print("Input name:", input_name)
             print("Label name:", label_name)
             print("X:", x.shape)
@@ -136,24 +139,23 @@ class DNNProducer:
             all_predictions[:, parityIdx] = predictions.reshape(predictions.shape[0])
         final_predictions = np.sum(all_predictions, axis=1)
         # Last save the branches
-        branches['NNOutput'] = final_predictions.transpose().astype(np.float32)
+        branches["NNOutput"] = final_predictions.transpose().astype(np.float32)
         print("Finishing call, memory?")
         process = psutil.Process(os.getpid())
         mem_mb = process.memory_info().rss / 1024 / 1024
         print(f"Current memory usage: {mem_mb:.2f} MB")
         return branches
 
-
     def run(self, array):
         print("############# Running DNN producer")
         array = self.ApplyDNN(array)
         # Delete not-needed branches
         for col in array.fields:
-            if col not in self.cfg['columns']:
-                if col != 'FullEventId':
+            if col not in self.cfg["columns"]:
+                if col != "FullEventId":
                     del array[col]
         # Rename the branches
-        for col in self.cfg['columns']:
+        for col in self.cfg["columns"]:
             if col in array.fields:
                 array[f"{self.payload_name}_{col}"] = array[f"{col}"]
                 del array[f"{col}"]

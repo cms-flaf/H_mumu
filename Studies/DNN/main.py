@@ -128,7 +128,7 @@ if __name__ == "__main__":
         print(f"Device count: {torch.cuda.device_count()}")
         print(f"Current device: {torch.cuda.current_device()}")
     else:
-        print("*WARNING: training on CPU (slow)" )
+        print("*WARNING: training on CPU (slow)")
         device = None
 
     # Start the k-fold training loop

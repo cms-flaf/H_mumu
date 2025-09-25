@@ -611,9 +611,9 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.defineSignRegions()
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
-    #dfBuilder.df = GetSoftJets(dfBuilder.df)
+    # dfBuilder.df = GetSoftJets(dfBuilder.df)
     dfBuilder.SignRegionDef()
     dfBuilder.defineRegions()
     dfBuilder.defineCategories()
-    #dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
+    # dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder
