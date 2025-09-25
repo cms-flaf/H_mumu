@@ -23,6 +23,7 @@ class Network(torch.nn.Module):
             self.to(device)
             self.double()
 
+
     def _build_layers(self, layer_list):
         layers = []
         ins = layer_list

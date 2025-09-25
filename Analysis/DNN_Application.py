@@ -34,7 +34,7 @@ class DNNProducer:
         self.cols_to_save = [
             f"{self.payload_name}_{col}" for col in self.cfg["columns"]
         ]
-        self.models, self.renorm_vars = self._load_models()
+        self.models = self._load_models()
 
     ### Init helpers ###
 
@@ -68,12 +68,7 @@ class DNNProducer:
             filename = os.path.join(directory, f"trained_model_{i}.onnx")
             model = ort.InferenceSession(filename)
             models.append(model)
-            # Renorm variables
-            filename = os.path.join(directory, f"renorm_variables_{i}.pkl")
-            with open(filename, "rb") as f:
-                v = pkl.load(f)
-            renorm_vars.append(v)
-        return models, renorm_vars
+        return models
 
     def _load_dnn_config(self):
         """
@@ -124,16 +119,13 @@ class DNNProducer:
             [getattr(branches, feature_name) for feature_name in self.input_features]
         ).transpose()
         all_predictions = np.zeros([nEvents, self.parity])
-        for parityIdx, (sess, (m, s)) in enumerate(zip(self.models, self.renorm_vars)):
-            m = np.repeat(m[np.newaxis, :], input_array.shape[0], axis=0)
-            s = np.repeat(s[np.newaxis, :], input_array.shape[0], axis=0)
+        for parityIdx, sess in enumerate(self.models):
             input_name = sess.get_inputs()[0].name
             label_name = sess.get_outputs()[0].name
-            x = (input_array - m) / s
             print("Input name:", input_name)
             print("Label name:", label_name)
-            print("X:", x.shape)
-            predictions = sess.run([label_name], {input_name: x})[0]
+            print("X:", input_array.shape)
+            predictions = sess.run([label_name], {input_name: input_array})[0]
             mask = (event_number % self.parity) != parityIdx
             predictions[mask] = 0
             all_predictions[:, parityIdx] = predictions.reshape(predictions.shape[0])

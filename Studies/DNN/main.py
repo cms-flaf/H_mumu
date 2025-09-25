@@ -15,6 +15,7 @@ from model_generation.network import Network
 from model_generation.preprocess import Preprocessor
 from model_generation.test import Tester
 from model_generation.train import Trainer
+from model_generation.onnx_exporter import export_to_onnx
 
 """
 This is the high-level script describing a full train/test cycle.
@@ -191,33 +192,19 @@ if __name__ == "__main__":
         os.chdir(run_name)
         print("Saving outputs to", run_name)
 
-        # Save the input renorm variables
-        if m is not None and s is not None:
-            with open(f"renorm_variables_{i}.pkl", "wb") as f:
-                pkl.dump((m, s), f)
-
         # Save output files
         trainer.plot_losses()
         trainer.plot_losses(valid=True)
         trainer.write_loss_data()
         outname = f"trained_model_{i}"
 
-        # Save model
+        # Save model (torch)
         with open(outname + ".torch", "wb") as f:
             torch.save(model, f)
         (x_data, _), _ = train_data
-        if device is None:
-            x = torch.tensor(x_data, device=device)
-        else:
-            x = torch.tensor(x_data, device=device, dtype=torch.double)
-        torch.onnx.export(
-            model=model,
-            args=(x[0:3]),
-            f=outname + ".onnx",
-            input_names=["x"],
-            output_names=["y"],
-            dynamic_axes={"x": [0], "y": [0]},
-        )
+        # Save model (onnx)
+        export_to_onnx(x_data, model, outname, device, m, s)
+
         # Back to the main kfold dir
         os.chdir(base_dir)
 
