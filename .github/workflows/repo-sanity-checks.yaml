@@ -1,0 +1,14 @@
+name: Check repository state
+
+on:
+  pull_request:
+    types: [ "opened", "synchronize", "reopened", "labeled" ]
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  sanity-checks:
+    uses: cms-flaf/FLAF/.github/workflows/repo-sanity-checks.yaml@main
+    secrets: inherit
