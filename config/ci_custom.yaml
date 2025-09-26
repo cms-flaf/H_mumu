@@ -6,5 +6,5 @@ compute_unc_variations: true
 compute_unc_histograms: true
 store_noncentral: true
 
-vars_to_plot:
+variables:
   - mu1_pt
