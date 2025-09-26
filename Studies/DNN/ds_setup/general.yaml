@@ -33,7 +33,6 @@ vars_to_save:
     - y_mumu
     - phi_CS
   Global:
-    ### evt info ###
     - FullEventId
     - luminosityBlock
     - isData
@@ -44,23 +43,23 @@ vars_to_save:
   Categories:
     - HasVBF
     - baseline
-    #- baseline_Zmumu
+    # - baseline_Zmumu
     - ggH
-    #- ggH_Zmumu
-    #- ggH_Zmumu_JetVeto
+    # - ggH_Zmumu
+    # - ggH_Zmumu_JetVeto
     - VBF
     - VBF_JetVeto
-    #- VBF_Zmumu
-    #- VBF_Zmumu_JetVeto
+    # - VBF_Zmumu
+    # - VBF_Zmumu_JetVeto
   Regions:
     - Signal_ext
     - H_sideband
     - Signal_Fit
   Sign:
     - OS
-  #nJets:
-  #  - nJet
-  #  - nSelectedJet
+  # nJets:
+  # - nJet
+  # - nSelectedJet
   Weight:
     # - weight_mu1_HighPt_MuonID_SF_MediumIDCentral
     # - weight_mu1_HighPt_MuonID_SF_RecoCentral
