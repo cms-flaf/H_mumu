@@ -70,20 +70,20 @@ categories:
 category_definition:
   #### COMPARISON WITH RUN 2 ####
   # the baseline selection requires OS -- > Opposite Sign of muons charge (as in Run2, obv), and either the first or the second muon matching the online object and passing the pT threshold driven by the trigger (which is always 26 GeV in Run3 up to now) -- See AN/2019_185 lines 123 - 130
-  baseline: "OS && ((mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu))"
+  baseline: "OS && ( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu && !mu2_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu && !mu1_HasMatching_singleMu) )"
+  baseline_preVBF: "OS && ( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu && !mu2_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu && !mu1_HasMatching_singleMu) ) && nonOverlapping_Njet > 0"
   #### COMPARISON WITH RUN 2 ####
   # VBF category and def is the same w.r.t run 2
-  VBF_def: "HasVBF && Jet_preselection && NoOverlapWithMuons && j1_pt > 35 && j2_pt > 25"
-
-  VBF: "baseline && VBF_def"
+  VBF_def: "baseline_preVBF && HasVBF"
+  VBF: "VBF_def && j1_pt > 35 && j2_pt > 25 "
   # ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
-  ggH: "baseline && !(VBF_def)"
+  ggH: "baseline && !(VBF)"
 
   # This is only introduced for Run3 jet horn issue!!
   # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
   # non-physics dependent, but related to Jet Energy Correction and Scale
-  VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
+  VBF_JetVeto_def: "VBF && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
   VBF_JetVeto: "baseline && VBF_JetVeto_def"
 
 # DIFFERENCES WITH RUN2:

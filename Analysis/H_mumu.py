@@ -136,11 +136,19 @@ def VBFJetSelection(df):
         f"SelectedJet_p4",
         f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)",
     )
-    # df = df.Define(f"JetVeto", f"SelectedJet_btagDeepFlavB")
-    # https://btv-wiki.docs.cern.ch/ScaleFactors/Run3Summer22EE/#ak4-b-tagging
+    #### Check nEvents before any jet selection ####
+    # print(f"before preSelecting")
+    # print(df.Count().GetValue())
 
-    ####  COMPARISON WITH RUN2 ####
-    # In Run2, the DeepCSV Algorithm was used (see AN/2019_185 lines 106 - 112 ). In Run3 the ParticleNet is recommended in place of DeepCSV/DeepJet
+    #### Jet PreSelection ####
+    df = df.Define("SelectedJet_preSel", f"""v_ops::pt(SelectedJet_p4) > 20 && abs(v_ops::eta(SelectedJet_p4))< 4.7 && (SelectedJet_jetId & 2) """)
+    df = df.Define("SelectedJet_preSel_2", "SelectedJet_preSel && !SelectedJet_vetoMap")
+    df = df.Define(f"NJets_preSelected", "SelectedJet_p4[SelectedJet_preSel_2].size()")
+    #### Check nEvents after basic requirements ####
+    # print(f"after preSelecting")
+    # print(df.Filter("NJets_preSelected>0").Count().GetValue())
+
+    #### Final state definitions: removing bTagged jets ####
     df = df.Define(
         "Jet_Veto_loose", "SelectedJet_btagPNetB >= 0.0499"
     )  # 0.0499 is the loose working point for PNet B-tagging in Run3
@@ -148,28 +156,23 @@ def VBFJetSelection(df):
         "Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605"
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
+    df = df.Define("JetTagSel", "SelectedJet_p4[SelectedJet_preSel_2 && Jet_Veto_medium].size() < 1  && SelectedJet_p4[SelectedJet_preSel_2 && Jet_Veto_loose].size() < 2").Filter("JetTagSel") # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
+    #### Check nEvents after b-tagged jets exclusion ####
+    # print("after JetTagSel")
+    # print(df.Filter("JetTagSel").Count().GetValue())
 
-    ####  COMPARISON WITH RUN2 ####
-    # in Run2 there was not this JetVetoMap for or at least it's not described in the AN.
-    df = df.Define("SelectedJet_vetoMap_inverted", "!SelectedJet_vetoMap").Define(
-        "Jet_preselection",
-        "JetSel && SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ",
-    )  # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
+    df = df.Define(f"NoOverlapWithMuons",  f"RemoveOverlaps(SelectedJet_p4, SelectedJet_preSel_2, {{mu1_p4, mu2_p4}}, 0.4)" )
+    df = df.Define(f"nonOverlapping_Njet", "SelectedJet_p4[NoOverlapWithMuons].size()")
+    #### Check nEvents after no overlap with muons ####
+    # print(f"after non overlap with muons")
+    # print(df.Filter("nonOverlapping_Njet>0").Count().GetValue())
 
-    df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4)")
-    df = df.Define("HasVBF_0", "return static_cast<bool>(VBFJetCand.isVBF)")
-    df = df.Define("HasVBF", "HasVBF_0 && Jet_preselection")
-    ####  COMPARISON WITH RUN2 ####
-    # No overlap between VBF Jet Candidates and muons AN/2019_185 lines 103-104 - in future it will be extended to any jet, but it's fine to keep as it is now as the selection is applied when VBF jet candidates are defined
-    df = df.Define(
-        "NoOverlapWithMuons",
-        f"""
-                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu1_p4) >= std::pow(0.4, 2) &&
-                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu1_p4) >= std::pow(0.4, 2) &&
-                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu2_p4) >= std::pow(0.4, 2) &&
-                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu2_p4) >= std::pow(0.4, 2)
-                   """,
-    )
+    df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4[NoOverlapWithMuons])")
+    df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF) ")
+    #### Check nEvents after VBF definition ####
+    # print("after VBF def")
+    # print(df.Filter("HasVBF").Count().GetValue())
+    # print()
     df = df.Define(
         "m_jj",
         "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f",
@@ -223,7 +226,7 @@ def VBFJetSelection(df):
         "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;",
     )
 
-    df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Phi()")
+    df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Pt()")
     df = df.Define(
         "VBFjets_pt",
         f"RVecF void_pt {{}} ; if (HasVBF) return v_ops::pt(VBFJetCand.legs_p4); return void_pt;",

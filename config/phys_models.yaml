@@ -7,7 +7,7 @@ BaseModel:
     - DYToMuMu_amcatnloFXFX
     # - W
     - W_NJets
-    # - EWK
+    - EWK
     - EWK_LLJJ
     # - EWK_LLJJ_herwig
     - H_mainBckg
