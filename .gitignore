@@ -8,3 +8,5 @@ __pycache__
 AnaProd/tasks.py
 *.txt
 /output
+*.root
+/H_mumu/Studies/DNN/results
