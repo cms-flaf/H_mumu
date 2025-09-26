@@ -1,6 +1,7 @@
 authorized_users:
   - kandrosov
   - valeriadamante
+  - acyeagle
 
 expected_headers:
   - "@cms-flaf-bot test"
