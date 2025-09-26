@@ -141,7 +141,10 @@ def VBFJetSelection(df):
     # print(df.Count().GetValue())
 
     #### Jet PreSelection ####
-    df = df.Define("SelectedJet_preSel", f"""v_ops::pt(SelectedJet_p4) > 20 && abs(v_ops::eta(SelectedJet_p4))< 4.7 && (SelectedJet_jetId & 2) """)
+    df = df.Define(
+        "SelectedJet_preSel",
+        f"""v_ops::pt(SelectedJet_p4) > 20 && abs(v_ops::eta(SelectedJet_p4))< 4.7 && (SelectedJet_jetId & 2) """,
+    )
     df = df.Define("SelectedJet_preSel_2", "SelectedJet_preSel && !SelectedJet_vetoMap")
     df = df.Define(f"NJets_preSelected", "SelectedJet_p4[SelectedJet_preSel_2].size()")
     #### Check nEvents after basic requirements ####
@@ -156,12 +159,20 @@ def VBFJetSelection(df):
         "Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605"
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
-    df = df.Define("JetTagSel", "SelectedJet_p4[SelectedJet_preSel_2 && Jet_Veto_medium].size() < 1  && SelectedJet_p4[SelectedJet_preSel_2 && Jet_Veto_loose].size() < 2").Filter("JetTagSel") # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
+    df = df.Define(
+        "JetTagSel",
+        "SelectedJet_p4[SelectedJet_preSel_2 && Jet_Veto_medium].size() < 1  && SelectedJet_p4[SelectedJet_preSel_2 && Jet_Veto_loose].size() < 2",
+    ).Filter(
+        "JetTagSel"
+    )  # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
     #### Check nEvents after b-tagged jets exclusion ####
     # print("after JetTagSel")
     # print(df.Filter("JetTagSel").Count().GetValue())
 
-    df = df.Define(f"NoOverlapWithMuons",  f"RemoveOverlaps(SelectedJet_p4, SelectedJet_preSel_2, {{mu1_p4, mu2_p4}}, 0.4)" )
+    df = df.Define(
+        f"NoOverlapWithMuons",
+        f"RemoveOverlaps(SelectedJet_p4, SelectedJet_preSel_2, {{mu1_p4, mu2_p4}}, 0.4)",
+    )
     df = df.Define(f"nonOverlapping_Njet", "SelectedJet_p4[NoOverlapWithMuons].size()")
     #### Check nEvents after no overlap with muons ####
     # print(f"after non overlap with muons")
