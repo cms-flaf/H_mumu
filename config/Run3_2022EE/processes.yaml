@@ -1,4 +1,32 @@
+############## TT ##############
+TT:
+  name: "t#bar{t}"
+  color: "kGreen-3"  # eliminates need for plot.yaml
+  color_mplhep: darkblue  # turquoise
+  datasets:
+    - TTto2L2Nu
+    - TTtoLNu2Q
+    - TTto4Q
+
+TT_Inclusive:
+  name: "t#bar{t} Inclusive"
+  color: "kGreen-3"
+  color_mplhep: darkblue  # turquoise
+  datasets:
+    - TT
+
 ############## DY ##############
+# DY:
+#   name: "DY M50"
+#   # cross_section_correction: 12/ 11  # NLO -> NNLO
+#   color: kAzure-9
+#   color_mplhep: lightskyblue
+#   datasets:
+#     - DYto2E_M_50_amcatnloFXFX
+#     - DYto2E_M_50_amcatnloFXFX_ext1
+#     - DYto2Mu_M_50_amcatnloFXFX
+#     - DYto2Mu_M_50_amcatnloFXFX_ext1
+
 DY:
   name: "DY M50"
   cross_section_correction: 12/ 11  # NLO -> NNLO
@@ -22,32 +50,7 @@ DYToMuMu_amcatnloFXFX:
   color_mplhep: lightskyblue
   datasets:
     - DYto2Mu_M_50_amcatnloFXFX
-    # - DYto2Mu_M_50_amcatnloFXFX_ext1
-
-DYToMuMu_MiNNLO:
-  name: "DY $\\rightarrow \\ell \\ell$ + jets"
-  color: kAzure-9
-  color_mplhep: lightskyblue
-  datasets:
-    - DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
-    # - DYToMuMu-M50_13p6TeV_MiNNLO_pythia8_ext1
-
-############## TT ##############
-TT:
-  name: "t#bar{t}"
-  color: "kGreen-3"  # eliminates need for plot.yaml
-  color_mplhep: darkgreen  # turquoise
-  datasets:
-    - TTto2L2Nu
-    - TTtoLNu2Q
-    - TTto4Q
-
-TT_Inclusive:
-  name: "t#bar{t} Inclusive"
-  color: "kGreen-3"
-  color_mplhep: darkgreen  # turquoise
-  datasets:
-    - TT
+    - DYto2Mu_M_50_amcatnloFXFX_ext1
 
 
 ############## WJetsToLNu ##############
@@ -67,55 +70,14 @@ W_NJets:
     - WtoLNu_1J_amcatnloFXFX
     - WtoLNu_2J_amcatnloFXFX
 
-############## EWK ##############
-EWK_LLJJ:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: seagreen
-  datasets:
-    - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole
-    # - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole_ext1
 
 EWK:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: seagreen
+  color_mplhep: darkmagenta
   datasets:
     - EWK_2L2J_madgraph_herwig
 
-# EWK_LLJJ_herwig:
-#   name: "EWK"
-#   color: kMagenta+3
-#   color_mplhep: seagreen
-#   datasets:
-#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
-#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1
-#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2
-
-EWK_LLJJ_M105_160:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: seagreen
-  datasets:
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext2
-
-EWK_LLJJ_M105_160_VBFFilter:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: seagreen
-  datasets:
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext1
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext2
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext3
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext4
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext5
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext6
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext7
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext8
-    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9
 
 ############## Other single H  ##############
 H_mainBckg:
@@ -134,7 +96,7 @@ H_mainBckg:
 VV_Inclusive:
   name: "VV Inclusive"
   color: kPink+2
-  color_mplhep: violet
+  color_mplhep: mistyrose
   datasets:
     - WW
     - WZ
@@ -143,7 +105,7 @@ VV_Inclusive:
 VV:
   name: "VV"
   color: kPink+2
-  color_mplhep: violet
+  color_mplhep: mistyrose
   datasets:
     - WWto2L2Nu_powheg
     - WWto4Q_powheg
@@ -160,7 +122,7 @@ VV:
 VH_inclusive:
   name: "VH"
   color: kPink+2
-  color_mplhep: slateblue
+  color_mplhep: tan
   datasets:
     - ZH_Hto2B_Zto2L
     - ZH_Hto2B_Zto2Q
@@ -175,7 +137,7 @@ VH_inclusive:
 VVV:
   name: "VVV"
   color: kOrange-4
-  color_mplhep: mediumvioletred
+  color_mplhep: plum
   datasets:
     - WWW_4F
     - WWZ_4F
@@ -186,7 +148,7 @@ VVV:
 ST:
   name: "ST"
   color: kCyan-1
-  color_mplhep: bisque
+  color_mplhep: lightgreen
   datasets:
     - TbarBtoLminusNuB_s_channel_4FS
     - TBbartoLplusNuBbar_s_channel_4FS
@@ -198,7 +160,7 @@ ST:
 TW:
   name: "TW"
   color: kCyan-1
-  color_mplhep: darkorange
+  color_mplhep: olivedrab
   datasets:
     - TWminusto2L2Nu
     - TWminusto4Q
@@ -225,16 +187,9 @@ TTX:
 VBFHto2Mu:
   name: "VBFHto2Mu"
   color: "kPink"
-  color_mplhep: fuchsia
+  color_mplhep: magenta
   datasets:
     - VBFHto2Mu
-
-VBFHto2Mu_Herwig:
-  name: "VBFHto2Mu_Herwig"
-  color: "kPink"
-  color_mplhep: fuchsia
-  datasets:
-    - VBFHto2Mu_Herwig
 
 ############## ggH signal ##############
 
@@ -273,40 +228,36 @@ TTH_inclusive:
     - TTHtoNon2B_M125
     - TTHto2B_M125
 
-
 Data_Full:
   name: "Data"
   datasets:
-    - EGamma_Run2022C
-    - EGamma_Run2022D
-    - Muon_Run2022C
-    - Muon_Run2022D
-    - SingleMuon_Run2022C
-    - DoubleMuon_Run2022C
-    - MuonEG_Run2022C
-    - MuonEG_Run2022D
+    - EGamma_Run2022E
+    - EGamma_Run2022F
+    - EGamma_Run2022G
+    - Muon_Run2022E
+    - Muon_Run2022F
+    - Muon_Run2022G
+    - MuonEG_Run2022E
+    - MuonEG_Run2022F
+    - MuonEG_Run2022G
 
 Data_EGamma:
   name: "Data EGamma"
   datasets:
-    - EGamma_Run2022C
-    - EGamma_Run2022D
+    - EGamma_Run2022E
+    - EGamma_Run2022F
+    - EGamma_Run2022G
 
 Data_Muon:
   name: "Data Muon"
   datasets:
-    # - SingleMuon_Run2022C
-    # - DoubleMuon_Run2022C
-    - Muon_Run2022C
-    - Muon_Run2022D
+    - Muon_Run2022E
+    - Muon_Run2022F
+    - Muon_Run2022G
 
 Data_MuonEG:
   name: "Data MuonEG"
   datasets:
-    - MuonEG_Run2022C
-
-Other:
-  name: "Other"
-  color: kGray+1
-  color_mplhep: slateblue
-  datasets: []
+    - MuonEG_Run2022E
+    - MuonEG_Run2022F
+    - MuonEG_Run2022G

@@ -1,13 +1,13 @@
 BaseModel:
   name: "Base Model"
   backgrounds:
-    - TT
     - DY
-    - DYToMuMu_MiNNLO
-    - DYToMuMu_amcatnloFXFX
+    - TT
+    # - DYToMuMu_MiNNLO
+    # - DYToMuMu_amcatnloFXFX
     # - W
     - W_NJets
-    - EWK
+    # - EWK
     - EWK_LLJJ
     # - EWK_LLJJ_herwig
     - H_mainBckg
@@ -20,7 +20,7 @@ BaseModel:
     - VVV
   signals:
     - VBFHto2Mu
-    - VBFHto2Mu_Herwig
+    # - VBFHto2Mu_Herwig
     - GluGluHto2Mu
   data:
     - Data_Muon

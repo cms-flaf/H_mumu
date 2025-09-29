@@ -128,7 +128,7 @@ def GetBTagWeight(global_cfg_dict, cat, applyBtag=False):
     return f"{btag_weight}*{btagshape_weight}"
 
 
-def VBFJetSelection(df):
+def JetCollectionDef(df):
     if "SelectedJet_idx" not in df.GetColumnNames():
         print("SelectedJet_idx not in df.GetColumnNames")
         df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
@@ -136,54 +136,59 @@ def VBFJetSelection(df):
         f"SelectedJet_p4",
         f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)",
     )
-    #### Check nEvents before any jet selection ####
-    # print(f"before preSelecting")
-    # print(df.Count().GetValue())
 
     #### Jet PreSelection ####
     df = df.Define(
         "SelectedJet_preSel",
         f"""v_ops::pt(SelectedJet_p4) > 20 && abs(v_ops::eta(SelectedJet_p4))< 4.7 && (SelectedJet_jetId & 2) """,
     )
-    df = df.Define("SelectedJet_preSel_2", "SelectedJet_preSel && !SelectedJet_vetoMap")
-    df = df.Define(f"NJets_preSelected", "SelectedJet_p4[SelectedJet_preSel_2].size()")
-    #### Check nEvents after basic requirements ####
-    # print(f"after preSelecting")
-    # print(df.Filter("NJets_preSelected>0").Count().GetValue())
-
-    #### Final state definitions: removing bTagged jets ####
     df = df.Define(
-        "Jet_Veto_loose", "SelectedJet_btagPNetB >= 0.0499"
+        "SelectedJet_preSel_andDeadZoneVetoMap",
+        "SelectedJet_preSel && !SelectedJet_vetoMap",
+    )
+
+    df = df.Define(
+        f"SelectedJet_NoOverlapWithMuons",
+        f"RemoveOverlaps(SelectedJet_p4, SelectedJet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
+    )
+
+    ### Final state definitions: removing bTagged jets - deepJet ####
+    df = df.Define(
+        "Jet_btag_Veto_loose_deepJet",
+        "SelectedJet_btagDeepFlavB >= 0.0614 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
+    )
+    df = df.Define(
+        "Jet_btag_Veto_medium_deepJet",
+        "SelectedJet_btagDeepFlavB >= 0.3196 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
+    )
+    df = df.Define(
+        "JetTagSel_deepJet",
+        "SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
+    )
+
+    #### Final state definitions: removing bTagged jets - pNet ####
+    df = df.Define(
+        "Jet_btag_Veto_loose",
+        "SelectedJet_btagPNetB >= 0.0499 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
     )  # 0.0499 is the loose working point for PNet B-tagging in Run3
     df = df.Define(
-        "Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605"
+        "Jet_btag_Veto_medium",
+        "SelectedJet_btagPNetB >= 0.2605 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
     df = df.Define(
         "JetTagSel",
-        "SelectedJet_p4[SelectedJet_preSel_2 && Jet_Veto_medium].size() < 1  && SelectedJet_p4[SelectedJet_preSel_2 && Jet_Veto_loose].size() < 2",
-    ).Filter(
-        "JetTagSel"
-    )  # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
-    #### Check nEvents after b-tagged jets exclusion ####
-    # print("after JetTagSel")
-    # print(df.Filter("JetTagSel").Count().GetValue())
-
-    df = df.Define(
-        f"NoOverlapWithMuons",
-        f"RemoveOverlaps(SelectedJet_p4, SelectedJet_preSel_2, {{mu1_p4, mu2_p4}}, 0.4)",
+        "SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2",
     )
-    df = df.Define(f"nonOverlapping_Njet", "SelectedJet_p4[NoOverlapWithMuons].size()")
-    #### Check nEvents after no overlap with muons ####
-    # print(f"after non overlap with muons")
-    # print(df.Filter("nonOverlapping_Njet>0").Count().GetValue())
+    return df
 
-    df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4[NoOverlapWithMuons])")
+
+def VBFJetSelection(df):
+    df = df.Define(
+        "VBFJetCand", "FindVBFJets(SelectedJet_p4,SelectedJet_NoOverlapWithMuons)"
+    )
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF) ")
-    #### Check nEvents after VBF definition ####
-    # print("after VBF def")
-    # print(df.Filter("HasVBF").Count().GetValue())
-    # print()
+
     df = df.Define(
         "m_jj",
         "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f",
@@ -554,6 +559,12 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
+    def defineSampleType(self):
+        self.df = self.df.Define(
+            f"sample_type",
+            f"""std::string process_name = "{self.config["process_name"]}"; return process_name;""",
+        )
+
     def defineRegions(self):
         region_defs = self.config["MuMuMassRegions"]
         for reg_name, reg_cut in region_defs.items():
@@ -599,11 +610,14 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
+
     dfForHistograms.defineChannels()
+    dfForHistograms.defineSampleType()
     dfForHistograms.defineTriggers()
     # dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
+    dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
@@ -621,6 +635,7 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.df = GetMuMuObservables(dfBuilder.df)
     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
     dfBuilder.defineSignRegions()
+    dfBuilder.df = JetCollectionDef(dfBuilder.df)
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
     dfBuilder.df = GetSoftJets(dfBuilder.df)
