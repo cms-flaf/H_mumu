@@ -309,4 +309,4 @@ Other:
   name: "Other"
   color: kGray+1
   color_mplhep: slateblue
-  datasets: []
+  datasets: [ ]
