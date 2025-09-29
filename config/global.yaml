@@ -77,7 +77,6 @@ categories:
   - ggH_deepJet
 
 
-
 category_definition:
   #### COMPARISON WITH RUN 2 ####
   # the baseline selection requires OS -- > Opposite Sign of muons charge (as in Run2, obv), and either the first or the second muon matching the online object and passing the pT threshold driven by the trigger (which is always 26 GeV in Run3 up to now) -- See AN/2019_185 lines 123 - 130
@@ -85,26 +84,20 @@ category_definition:
   OS_sel: "OS"
   trigger_sel: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
   baseline: "OS_sel && trigger_sel"
-
   JetTagSel_deepJet_sel: "baseline && JetTagSel_deepJet"
   JetTagSel_def_sel: "baseline && JetTagSel"
-
-
   #### COMPARISON WITH RUN 2 ####
   # VBF category and def is the same w.r.t run 2
   VBF_def: "JetTagSel_def_sel && HasVBF"
   VBF: "VBF_def && j1_pt > 35 && j2_pt > 25 "
   # ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
   ggH: "JetTagSel_def_sel && !(VBF)"
-
-
   #### COMPARISON WITH RUN 2 ####
   # VBF category and def is the same w.r.t run 2
   VBF_def_deepJet: "JetTagSel_deepJet_sel && HasVBF"
   VBF_deepJet: "VBF_def_deepJet && j1_pt > 35 && j2_pt > 25 "
   # ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
   ggH_deepJet: "JetTagSel_deepJet_sel && !(VBF)"
-
   # This is only introduced for Run3 jet horn issue!!
   # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
