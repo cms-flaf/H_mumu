@@ -6,23 +6,6 @@ if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
 
-defaultColToSave = [
-    "FullEventId",
-    "luminosityBlock",
-    "run",
-    "event",
-    "sample_type",
-    "period",
-    "isData",
-    "PuppiMET_pt",
-    "PuppiMET_phi",
-    "nJet",
-    "DeepMETResolutionTune_pt",
-    "DeepMETResolutionTune_phi",
-    "DeepMETResponseTune_pt",
-    "DeepMETResponseTune_phi",
-    "PV_npvs",
-]
 initialized = False
 analysis = None
 
@@ -34,7 +17,9 @@ def Initialize():
         ROOT.gROOT.ProcessLine(f".include {os.environ['ANALYSIS_PATH']}")
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/HistHelper.h"')
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/Utilities.h"')
-        ROOT.gInterpreter.Declare(f'#include "FLAF/include/pnetSF.h"')
+        ROOT.gInterpreter.Declare(
+            f'#include "FLAF/include/pnetSF.h"'
+        )  # do we need this??
         ROOT.gROOT.ProcessLine('#include "FLAF/include/AnalysisTools.h"')
         ROOT.gROOT.ProcessLine('#include "FLAF/include/AnalysisMath.h"')
         ROOT.gInterpreter.Declare(
@@ -94,7 +79,7 @@ def DefineWeightForHistograms(
     process_group = global_params["process_group"]
     isCentral = uncName == "Central"
     total_weight_expression = (
-        analysis.GetWeight("muMu", "", "") if process_group != "data" else "1"
+        analysis.GetWeight() if process_group != "data" else "1"
     )  # are we sure?
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
