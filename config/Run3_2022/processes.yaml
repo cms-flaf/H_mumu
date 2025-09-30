@@ -34,7 +34,7 @@ DYToMuMu_MiNNLO:
 
 ############## TT ##############
 TT:
-  name: "t#bar{t}"
+  name: "t $\\bar{t}$"
   color: "kGreen-3"  # eliminates need for plot.yaml
   color_mplhep: darkgreen  # turquoise
   datasets:
@@ -59,7 +59,7 @@ W:
     - WtoLNu_amcatnloFXFX
 
 W_NJets:
-  name: "W"
+  name: "W $\\rightarrow \\ell \\nu$+ jets"
   color: "kGreen"  # eliminates need for plot.yaml
   color_mplhep: yellow
   datasets:
@@ -71,7 +71,7 @@ W_NJets:
 EWK_LLJJ:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: seagreen
+  color_mplhep: aqua
   datasets:
     - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole
     # - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole_ext1
@@ -79,23 +79,23 @@ EWK_LLJJ:
 EWK:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: seagreen
+  color_mplhep: aqua
   datasets:
     - EWK_2L2J_madgraph_herwig
 
-# EWK_LLJJ_herwig:
-#   name: "EWK"
-#   color: kMagenta+3
-#   color_mplhep: seagreen
-#   datasets:
-#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
-#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1
-#     - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2
+EWK_LLJJ_herwig:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: aqua
+  datasets:
+    - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
+    - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1
+    - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2
 
 EWK_LLJJ_M105_160:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: seagreen
+  color_mplhep: aqua
   datasets:
     - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
     # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1
@@ -104,7 +104,7 @@ EWK_LLJJ_M105_160:
 EWK_LLJJ_M105_160_VBFFilter:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: seagreen
+  color_mplhep: aqua
   datasets:
     - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
     # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext1
@@ -121,7 +121,7 @@ EWK_LLJJ_M105_160_VBFFilter:
 H_mainBckg:
   name: "Single H"
   color: kPink
-  color_mplhep: darkgreen
+  color_mplhep: coral
   datasets:
     - GluGluHto2Tau_M125
     - GluGluHto2B_M125
@@ -211,7 +211,7 @@ TW:
 TTX:
   name: "TT+X"
   color: kBlue-10
-  color_mplhep: red
+  color_mplhep: cadetblue
   datasets:
     - TTWH
     - TTWW
@@ -234,7 +234,9 @@ VBFHto2Mu_Herwig:
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_Herwig
+    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
+    # - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
+    # - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
 
 ############## ggH signal ##############
 
