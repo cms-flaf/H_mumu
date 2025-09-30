@@ -129,64 +129,62 @@ def GetBTagWeight(global_cfg_dict, cat, applyBtag=False):
 
 
 def JetCollectionDef(df):
-    if "SelectedJet_idx" not in df.GetColumnNames():
-        print("SelectedJet_idx not in df.GetColumnNames")
-        df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
+    if "Jet_idx" not in df.GetColumnNames():
+        print("Jet_idx not in df.GetColumnNames")
+        df = df.Define(f"Jet_idx", f"CreateIndexes(Jet_pt.size())")
     df = df.Define(
-        f"SelectedJet_p4",
-        f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)",
+        f"Jet_p4",
+        f"GetP4(Jet_pt, Jet_eta, Jet_phi, Jet_mass, Jet_idx)",
     )
 
     #### Jet PreSelection ####
     df = df.Define(
-        "SelectedJet_preSel",
-        f"""v_ops::pt(SelectedJet_p4) > 20 && abs(v_ops::eta(SelectedJet_p4))< 4.7 && (SelectedJet_jetId & 2) """,
+        "Jet_preSel",
+        f"""v_ops::pt(Jet_p4) > 20 && abs(v_ops::eta(Jet_p4))< 4.7 && (Jet_jetId & 2) """,
     )
     df = df.Define(
-        "SelectedJet_preSel_andDeadZoneVetoMap",
-        "SelectedJet_preSel && !SelectedJet_vetoMap",
+        "Jet_preSel_andDeadZoneVetoMap",
+        "Jet_preSel && !Jet_vetoMap",
     )
 
     df = df.Define(
-        f"SelectedJet_NoOverlapWithMuons",
-        f"RemoveOverlaps(SelectedJet_p4, SelectedJet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
+        f"Jet_NoOverlapWithMuons",
+        f"RemoveOverlaps(Jet_p4, Jet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
     )
 
     ### Final state definitions: removing bTagged jets - deepJet ####
     df = df.Define(
         "Jet_btag_Veto_loose_deepJet",
-        "SelectedJet_btagDeepFlavB >= 0.0614 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
+        "Jet_btagDeepFlavB >= 0.0614 && abs(v_ops::eta(Jet_p4))< 2.5 ",
     )
     df = df.Define(
         "Jet_btag_Veto_medium_deepJet",
-        "SelectedJet_btagDeepFlavB >= 0.3196 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
+        "Jet_btagDeepFlavB >= 0.3196 && abs(v_ops::eta(Jet_p4))< 2.5 ",
     )
     df = df.Define(
         "JetTagSel_deepJet",
-        "SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
+        "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
     )
 
     #### Final state definitions: removing bTagged jets - pNet ####
     df = df.Define(
         "Jet_btag_Veto_loose",
-        "SelectedJet_btagPNetB >= 0.0499 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
+        "Jet_btagPNetB >= 0.0499 && abs(v_ops::eta(Jet_p4))< 2.5 ",
     )  # 0.0499 is the loose working point for PNet B-tagging in Run3
     df = df.Define(
         "Jet_btag_Veto_medium",
-        "SelectedJet_btagPNetB >= 0.2605 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
+        "Jet_btagPNetB >= 0.2605 && abs(v_ops::eta(Jet_p4))< 2.5 ",
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
-    # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
+    # df = df.Define("Jet_Veto_tight", "Jet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
     df = df.Define(
         "JetTagSel",
-        "SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2",
+        "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2",
     )
     return df
 
 
 def VBFJetSelection(df):
-    df = df.Define(
-        "VBFJetCand", "FindVBFJets(SelectedJet_p4,SelectedJet_NoOverlapWithMuons)"
-    )
+    df = df.Define("VBFJetCand", "FindVBFJets(Jet_p4,Jet_NoOverlapWithMuons)")
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF) ")
 
     df = df.Define(
@@ -260,17 +258,17 @@ def VBFJetSelection(df):
         f"RVecF void_y {{}} ; if (HasVBF) return v_ops::rapidity(VBFJetCand.legs_p4); return void_y;",
     )
     for var in JetObservables:
-        if f"SelectedJet_{var}" not in df.GetColumnNames():
+        if f"Jet_{var}" not in df.GetColumnNames():
             continue
         if f"j1_{var}" not in df.GetColumnNames():
             df = df.Define(
                 "j1_" + var,
-                f"if (HasVBF && j1_idx >= 0) return static_cast<float>(SelectedJet_{var}[j1_idx]); return -1000.f;",
+                f"if (HasVBF && j1_idx >= 0) return static_cast<float>(Jet_{var}[j1_idx]); return -1000.f;",
             )
         if f"j2_{var}" not in df.GetColumnNames():
             df = df.Define(
                 "j2_" + var,
-                f"if (HasVBF && j2_idx >= 0) return static_cast<float>(SelectedJet_{var}[j2_idx]); return -1000.f;",
+                f"if (HasVBF && j2_idx >= 0) return static_cast<float>(Jet_{var}[j2_idx]); return -1000.f;",
             )
 
     return df
@@ -390,21 +388,21 @@ def VBFJetMuonsObservables(df):
 
 def GetSoftJets(df):
     df = df.Define(
-        "SoftJet_def_vtx", "(SelectedJet_svIdx1 < 0 && SelectedJet_svIdx2< 0 ) "
+        "SoftJet_def_vtx", "(Jet_svIdx1 < 0 && Jet_svIdx2< 0 ) "
     )  # no secondary vertex associated
-    df = df.Define("SoftJet_def_pt", " (SelectedJet_pt>2) ")  # pT > 2 GeV
+    df = df.Define("SoftJet_def_pt", " (Jet_pt>2) ")  # pT > 2 GeV
     df = df.Define(
         "SoftJet_def_muon",
-        "(SelectedJet_idx != mu1_jetIdx && SelectedJet_idx != mu2_jetIdx)",
+        "(Jet_idx != mu1_jetIdx && Jet_idx != mu2_jetIdx)",
     )  # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
     # df = df.Define(
     #     "SoftJet_def_muon",
-    #     "(SelectedJet_muonIdx1 != mu1_index && SelectedJet_muonIdx2 != mu2_index && SelectedJet_muonIdx2 != mu1_index && SelectedJet_muonIdx2 != mu2_index)",
+    #     "(Jet_muonIdx1 != mu1_index && Jet_muonIdx2 != mu2_index && Jet_muonIdx2 != mu1_index && Jet_muonIdx2 != mu2_index)",
     # )  # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
 
     df = df.Define(
         "SoftJet_def_VBF",
-        " (HasVBF && SelectedJet_idx != j1_idx && SelectedJet_idx != j2_idx) ",
+        " (HasVBF && Jet_idx != j1_idx && Jet_idx != j2_idx) ",
     )  # if it is a VBF event, the soft jets are not the VBF jets
     df = df.Define("SoftJet_def_noVBF", " (!(HasVBF)) ")
 
@@ -413,36 +411,36 @@ def GetSoftJets(df):
         "SoftJet_def_vtx && SoftJet_def_pt && SoftJet_def_muon && (SoftJet_def_VBF || SoftJet_def_noVBF )",
     )
 
-    df = df.Define("N_softJet", "SelectedJet_p4[SoftJet_def].size()")
-    df = df.Define("SoftJet_energy", "v_ops::energy(SelectedJet_p4[SoftJet_def])")
-    df = df.Define("SoftJet_Et", "v_ops::Et(SelectedJet_p4[SoftJet_def])")
-    df = df.Define("SoftJet_HtCh_fraction", "SelectedJet_chHEF[SoftJet_def]")
-    df = df.Define("SoftJet_HtNe_fraction", "SelectedJet_neHEF[SoftJet_def]")
-    if "SelectedJet_hfHEF" in df.GetColumnNames():
-        df = df.Define("SoftJet_HtHF_fraction", "SelectedJet_hfHEF[SoftJet_def]")
+    df = df.Define("N_softJet", "Jet_p4[SoftJet_def].size()")
+    df = df.Define("SoftJet_energy", "v_ops::energy(Jet_p4[SoftJet_def])")
+    df = df.Define("SoftJet_Et", "v_ops::Et(Jet_p4[SoftJet_def])")
+    df = df.Define("SoftJet_HtCh_fraction", "Jet_chHEF[SoftJet_def]")
+    df = df.Define("SoftJet_HtNe_fraction", "Jet_neHEF[SoftJet_def]")
+    if "Jet_hfHEF" in df.GetColumnNames():
+        df = df.Define("SoftJet_HtHF_fraction", "Jet_hfHEF[SoftJet_def]")
     for var in JetObservables:
         if f"SoftJet_{var}" not in df.GetColumnNames():
             if (
                 f"SoftJet_{var}" not in df.GetColumnNames()
-                and f"SelectedJet_{var}" in df.GetColumnNames()
+                and f"Jet_{var}" in df.GetColumnNames()
             ):
-                df = df.Define(f"SoftJet_{var}", f"SelectedJet_{var}[SoftJet_def]")
+                df = df.Define(f"SoftJet_{var}", f"Jet_{var}[SoftJet_def]")
     for var in JetObservablesMC:
         if (
             f"SoftJet_{var}" not in df.GetColumnNames()
-            and f"SelectedJet_{var}" in df.GetColumnNames()
+            and f"Jet_{var}" in df.GetColumnNames()
         ):
-            df = df.Define(f"SoftJet_{var}", f"SelectedJet_{var}[SoftJet_def]")
+            df = df.Define(f"SoftJet_{var}", f"Jet_{var}[SoftJet_def]")
     return df
 
 
 def defineP4AndInvMass(df):
-    if "SelectedJet_idx" not in df.GetColumnNames():
-        print("SelectedJet_idx not in df.GetColumnNames")
-        df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
+    if "Jet_idx" not in df.GetColumnNames():
+        print("Jet_idx not in df.GetColumnNames")
+        df = df.Define(f"Jet_idx", f"CreateIndexes(Jet_pt.size())")
     df = df.Define(
-        f"SelectedJet_p4",
-        f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)",
+        f"Jet_p4",
+        f"GetP4(Jet_pt, Jet_eta, Jet_phi, Jet_mass, Jet_idx)",
     )
     for idx in [0, 1]:
         df = Utilities.defineP4(df, f"mu{idx+1}")
@@ -511,7 +509,7 @@ def SaveVarsForNNInput(variables):
     return variables
 
 
-def GetWeight(channel, A, B):
+def GetWeight(channel="muMu"):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
         "weight_EWKCorr_VptCentral",
