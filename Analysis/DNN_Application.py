@@ -9,6 +9,7 @@ import os
 import ROOT
 import tomllib
 import pickle as pkl
+from pprint import pprint
 
 from Studies.DNN.model_generation.parse_column_names import parse_column_names
 import FLAF.Common.Utilities as Utilities
@@ -19,15 +20,14 @@ from FLAF.Common.Utilities import DeclareHeader
 class DNNProducer:
 
     def __init__(self, cfg, payload_name):
+        print("DNN Producer init!")
         # cfg is H_mumu/configs/global.yaml
         self.cfg = cfg
         self.global_cfg = self._load_global_config()
         self.payload_name = payload_name
         self.period = "Run3_2022"
         self._load_framework()
-        self._set_environ_vars()
         self.parity, self.input_features = self._load_dnn_config()
-        # self.corrected_input_features = [f"{x}_renorm" for x in self.input_features]
         # Columns for tmp file
         self.vars_to_save = self.input_features  # + self.corrected_input_features
         # Final columns
@@ -36,17 +36,18 @@ class DNNProducer:
         ]
         self.models = self._load_models()
 
+
     ### Init helpers ###
 
-    def _set_environ_vars(self):
+    def _load_framework(self):
         sys.path.append(os.environ["ANALYSIS_PATH"])
-        ana_path = os.environ["ANALYSIS_PATH"]
         for header in [
             "FLAF/include/Utilities.h",
             "include/Helper.h",
             "include/HmumuCore.h",
             "FLAF/include/AnalysisTools.h",
             "FLAF/include/AnalysisMath.h",
+            "FLAF/include/HistHelper.h"
         ]:
             DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
 
@@ -78,7 +79,7 @@ class DNNProducer:
         filepath = os.path.join(directory, "configs", "config.toml")
         with open(filepath, "rb") as f:
             config = tomllib.load(f)
-        pairity = config["kfold"]["k"]
+        parity = config["kfold"]["k"]
         # Input features
         filepath = os.path.join(directory, "ds_setup", "general.yaml")
         with open(filepath, "r") as f:
@@ -86,20 +87,8 @@ class DNNProducer:
         input_features = parse_column_names(
             columns_config["vars_to_save"], column_type="data"
         )
-        return pairity, input_features
+        return parity, input_features
 
-    def _load_framework(self):
-        """
-        Load any needed files from FLAF
-        """
-        sys.path.append(os.environ["ANALYSIS_PATH"])
-        ROOT.gROOT.ProcessLine(".include " + os.environ["ANALYSIS_PATH"])
-        ROOT.gInterpreter.Declare(f'#include "FLAF/include/Utilities.h"')
-        ROOT.gROOT.ProcessLine(f'#include "FLAF/include/HistHelper.h"')
-        ROOT.gROOT.ProcessLine(f'#include "FLAF/include/AnalysisTools.h"')
-        ROOT.gROOT.ProcessLine(f'#include "FLAF/include/AnalysisMath.h"')
-        ROOT.gROOT.ProcessLine(f'#include "FLAF/include/MT2.h"')
-        ROOT.gROOT.ProcessLine(f'#include "FLAF/include/Lester_mt2_bisect.cpp"')
 
     ### Functions for running the inference ###
 
@@ -108,7 +97,7 @@ class DNNProducer:
         dfw = analysis.DataFrameBuilderForHistograms(
             dfw.df, self.global_cfg, self.period
         )
-        dfw = analysis.PrepareDfForHistograms(dfw)
+        dfw = analysis.PrepareDfForNNInputs(dfw)
         return dfw
 
     def ApplyDNN(self, branches):
@@ -122,9 +111,6 @@ class DNNProducer:
         for parityIdx, sess in enumerate(self.models):
             input_name = sess.get_inputs()[0].name
             label_name = sess.get_outputs()[0].name
-            print("Input name:", input_name)
-            print("Label name:", label_name)
-            print("X:", input_array.shape)
             predictions = sess.run([label_name], {input_name: input_array})[0]
             mask = (event_number % self.parity) != parityIdx
             predictions[mask] = 0
@@ -139,7 +125,7 @@ class DNNProducer:
         return branches
 
     def run(self, array):
-        print("############# Running DNN producer")
+        print("*********** Running DNN producer")
         array = self.ApplyDNN(array)
         # Delete not-needed branches
         for col in array.fields:

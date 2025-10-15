@@ -97,7 +97,7 @@ class Trainer:
         elif algo == "Adam":
             opt = torch.optim.Adam
         else:
-            raise ValueError("Optimizer config should speficy SGD or Adam as algo.")
+            raise ValueError("Optimizer config should specify SGD or Adam as algo.")
         # Actually init and set
         self.optimizer = opt(model.parameters(), **hypers)
 

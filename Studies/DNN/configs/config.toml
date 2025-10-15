@@ -15,13 +15,13 @@ signal_types = ['VBFH', 'ggH']
 # Binary or multiclass
 classification = 'binary'          
 # Per file stitching
-file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights.toml'
+file_stitching = '/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/class_reweights_old_v2.toml'
 renorm_inputs = 'gauss'
 
 
 [preprocess]
 # Reweigh/rebalance options
-uniform_train_weight = false       # If true, all train weights (prenorm) = 1
+uniform_train_weight = true       # If true, all train weights (prenorm) = 1
 zero_negative_weights = true       # Remove the effect of negative weights for training only
 equalize_class_weights = true      # Sets each class weight to be equal (training only!)
 renorm_inputs = 'gauss'            # Apply some scaling/renorm to the input columns. Can be 'no' or 'gauss'
@@ -30,32 +30,32 @@ target_ratio = 10                  # New N_{majority_class}/N_{minority_class} r
 use_mass_resolution = false
 
 [kfold]
-k = 4
+k = 5
 
 [network]  
 # Hidden layers only
 # Input layer size pulled from the used columns
-layer_list = [26, 18, 9]
-dropout = 0.1
+layer_list = [64, 64]
+dropout = 0.00
 
 [training]
 # batch_size = 0 means use the whole set (1 batch per epoch)
-batch_size = 2500
-epochs = 250
-early_stop = true
+batch_size = 64
+epochs = 25
+early_stop = false
 early_threshold = 0
-patience = 100
+patience = 25
 label_smoothing = 0.0
 
 [optimizer]
 algo = "Adam"   # Currently, SGD and Adam are supported
-lr = 1.5E-4
+lr = 0.001
 weight_decay = 0.0
 #momentum = 0.7
 #dampening = 0.2
 
 [testing]
 # Number of bins for all histograms
-n_bins = 12
+n_bins = 20
 
 

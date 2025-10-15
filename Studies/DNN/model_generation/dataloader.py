@@ -215,7 +215,7 @@ class DataLoader:
                 df = self._root_to_dataframe(filename)
             else:
                 df = pd.concat([df, self._root_to_dataframe(filename)])
-        df = self._add_sample_names(df)
+        #df = self._add_sample_names(df)
         return df
 
     ### Main runner function ###

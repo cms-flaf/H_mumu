@@ -415,6 +415,7 @@ class Tester:
         proc = pd.unique(df.sample_name)
         plt.clf()
         fig, axs = plt.subplots(1, len(proc))
+        alpha = 0.8
         for p, ax in zip(proc, axs):
             # for p in proc:
             mask = df.sample_name == p
@@ -472,8 +473,8 @@ class Tester:
         sig_hist = root.TH1F("signal", "signal", self.n_bins, 0, self.n_bins)
         bkg_hist = root.TH1F("background", "background", self.n_bins, 0, self.n_bins)
         for i, (s, b) in enumerate(zip(sig, bkg)):
-            sig_hist.SetBinContent(i, s)
-            bkg_hist.SetBinContent(i, b)
+            sig_hist.SetBinContent(i + 1, s)
+            bkg_hist.SetBinContent(i + 1, b)
         # Save to a root file
         with uproot.recreate("hists.root") as f:
             f["signal"] = sig_hist

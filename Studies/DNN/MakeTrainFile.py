@@ -13,6 +13,8 @@ from model_generation.parse_column_names import parse_column_names
 
 import Analysis.H_mumu as analysis
 import FLAF.Common.Utilities as Utilities
+from FLAF.Common.Setup import Setup
+
 
 ROOT.gROOT.SetBatch(True)
 ROOT.EnableThreadSafety()
@@ -140,7 +142,6 @@ def create_file(
     os.system(f"rm {tmp_filename}")
 
     print("Finished create file loop, now we must add the DNN variables")
-    # Increment the name indexes before I embarass myself again
     tmp_dir = config_dict["meta_data"]["temp_folder"]
     tmp_filename = os.path.join(tmp_dir, f"tmp{step_idx}.root")
     tmpnext_filename = os.path.join(tmp_dir, f"tmp{step_idx+1}.root")
@@ -158,8 +159,8 @@ def create_file(
     # Only need to save the prexisting columns plus the new DNN variables
     # to add kwargset for isData
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
-    dfw_out = analysis.PrepareDfForHistograms(dfw_out)
-    # dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
+    dfw_out = analysis.PrepareDfForNNInputs(dfw_out)
+
     col_to_save = parse_column_names(
         general_cfg_dict["vars_to_save"], column_type="all"
     )
@@ -168,18 +169,16 @@ def create_file(
         "Events", tmpnext_filename, Utilities.ListToVector(col_to_save), snapshotOptions
     )
 
-    print(f"Finished create file, will copy tmp file to final output {out_filename}")
-    print(f"cp {tmpnext_filename} {out_filename}")
-    print(f"rm {tmp_filename}")
-    print(f"rm {tmpnext_filename}")
+    print(f"Finished create file, will copy {tmpnext_filename} file to final output {out_filename}")
     os.system(f"cp {tmpnext_filename} {out_filename}")
     os.system(f"rm {tmp_filename}")
     os.system(f"rm {tmpnext_filename}")
 
 
-def set_environ_vars():
+def load_framework():
     sys.path.append(os.environ["ANALYSIS_PATH"])
     ana_path = os.environ["ANALYSIS_PATH"]
+    # Include from ANALYSIS_PATH
     for header in [
         "FLAF/include/Utilities.h",
         "include/Helper.h",
@@ -188,6 +187,13 @@ def set_environ_vars():
         "FLAF/include/AnalysisMath.h",
     ]:
         DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
+    # Include from Studies/DNN local include
+    headers_dir = os.path.dirname(os.path.abspath(__file__))
+    headers = ["include/TupleMaker.h"]
+    for header in headers:
+        header_path = os.path.join(headers_dir, header)
+        ROOT.gInterpreter.Declare(f'#include "{header_path}"')
+    
 
 
 def get_args():
@@ -203,24 +209,11 @@ def get_args():
     return args
 
 
-def load_headers():
-    headers_dir = os.path.dirname(os.path.abspath(__file__))
-    # headers = [ 'AnalysisTools.h', 'TupleMaker.h' ] #Order here matters since TupleMaker requires AnalysisTools
-    headers = [
-        "include/TupleMaker.h"
-    ]  # Order here matters since TupleMaker requires AnalysisTools
-    for header in headers:
-        header_path = os.path.join(headers_dir, header)
-        if not ROOT.gInterpreter.Declare(f'#include "{header_path}"'):
-            raise RuntimeError(f"Failed to load {header_path}")
-
-
 def get_memory_usage():
     return psutil.Process(os.getpid()).memory_info()[0] / float(2**20)
 
 
 def yaml_to_config(yamlname):
-
     with open(yamlname, "r") as file:
         config_dict = yaml.safe_load(file)
     glb_cfg_dict_name = config_dict["meta_data"]["global_config"]
@@ -235,9 +228,8 @@ def yaml_to_config(yamlname):
 
 if __name__ == "__main__":
 
-    set_environ_vars()
+    load_framework()
     args = get_args()
-    load_headers()
 
     config_dict, global_cfg_dict, general_cfg_dict = yaml_to_config(args.config)
 

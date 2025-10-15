@@ -4,9 +4,7 @@ import sys
 if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
-from FLAF.Analysis.HistHelper import *
 
-# from FLAF.Common.HistHelper import *
 from FLAF.Analysis.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
@@ -130,7 +128,7 @@ def GetBTagWeight(global_cfg_dict, cat, applyBtag=False):
     return f"{btag_weight}*{btagshape_weight}"
 
 
-def VBFJetSelection(df):
+def JetCollectionDef(df):
     if "SelectedJet_idx" not in df.GetColumnNames():
         print("SelectedJet_idx not in df.GetColumnNames")
         df = df.Define(f"SelectedJet_idx", f"CreateIndexes(SelectedJet_pt.size())")
@@ -138,40 +136,59 @@ def VBFJetSelection(df):
         f"SelectedJet_p4",
         f"GetP4(SelectedJet_pt, SelectedJet_eta, SelectedJet_phi, SelectedJet_mass, SelectedJet_idx)",
     )
-    # df = df.Define(f"JetVeto", f"SelectedJet_btagDeepFlavB")
-    # https://btv-wiki.docs.cern.ch/ScaleFactors/Run3Summer22EE/#ak4-b-tagging
 
-    ####  COMPARISON WITH RUN2 ####
-    # In Run2, the DeepCSV Algorithm was used (see AN/2019_185 lines 106 - 112 ). In Run3 the ParticleNet is recommended in place of DeepCSV/DeepJet
+    #### Jet PreSelection ####
     df = df.Define(
-        "Jet_Veto_loose", "SelectedJet_btagPNetB >= 0.0499"
+        "SelectedJet_preSel",
+        f"""v_ops::pt(SelectedJet_p4) > 20 && abs(v_ops::eta(SelectedJet_p4))< 4.7 && (SelectedJet_jetId & 2) """,
+    )
+    df = df.Define(
+        "SelectedJet_preSel_andDeadZoneVetoMap",
+        "SelectedJet_preSel && !SelectedJet_vetoMap",
+    )
+
+    df = df.Define(
+        f"SelectedJet_NoOverlapWithMuons",
+        f"RemoveOverlaps(SelectedJet_p4, SelectedJet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
+    )
+
+    ### Final state definitions: removing bTagged jets - deepJet ####
+    df = df.Define(
+        "Jet_btag_Veto_loose_deepJet",
+        "SelectedJet_btagDeepFlavB >= 0.0614 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
+    )
+    df = df.Define(
+        "Jet_btag_Veto_medium_deepJet",
+        "SelectedJet_btagDeepFlavB >= 0.3196 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
+    )
+    df = df.Define(
+        "JetTagSel_deepJet",
+        "SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
+    )
+
+    #### Final state definitions: removing bTagged jets - pNet ####
+    df = df.Define(
+        "Jet_btag_Veto_loose",
+        "SelectedJet_btagPNetB >= 0.0499 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
     )  # 0.0499 is the loose working point for PNet B-tagging in Run3
     df = df.Define(
-        "Jet_Veto_medium", "SelectedJet_btagPNetB >= 0.2605"
+        "Jet_btag_Veto_medium",
+        "SelectedJet_btagPNetB >= 0.2605 && abs(v_ops::eta(SelectedJet_p4))< 2.5 ",
     )  # 0.2605 is the medium working point for PNet B-tagging in Run3
     # df = df.Define("Jet_Veto_tight", "SelectedJet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
-
-    ####  COMPARISON WITH RUN2 ####
-    # in Run2 there was not this JetVetoMap for or at least it's not described in the AN.
-    df = df.Define("SelectedJet_vetoMap_inverted", "!SelectedJet_vetoMap").Define(
-        "Jet_preselection",
-        "JetSel && SelectedJet_p4[Jet_Veto_medium].size() < 1  && SelectedJet_p4[Jet_Veto_loose].size() < 2 && SelectedJet_p4[SelectedJet_vetoMap_inverted].size()>0 ",
-    )  # "Remove events with at least one medium b-tagged jet and events with at least two loose b-tagged jets")
-
-    df = df.Define("VBFJetCand", "FindVBFJets(SelectedJet_p4)")
-    df = df.Define("HasVBF_0", "return static_cast<bool>(VBFJetCand.isVBF)")
-    df = df.Define("HasVBF", "HasVBF_0 && Jet_preselection")
-    ####  COMPARISON WITH RUN2 ####
-    # No overlap between VBF Jet Candidates and muons AN/2019_185 lines 103-104 - in future it will be extended to any jet, but it's fine to keep as it is now as the selection is applied when VBF jet candidates are defined
     df = df.Define(
-        "NoOverlapWithMuons",
-        f"""
-                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu1_p4) >= std::pow(0.4, 2) &&
-                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu1_p4) >= std::pow(0.4, 2) &&
-                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[0], mu2_p4) >= std::pow(0.4, 2) &&
-                   ROOT::Math::VectorUtil::DeltaR2(VBFJetCand.leg_p4[1], mu2_p4) >= std::pow(0.4, 2)
-                   """,
+        "JetTagSel",
+        "SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && SelectedJet_p4[SelectedJet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2",
     )
+    return df
+
+
+def VBFJetSelection(df):
+    df = df.Define(
+        "VBFJetCand", "FindVBFJets(SelectedJet_p4,SelectedJet_NoOverlapWithMuons)"
+    )
+    df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF) ")
+
     df = df.Define(
         "m_jj",
         "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f",
@@ -225,7 +242,7 @@ def VBFJetSelection(df):
         "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;",
     )
 
-    df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Phi()")
+    df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Pt()")
     df = df.Define(
         "VBFjets_pt",
         f"RVecF void_pt {{}} ; if (HasVBF) return v_ops::pt(VBFJetCand.legs_p4); return void_pt;",
@@ -542,6 +559,12 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
+    def defineSampleType(self):
+        self.df = self.df.Define(
+            f"sample_type",
+            f"""std::string process_name = "{self.config["process_name"]}"; return process_name;""",
+        )
+
     def defineRegions(self):
         region_defs = self.config["MuMuMassRegions"]
         for reg_name, reg_cut in region_defs.items():
@@ -587,11 +610,14 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
+
     dfForHistograms.defineChannels()
+    dfForHistograms.defineSampleType()
     dfForHistograms.defineTriggers()
     # dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
+    dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
@@ -606,14 +632,17 @@ def PrepareDfForHistograms(dfForHistograms):
 
 
 def PrepareDfForNNInputs(dfBuilder):
+    dfBuilder.defineChannels()
+    dfBuilder.defineSampleType()
+    dfBuilder.defineTriggers()
     dfBuilder.df = GetMuMuObservables(dfBuilder.df)
     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
-    dfBuilder.defineSignRegions()
+    dfBuilder.df = JetCollectionDef(dfBuilder.df)
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
-    # dfBuilder.df = GetSoftJets(dfBuilder.df)
+    dfBuilder.df = GetSoftJets(dfBuilder.df)
     dfBuilder.SignRegionDef()
     dfBuilder.defineRegions()
     dfBuilder.defineCategories()
-    # dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
+    dfBuilder.df = dfBuilder.df.Define("final_weight", GetWeight("muMu", "", ""))
     return dfBuilder
