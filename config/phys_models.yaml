@@ -2,20 +2,17 @@ BaseModel:
   name: "Base Model"
   backgrounds:
     - DY
-    - DY_mll_bin
-    - DY_amcatnloFXFX
-    # - DYToMuMu_MiNNLO
-    - DYToMuMu_amcatnloFXFX
     - TT
     - VV
+    - EWK
     - EWK_LLJJ
+    # - EWK_LLJJ_herwig
+    # - EWK_LLJJ_M105_160
+    # - EWK_LLJJ_M105_160_VBFFilter
     - W_NJets
     - ST
     - TW
     - VVV
-    # - W
-    # - EWK
-    # - EWK_LLJJ_herwig
     - TTX
     - H_mainBckg
     - TTH_inclusive
@@ -26,3 +23,4 @@ BaseModel:
     - GluGluHto2Mu
   data:
     - Data_Muon
+

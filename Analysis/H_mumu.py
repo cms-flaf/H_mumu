@@ -564,18 +564,13 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         xsFilePath = os.path.join(os.environ["ANALYSIS_PATH"], xsFile)
         with open(xsFilePath, "r") as xs_file:
             xs_dict = yaml.safe_load(xs_file)
-        # xs_condition = "DY" in self.config["process_name"] #== "DY_mll_bin" or self.config["process_name"] == "DY_amcatnloFXFX" or self.config["process_name"] == "DY"
         xs_condition = self.config["process_name"] == "DY"
-        print(xs_condition)
         xs_to_scale = xs_dict["DY_NNLO_QCD+NLO_EW"]["crossSec"] if xs_condition else "1.f"
-        current_xs = xs_dict[self.config["xs_entry"]]["crossSec"] if xs_condition else "1.f"
         weight_XS_string = f"xs_to_scale/current_xs" if xs_condition else "1."
-        print(xs_to_scale,current_xs)
         total_denunmerator_nJets = (5378.0 / 3 + 1017.0 / 3 + 385.5 / 3)
         self.df = self.df.Define(f"current_xs",f"{total_denunmerator_nJets}")
         self.df = self.df.Define(f"xs_to_scale",f"{xs_to_scale}")
         self.df = self.df.Define(f"weight_XS",weight_XS_string)
-        # self.df.Display({"current_xs","xs_to_scale","weight_XS"}).Print()
 
     def defineTriggers(self):
         for ch in self.config["channelSelection"]:
