@@ -34,13 +34,13 @@ vars_to_save:
     - phi_CS
   Global:
     - FullEventId
-    - luminosityBlock
+    # - luminosityBlock
     - isData
-    - event
-    - period
-    - run
-    - sample_type
+    # - event
+    # - period
+    # - run
   Categories:
+    - Z_sideband
     - HasVBF
     - baseline
     # - baseline_Zmumu
@@ -61,22 +61,22 @@ vars_to_save:
   # - nJet
   # - nSelectedJet
   Weight:
-    - weight_mu1_HighPt_MuonID_SF_MediumIDCentral
-    - weight_mu1_HighPt_MuonID_SF_RecoCentral
-    - weight_mu1_LowPt_MuonID_SF_MediumIDCentral
-    - weight_mu1_MuonID_SF_LoosePFIsoCentral
-    - weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral
-    - weight_mu1_MuonID_SF_MediumID_TrkCentral
-    - weight_mu2_HighPt_MuonID_SF_MediumIDCentral
-    - weight_mu2_HighPt_MuonID_SF_RecoCentral
-    - weight_mu2_LowPt_MuonID_SF_MediumIDCentral
-    - weight_mu2_MuonID_SF_LoosePFIsoCentral
-    - weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral
-    - weight_mu2_MuonID_SF_MediumID_TrkCentral
-    # - weight_trigSF_singleMu
+    # - weight_mu1_HighPt_MuonID_SF_MediumIDCentral
+    # - weight_mu1_HighPt_MuonID_SF_RecoCentral
+    # - weight_mu1_LowPt_MuonID_SF_MediumIDCentral
+    # - weight_mu1_MuonID_SF_LoosePFIsoCentral
+    # - weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral
+    # - weight_mu1_MuonID_SF_MediumID_TrkCentral
+    # - weight_mu2_HighPt_MuonID_SF_MediumIDCentral
+    # - weight_mu2_HighPt_MuonID_SF_RecoCentral
+    # - weight_mu2_LowPt_MuonID_SF_MediumIDCentral
+    # - weight_mu2_MuonID_SF_LoosePFIsoCentral
+    # - weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral
+    # - weight_mu2_MuonID_SF_MediumID_TrkCentral
+    #- weight_trigSF_singleMu
     - weight_MC_Lumi_pu
-    - weight_EWKCorr_VptCentral
-    - weight_DYw_DYWeightCentral
+    # - weight_EWKCorr_VptCentral
+    # - weight_DYw_DYWeightCentral
     - m_mumu_resolution
-    - weight_EWKCorr_ewcorrCentral
-    - final_weight
+    # - weight_EWKCorr_ewcorrCentral
+    #- final_weight

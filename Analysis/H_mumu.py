@@ -1,14 +1,24 @@
 import ROOT
 import sys
+import os
 
 if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
 
-from FLAF.Common.HistHelper import *
+#from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
+from FLAF.Common import Utilities
 
+for header in [
+    "FLAF/include/Utilities.h",
+    "include/Helper.h",
+    "include/HmumuCore.h",
+    "FLAF/include/AnalysisTools.h",
+    "FLAF/include/AnalysisMath.h",
+]:
+    DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
 
 JetObservables = [
     "PNetRegPtRawCorr",
@@ -192,7 +202,8 @@ def JetCollectionDef(df):
 
 
 def VBFJetSelection(df):
-    df = df.Define("VBFJetCand", "FindVBFJets(Jet_p4,Jet_NoOverlapWithMuons)")
+    #df = df.Define("VBFJetCand", "FindVBFJets(Jet_p4,Jet_NoOverlapWithMuons)")
+    df = df.Define("VBFJetCand", "FindVBFJets(Jet_p4)")
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF) ")
 
     df = df.Define(
@@ -708,14 +719,17 @@ def PrepareDfForHistograms(dfForHistograms):
 
 
 def PrepareDfForNNInputs(dfBuilder):
+    #dfBuilder.RescaleXS()
+    dfBuilder.defineChannels()
+    dfBuilder.defineTriggers()
+    dfBuilder.AddScaReOnBS()
     dfBuilder.df = GetMuMuObservables(dfBuilder.df)
     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
-    dfBuilder.defineSignRegions()
     dfBuilder.df = JetCollectionDef(dfBuilder.df)
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
     dfBuilder.df = GetSoftJets(dfBuilder.df)
-    # dfBuilder.defineRegions()
+    dfBuilder.SignRegionDef()
+    dfBuilder.defineRegions()
     dfBuilder.defineCategories()
-    dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder
