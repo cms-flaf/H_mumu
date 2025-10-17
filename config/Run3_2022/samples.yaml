@@ -191,19 +191,19 @@ DYto2Mu_MLL_105to160_amcatnloFXFX:
 # dymumu012j_5f_NLO_FXFX_M105to180_vbffilter # no xs available
 # DY012j_NLO_5f # no xs available
 
-# DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8:
-#   sampleType: DY
-#   crossSection: DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
-#   generator: pythia
-#   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
-#   dirName: "0000"
+DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8:
+  sampleType: DY
+  crossSection: DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
+  generator: pythia
+  fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
+  dirName: "0000"
 
-# DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8_ext1:
-#   sampleType: DY
-#   crossSection: DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
-#   generator: pythia
-#   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
-#   dirName: "0001"
+DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8_ext1:
+  sampleType: DY
+  crossSection: DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
+  generator: pythia
+  fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
+  dirName: "0001"
 
 DYToMuMu-M50_13p6TeV_MiNNLO_pythia8:
   sampleType: DY

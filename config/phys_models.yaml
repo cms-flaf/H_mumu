@@ -2,22 +2,24 @@ BaseModel:
   name: "Base Model"
   backgrounds:
     - DY
+    - DY_mll_bin
+    - DY_amcatnloFXFX
+    # - DYToMuMu_MiNNLO
+    - DYToMuMu_amcatnloFXFX
     - TT
-    - DYToMuMu_MiNNLO
-    # - DYToMuMu_amcatnloFXFX
-    - W
-    - W_NJets
-    # - EWK
+    - VV
     - EWK_LLJJ
-    # - EWK_LLJJ_herwig
-    - H_mainBckg
+    - W_NJets
     - ST
     - TW
-    - TTH_inclusive
-    - TTX
-    - VH_inclusive
-    - VV
     - VVV
+    # - W
+    # - EWK
+    # - EWK_LLJJ_herwig
+    - TTX
+    - H_mainBckg
+    - TTH_inclusive
+    - VH_inclusive
   signals:
     - VBFHto2Mu
     - VBFHto2Mu_Herwig

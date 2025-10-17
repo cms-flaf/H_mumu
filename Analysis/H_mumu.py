@@ -151,6 +151,14 @@ def JetCollectionDef(df):
         f"Jet_NoOverlapWithMuons",
         f"RemoveOverlaps(Jet_p4, Jet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
     )
+    df = df.Define(
+        f"SelectedJet_p4",
+        f"Jet_p4[Jet_NoOverlapWithMuons]",
+    )
+    df = df.Define(
+        f"SelectedJet_index",
+        f"Jet_idx[Jet_NoOverlapWithMuons]",
+    )
 
     ### Final state definitions: removing bTagged jets - deepJet ####
     df = df.Define(
@@ -285,30 +293,30 @@ def GetMuMuObservables(df):
             f"mu{idx+1}_p4_nano",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
-        # df = df.Define(
-        #     f"mu{idx+1}_p4_BS_ScaRe",
-        #     f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        # )
+        df = df.Define(
+            f"mu{idx+1}_p4_BS_ScaRe",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
     df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
     df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
-    # df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
+    df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
     df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
     df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
     df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
     df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
     df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
-    # df = df.Define(
-    #     "m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())"
-    # )
+    df = df.Define(
+        "m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())"
+    )
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
         df = df.Define(f"mu{idx+1}_pt_rel_BS", f"mu{idx+1}_bsConstrainedPt/m_mumu_BS")
         df = df.Define(f"mu{idx+1}_pt_rel_nano", f"mu{idx+1}_pt_nano/m_mumu_nano")
-        # df = df.Define(
-        #     f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe"
-        # )
+        df = df.Define(
+            f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe"
+        )
 
     df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
 
@@ -512,11 +520,12 @@ def SaveVarsForNNInput(variables):
 def GetWeight(channel="muMu"):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
+        "weight_XS",
         "weight_EWKCorr_VptCentral",
         "weight_DYw_DYWeightCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
 
-    trg_weights_dict = {"muMu": []}  # ["weight_trigSF_singleMu"],
+    trg_weights_dict = {"muMu": ["weight_trigSF_singleMu"]}#["weight_mu1_TrgSF_singleMu_Central", "weight_mu2_TrgSF_singleMu_Central"]}  # ["weight_trigSF_singleMu"],
     ID_weights_dict = {
         "muMu": [
             "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
@@ -543,10 +552,30 @@ def GetWeight(channel="muMu"):
     weights_to_apply.extend(trg_weights_dict[channel])
 
     total_weight = "*".join(weights_to_apply)
+    # print(total_weight)
     return total_weight
 
 
 class DataFrameBuilderForHistograms(DataFrameBuilderBase):
+
+    def RescaleXS(self):
+        import yaml
+        xsFile = self.config["crossSectionsFile"]
+        xsFilePath = os.path.join(os.environ["ANALYSIS_PATH"], xsFile)
+        with open(xsFilePath, "r") as xs_file:
+            xs_dict = yaml.safe_load(xs_file)
+        # xs_condition = "DY" in self.config["process_name"] #== "DY_mll_bin" or self.config["process_name"] == "DY_amcatnloFXFX" or self.config["process_name"] == "DY"
+        xs_condition = self.config["process_name"] == "DY"
+        print(xs_condition)
+        xs_to_scale = xs_dict["DY_NNLO_QCD+NLO_EW"]["crossSec"] if xs_condition else "1.f"
+        current_xs = xs_dict[self.config["xs_entry"]]["crossSec"] if xs_condition else "1.f"
+        weight_XS_string = f"xs_to_scale/current_xs" if xs_condition else "1."
+        print(xs_to_scale,current_xs)
+        total_denunmerator_nJets = (5378.0 / 3 + 1017.0 / 3 + 385.5 / 3)
+        self.df = self.df.Define(f"current_xs",f"{total_denunmerator_nJets}")
+        self.df = self.df.Define(f"xs_to_scale",f"{xs_to_scale}")
+        self.df = self.df.Define(f"weight_XS",weight_XS_string)
+        # self.df.Display({"current_xs","xs_to_scale","weight_XS"}).Print()
 
     def defineTriggers(self):
         for ch in self.config["channelSelection"]:
@@ -562,6 +591,60 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
             f"sample_type",
             f"""std::string process_name = "{self.config["process_name"]}"; return process_name;""",
         )
+
+
+    def AddScaReOnBS(self):
+        import correctionlib
+
+        period_files = {
+            "Run3_2022": "2022_Summer22",
+            "Run3_2022EE": "2022_Summer22EE",
+            "Run3_2023": "2023_Summer23",
+            "Run3_2023BPix": "2023_Summer23BPix",
+        }
+        correctionlib.register_pyroot_binding()
+        file_name = period_files.get(self.period, "")
+        analysis_path = os.environ["ANALYSIS_PATH"]
+        ROOT.gROOT.ProcessLine(
+            f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
+        )
+        ROOT.gROOT.ProcessLine(f'#include "{analysis_path}/include/MuonScaRe.cc"')
+        for mu_idx in [1, 2]:
+            if self.isData:
+                # Data apply scale correction
+                self.df = self.df.Define(
+                    f"mu{mu_idx}_BS_pt_1_corr",
+                    f"pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
+                )
+            else:
+                self.df = self.df.Define(
+                    f"mu{mu_idx}_BS_pt_1_scale_corr",
+                    f"pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
+                )
+
+                self.df = self.df.Define(
+                    f"mu{mu_idx}_BS_pt_1_corr",
+                    f"pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
+                )
+                # # MC evaluate scale uncertainty
+                # df_mc = df_mc.Define(
+                #     'pt_1_scale_corr_up',
+                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "up")'
+                # )
+                # df_mc = df_mc.Define(
+                #     'pt_1_scale_corr_dn',
+                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "dn")'
+                # )
+
+                # # MC evaluate resolution uncertainty
+                # df_mc = df_mc.Define(
+                #     "pt_1_corr_resolup",
+                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "up")'
+                # )
+                # df_mc = df_mc.Define(
+                #     "pt_1_corr_resoldn",
+                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "dn")'
+                # )
 
     def defineRegions(self):
         region_defs = self.config["MuMuMassRegions"]
@@ -608,19 +691,19 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-
+    dfForHistograms.RescaleXS()
     dfForHistograms.defineChannels()
-    dfForHistograms.defineSampleType()
+    # dfForHistograms.defineSampleType()
     dfForHistograms.defineTriggers()
-    # dfForHistograms.AddScaReOnBS()
+    dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
-    # if not dfForHistograms.isData:
-    #     defineTriggerWeights(dfForHistograms)
+    if not dfForHistograms.isData:
+        defineTriggerWeights(dfForHistograms)
     #     if dfForHistograms.wantTriggerSFErrors:
     #         defineTriggerWeightsErrors(dfForHistograms)
     dfForHistograms.SignRegionDef()
