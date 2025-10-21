@@ -6,7 +6,7 @@ if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
 
-#from FLAF.Common.HistHelper import *
+from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
 from FLAF.Common import Utilities
@@ -162,6 +162,8 @@ def JetCollectionDef(df):
         f"RemoveOverlaps(Jet_p4, Jet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
     )
     df = df.Define(
+        "JetTagSel_deepJet",
+        "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
         f"SelectedJet_p4",
         f"Jet_p4[Jet_NoOverlapWithMuons]",
     )
@@ -703,6 +705,7 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
+    dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)

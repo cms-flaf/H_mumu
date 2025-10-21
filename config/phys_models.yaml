@@ -47,6 +47,7 @@ BaseModel_2022EE:
     - VH_inclusive
   signals:
     - VBFHto2Mu
+    - VBFHto2Mu_Herwig
     - GluGluHto2Mu
   data:
     - Data_Muon

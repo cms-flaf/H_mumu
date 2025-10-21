@@ -137,7 +137,7 @@ W_NJets:
 EWK_LLJJ:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: darkmagenta
+  color_mplhep: aqua
   datasets:
     - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole
     # - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole_ext1
@@ -145,7 +145,7 @@ EWK_LLJJ:
 EWK:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: darkmagenta
+  color_mplhep: aqua
   datasets:
     - EWK_2L2J_madgraph_herwig
 
@@ -161,27 +161,27 @@ EWK_LLJJ_herwig:
 EWK_LLJJ_M105_160:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: darkmagenta
+  color_mplhep: aqua
   datasets:
     - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext2
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext2
 
 EWK_LLJJ_M105_160_VBFFilter:
   name: "EWK"
   color: kMagenta+3
-  color_mplhep: darkmagenta
+  color_mplhep: aqua
   datasets:
     - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext1
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext2
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext3
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext4
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext5
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext6
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext7
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext8
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext1
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext2
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext3
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext4
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext5
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext6
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext7
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext8
+    # - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9
 
 ############## Other single H  ##############
 H_mainBckg:
@@ -200,7 +200,7 @@ H_mainBckg:
 VV_Inclusive:
   name: "VV Inclusive"
   color: kPink+2
-  color_mplhep: tomato
+  color_mplhep: violet
   datasets:
     - WW
     - WZ
@@ -209,7 +209,7 @@ VV_Inclusive:
 VV:
   name: "VV"
   color: kPink+2
-  color_mplhep: tomato
+  color_mplhep: violet
   datasets:
     - WWto2L2Nu_powheg
     - WWto4Q_powheg
@@ -241,7 +241,7 @@ VH_inclusive:
 VVV:
   name: "VVV"
   color: kOrange-4
-  color_mplhep: plum
+  color_mplhep: mediumvioletred
   datasets:
     - WWW_4F
     - WWZ_4F
@@ -252,7 +252,7 @@ VVV:
 ST:
   name: "ST"
   color: kCyan-1
-  color_mplhep: green
+  color_mplhep: bisque
   datasets:
     - TbarBtoLminusNuB_s_channel_4FS
     - TBbartoLplusNuBbar_s_channel_4FS
@@ -264,7 +264,7 @@ ST:
 TW:
   name: "TW"
   color: kCyan-1
-  color_mplhep: green
+  color_mplhep: darkorange
   datasets:
     - TWminusto2L2Nu
     - TWminusto4Q
@@ -297,7 +297,10 @@ VBFHto2Mu:
 
 VBFHto2Mu_Herwig:
   name: "VBFHto2Mu_Herwig"
+VBFHto2Mu_Herwig:
+  name: "VBFHto2Mu_Herwig"
   color: "kPink"
+  color_mplhep: fuchsia
   color_mplhep: fuchsia
   datasets:
     - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
