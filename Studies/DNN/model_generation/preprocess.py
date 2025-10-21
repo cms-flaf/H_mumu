@@ -50,10 +50,10 @@ class Preprocessor:
 
     def _equalize_train_weights_multiclass(self, df):
         total = np.sum(df.Training_Weight)
-        all_proc = sorted(pd.unique(df.sample_name))
+        all_proc = sorted(pd.unique(df.process))
         new_train_weights = np.zeros(len(df))
         for process in all_proc:
-            mask = df.sample_name == process
+            mask = df.process == process
             subtotal = df[mask].Training_Weight.sum()
             factor = (1 / len(all_proc)) * (total / subtotal)
             new_train_weights[mask] = df[mask].Training_Weight * factor
@@ -73,18 +73,18 @@ class Preprocessor:
 
     def _apply_zero_neg_weight(self, df):
         # Stash the pre-zeroing weights
-        cols = ["sample_name", "Training_Weight"]
-        total_initial = df[cols].groupby("sample_name").sum()
+        cols = ["process", "Training_Weight"]
+        total_initial = df[cols].groupby("process").sum()
         total_initial.columns = ["initial"]
         # Do the zero
         df["Training_Weight"] = np.clip(df.Training_Weight.values, a_min=0, a_max=None)
         # Get post-zeroing weights
-        total_final = df[cols].groupby("sample_name").sum()
+        total_final = df[cols].groupby("process").sum()
         total_final.columns = ["final"]
         totals = pd.merge(total_initial, total_final, left_index=True, right_index=True)
         # Now correct so the pre and post are equal
         for p, (i, f) in totals.iterrows():
-            mask = df.sample_name == p
+            mask = df.process == p
             scale = np.ones(len(df))
             scale[mask] = i / f
             df["Training_Weight"] = df.Training_Weight * scale
@@ -92,16 +92,16 @@ class Preprocessor:
 
     def _downsample_and_upweight(self, df):
         print("Dispatching a downsample and reweigh...")
-        counts = df.value_counts("sample_name")
+        counts = df.value_counts("process")
         minority = counts.idxmin()
         n_min = counts[minority]
-        for process in pd.unique(df.sample_name):
+        for process in pd.unique(df.process):
             n = counts[process]
             current_ratio = n / n_min
             print("Process:", process)
             print("Current ratio:", current_ratio, "Target ratio:", self.target_ratio)
             if current_ratio > self.target_ratio:
-                mask = df.sample_name == process
+                mask = df.process == process
                 # Downsample
                 selected = df[mask]
                 other = df[~mask]
@@ -109,7 +109,7 @@ class Preprocessor:
                 print("Factor:", factor)
                 df = pd.concat([other, selected.sample(frac=factor)])
                 # Upweigh
-                mask = df.sample_name == process
+                mask = df.process == process
                 weights = df.Training_Weight.values.copy()
                 weights[mask] *= 1 / factor
                 df["Training_Weight"] = weights

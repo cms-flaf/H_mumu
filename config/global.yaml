@@ -142,3 +142,17 @@ sample_types_to_merge:
   - ST
   - TW
   - TTX
+
+payload_producers:
+DNN:
+  producers_module_name: Analysis.DNN_Application
+  producer_name: DNNProducer
+  columns:
+    - NNOutput
+  dependencies:
+  # - DoubleLepHME
+  n_cpus: 4
+  max_runtime: 2.0
+  cmssw_env: False
+  awkward_based: True
+  uproot_stepsize: '50MB'

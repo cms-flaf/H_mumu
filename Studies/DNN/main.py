@@ -116,7 +116,7 @@ if __name__ == "__main__":
     df = dataloader._add_class_weights(df)
 
     # Add the correct layer-list to the config (instead of just hidden)
-    p = pd.unique(df.sample_name)
+    p = pd.unique(df.process)
     config = build_layer_list(config, dataloader, p)
     # Init our other objects
     preprocessor = Preprocessor(**config["preprocess"] | config["dataloader"])
@@ -225,4 +225,6 @@ if __name__ == "__main__":
     tester.make_transformed_stackplot()
     tester.make_roc_plot(log=True)
     tester.make_roc_plot(log=False)
+    if dataloader.classification == "multiclass":
+        tester.plot_multiclass_probs()
     tester.make_thist()

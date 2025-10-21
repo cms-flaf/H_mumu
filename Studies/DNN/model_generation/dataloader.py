@@ -32,7 +32,7 @@ class DataLoader:
         selection_cut,
         classification,
         renorm_inputs,
-        file_stitching,
+        file_stitching=None,
         **kwargs,
     ):
         self._get_column_info(columns_config)
@@ -74,18 +74,11 @@ class DataLoader:
         df[self.data_columns] = df[self.data_columns].astype("float")
         return df
 
-    def _add_sample_names(self, df):
-        """
-        Map sample_type to human friendly sample_names
-        """
-        df["sample_name"] = df.sample_type.apply(lambda x: lookup[x])
-        return df
-
     def _add_labels(self, df):
         """
         Adds the training labels [0, 1] for bkg and sig (resp.)
         """
-        df["Label"] = df.sample_name.apply(
+        df["Label"] = df.process.apply(
             lambda x: 1 if x in self.signal_types else 0
         ).astype(float)
         return df
@@ -94,11 +87,11 @@ class DataLoader:
         """
         One-hot encoded label for multiclass
         """
-        all_process = sorted(pd.unique(df.sample_name))
+        all_process = sorted(pd.unique(df.process))
         self.label_cols = []
         for p in all_process:
             labels = np.zeros(len(df))
-            labels[df.sample_name == p] = 1
+            labels[df.process == p] = 1
             col_name = f"Label_{p}"
             self.label_cols.append(col_name)
             df[col_name] = labels
@@ -170,8 +163,13 @@ class DataLoader:
         cols = self.all_columns
         with uproot.open(filename) as f:
             tree = f["Events"]
-            df = tree.arrays(cols, cut=self.selection_cut, library="pd")
-        df["source_file"] = Path(filename).stem
+            df = tree.arrays(
+                cols, 
+                cut=self.selection_cut, 
+                library="pd"
+            )
+        for col in ['process', 'era', 'dataset']:
+            df[col] = df[col].astype(str)
         return df
 
     def _split_dataframe(self, data):
@@ -185,9 +183,9 @@ class DataLoader:
         valid_df = pd.DataFrame(columns=data.columns)
         testing_df = pd.DataFrame(columns=data.columns)
         # Add each category to each dataframe
-        for category in pd.unique(data.sample_name):
+        for category in pd.unique(data.process):
             selected = (
-                data[data.sample_name == category].sample(frac=1).reset_index(drop=True)
+                data[data.process == category].sample(frac=1).reset_index(drop=True)
             )
             number = len(selected)
             valid_size = floor(number * self.valid_size)

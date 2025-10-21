@@ -38,7 +38,7 @@ class Tester:
         self.n_bins = n_bins
         # Other on-the-fly ones
         self.hist_range = (0, 1)
-        self.processes = sorted(pd.unique(testing_df.sample_name))
+        self.processes = sorted(pd.unique(testing_df.process))
 
         # Just keep and convert the x_data.
         # We'll run inference on this only then put back into self.testing_df
@@ -56,8 +56,8 @@ class Tester:
             "TT": "blue",
             "VV": "lightslategray",
             "EWK": "magenta",
-            "VBFH": "green",
-            "ggH": "red",
+            "VBFHto2Mu": "green",
+            "GluGluHto2Mu": "red",
         }
 
     def prediction_to_prob(self, subdf):
@@ -67,10 +67,20 @@ class Tester:
         """
         classes = [x.replace("Prob_", "") for x in subdf.columns]
         predictions = subdf.apply(np.argmax, axis=1).apply(lambda x: classes[x])
-        maxima = subdf.apply(np.max, axis=1).values.copy()
-        mask = np.isin(predictions, self.signal_types)
-        maxima[~mask] = 1 - maxima[~mask]
-        return predictions, maxima
+        bkg_processes = [x for x in classes if x not in self.signal_types]
+        # Calc an output discriminator (from the Run2 paper)
+        final_prob = np.zeros(len(subdf))
+        for p in self.signal_types:
+            final_prob += subdf[f"Prob_{p}"]
+        for p in bkg_processes:
+            final_prob -= subdf[f"Prob_{p}"]
+        # Rescale so discrim is in [0,1]
+        final_prob += len(bkg_p)
+        final_prob /= len(classes)
+        # maxima = subdf.apply(np.max, axis=1).values.copy()
+        # mask = np.isin(predictions, self.signal_types)
+        # maxima[~mask] = 1 - maxima[~mask]
+        return predictions, final_prob
 
     def test(self, model):
         """
@@ -137,8 +147,8 @@ class Tester:
         bin_edges = np.percentile(signal.NN_Output, q)
         # Calculate the bin populations for each process
         counts_lookup = {}
-        for p in pd.unique(df.sample_name):
-            selected = df[df.sample_name == p]
+        for p in pd.unique(df.process):
+            selected = df[df.process == p]
             counts, _ = np.histogram(
                 selected.NN_Output, weights=selected.Class_Weight, bins=bin_edges
             )
@@ -217,8 +227,8 @@ class Tester:
         plt.clf()
         df = self.testing_df
         # Add individual hist curves
-        for p in sorted(pd.unique(df.sample_name)):
-            selected = df[df.sample_name == p]
+        for p in sorted(pd.unique(df.process)):
+            selected = df[df.process == p]
             if weight:
                 h = np.histogram(
                     selected.NN_Output,
@@ -259,12 +269,12 @@ class Tester:
         df = self.testing_df
         # Only stack background processes
         # Yeah yeah hardcoding sig is bad, I know.
-        sig = ["VBFH", "ggH"]
-        bkg = [x for x in pd.unique(df.sample_name) if x not in sig]
+        sig = ["VBFHto2Mu", "GluGluHto2Mu"]
+        bkg = [x for x in pd.unique(df.process) if x not in sig]
 
         # Make sure sorted for stacking
         def size(p):
-            selected = df[df.sample_name == p]
+            selected = df[df.process == p]
             return selected.Class_Weight.sum()
 
         # Do the stack part plot
@@ -272,7 +282,7 @@ class Tester:
         weights = []
         values = []
         for p in bkg:
-            selected = df[df.sample_name == p]
+            selected = df[df.process == p]
             weights.append(selected.Class_Weight.values)
             values.append(selected.NN_Output.values)
         colors = [self.color_map[x] for x in bkg]
@@ -288,7 +298,7 @@ class Tester:
         )
         # Now add on the signal curves
         for p in sig:
-            selected = df[df.sample_name == p]
+            selected = df[df.process == p]
             h = np.histogram(
                 selected.NN_Output,
                 weights=selected.Class_Weight,
@@ -366,7 +376,7 @@ class Tester:
 
         # HARDCODE WARNING! (Ricardo wants this plot in a specific order)
         stack_proc = ["VV", "TT", "EWK", "DY"]
-        other_proc = [x for x in pd.unique(df.sample_name) if x not in stack_proc]
+        other_proc = [x for x in pd.unique(df.process) if x not in stack_proc]
 
         # Do the stacking
         baseline = np.zeros(len(bin_edges) - 1)
@@ -381,6 +391,13 @@ class Tester:
         # and add the non-stackers
         for p in other_proc:
             plt.stairs(counts_lookup[p], x, label=p, color=self.color_map[p])
+
+        # Add S/sqrt(B) to plot
+        sig_total = np.zeros(len(baseline))
+        for p in self.signal_types:
+            sig_total += counts_lookup[p]
+        sensitivity = self.s2overb(sig_total, total)
+        plt.text(1, 1E5, r"$\frac{S}{\sqrt{B}} = $" + str(round(sensitivity, 3)))
 
         # Format
         if log:
@@ -412,13 +429,13 @@ class Tester:
         as a function of that process discriminant (P_{process})
         """
         df = self.testing_df
-        proc = pd.unique(df.sample_name)
+        proc = pd.unique(df.process)
         plt.clf()
         fig, axs = plt.subplots(1, len(proc))
         alpha = 0.8
         for p, ax in zip(proc, axs):
             # for p in proc:
-            mask = df.sample_name == p
+            mask = df.process == p
             selected = df[mask]
             other = df[~mask]
             col = f"Prob_{p}"
@@ -463,7 +480,7 @@ class Tester:
         # Calc sig and bkg totals
         sig = np.zeros(len(bin_edges) - 1)
         bkg = np.zeros(len(bin_edges) - 1)
-        for p in pd.unique(df.sample_name):
+        for p in pd.unique(df.process):
             x = counts_lookup[p]
             if p in self.signal_types:
                 sig += x

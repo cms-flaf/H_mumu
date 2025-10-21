@@ -82,9 +82,9 @@ if __name__ == '__main__':
 
     # Update the columns to save
     # Add metadata columns
-    output_columns.append('dataset')
-    output_columns.append('process')
-    output_columns.append('era')
+    # output_columns.append('dataset')
+    # output_columns.append('process')
+    # output_columns.append('era')
     # Add them jets!
     output_columns.append("Jet_pt")
     output_columns.append("Jet_eta")

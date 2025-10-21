@@ -2,8 +2,7 @@ BaseModel:
   name: "Base Model"
   backgrounds:
     - DY
-    - DY_mll_bin
-    - DY_amcatnloFXFX
+    # - DY_mll_bin
     # - DYToMuMu_M105-180_MiNNLO
     # - DYToMuMu_MiNNLO # but it has wrong XS
     - TT

@@ -1,0 +1,14 @@
+meta_data:
+  global_config: /afs/cern.ch/user/a/ayeagle/H_mumu/config/global.yaml
+  columns_config: /afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/columns_config.yaml
+  output_folder: /eos/user/a/ayeagle/H_mumu/root_files/v3_parse1/
+  input_folder: /eos/user/v/vdamante/H_mumu/anaTuples/v3_01Oct/
+  selection_cut: ((Signal_Fit) || (H_sideband) || (Z_sideband)) & (baseline)
+
+sample_list:
+  - DY
+  - TT
+  - EWK
+  - VV
+  - GluGluHto2Mu
+  - VBFHto2Mu

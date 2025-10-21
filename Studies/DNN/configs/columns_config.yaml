@@ -39,6 +39,9 @@ vars_to_save:
     # - event
     # - period
     # - run
+    - era
+    - process
+    - dataset
   Categories:
     - Z_sideband
     - HasVBF

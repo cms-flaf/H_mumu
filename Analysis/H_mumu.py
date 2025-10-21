@@ -202,8 +202,7 @@ def JetCollectionDef(df):
 
 
 def VBFJetSelection(df):
-    #df = df.Define("VBFJetCand", "FindVBFJets(Jet_p4,Jet_NoOverlapWithMuons)")
-    df = df.Define("VBFJetCand", "FindVBFJets(Jet_p4)")
+    df = df.Define("VBFJetCand", "FindVBFJets(Jet_p4,Jet_NoOverlapWithMuons)")
     df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF) ")
 
     df = df.Define(
@@ -697,7 +696,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-    dfForHistograms.RescaleXS()
+    #dfForHistograms.RescaleXS()
     dfForHistograms.defineChannels()
     # dfForHistograms.defineSampleType()
     dfForHistograms.defineTriggers()
