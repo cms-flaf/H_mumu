@@ -62,29 +62,49 @@ singleMu_th:
   "Run3_2023BPix": 26
 
 categories:
+  - no_cuts
+  - OS_sel
+  - trigger_sel
   - baseline
+  - JetTagSel_deepJet_sel
+  - JetTagSel_def_sel
+  - VBF_def
   - VBF
   - ggH
   - VBF_JetVeto
+  - VBF_deepJet
+  - VBF_JetVeto_deepJet
+  - ggH_deepJet
+
 
 category_definition:
   #### COMPARISON WITH RUN 2 ####
   # the baseline selection requires OS -- > Opposite Sign of muons charge (as in Run2, obv), and either the first or the second muon matching the online object and passing the pT threshold driven by the trigger (which is always 26 GeV in Run3 up to now) -- See AN/2019_185 lines 123 - 130
-  baseline: "OS && ((mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu))"
+  no_cuts: "true"
+  OS_sel: "OS"
+  trigger_sel: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
+  baseline: "OS_sel && trigger_sel &&  abs(mu1_dz) < 1. && abs(mu1_dxy) < 0.5 && abs(mu2_dz) < 1. && abs(mu2_dxy) < 0.5"
+  JetTagSel_deepJet_sel: "baseline && JetTagSel_deepJet"
+  JetTagSel_def_sel: "baseline && JetTagSel"
   #### COMPARISON WITH RUN 2 ####
   # VBF category and def is the same w.r.t run 2
-  VBF_def: "HasVBF && Jet_preselection && NoOverlapWithMuons && j1_pt > 35 && j2_pt > 25"
-
-  VBF: "baseline && VBF_def"
+  VBF_def: "JetTagSel_def_sel && HasVBF"
+  VBF: "VBF_def && j1_pt >= 35 && j2_pt >= 25 "
   # ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
-  ggH: "baseline && !(VBF_def)"
-
+  ggH: "JetTagSel_def_sel && !(VBF)"
+  #### COMPARISON WITH RUN 2 ####
+  # VBF category and def is the same w.r.t run 2
+  VBF_def_deepJet: "JetTagSel_deepJet_sel && HasVBF"
+  VBF_deepJet: "VBF_def_deepJet && j1_pt >= 35 && j2_pt >= 25 "
+  # ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
+  ggH_deepJet: "JetTagSel_deepJet_sel && !(VBF)"
   # This is only introduced for Run3 jet horn issue!!
   # https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
   # spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
   # non-physics dependent, but related to Jet Energy Correction and Scale
-  VBF_JetVeto_def: "VBF_def && ((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
-  VBF_JetVeto: "baseline && VBF_JetVeto_def"
+  HornJetVeto_def: "((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
+  VBF_JetVeto: "VBF && HornJetVeto_def"
+  VBF_JetVeto_deepJet: "VBF_deepJet && HornJetVeto_def"
 
 # DIFFERENCES WITH RUN2:
 # - muon baseline pT cut (before requiring eventual matching to the trigger object) 20 --> 10 GeV

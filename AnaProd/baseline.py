@@ -37,7 +37,7 @@ def RecoHttCandidateSelection(df, config):
         df = df.Define(
             cand_column,
             f"""
-            GetHTTCandidates<2>(Channel::{ch}, 0.5, {leg1}_B2_{ch}_1, {leg1}_p4, {leg1}_iso, {leg1}_charge, {leg1}_genMatchIdx,{leg2}_B2_{ch}_2, {leg2}_p4, {leg2}_iso, {leg2}_charge, {leg2}_genMatchIdx)
+            GetHTTCandidates<2>(Channel::{ch}, 0., {leg1}_B2_{ch}_1, {leg1}_p4, {leg1}_iso, {leg1}_charge, {leg1}_genMatchIdx,{leg2}_B2_{ch}_2, {leg2}_p4, {leg2}_iso, {leg2}_charge, {leg2}_genMatchIdx)
         """,
         )
         cand_columns.append(cand_column)
@@ -53,11 +53,11 @@ def RecoHttCandidateSelection(df, config):
 def LeptonVeto(df):
     df = df.Define("Muon_iso", "Muon_pfRelIso04_all")
     ####  COMPARISON WITH RUN2 ####
-    # pT > 10 is a GENERAL preselection cut, then the muon matching to the offline one (which is the "leading" in Run2 analysis, in this case can be either the first or the second) has the offline pT threshold driven by the trigger. The eta, ID and iso cuts are the same w.r.t. Run 2 -- See AN/2019_185 lines 123 - 130
+    # pT > 10 is a GENERAL preselection cut, then the muon matching to the offline one (which is the "leading" in Run2 analysis, in this case can be either the first or the second) has the offline pT threshold driven by the trigger. The eta, ID and iso cuts are the same w.r.t. Run 2 -- See AN/2019_185 lines 123 - 130 #  dxy < 0.5 cm, dz < 1.0 cm
     df = df.Define(
         "Muon_B0",
         f"""
-        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""",
+        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25) && abs(Muon_dz) < 1. && abs(Muon_dxy) < 0.5""",
     )
     ####  COMPARISON WITH RUN2 ####
     # # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246
