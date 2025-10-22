@@ -250,21 +250,9 @@ TTH_inclusive:
     - TTHtoNon2B_M125
     - TTHto2B_M125
 
-
-
 Data_Full:
   name: "Data"
   datasets: [ ]
-    # - EGamma_Run2022E
-    # - EGamma_Run2022F
-    # - EGamma_Run2022G
-    # - Muon_Run2022E
-    # - Muon_Run2022F
-    # - Muon_Run2022G
-    # - MuonEG_Run2022E
-    # - MuonEG_Run2022F
-    # - MuonEG_Run2022G
-
 Data_EGamma0:
   name: "Data EGamma0"
   datasets:
