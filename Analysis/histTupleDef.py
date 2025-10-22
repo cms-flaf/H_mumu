@@ -33,6 +33,7 @@ def analysis_setup(setup):
     analysis_import = setup.global_params["analysis_import"]
     analysis = importlib.import_module(f"{analysis_import}")
 
+
 def GetDfw(
     df,
     df_caches,
@@ -49,7 +50,6 @@ def GetDfw(
     kwargset["isData"] = global_params["process_group"] == "data"
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
     kwargset["colToSave"] = []
-
 
     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
 
