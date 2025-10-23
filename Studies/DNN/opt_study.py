@@ -27,17 +27,17 @@ class Args:
 
 args = Args(
     "/afs/cern.ch/user/a/ayeagle/H_mumu/Studies/DNN/configs/config.toml",
-    "/eos/user/a/ayeagle/H_mumu/root_files/hlrp_v1p1/Run3_2022",
+    "/eos/user/a/ayeagle/H_mumu/root_files/v3_parse1",
 )
 
 
 def objective(trial, config, train_data, valid_data, test_data, test_df, device=None):
     # Declare the study parameters
-    nodes_per_layer = trial.suggest_int("nodes_per_layer", 10, 150)
+    nodes_per_layer = trial.suggest_int("nodes_per_layer", 10, 100)
     hidden_layers = trial.suggest_int("hidden_layers", 1, 6)
-    batch_size = trial.suggest_int("batch_size", 10, 3000)
-    lr = trial.suggest_float("lr", 1e-6, 1e-2)
-    epochs = trial.suggest_int("epochs", 50, 1000)
+    batch_size = trial.suggest_int("batch_size", 32, 5000)
+    lr = trial.suggest_float("lr", 1e-5, 1e-3)
+    epochs = trial.suggest_int("epochs", 10, 200)
     dropout = trial.suggest_float("dropout", 0, 0.4)
     # weight_decay = trial.suggest_float("weight_decay", 0, 0.2)
 
@@ -71,8 +71,17 @@ def objective(trial, config, train_data, valid_data, test_data, test_df, device=
     )
     tester.test(model)
 
-    # Evaluate
-    return tester.get_roc_auc()
+    # Evaluate the run
+    bin_edges, counts_lookup = tester._calc_transformed_hist()
+    bkg_total = np.zeros(len(bin_edges) - 1)
+    sig_total = np.zeros(len(bin_edges) - 1)
+    for p in tester.processes:
+        if p in tester.signal_types:
+            sig_total += counts_lookup[p]
+        else:
+            bkg_total += counts_lookup[p]
+    score = tester.s2overb(sig_total, bkg_total)   
+    return score
 
 
 # Read in config and datasets from args
@@ -120,11 +129,12 @@ config["network"]["input_size"] = len(dataloader.data_columns)
 config["network"]["output_size"] = len(train_data[0][1][0])
 
 # Do the dang thing!
-study_name = "hyper_p_test1"
+study_name = "v3_hyperparams"
 study = optuna.create_study(
     study_name=study_name,
     storage=f"sqlite:///study_{study_name}.db",
     load_if_exists=True,
+    direction='maximize'
 )
 f = lambda x: objective(x, config, train_data, valid_data, test_data, test_df, device)
 study.optimize(f, n_trials=500)

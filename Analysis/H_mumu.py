@@ -162,8 +162,6 @@ def JetCollectionDef(df):
         f"RemoveOverlaps(Jet_p4, Jet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
     )
     df = df.Define(
-        "JetTagSel_deepJet",
-        "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
         f"SelectedJet_p4",
         f"Jet_p4[Jet_NoOverlapWithMuons]",
     )
@@ -532,12 +530,14 @@ def SaveVarsForNNInput(variables):
 def GetWeight(channel="muMu"):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
-        # "weight_XS",
+        "weight_XS",
         "weight_EWKCorr_VptCentral",
         "weight_DYw_DYWeightCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
 
-    trg_weights_dict = {"muMu": ["weight_trigSF_singleMu"]}#["weight_mu1_TrgSF_singleMu_Central", "weight_mu2_TrgSF_singleMu_Central"]}  # ["weight_trigSF_singleMu"],
+    trg_weights_dict = {
+        "muMu": ["weight_trigSF_singleMu"]
+    }  # ["weight_mu1_TrgSF_singleMu_Central", "weight_mu2_TrgSF_singleMu_Central"]}  # ["weight_trigSF_singleMu"],
     ID_weights_dict = {
         "muMu": [
             "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
@@ -572,17 +572,20 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
     def RescaleXS(self):
         import yaml
+
         xsFile = self.config["crossSectionsFile"]
         xsFilePath = os.path.join(os.environ["ANALYSIS_PATH"], xsFile)
         with open(xsFilePath, "r") as xs_file:
             xs_dict = yaml.safe_load(xs_file)
-        xs_condition = self.config["process_name"] == "DY_mll_bin" or self.config["process_name"] == "DY_amcatnloFXFX" or self.config["process_name"] == "DY"
-        print(xs_condition)
-        xs_to_scale = xs_dict["DY_NNLO_QCD+NLO_EW"]["crossSec"] if xs_condition else "1.f"
-        current_xs = xs_dict[self.config["xs_entry"]]["crossSec"] if xs_condition else "1.f"
-        weight_XS_string = f"{xs_to_scale}/{current_xs}"
-        self.df = self.df.Define(f"weight_XS",weight_XS_string)
-        # self.df.Display("weight_XS").Print()
+        xs_condition = self.config["process_name"] == "DY"
+        xs_to_scale = (
+            xs_dict["DY_NNLO_QCD+NLO_EW"]["crossSec"] if xs_condition else "1.f"
+        )
+        weight_XS_string = f"xs_to_scale/current_xs" if xs_condition else "1."
+        total_denunmerator_nJets = 5378.0 / 3 + 1017.0 / 3 + 385.5 / 3
+        self.df = self.df.Define(f"current_xs", f"{total_denunmerator_nJets}")
+        self.df = self.df.Define(f"xs_to_scale", f"{xs_to_scale}")
+        self.df = self.df.Define(f"weight_XS", weight_XS_string)
 
     def defineTriggers(self):
         for ch in self.config["channelSelection"]:
@@ -598,7 +601,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
             f"sample_type",
             f"""std::string process_name = "{self.config["process_name"]}"; return process_name;""",
         )
-
 
     def AddScaReOnBS(self):
         import correctionlib
@@ -698,14 +700,13 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-    #dfForHistograms.RescaleXS()
+    dfForHistograms.RescaleXS()
     dfForHistograms.defineChannels()
     # dfForHistograms.defineSampleType()
     dfForHistograms.defineTriggers()
     dfForHistograms.AddScaReOnBS()
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
-    dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)

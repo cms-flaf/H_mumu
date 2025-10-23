@@ -34,9 +34,10 @@ def analysis_setup(setup):
     analysis = importlib.import_module(f"{analysis_import}")
 
 
+
 def GetDfw(
     df,
-    df_cache,
+    df_caches,
     global_params,
     shift="Central",
     col_names_central=[],
@@ -51,13 +52,20 @@ def GetDfw(
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
     kwargset["colToSave"] = []
 
+
     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
 
-    if df_cache:
-        dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
-            df_cache, global_params, **kwargset
-        )
-        AddCacheColumnsInDf(dfw, dfWrapped_cache, cache_map_name)
+    if df_caches:
+        k = 0
+
+        for df_cache in df_caches:
+            print(dfw.df.Count().GetValue())
+            dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
+                df_cache, global_params, period, **kwargset
+            )
+            AddCacheColumnsInDf(dfw, dfWrapped_cache, f"{cache_map_name}_{k}")
+            k += 1
+
     if shift == "Valid" and global_params["compute_unc_variations"]:
         dfw.CreateFromDelta(col_names_central, col_types_central)
     if shift != "Central" and global_params["compute_unc_variations"]:
