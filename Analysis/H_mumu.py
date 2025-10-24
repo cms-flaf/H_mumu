@@ -569,7 +569,6 @@ def GetWeight(channel="muMu"):
 
 
 class DataFrameBuilderForHistograms(DataFrameBuilderBase):
-
     def RescaleXS(self):
         import yaml
 
@@ -722,7 +721,7 @@ def PrepareDfForHistograms(dfForHistograms):
 
 
 def PrepareDfForNNInputs(dfBuilder):
-    #dfBuilder.RescaleXS()
+    # dfBuilder.RescaleXS()
     dfBuilder.defineChannels()
     dfBuilder.defineTriggers()
     dfBuilder.AddScaReOnBS()
