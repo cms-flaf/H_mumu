@@ -330,7 +330,6 @@ def addAllVariables(
     global_params,
     channels,
 ):
-
     dfw.Apply(AnaBaseline.LeptonVeto)
 
     dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
