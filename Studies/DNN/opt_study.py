@@ -33,13 +33,11 @@ args = Args(
 
 def objective(trial, config, train_data, valid_data, test_data, test_df, device=None):
     # Declare the study parameters
-    nodes_per_layer = trial.suggest_int("nodes_per_layer", 10, 100)
-    hidden_layers = trial.suggest_int("hidden_layers", 1, 6)
-    batch_size = trial.suggest_int("batch_size", 32, 5000)
-    lr = trial.suggest_float("lr", 1e-5, 1e-3)
-    epochs = trial.suggest_int("epochs", 10, 200)
-    dropout = trial.suggest_float("dropout", 0, 0.4)
-    # weight_decay = trial.suggest_float("weight_decay", 0, 0.2)
+    nodes_per_layer = trial.suggest_int("nodes_per_layer", 8, 128)
+    hidden_layers = trial.suggest_int("hidden_layers", 1, 8)
+    #batch_size = trial.suggest_int("batch_size", 32, 5000)
+    #lr = trial.suggest_float("lr", 1e-5, 1e-3)
+    dropout = trial.suggest_float("dropout", 0, 0.5)
 
     # Update config dict with the study params
     input_size = config["network"]["input_size"]
@@ -48,11 +46,9 @@ def objective(trial, config, train_data, valid_data, test_data, test_df, device=
     config["network"]["layer_list"] = (
         [input_size] + hidden_layers * [nodes_per_layer] + [output_size]
     )
-    config["training"]["batch_size"] = batch_size
-    config["optimizer"]["lr"] = lr
-    config["training"]["epochs"] = epochs
+    #config["training"]["batch_size"] = batch_size
+    #config["optimizer"]["lr"] = lr
     config["network"]["dropout"] = dropout
-    # config["optimizer"]["weight_decay"] = weight_decay
 
     # Init objects
     model = Network(device=device, **config["network"])
@@ -129,7 +125,7 @@ config["network"]["input_size"] = len(dataloader.data_columns)
 config["network"]["output_size"] = len(train_data[0][1][0])
 
 # Do the dang thing!
-study_name = "v3_hyperparams"
+study_name = "v3run2_hyperparams"
 study = optuna.create_study(
     study_name=study_name,
     storage=f"sqlite:///study_{study_name}.db",

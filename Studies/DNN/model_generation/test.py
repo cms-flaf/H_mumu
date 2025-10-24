@@ -75,7 +75,7 @@ class Tester:
         for p in bkg_processes:
             final_prob -= subdf[f"Prob_{p}"]
         # Rescale so discrim is in [0,1]
-        final_prob += len(bkg_p)
+        final_prob += len(bkg_processes)
         final_prob /= len(classes)
         # maxima = subdf.apply(np.max, axis=1).values.copy()
         # mask = np.isin(predictions, self.signal_types)
@@ -160,7 +160,7 @@ class Tester:
         """
         Takes two np arrays. Precompute a histogram and pass the bins over here.
         """
-        x = (signal_bins**2) / background_bins
+        x = (signal_bins) / np.sqrt(background_bins + signal_bins)
         return np.sqrt(np.sum(x**2))
 
     ### PLOTTING ###
@@ -397,7 +397,7 @@ class Tester:
         for p in self.signal_types:
             sig_total += counts_lookup[p]
         sensitivity = self.s2overb(sig_total, total)
-        plt.text(1, 1E5, r"$\frac{S}{\sqrt{B}} = $" + str(round(sensitivity, 3)))
+        plt.text(1, 1E5, r"$\frac{S}{\sqrt{S + B}} = $" + str(round(sensitivity, 3)))
 
         # Format
         if log:
@@ -428,44 +428,25 @@ class Tester:
         Shows the process population vs rest of population
         as a function of that process discriminant (P_{process})
         """
+        basedir = os.getcwd()
+        if not os.path.isdir('multiclass_hists'):
+            os.mkdir('multiclass_hists')
+        os.chdir('multiclass_hists')
         df = self.testing_df
         proc = pd.unique(df.process)
-        plt.clf()
-        fig, axs = plt.subplots(1, len(proc))
         alpha = 0.8
-        for p, ax in zip(proc, axs):
-            # for p in proc:
+        for p in proc:
+            plt.clf()
             mask = df.process == p
             selected = df[mask]
             other = df[~mask]
             col = f"Prob_{p}"
-            ax.hist(
-                selected[col],
-                weights=selected.Class_Weight,
-                range=self.hist_range,
-                bins=self.n_bins,
-                label=p,
-                alpha=alpha,
-            )
-            ax.hist(
-                other[col],
-                weights=other.Class_Weight,
-                range=self.hist_range,
-                bins=self.n_bins,
-                label="other",
-                alpha=alpha,
-            )
-            ax.set_yscale("log")
-            ax.set_xticks([])
-            ax.set_yticks([])
-            ax.set_xticks([], minor=True)
-            ax.set_yticks([], minor=True)
-            ax.set_xlim(0, 1)
-            ax.set_title(p)
-        if show:
-            plt.show()
-        else:
-            plt.savefig("multiclass_probs.svg")
+            plt.hist(selected[col], label=p, weights=selected.Class_Weight, alpha=alpha, bins=self.n_bins, range=self.hist_range)
+            plt.hist(other[col], label='Else', weights=other.Class_Weight, alpha=alpha, bins=self.n_bins, range=self.hist_range)
+            plt.yscale('log')
+            plt.legend()
+            plt.savefig(f"{p}_hist.svg")
+        os.chdir(basedir)
 
     ### Functions for working with Combine
 
