@@ -76,10 +76,10 @@ vars_to_save:
     # - weight_mu2_MuonID_SF_LoosePFIsoCentral
     # - weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral
     # - weight_mu2_MuonID_SF_MediumID_TrkCentral
-    #- weight_trigSF_singleMu
+    # - weight_trigSF_singleMu
     - weight_MC_Lumi_pu
     # - weight_EWKCorr_VptCentral
     # - weight_DYw_DYWeightCentral
     - m_mumu_resolution
     # - weight_EWKCorr_ewcorrCentral
-    #- final_weight
+    # - final_weight

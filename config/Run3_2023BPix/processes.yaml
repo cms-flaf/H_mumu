@@ -7,13 +7,13 @@ DY:
   datasets:
     - DYto2E_M_50_0J_amcatnloFXFX
     - DYto2Mu_M_50_0J_amcatnloFXFX
-    - DYto2Tau_M_50_0J_Filtered_amcatnloFXFX #DYto2Tau_M_50_0J_amcatnloFXFX
+    - DYto2Tau_M_50_0J_Filtered_amcatnloFXFX # DYto2Tau_M_50_0J_amcatnloFXFX
     - DYto2E_M_50_1J_amcatnloFXFX
     - DYto2Mu_M_50_1J_amcatnloFXFX
-    - DYto2Tau_M_50_1J_Filtered_amcatnloFXFX #DYto2Tau_M_50_1J_amcatnloFXFX
+    - DYto2Tau_M_50_1J_Filtered_amcatnloFXFX # DYto2Tau_M_50_1J_amcatnloFXFX
     - DYto2E_M_50_2J_amcatnloFXFX
     - DYto2Mu_M_50_2J_amcatnloFXFX
-    - DYto2Tau_M_50_2J_Filtered_amcatnloFXFX #DYto2Tau_M_50_2J_amcatnloFXFX
+    - DYto2Tau_M_50_2J_Filtered_amcatnloFXFX # DYto2Tau_M_50_2J_amcatnloFXFX
 
 # DY_inclusive:
 #   name: "DY m50 incl"
@@ -112,7 +112,7 @@ EWK_LLJJ:
   name: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-  datasets: []
+  datasets: [ ]
 
 EWK:
   name: "EWK"
@@ -125,19 +125,19 @@ EWK_LLJJ_herwig:
   name: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-  datasets: []
+  datasets: [ ]
 
 EWK_LLJJ_M105_160:
   name: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-  datasets: []
+  datasets: [ ]
 
 EWK_LLJJ_M105_160_VBFFilter:
   name: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-  datasets: []
+  datasets: [ ]
 
 ############## Other single H  ##############
 H_mainBckg:
@@ -265,7 +265,7 @@ VBFHto2Mu_Herwig:
   name: "VBFHto2Mu_Herwig"
   color: "kPink"
   color_mplhep: fuchsia
-  datasets: []
+  datasets: [ ]
 #     - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
 #     # - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
 #     # - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
@@ -308,10 +308,9 @@ TTH_inclusive:
     - TTHto2B_M125
 
 
-
 Data_Full:
   name: "Data"
-  datasets: []
+  datasets: [ ]
     # - EGamma_Run2022E
     # - EGamma_Run2022F
     # - EGamma_Run2022G
@@ -352,4 +351,3 @@ Data_MuonEG:
   datasets:
     - MuonEG_Run2023D_v1
     - MuonEG_Run2023D_v2
-

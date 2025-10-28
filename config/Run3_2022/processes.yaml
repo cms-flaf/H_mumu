@@ -297,10 +297,7 @@ VBFHto2Mu:
 
 VBFHto2Mu_Herwig:
   name: "VBFHto2Mu_Herwig"
-VBFHto2Mu_Herwig:
-  name: "VBFHto2Mu_Herwig"
   color: "kPink"
-  color_mplhep: fuchsia
   color_mplhep: fuchsia
   datasets:
     - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
