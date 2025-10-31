@@ -68,6 +68,12 @@ def GetDfw(
     if shift != "Central" and global_params["compute_unc_variations"]:
         dfw.AddMissingColumns(col_names_central, col_types_central)
     new_dfw = analysis.PrepareDfForHistograms(dfw)
+    if global_params["further_cuts"]:
+        for key in global_params["further_cuts"].keys():
+            vars_to_add = global_params["further_cuts"][key][0]
+            for var_to_add in vars_to_add:
+                if var_to_add not in new_dfw.colToSave:
+                    new_dfw.colToSave.append(var_to_add)
     return new_dfw
 
 
@@ -122,10 +128,12 @@ def DefineWeightForHistograms(
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
         dfw.df = dfw.df.Define(weight_name, total_weight_expression)
-    if not isCentral and type(unc_cfg_dict) == dict:
+    if not isCentral:  # and type(unc_cfg_dict['norm']) == dict:
         if (
-            uncName in unc_cfg_dict.keys()
-            and "expression" in unc_cfg_dict[uncName].keys()
+            uncName in unc_cfg_dict["norm"].keys()
+            and "expression" in unc_cfg_dict["norm"][uncName].keys()
         ):
-            weight_name = unc_cfg_dict[uncName]["expression"].format(scale=uncScale)
+            weight_name = unc_cfg_dict["norm"][uncName]["expression"].format(
+                scale=uncScale
+            )
     dfw.df = dfw.df.Define(final_weight_name, weight_name)
