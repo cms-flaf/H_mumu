@@ -23,3 +23,5 @@ BaseModel:
     - GluGluHto2Mu
   data:
     - Data_Muon
+    - Data_Muon0
+    - Data_Muon1
