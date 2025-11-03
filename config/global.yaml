@@ -31,7 +31,7 @@ custom_regions: MuMuMassRegions
 custom_categories: ""
 custom_subcategories: [ ]
 
-further_cuts: 
+further_cuts:
   # etamm_0p9: ["eta_mumu","abs(eta_mumu) < 0.9"]
   # etamm_1p4: ["eta_mumu","abs(eta_mumu) >= 0.9 && abs(eta_mumu) < 1.4"]
   # etamm_2p4: ["eta_mumu","abs(eta_mumu) >= 1.4 && abs(eta_mumu) < 2.4"]
@@ -171,7 +171,7 @@ corrections:
   # - btagWP
   - mu
   - Vpt
-  - puP
+  - pu
   - muScaRe
 
 scales:
