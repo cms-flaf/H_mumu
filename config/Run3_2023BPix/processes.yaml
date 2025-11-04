@@ -183,7 +183,7 @@ TTX:
     - TTWW
     - TTZH
     - TTZZ
-    - TTZ_Zto2Q
+    # - TTZ_Zto2Q
 
 TTX_2023:
   name: "TT+X"
@@ -265,18 +265,13 @@ Data_EGamma1:
     - EGamma1_Run2023D_v1
     - EGamma1_Run2023D_v2
 
-Data_Muon0:
+Data_Muon:
   name: "Data Muon 0 "
   datasets:
     - Muon0_Run2023D_v1
     - Muon0_Run2023D_v2
-
-
-Data_Muon1:
-  name: "Data Muon 1 "
-  datasets:
     - Muon1_Run2023D_v1
-    - Muon1_Run2023D_v2
+    - Muon1_Run2023D_v2 
 
 Data_MuonEG:
   name: "Data MuonEG"

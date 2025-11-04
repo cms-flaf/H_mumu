@@ -117,16 +117,16 @@ singleMu_th:
   Run3_2023BPix : 26
 
 categories:
-  # - no_cuts
-  # - OS_sel
-  # - trigger_sel
-  # - baseline
-  # - baseline_POG
+  - no_cuts
+  - OS_sel
+  - trigger_sel
+  - baseline
+  - baseline_POG
   - JetTagSel_def_sel
-  # - VBF_def
-  # - VBF
-  # - ggH
-  # - VBF_JetVeto
+  - VBF_def
+  - VBF
+  - ggH
+  - VBF_JetVeto
 
 
 category_definition:
