@@ -131,7 +131,7 @@ categories:
 
 category_definition:
   #### COMPARISON WITH RUN 2 ####
-#  the baseline selection requires OS -- > Opposite Sign of muons charge (as in Run2, obv), and either the first or the second muon matching the online object and passing the pT threshold driven by the trigger (which is always 26 GeV in Run3 up to now) -- See AN/2019_185 lines 123 - 130
+  #  the baseline selection requires OS -- > Opposite Sign of muons charge (as in Run2, obv), and either the first or the second muon matching the online object and passing the pT threshold driven by the trigger (which is always 26 GeV in Run3 up to now) -- See AN/2019_185 lines 123 - 130
   no_cuts: "true"
   OS_sel: "OS"
   trigger_sel: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
@@ -139,18 +139,18 @@ category_definition:
   baseline_POG: "OS_sel && trigger_sel &&  mu1_iso< 0.15 && mu2_iso< 0.15 && mu1_tightId && mu2_tightId && mu1_pt > 26 && mu2_pt>26"
   JetTagSel_def_sel: "baseline && JetTagSel"
   #### COMPARISON WITH RUN 2 ####
-#  VBF category and def is the same w.r.t run 2
+  #  VBF category and def is the same w.r.t run 2
   VBF_def: "JetTagSel_def_sel && HasVBF"
   VBF: "VBF_def && j1_pt >= 35 && j2_pt >= 25 "
-#  ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
+  #  ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
   ggH: "JetTagSel_def_sel && !(VBF)"
   #### COMPARISON WITH RUN 2 ####
-#  VBF category and def is the same w.r.t run 2
-#  ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
-#  This is only introduced for Run3 jet horn issue!!
-#  https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
-#  spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
-#  non-physics dependent, but related to Jet Energy Correction and Scale
+  #  VBF category and def is the same w.r.t run 2
+  #  ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
+  #  This is only introduced for Run3 jet horn issue!!
+  #  https://gitlab.cern.ch/cms-jetmet/coordination/coordination/-/issues/113 --> data/MC differences in Jet distributions
+  #  spikes are pT dependent, increasing the pT threshold to 50 GeV let them disappear, but reduces significantly the analysis sensitivity
+  #  non-physics dependent, but related to Jet Energy Correction and Scale
   HornJetVeto_def: "((abs(j1_eta) < 2.5 || abs(j1_eta) > 3 || j1_pt > 50) && (abs(j2_eta) < 2.5 || abs(j2_eta) > 3 || j2_pt > 50))"
   VBF_JetVeto: "VBF && HornJetVeto_def"
 
@@ -168,7 +168,7 @@ corrections:
   - Jet_horns_fix
   - JER
   - trgSF
-#  - btagWP
+  #  - btagWP
   - mu
   - Vpt
   - pu
