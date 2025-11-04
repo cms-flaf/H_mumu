@@ -8,3 +8,8 @@ __pycache__
 AnaProd/tasks.py
 *.txt
 /output
+Analysis/fits
+Analysis/plotting_tools
+Analysis/schemaV2_VXBS.json
+Analysis/yield_calculator/
+Studies/FSRRecovery/
