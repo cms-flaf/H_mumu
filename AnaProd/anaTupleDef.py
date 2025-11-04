@@ -33,6 +33,7 @@ Muon_observables = [
     "fsrPhotonIdx",
     "genPartFlav",
     "genPartIdx",
+    # "genMatchIdx",
     "highPtId",
     "highPurity",
     "inTimeMuon",
@@ -423,6 +424,22 @@ def addAllVariables(
                 var_cond=f"mu{leg_idx+1}_genMatchIdx>=0",
                 default="-10",
             )
+        else:
+            dfw.Define(
+                f"mu{leg_idx+1}_genMatchIdx",
+                f"-1",
+                var_type="int"
+            )
+            LegVar(
+                "gen_kind",
+                f"-1",
+                var_type="int",
+            )
+            LegVar(
+                "gen_charge",
+                f"-10",
+                var_type="int",
+            )
         dfw.Define(
             f"mu{leg_idx+1}_p4",
             f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_p4.at({leg_idx}) : LorentzVectorM()",
@@ -435,6 +452,7 @@ def addAllVariables(
         #     f"mu{leg_idx+1}_index",
         #     f"HttCandidate.leg_type.size() > {leg_idx} ? HttCandidate.leg_index.at({leg_idx}) : -1",
         # )
+        dfw.colToSave.append(f"mu{leg_idx+1}_genMatchIdx")
         dfw.Define(
             f"mu{leg_idx+1}_type",
             f"HttCandidate.leg_type.size() > {leg_idx} ? static_cast<int>(HttCandidate.leg_type.at({leg_idx})) : -1",

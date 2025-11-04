@@ -8,7 +8,7 @@ if __name__ == "__main__":
 from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
-
+from Analysis.ApplyMuonCorrections import *
 
 JetObservables = [
     "PNetRegPtRawCorr",
@@ -297,16 +297,29 @@ def GetMuMuObservables(df):
             f"mu{idx+1}_p4_BS_ScaRe",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
+
+        df = df.Define(
+            f"mu{idx+1}_p4_RoccoR",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_RoccoR_pt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
+        df = df.Define(
+            f"mu{idx+1}_p4_BS_RoccoR",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_RoccoR_pt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
     df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
     df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
     df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
+    df = df.Define(f"pt_mumu_RoccoR", "(mu1_p4_RoccoR+mu2_p4_RoccoR).Pt()")
+    df = df.Define(f"pt_mumu_BS_RoccoR", "(mu1_p4_BS_RoccoR+mu2_p4_BS_RoccoR).Pt()")
     df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
     df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
     df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
     df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
     df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
+    df = df.Define("m_mumu_RoccoR", "static_cast<float>((mu1_p4_RoccoR+mu2_p4_RoccoR).M())")
+    df = df.Define("m_mumu_BS_RoccoR", "static_cast<float>((mu1_p4_BS_RoccoR+mu2_p4_BS_RoccoR).M())")
     df = df.Define(
         "m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())"
     )
@@ -330,29 +343,42 @@ def GetMuMuObservables(df):
 def GetMuMuMassResolution(df):
     delta_mu_expr = "sqrt( 0.5 * (pow( ({0}/{1}), 2) + pow( ({2}/{3}), 2) ) ) "
     df = df.Define(
+        "m_mumu_resolution_nano",
+        delta_mu_expr.format(
+            "mu1_ptErr",
+            "mu1_pt_nano",
+            "mu2_ptErr",
+            "mu2_pt_nano",
+        ),
+    )
+    df = df.Define(
         "m_mumu_resolution",
         delta_mu_expr.format(
-            "mu1_pt",
             "(mu1_pt-mu1_pt_nano)/mu1_pt",
-            "mu2_pt",
+            "mu1_pt",
             "(mu2_pt-mu2_pt_nano)/mu2_pt",
+            "mu2_pt",
         ),
     )
     df = df.Define(
-        "m_mumu_resolution_relerr",
+        "m_mumu_resolution_BS",
         delta_mu_expr.format(
-            "mu1_pt", "(mu1_pt-mu1_pt_nano)", "mu2_pt", "(mu2_pt-mu2_pt_nano)"
-        ),
-    )
-    df = df.Define(
-        "m_mumu_resolution_bsConstrained",
-        delta_mu_expr.format(
-            "mu1_bsConstrainedPt",
             "mu1_bsConstrainedPtErr",
-            "mu2_bsConstrainedPt",
+            "mu1_bsConstrainedPt",
             "mu2_bsConstrainedPtErr",
+            "mu2_bsConstrainedPt",
         ),
     )
+    df = df.Define(
+        "m_mumu_resolution_BS_ScaRe",
+        delta_mu_expr.format(
+            "(mu1_BS_pt_1_corr-mu1_bsConstrainedPt)",
+            "mu1_BS_pt_1_corr",
+            "(mu2_BS_pt_1_corr-mu2_bsConstrainedPt)",
+            "mu2_BS_pt_1_corr",
+        ),
+    )
+
     return df
 
 
@@ -521,40 +547,39 @@ def GetWeight(channel="muMu"):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
         "weight_XS",
-        "weight_EWKCorr_VptCentral",
-        "weight_DYw_DYWeightCentral",
+        "new_DY_weight"
+        # "weight_DYw_DYWeightCentral",
+        # "weight_EWKCorr_VptCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
         "muMu": ["weight_trigSF_singleMu"]
-    }  # ["weight_mu1_TrgSF_singleMu_Central", "weight_mu2_TrgSF_singleMu_Central"]}  # ["weight_trigSF_singleMu"],
+    }
     ID_weights_dict = {
         "muMu": [
-            "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
-            "weight_mu1_HighPt_MuonID_SF_RecoCentral",
-            "weight_mu1_LowPt_MuonID_SF_MediumIDCentral",
-            "weight_mu1_MuonID_SF_LoosePFIsoCentral",
-            "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
-            "weight_mu1_MuonID_SF_MediumID_TrkCentral",
-            "weight_mu2_HighPt_MuonID_SF_MediumIDCentral",
-            "weight_mu2_HighPt_MuonID_SF_RecoCentral",
-            "weight_mu2_LowPt_MuonID_SF_MediumIDCentral",
-            "weight_mu2_MuonID_SF_LoosePFIsoCentral",
-            "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
-            "weight_mu2_MuonID_SF_MediumID_TrkCentral",
+            # "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
+            # "weight_mu1_LowPt_MuonID_SF_MediumIDCentral",
+            # "weight_mu1_MuonID_SF_LoosePFIsoCentral",
+            # "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
+            # "weight_mu1_MuonID_SF_MediumID_TrkCentral",
+            # "weight_mu2_HighPt_MuonID_SF_MediumIDCentral",
+            # "weight_mu2_LowPt_MuonID_SF_MediumIDCentral",
+            # "weight_mu2_MuonID_SF_LoosePFIsoCentral",
+            # "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
+            # "weight_mu2_MuonID_SF_MediumID_TrkCentral",
+            "weight_mu1_HighPt_MuonID_SF_TightIDCentral",
+            "weight_mu1_LowPt_MuonID_SF_TightIDCentral",
+            "weight_mu1_MuonID_SF_TightID_TrkCentral",
+            "weight_mu2_HighPt_MuonID_SF_TightIDCentral",
+            "weight_mu2_LowPt_MuonID_SF_TightIDCentral",
+            "weight_mu2_MuonID_SF_TightID_TrkCentral",
         ]
     }
     # should be moved to config
-    # what about :
-    #   weight_mu1_HighPt_MuonID_SF_MediumIDLooseRelIsoHLTCentral ?
-    #   weight_mu2_HighPt_MuonID_SF_MediumIDLooseRelIsoHLTCentral
-    #   weight_mu1_HighPt_MuonID_SF_MediumIdLooseRelTkIsoCentral ?
-    #   weight_mu2_HighPt_MuonID_SF_MediumIdLooseRelTkIsoCentral ?
     weights_to_apply.extend(ID_weights_dict[channel])
     weights_to_apply.extend(trg_weights_dict[channel])
 
     total_weight = "*".join(weights_to_apply)
-    # print(total_weight)
     return total_weight
 
 
@@ -567,7 +592,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         xsFilePath = os.path.join(os.environ["ANALYSIS_PATH"], xsFile)
         with open(xsFilePath, "r") as xs_file:
             xs_dict = yaml.safe_load(xs_file)
-        xs_condition = self.config["process_name"] == "DY"
+        xs_condition = f"DY" in self.config["process_name"] #== "DY"
         xs_to_scale = (
             xs_dict["DY_NNLO_QCD+NLO_EW"]["crossSec"] if xs_condition else "1.f"
         )
@@ -591,59 +616,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
             f"sample_type",
             f"""std::string process_name = "{self.config["process_name"]}"; return process_name;""",
         )
-
-    def AddScaReOnBS(self):
-        import correctionlib
-
-        period_files = {
-            "Run3_2022": "2022_Summer22",
-            "Run3_2022EE": "2022_Summer22EE",
-            "Run3_2023": "2023_Summer23",
-            "Run3_2023BPix": "2023_Summer23BPix",
-        }
-        correctionlib.register_pyroot_binding()
-        file_name = period_files.get(self.period, "")
-        analysis_path = os.environ["ANALYSIS_PATH"]
-        ROOT.gROOT.ProcessLine(
-            f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
-        )
-        ROOT.gROOT.ProcessLine(f'#include "{analysis_path}/include/MuonScaRe.cc"')
-        for mu_idx in [1, 2]:
-            if self.isData:
-                # Data apply scale correction
-                self.df = self.df.Define(
-                    f"mu{mu_idx}_BS_pt_1_corr",
-                    f"pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
-                )
-            else:
-                self.df = self.df.Define(
-                    f"mu{mu_idx}_BS_pt_1_scale_corr",
-                    f"pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
-                )
-
-                self.df = self.df.Define(
-                    f"mu{mu_idx}_BS_pt_1_corr",
-                    f"pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
-                )
-                # # MC evaluate scale uncertainty
-                # df_mc = df_mc.Define(
-                #     'pt_1_scale_corr_up',
-                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "up")'
-                # )
-                # df_mc = df_mc.Define(
-                #     'pt_1_scale_corr_dn',
-                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "dn")'
-                # )
-
-                # # MC evaluate resolution uncertainty
-                # df_mc = df_mc.Define(
-                #     "pt_1_corr_resolup",
-                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "up")'
-                # )
-                # df_mc = df_mc.Define(
-                #     "pt_1_corr_resoldn",
-                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "dn")'
-                # )
 
     def defineRegions(self):
         region_defs = self.config["MuMuMassRegions"]
@@ -694,7 +666,8 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.defineChannels()
     # dfForHistograms.defineSampleType()
     dfForHistograms.defineTriggers()
-    dfForHistograms.AddScaReOnBS()
+    dfForHistograms.df = AddScaReOnBS(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
+    dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
