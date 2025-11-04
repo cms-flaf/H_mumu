@@ -31,66 +31,66 @@ custom_regions: MuMuMassRegions
 custom_categories: ""
 custom_subcategories: [ ]
 
-further_cuts:
+further_cuts: { }
   # etamm_0p9: ["eta_mumu","abs(eta_mumu) < 0.9"]
   # etamm_1p4: ["eta_mumu","abs(eta_mumu) >= 0.9 && abs(eta_mumu) < 1.4"]
   # etamm_2p4: ["eta_mumu","abs(eta_mumu) >= 1.4 && abs(eta_mumu) < 2.4"]
   # etamm_above2p4: ["eta_mumu","abs(eta_mumu) > 2.4"]
   # inclusive: [["eta_mumu"],"abs(eta_mumu) >= 0."]
   # # Inclusive
-  # inclusive_BB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
-  # inclusive_BO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # inclusive_BE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # inclusive_OB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
-  # inclusive_OO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # inclusive_OE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # inclusive_EB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
-  # inclusive_EO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # inclusive_EE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # inclusive_BB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
+  # inclusive_BO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # inclusive_BE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # inclusive_OB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
+  # inclusive_OO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # inclusive_OE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # inclusive_EB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
+  # inclusive_EO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # inclusive_EE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
 
   # # pT < 45
-  # leading_mu_pt_45_BB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_45_BO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_45_BE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # leading_mu_pt_45_OB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_45_OO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_45_OE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # leading_mu_pt_45_EB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_45_EO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_45_EE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_45_BB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_45_BO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_45_BE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_45_OB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_45_OO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_45_OE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_45_EB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_45_EO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_45_EE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
 
   # # 45 ≤ pT < 52
-  # leading_mu_pt_52_BB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_52_BO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_52_BE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # leading_mu_pt_52_OB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_52_OO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_52_OE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # leading_mu_pt_52_EB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_52_EO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_52_EE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_52_BB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_52_BO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_52_BE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_52_OB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_52_OO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_52_OE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_52_EB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_52_EO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_52_EE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
 
   # # 52 ≤ pT < 62
-  # leading_mu_pt_62_BB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_62_BO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_62_BE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # leading_mu_pt_62_OB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_62_OO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_62_OE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # leading_mu_pt_62_EB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_62_EO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_62_EE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_62_BB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_62_BO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_62_BE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_62_OB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_62_OO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_62_OE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_62_EB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_62_EO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_62_EE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
 
   # # pT ≥ 62
-  # leading_mu_pt_up_BB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_up_BO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_up_BE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # leading_mu_pt_up_OB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_up_OO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_up_OE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
-  # leading_mu_pt_up_EB : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
-  # leading_mu_pt_up_EO : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
-  # leading_mu_pt_up_EE : [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_up_BB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_up_BO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_up_BE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_up_OB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_up_OO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_up_OE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=0.9 && abs(mu1_eta)<1.8 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
+  # leading_mu_pt_up_EB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)<0.9"]
+  # leading_mu_pt_up_EO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
+  # leading_mu_pt_up_EE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
 
 
 MuMuMassRegions:  ### ALL same w.r.t. Run 2 ###
@@ -107,14 +107,14 @@ hist_triggers:
     default: (HLT_singleMu)
 
 singleMu_th:
-  Run2_2016 : 26
-  Run2_2016_HIPM : 26
-  Run2_2017 : 29
-  Run2_2018 : 26
-  Run3_2022 : 26
-  Run3_2022EE : 26
-  Run3_2023 : 26
-  Run3_2023BPix : 26
+  Run2_2016: 26
+  Run2_2016_HIPM: 26
+  Run2_2017: 29
+  Run2_2018: 26
+  Run3_2022: 26
+  Run3_2022EE: 26
+  Run3_2023: 26
+  Run3_2023BPix: 26
 
 categories:
   - no_cuts

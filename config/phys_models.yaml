@@ -22,4 +22,4 @@ BaseModel:
     - VBFHto2Mu_Herwig
     - GluGluHto2Mu
   data:
-    - Data_Muon 
+    - Data_Muon

@@ -270,7 +270,7 @@ Data_Muon:
     - Muon1_Run2023C_v1
     - Muon1_Run2023C_v2
     - Muon1_Run2023C_v3
-    - Muon1_Run2023C_v4 
+    - Muon1_Run2023C_v4
 
 Data_MuonEG:
   name: "Data MuonEG"
