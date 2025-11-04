@@ -273,7 +273,6 @@ defaultColToSave = [
     "BeamSpot_type",
     "BeamSpot_z",
     "BeamSpot_zError",
-    "JetSel",
 ]
 
 additional_VBFStudies_vars = [
@@ -336,13 +335,13 @@ def addAllVariables(
 
     dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
 
-    dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
+    # dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
 
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
 
     dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
-    dfw.Apply(CommonBaseline.ApplyJetVetoMap)
+    dfw.Apply(CommonBaseline.ApplyJetVetoMap, apply_filter=False)
 
     dfw.Apply(AnaBaseline.GetMuMuCandidate)
 
@@ -440,12 +439,18 @@ def addAllVariables(
             f"mu{leg_idx+1}_type",
             f"HttCandidate.leg_type.size() > {leg_idx} ? static_cast<int>(HttCandidate.leg_type.at({leg_idx})) : -1",
         )
+    jet_obs_names = []
     for jetobs in JetObservables + ["idx"]:
         jet_obs_name = f"Jet_{jetobs}"
         if jet_obs_name in dfw.df.GetColumnNames():
-            dfw.DefineAndAppend(f"SelectedJet_{jetobs}", f"Jet_{jetobs}[Jet_B0]")
+            jet_obs_names.append(jet_obs_name)
+            # dfw.DefineAndAppend(f"SelectedJet_{jetobs}", f"Jet_{jetobs}")
+    dfw.colToSave.extend(jet_obs_names)
     for recoObsNew in (
-        PUObservables + FSRPhotonObservables + SoftActivityJetObservables
+        PUObservables
+        + FSRPhotonObservables
+        + SoftActivityJetObservables
+        + additional_VBFStudies_vars
     ):  # additional_VBFStudies_vars+
         if recoObsNew in dfw.df.GetColumnNames():
             dfw.colToSave.extend([recoObsNew])
