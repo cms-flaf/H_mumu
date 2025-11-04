@@ -7,29 +7,14 @@ DY:
   datasets:
     - DYto2E_M_50_0J_amcatnloFXFX
     - DYto2Mu_M_50_0J_amcatnloFXFX
-    - DYto2Tau_M_50_0J_amcatnloFXFX
+    - DYto2Tau_M_50_0J_Filtered_amcatnloFXFX # DYto2Tau_M_50_0J_amcatnloFXFX
     - DYto2E_M_50_1J_amcatnloFXFX
     - DYto2Mu_M_50_1J_amcatnloFXFX
-    - DYto2Tau_M_50_1J_amcatnloFXFX
+    - DYto2Tau_M_50_1J_Filtered_amcatnloFXFX # DYto2Tau_M_50_1J_amcatnloFXFX
     - DYto2E_M_50_2J_amcatnloFXFX
     - DYto2Mu_M_50_2J_amcatnloFXFX
-    - DYto2Tau_M_50_2J_amcatnloFXFX
+    - DYto2Tau_M_50_2J_Filtered_amcatnloFXFX # DYto2Tau_M_50_2J_amcatnloFXFX
 
-DYToMuMu_MiNNLO:
-  name: "DY $\\rightarrow \\ell \\ell$ + jets"
-  color: kAzure-9
-  color_mplhep: lightskyblue
-  datasets:
-    - DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
-    # - DYToMuMu-M50_13p6TeV_MiNNLO_pythia8_ext1
-
-DYToMuMu_M105-180_MiNNLO:
-  name: "DY $\\rightarrow \\ell \\ell$ + jets"
-  color: kAzure-9
-  color_mplhep: lightskyblue
-  datasets:
-    - DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8_ext1
-    - DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
 
 ############## TT ##############
 TT:
@@ -71,9 +56,7 @@ EWK_LLJJ:
   name: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-  datasets:
-    - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole
-    # - LLJJ_SM_M-50_MJJ120_13p6TeV_dipole_ext1
+  datasets: [ ]
 
 EWK:
   name: "EWK"
@@ -86,35 +69,19 @@ EWK_LLJJ_herwig:
   name: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-  datasets:
-    - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
-    - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1
-    - LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2
+  datasets: [ ]
 
 EWK_LLJJ_M105_160:
   name: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-  datasets:
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext2
+  datasets: [ ]
 
 EWK_LLJJ_M105_160_VBFFilter:
   name: "EWK"
   color: kMagenta+3
   color_mplhep: darkmagenta
-  datasets:
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext1
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext2
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext3
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext4
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext5
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext6
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext7
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext8
-    - LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9
+  datasets: [ ]
 
 ############## Other single H  ##############
 H_mainBckg:
@@ -122,7 +89,8 @@ H_mainBckg:
   color: kPink
   color_mplhep: aqua
   datasets:
-    - GluGluHto2Tau_M125
+    - GluGluHto2Tau_UncorrelatedDecay_Filtered
+    - GluGluHto2Tau_UncorrelatedDecay_UnFiltered
     - GluGluHto2B_M125
     - VBFHto2B_M125
     - VBFHto2Tau_UncorrelatedDecay_UnFiltered
@@ -232,10 +200,10 @@ VBFHto2Mu_Herwig:
   name: "VBFHto2Mu_Herwig"
   color: "kPink"
   color_mplhep: fuchsia
-  datasets:
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
-    - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
+  datasets: [ ]
+#     - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7
+#     # - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1
+#     # - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
 
 ############## ggH signal ##############
 
@@ -278,36 +246,33 @@ TTH_inclusive:
 Data_Full:
   name: "Data"
   datasets:
-    - EGamma_Run2022C
-    - EGamma_Run2022D
-    - Muon_Run2022C
-    - Muon_Run2022D
-    - SingleMuon_Run2022C
-    - DoubleMuon_Run2022C
-    - MuonEG_Run2022C
-    - MuonEG_Run2022D
+    - EGamma_Run2022E
+    - EGamma_Run2022F
+    - EGamma_Run2022G
+    - Muon_Run2022E
+    - Muon_Run2022F
+    - Muon_Run2022G
+    - MuonEG_Run2022E
+    - MuonEG_Run2022F
+    - MuonEG_Run2022G
 
 Data_EGamma:
   name: "Data EGamma"
   datasets:
-    - EGamma_Run2022C
-    - EGamma_Run2022D
+    - EGamma_Run2022E
+    - EGamma_Run2022F
+    - EGamma_Run2022G
 
 Data_Muon:
   name: "Data Muon"
   datasets:
-    - SingleMuon_Run2022C
-    # - DoubleMuon_Run2022C
-    - Muon_Run2022C
-    - Muon_Run2022D
+    - Muon_Run2022E
+    - Muon_Run2022F
+    - Muon_Run2022G
 
 Data_MuonEG:
   name: "Data MuonEG"
   datasets:
-    - MuonEG_Run2022C
-
-Other:
-  name: "Other"
-  color: kGray+1
-  color_mplhep: slateblue
-  datasets: [ ]
+    - MuonEG_Run2022E
+    - MuonEG_Run2022F
+    - MuonEG_Run2022G
