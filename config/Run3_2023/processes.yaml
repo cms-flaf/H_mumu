@@ -15,63 +15,6 @@ DY:
     - DYto2Mu_M_50_2J_amcatnloFXFX
     - DYto2Tau_M_50_2J_amcatnloFXFX # DYto2Tau_M_50_2J_Filtered_amcatnloFXFX #
 
-# DY_inclusive:
-#   name: "DY m50 incl"
-#   color:
-#   color_mplhep:
-#   datasets:
-#     - DYto2L_M_50_amcatnloFXFX
-
-DY_mll_bin:
-  name: "DY - mll bin"
-  color: "kAzure+7"
-  color_mplhep: lightskyblue
-  datasets:
-    - DYto2E_MLL_10to50_powheg
-    - DYto2E_MLL_50to120_powheg
-    - DYto2E_MLL_120to200_powheg
-    - DYto2E_MLL_200to400_powheg
-    - DYto2E_MLL_400to800_powheg
-    - DYto2E_MLL_800to1500_powheg
-    - DYto2E_MLL_1500to2500_powheg
-    - DYto2E_MLL_2500to4000_powheg
-    - DYto2E_MLL_4000to6000_powheg
-    - DYto2E_MLL_6000_powheg
-    - DYto2Mu_MLL_10to50_powheg
-    - DYto2Mu_MLL_50to120_powheg
-    - DYto2Mu_MLL_120to200_powheg
-    - DYto2Mu_MLL_200to400_powheg
-    - DYto2Mu_MLL_400to800_powheg
-    - DYto2Mu_MLL_800to1500_powheg
-    - DYto2Mu_MLL_1500to2500_powheg
-    - DYto2Mu_MLL_2500to4000_powheg
-    - DYto2Mu_MLL_4000to6000_powheg
-    - DYto2Mu_MLL_6000_powheg
-    - DYto2Tau_MLL_10to50_powheg
-    - DYto2Tau_MLL_50to120_powheg
-    - DYto2Tau_MLL_120to200_powheg
-    - DYto2Tau_MLL_200to400_powheg
-    - DYto2Tau_MLL_400to800_powheg
-    - DYto2Tau_MLL_800to1500_powheg
-    - DYto2Tau_MLL_1500to2500_powheg
-    - DYto2Tau_MLL_2500to4000_powheg
-    - DYto2Tau_MLL_4000to6000_powheg
-    - DYto2Tau_MLL_6000_powheg
-
-DY_amcatnloFXFX:
-  name: "DY amcatnloFXFX"
-  # cross_section_correction: 12/ 11  # NLO -> NNLO
-  color: kAzure-9
-  color_mplhep: lightskyblue
-  datasets:
-    - DYto2E_M_50_amcatnloFXFX
-    # - DYto2E_M_50_amcatnloFXFX_ext1
-    - DYto2Mu_M_50_amcatnloFXFX
-    # - DYto2Mu_M_50_amcatnloFXFX_ext1
-    - DYto2Tau_M_50_amcatnloFXFX
-    # - DYto2Tau_M_50_amcatnloFXFX_ext1
-
-
 ############## TT ##############
 TT:
   name: "t $\\bar{t}$"
@@ -209,7 +152,7 @@ VVV:
 ST:
   name: "ST"
   color: kCyan-1
-  color_mplhep: green
+  color_mplhep: cyan
   datasets:
     - TbarBtoLminusNuB_s_channel_4FS
     - TBbartoLplusNuBbar_s_channel_4FS
@@ -240,18 +183,6 @@ TTX:
     - TTWW
     - TTZH
     - TTZZ
-    - TTZ_Zto2Q
-
-TTX_2023:
-  name: "TT+X"
-  color: kBlue-10
-  color_mplhep: pink
-  datasets:
-    - TTWH
-    - TTWW
-    - TTZH
-    - TTZZ
-
 
 ############## VBF signal ##############
 
@@ -329,17 +260,13 @@ Data_EGamma1:
     - EGamma1_Run2023C_v3
     - EGamma1_Run2023C_v4
 
-Data_Muon0:
+Data_Muon:
   name: "Data Muon 0 "
   datasets:
     - Muon0_Run2023C_v1
     - Muon0_Run2023C_v2
     - Muon0_Run2023C_v3
     - Muon0_Run2023C_v4
-
-Data_Muon1:
-  name: "Data Muon 1 "
-  datasets:
     - Muon1_Run2023C_v1
     - Muon1_Run2023C_v2
     - Muon1_Run2023C_v3

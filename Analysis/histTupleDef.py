@@ -57,7 +57,6 @@ def GetDfw(
         k = 0
 
         for df_cache in df_caches:
-            print(dfw.df.Count().GetValue())
             dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
                 df_cache, global_params, period, **kwargset
             )
@@ -69,7 +68,46 @@ def GetDfw(
     if shift != "Central" and global_params["compute_unc_variations"]:
         dfw.AddMissingColumns(col_names_central, col_types_central)
     new_dfw = analysis.PrepareDfForHistograms(dfw)
+    if global_params["further_cuts"]:
+        for key in global_params["further_cuts"].keys():
+            vars_to_add = global_params["further_cuts"][key][0]
+            for var_to_add in vars_to_add:
+                if var_to_add not in new_dfw.colToSave:
+                    new_dfw.colToSave.append(var_to_add)
     return new_dfw
+
+
+# def GetDfw(
+#     df,
+#     df_cache,
+#     global_params,
+#     shift="Central",
+#     col_names_central=[],
+#     col_types_central=[],
+#     cache_map_name="cache_map_Central",
+# ):
+#     period = global_params["era"]
+#     kwargset = (
+#         {}
+#     )  # here go the customisations for each analysis eventually extrcting stuff from the global params
+#     kwargset["isData"] = global_params["process_group"] == "data"
+#     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
+#     kwargset["colToSave"] = []
+
+#     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
+
+#     if df_cache:
+
+#         dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
+#             df_cache, global_params, **kwargset
+#         )
+#         AddCacheColumnsInDf(dfw, dfWrapped_cache, cache_map_name)
+#     if shift == "Valid" and global_params["compute_unc_variations"]:
+#         dfw.CreateFromDelta(col_names_central, col_types_central)
+#     if shift != "Central" and global_params["compute_unc_variations"]:
+#         dfw.AddMissingColumns(col_names_central, col_types_central)
+#     new_dfw = analysis.PrepareDfForHistograms(dfw)
+#     return new_dfw
 
 
 def DefineWeightForHistograms(
@@ -90,10 +128,12 @@ def DefineWeightForHistograms(
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
         dfw.df = dfw.df.Define(weight_name, total_weight_expression)
-    if not isCentral and type(unc_cfg_dict) == dict:
+    if not isCentral:  # and type(unc_cfg_dict['norm']) == dict:
         if (
-            uncName in unc_cfg_dict.keys()
-            and "expression" in unc_cfg_dict[uncName].keys()
+            uncName in unc_cfg_dict["norm"].keys()
+            and "expression" in unc_cfg_dict["norm"][uncName].keys()
         ):
-            weight_name = unc_cfg_dict[uncName]["expression"].format(scale=uncScale)
+            weight_name = unc_cfg_dict["norm"][uncName]["expression"].format(
+                scale=uncScale
+            )
     dfw.df = dfw.df.Define(final_weight_name, weight_name)
