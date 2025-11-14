@@ -43,7 +43,6 @@ VBFJets FindVBFJets(const RVecLV& Jet_p4, const RVecB& pre_sel) {
     return VBF_jets_collection;
 }
 
-
 std::pair<double, double> ComputeCosThetaPhiCS(const LorentzVectorM& mu1_p4,
                                                const LorentzVectorM& mu2_p4,
                                                double Ebeam) {

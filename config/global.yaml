@@ -197,8 +197,6 @@ payload_producers:
     producer_name: DNNProducer
     columns:
       - NNOutput
-    dependencies:
-    # - DoubleLepHME
     n_cpus: 4
     max_runtime: 2.0
     cmssw_env: False
