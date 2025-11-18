@@ -728,7 +728,6 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.AddScaReOnBS()
     dfBuilder.df = GetMuMuObservables(dfBuilder.df)
     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
-    dfBuilder.defineSignRegions()
     dfBuilder.df = JetCollectionDef(dfBuilder.df)
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
