@@ -142,6 +142,7 @@ def JetCollectionDef(df):
         "Jet_preSel",
         f"""v_ops::pt(Jet_p4) > 20 && abs(v_ops::eta(Jet_p4))< 4.7 && (Jet_jetId & 2) """,
     )
+    # ed on “loose” selection: pT > 15 GeV and |η|<4.7 and passTightLepVetoId and (chEmEF + neEmEF) < 0.9)
     df = df.Define(
         "Jet_preSel_andDeadZoneVetoMap",
         "Jet_preSel && !Jet_vetoMap",
@@ -188,6 +189,11 @@ def JetCollectionDef(df):
         "JetTagSel",
         "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2",
     )
+
+    # df = df.Define(
+    #     "VBFCandJet_selection", "Jet_NoOverlapWithMuons && Jet_pt > 25 && ((ROOT::VecOps::abs(Jet_eta) < 2.5 ||  )) ];
+    # )
+    # df = df.Define("VBFCand_pt", "Jet_pt[VBFCandJet_selection]")
     return df
 
 
@@ -286,6 +292,10 @@ def GetMuMuObservables(df):
     for idx in [0, 1]:
         df = Utilities.defineP4(df, f"mu{idx+1}")
         df = df.Define(
+            f"mu{idx+1}_p4_reapplied",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_reapplied_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
+        df = df.Define(
             f"mu{idx+1}_p4_BS",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_bsConstrainedPt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
@@ -307,6 +317,7 @@ def GetMuMuObservables(df):
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_RoccoR_pt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
+    df = df.Define(f"pt_mumu_reapplied", "(mu1_p4_reapplied+mu2_p4_reapplied).Pt()")
     df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
     df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
     df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
@@ -316,6 +327,7 @@ def GetMuMuObservables(df):
     df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
     df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
     df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
+    df = df.Define("m_mumu_reapplied", "static_cast<float>((mu1_p4_reapplied+mu2_p4_reapplied).M())")
     df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
     df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
     df = df.Define("m_mumu_RoccoR", "static_cast<float>((mu1_p4_RoccoR+mu2_p4_RoccoR).M())")
@@ -547,34 +559,48 @@ def GetWeight(channel="muMu"):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
         "weight_XS",
-        "new_DY_weight"
+        "newDYWeight"
         # "weight_DYw_DYWeightCentral",
         # "weight_EWKCorr_VptCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
-        "muMu": ["weight_trigSF_singleMu"]
+        # "muMu": ["weight_trigSF_singleMu"]
+        "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
+        # "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
+
     }
+    # ID_weights_dict = {
+    #     "muMu": [
+    #         # "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
+    #         # "weight_mu1_LowPt_MuonID_SF_MediumIDCentral",
+    #         # "weight_mu1_MuonID_SF_LoosePFIsoCentral",
+    #         "weight_mu1_MuonID_SF_MediumID_TrkCentral",
+    #         "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
+    #         # "weight_mu2_HighPt_MuonID_SF_MediumIDCentral",
+    #         # "weight_mu2_LowPt_MuonID_SF_MediumIDCentral",
+    #         "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
+    #         # "weight_mu2_MuonID_SF_LoosePFIsoCentral",
+    #         "weight_mu2_MuonID_SF_MediumID_TrkCentral",
+    #     ]
+    # }
+
     ID_weights_dict = {
+        # "muMu": [
+        #     "weight_mu1_tightID",
+        #     "weight_mu1_tightID_tightIso",
+        #     "weight_mu2_tightID",
+        #     "weight_mu2_tightID_tightIso",
+        # ]
         "muMu": [
-            # "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
-            # "weight_mu1_LowPt_MuonID_SF_MediumIDCentral",
-            # "weight_mu1_MuonID_SF_LoosePFIsoCentral",
-            # "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
-            # "weight_mu1_MuonID_SF_MediumID_TrkCentral",
-            # "weight_mu2_HighPt_MuonID_SF_MediumIDCentral",
-            # "weight_mu2_LowPt_MuonID_SF_MediumIDCentral",
-            # "weight_mu2_MuonID_SF_LoosePFIsoCentral",
-            # "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
-            # "weight_mu2_MuonID_SF_MediumID_TrkCentral",
-            "weight_mu1_HighPt_MuonID_SF_TightIDCentral",
-            "weight_mu1_LowPt_MuonID_SF_TightIDCentral",
-            "weight_mu1_MuonID_SF_TightID_TrkCentral",
-            "weight_mu2_HighPt_MuonID_SF_TightIDCentral",
-            "weight_mu2_LowPt_MuonID_SF_TightIDCentral",
-            "weight_mu2_MuonID_SF_TightID_TrkCentral",
+            "weight_mu1_mediumID",
+            "weight_mu1_mediumID_looseIso",
+            "weight_mu2_mediumID",
+            "weight_mu2_mediumID_looseIso",
         ]
     }
+
+
     # should be moved to config
     weights_to_apply.extend(ID_weights_dict[channel])
     weights_to_apply.extend(trg_weights_dict[channel])
@@ -666,6 +692,9 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.defineChannels()
     # dfForHistograms.defineSampleType()
     dfForHistograms.defineTriggers()
+    dfForHistograms.df = AddNewDYWeights(dfForHistograms.df, dfForHistograms.period, f"DY" in dfForHistograms.config["process_name"])
+    dfForHistograms.df = AddMuTightIDWeights(dfForHistograms.df, dfForHistograms.period)
+
     dfForHistograms.df = AddScaReOnBS(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
     dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
     dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
@@ -689,9 +718,9 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
     dfBuilder.defineSignRegions()
     dfBuilder.df = JetCollectionDef(dfBuilder.df)
-    dfBuilder.df = VBFJetSelection(dfBuilder.df)
-    dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
-    dfBuilder.df = GetSoftJets(dfBuilder.df)
+    # dfBuilder.df = VBFJetSelection(dfBuilder.df)
+    # dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
+    # dfBuilder.df = GetSoftJets(dfBuilder.df)
     # dfBuilder.defineRegions()
     dfBuilder.defineCategories()
     dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)

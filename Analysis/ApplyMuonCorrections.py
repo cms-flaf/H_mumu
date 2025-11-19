@@ -2,6 +2,133 @@ import ROOT
 import correctionlib
 import os
 
+correctionlib.register_pyroot_binding()
+
+ROOT.gInterpreter.Declare(
+    """
+    float GetGenPtLL(const ROOT::VecOps::RVec<float> &GenPart_pt,
+                    const ROOT::VecOps::RVec<float> &GenPart_phi,
+                    const ROOT::VecOps::RVec<float> &GenPart_eta,
+                    const ROOT::VecOps::RVec<float> &GenPart_mass,
+                    const ROOT::VecOps::RVec<int>   &GenPart_pdgId,
+                    const ROOT::VecOps::RVec<unsigned short> &GenPart_statusFlags,
+                    const ROOT::VecOps::RVec<int>   &GenPart_status)
+    {
+        using lorentzvector = ROOT::Math::PtEtaPhiMVector;
+
+        int part1_idx = -1;
+        int part2_idx = -1;
+
+        // Bit 8 of statusFlags = "isHardProcess"
+        const unsigned short hardProcessMask = (1 << 8);
+
+        for (size_t i = 0; i < GenPart_pdgId.size(); i++) {
+
+            bool isHardProcess = (GenPart_statusFlags[i] & hardProcessMask);
+            int pdg = std::abs(GenPart_pdgId[i]);
+
+            if ( ((pdg == 11 || pdg == 13 ) && GenPart_status[i]==1 || (pdg == 15 && GenPart_status[i]==2)) && isHardProcess ) {
+                if (part1_idx < 0)
+                    part1_idx = i;
+                else if (part1_idx >= 0 && part2_idx < 0)
+                    part2_idx = i;
+                else
+                    std::cout << "WARNING: più di due leptoni hard process trovati"<<std::endl;
+            }
+        }
+
+        // Controlli
+        if (part1_idx < 0 || part2_idx < 0) {
+            // Nessuna coppia trovata
+            return -1.0;
+        }
+
+        lorentzvector p1(
+            GenPart_pt[part1_idx],
+            GenPart_eta[part1_idx],
+            GenPart_phi[part1_idx],
+            GenPart_mass[part1_idx]
+        );
+
+        lorentzvector p2(
+            GenPart_pt[part2_idx],
+            GenPart_eta[part2_idx],
+            GenPart_phi[part2_idx],
+            GenPart_mass[part2_idx]
+        );
+
+        return (p1 + p2).Pt();
+    }
+
+    """
+)
+from Analysis.GetTriggerWeights import *
+
+
+def AddMuTightIDWeights(df, period):
+    correctionlib.register_pyroot_binding()
+
+    year = period.split("_")[1]
+    analysis_path = os.environ["ANALYSIS_PATH"]
+    year_dict = {
+        "Run3_2022":"2022_Summer22",
+        "Run3_2022EE":"2022_Summer22EE",
+        "Run3_2023":"2023_Summer23",
+        "Run3_2023BPix":"2023_Summer23BPix",
+    }
+    ROOT.gROOT.ProcessLine(
+        f'auto cset = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");'
+    )
+    for muon_idx in [1,2]:
+        # NUM_TightPFIso_DEN_TightID --> Iso
+        # NUM_TightID_DEN_TrackerMuons --> ID
+        # NUM_IsoMu24_DEN_CutBasedIdTight_and_PFIsoTight --> Trg
+
+        ### new tight ID - tight iso weights ####
+        df = df.Define(f"""weight_mu{muon_idx}_tightID""",f"""mu{muon_idx}_pt > 15 ?cset->at("NUM_TightID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_tightID_tightIso""",f"""mu{muon_idx}_pt > 15 ?cset->at("NUM_TightPFIso_DEN_TightID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_TRG_tightID_tightIso""",f"""mu{muon_idx}_pt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdTight_and_PFIsoTight")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
+
+        ### new medium ID - loose/medium iso weights ####
+        # NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
+        # NUM_MediumID_DEN_TrackerMuons
+        # NUM_LoosePFIso_DEN_MediumID
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt > 15 ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt > 15 ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
+
+    df = df.Define(f"weight_trigSF_singleMu_tightID_tightIso",
+        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso,mu2_pt, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso) ;} return 1.f;",
+        )
+    df = df.Define(f"weight_trigSF_singleMu_mediumID_mediumIso",
+        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso,mu2_pt, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso) ;} return 1.f;",
+        )
+    return df
+
+
+def AddNewDYWeights(df, period, isDY):
+    correctionlib.register_pyroot_binding()
+
+    year = period.split("_")[1]
+    analysis_path = os.environ["ANALYSIS_PATH"]
+    year_dict = {
+        "Run3_2022":"2022preEE",
+        "Run3_2022EE":"2022postEE",
+        "Run3_2023":"2023preBPix",
+        "Run3_2023BPix":"2023postBPix",
+    }
+    if isDY:
+        ROOT.gROOT.ProcessLine(
+            f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/hleprare/DYweightCorrlib/DY_pTll_weights_{year_dict[period]}_v5.json.gz");'
+        )
+        df = df.Define("genpt_ll","""GetGenPtLL( GenPart_pt, GenPart_phi, GenPart_eta, GenPart_mass, GenPart_pdgId, GenPart_statusFlags, GenPart_status)""")
+        sample_order = '"NLO"'
+
+        df = df.Define("newDYWeight",f"""return genpt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, genpt_ll, "nom"}}) : 1.f""")
+    else:
+        df = df.Define("newDYWeight","""1.f""")
+    return df
+
 
 def AddRoccoR(df, period, isData):
     year = period.split("_")[1]
@@ -26,7 +153,7 @@ def AddRoccoR(df, period, isData):
             ).Define(f"mu{mu_idx}_BS_RoccoR_pt",f"mu{mu_idx}_bsConstrainedPt * mu{mu_idx}_BS_RoccoR_scale")
         else:
             df = df.Define(f"genmu{mu_idx}_pT", f"mu{mu_idx}_genPartIdx >= 0 ? GenPart_pt.at(mu{mu_idx}_genPartIdx) : -1.")
-            df.Display({f"mu{mu_idx}_charge"}).Print()
+            # df.Display({f"mu{mu_idx}_charge"}).Print()
             df = df.Define(
                 f"mu{mu_idx}_RoccoR_scale",
                 f""" mu{mu_idx}_genPartIdx >= 0? cset->compound().at("kSpreadMC")->evaluate({{mu{mu_idx}_charge, mu{mu_idx}_pt_nano, mu{mu_idx}_eta, mu{mu_idx}_phi,  genmu{mu_idx}_pT, 0, 0}}) : cset->at("kScaleMC")->evaluate({{mu{mu_idx}_charge, mu{mu_idx}_pt_nano, mu{mu_idx}_eta, mu{mu_idx}_phi, 0, 0}}) """
@@ -63,6 +190,10 @@ def AddScaReOnBS(df, period, isData):
                 f"mu{mu_idx}_BS_pt_1_corr",
                 f"pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
             )
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_corr",
+                f"pt_scale(1, mu{mu_idx}_pt_nano, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
+            )
         else:
             df = df.Define(
                 f"mu{mu_idx}_BS_pt_1_scale_corr",
@@ -73,6 +204,16 @@ def AddScaReOnBS(df, period, isData):
                 f"mu{mu_idx}_BS_pt_1_corr",
                 f"pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
             )
+
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_scale_corr",
+                f"pt_scale(0, mu{mu_idx}_pt_nano, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_corr",
+                f"pt_resol(mu{mu_idx}_reapplied_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
+            )
+            # df.Display({f"mu{mu_idx}_reapplied_pt_1_corr", "mu{mu_idx}_pt", f"mu{mu_idx}_reapplied_pt_1_scale_corr", "mu1_pt_nano"}).Print()
             # # MC evaluate scale uncertainty
             # df_mc = df_mc.Define(
             #     'pt_1_scale_corr_up',

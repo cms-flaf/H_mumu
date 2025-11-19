@@ -31,7 +31,7 @@ custom_regions: MuMuMassRegions
 custom_categories: ""
 custom_subcategories: [ ]
 
-further_cuts: { }
+further_cuts: {}
 #  etamm_0p9: ["eta_mumu","abs(eta_mumu) < 0.9"]
 #  etamm_1p4: ["eta_mumu","abs(eta_mumu) >= 0.9 && abs(eta_mumu) < 1.4"]
 #  etamm_2p4: ["eta_mumu","abs(eta_mumu) >= 1.4 && abs(eta_mumu) < 2.4"]
@@ -48,7 +48,7 @@ further_cuts: { }
 #  inclusive_EO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
 #  inclusive_EE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 0. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
 
-#  # pT < 45
+# #  # pT < 45
 #  leading_mu_pt_45_BB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
 #  leading_mu_pt_45_BO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
 #  leading_mu_pt_45_BE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
@@ -59,7 +59,7 @@ further_cuts: { }
 #  leading_mu_pt_45_EO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
 #  leading_mu_pt_45_EE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt < 45. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
 
-#  # 45 ≤ pT < 52
+ # 45 ≤ pT < 52
 #  leading_mu_pt_52_BB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
 #  leading_mu_pt_52_BO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
 #  leading_mu_pt_52_BE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 45. && mu1_pt < 52. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
@@ -81,7 +81,7 @@ further_cuts: { }
 #  leading_mu_pt_62_EO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
 #  leading_mu_pt_62_EE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 52. && mu1_pt < 62. && abs(mu1_eta)>=1.8 && abs(mu1_eta)<2.4 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
 
-#  # pT ≥ 62
+# #  # pT ≥ 62
 #  leading_mu_pt_up_BB: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)<0.9"]
 #  leading_mu_pt_up_BO: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=0.9 && abs(mu2_eta)<1.8"]
 #  leading_mu_pt_up_BE: [["mu1_pt", "mu1_eta", "mu2_eta"], "mu1_pt >= 62. && abs(mu1_eta)<0.9 && abs(mu2_eta)>=1.8 && abs(mu2_eta)<2.4"]
@@ -117,15 +117,16 @@ singleMu_th:
   Run3_2023BPix: 26
 
 categories:
-  - no_cuts
-  - OS_sel
-  - trigger_sel
-  - baseline
-  - baseline_POG
-  - JetTagSel_def_sel
+  # - no_cuts
+  # - OS_sel
+  # - trigger_sel
+  - baseline_muon # before --> baseline
+  # - baseline_MuonPOG
+  - baseline_muonJet # before --> JetTagSel_def_sel
   - VBF_def
   - VBF
   - ggH
+  # - HornJetVeto_def
   - VBF_JetVeto
 
 
@@ -135,15 +136,15 @@ category_definition:
   no_cuts: "true"
   OS_sel: "OS"
   trigger_sel: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
-  baseline: "OS_sel && trigger_sel &&  abs(mu1_dz) < 1. && abs(mu1_dxy) < 0.5 && abs(mu2_dz) < 1. && abs(mu2_dxy) < 0.5"
-  baseline_POG: "OS_sel && trigger_sel &&  mu1_iso< 0.15 && mu2_iso< 0.15 && mu1_tightId && mu2_tightId && mu1_pt > 26 && mu2_pt>26"
-  JetTagSel_def_sel: "baseline && JetTagSel"
+  baseline_muon: "OS_sel && trigger_sel &&  abs(mu1_dz) < 1. && abs(mu1_dxy) < 0.5 && abs(mu2_dz) < 1. && abs(mu2_dxy) < 0.5"
+  baseline_MuonPOG: "baseline_muon && mu1_iso < 0.15 && mu1_pfIsoId >=4 && mu2_pfIsoId >= 4 && mu2_iso< 0.15 && mu1_tightId && mu2_tightId && mu1_pt > 26 && mu2_pt>26"
+  baseline_muonJet: "baseline_muon && JetTagSel"
   #### COMPARISON WITH RUN 2 ####
   #  VBF category and def is the same w.r.t run 2
-  VBF_def: "JetTagSel_def_sel && HasVBF"
+  VBF_def: "baseline_muonJet && HasVBF"
   VBF: "VBF_def && j1_pt >= 35 && j2_pt >= 25 "
   #  ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
-  ggH: "JetTagSel_def_sel && !(VBF)"
+  ggH: "baseline_muonJet && !(VBF)"
   #### COMPARISON WITH RUN 2 ####
   #  VBF category and def is the same w.r.t run 2
   #  ggH category is "just" not ttH and VBF. There are no other exclusions w.r.t other channels.
