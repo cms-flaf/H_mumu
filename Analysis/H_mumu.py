@@ -10,6 +10,7 @@ from FLAF.Common.HistHelper import *
 from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
+from Analysis.ApplyMuonCorrections import *
 from FLAF.Common import Utilities
 
 for header in [
@@ -180,7 +181,7 @@ def JetCollectionDef(df):
     #### Jet PreSelection ####
     df = df.Define(
         "Jet_preSel",
-        f"""v_ops::pt(Jet_p4) > 20 && abs(v_ops::eta(Jet_p4))< 4.7 && (Jet_jetId & 2) """,
+        f"""v_ops::pt(Jet_p4) > 20 && abs(v_ops::eta(Jet_p4))< 4.7 && (Jet_passJetIdTight) """,
     )
     # ed on “loose” selection: pT > 15 GeV and |η|<4.7 and passTightLepVetoId and (chEmEF + neEmEF) < 0.9)
     df = df.Define(
@@ -339,10 +340,11 @@ def GetMuMuObservables(df):
             f"mu{idx+1}_p4_BS",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_bsConstrainedPt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
-        df = df.Define(
-            f"mu{idx+1}_p4_nano",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
+        if f"mu{idx+1}_p4_nano" not in df.GetColumnNames():
+            df = df.Define(
+                f"mu{idx+1}_p4_nano",
+                f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+            )
         df = df.Define(
             f"mu{idx+1}_p4_BS_ScaRe",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
@@ -596,11 +598,10 @@ def SaveVarsForNNInput(variables):
 
 
 def GetWeight(channel="muMu"):
-def GetWeight(channel="muMu"):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
         "weight_XS",
-        "newDYWeight"
+        "newDYWeight_ptLL_nano"
         # "weight_DYw_DYWeightCentral",
         # "weight_EWKCorr_VptCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
@@ -730,7 +731,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-    dfForHistograms.RescaleXS()
     dfForHistograms.RescaleXS()
     dfForHistograms.defineChannels()
     # dfForHistograms.defineSampleType()

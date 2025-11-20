@@ -120,14 +120,14 @@ categories:
   # - no_cuts
   # - OS_sel
   # - trigger_sel
-  # - baseline_muon # before --> baseline
-  # # - baseline_MuonPOG
-  # - baseline_muonJet # before --> JetTagSel_def_sel
-  # - VBF_def
-  # - VBF
-  # - ggH
-  # # - HornJetVeto_def
-  # - VBF_JetVeto
+  # - baseline_muon
+  # - baseline_MuonPOG
+  - baseline_muonJet
+  - VBF_def
+  - VBF
+  - ggH
+  # - HornJetVeto_def
+  - VBF_JetVeto
 
 
 

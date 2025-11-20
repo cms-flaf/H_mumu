@@ -108,6 +108,11 @@ def AddMuTightIDWeights(df, period):
 
 def AddNewDYWeights(df, period, isDY):
     correctionlib.register_pyroot_binding()
+    for idx in [0,1]:
+        df = df.Define(
+            f"mu{idx+1}_p4_nano",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+        )
 
     year = period.split("_")[1]
     analysis_path = os.environ["ANALYSIS_PATH"]
@@ -121,14 +126,19 @@ def AddNewDYWeights(df, period, isDY):
         ROOT.gROOT.ProcessLine(
             f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/hleprare/DYweightCorrlib/DY_pTll_weights_{year_dict[period]}_v5.json.gz");'
         )
-        df = df.Define("pt_ll","""(mu1_p4_nano + mu2_p4_nano).pt()""")
-        # df = df.Define("genpt_ll","""GetGenPtLL( GenPart_pt, GenPart_phi, GenPart_eta, GenPart_mass, GenPart_pdgId, GenPart_statusFlags, GenPart_status)""")
+        df = df.Define("pt_ll_nano","""(mu1_p4_nano + mu2_p4_nano).pt()""")
+        df = df.Define("genpt_ll","""GetGenPtLL( GenPart_pt, GenPart_phi, GenPart_eta, GenPart_mass, GenPart_pdgId, GenPart_statusFlags, GenPart_status)""")
         sample_order = '"NLO"'
 
-        df = df.Define("newDYWeight",f"""return pt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll, "nom"}}) : 1.f""")
-        # df = df.Define("newDYWeight",f"""return genpt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, genpt_ll, "nom"}}) : 1.f""")
+        df = df.Define("newDYWeight_ptLL_nano",f"""return pt_ll_nano >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll_nano, "nom"}}) : 1.f""")
+        # df = df.Define("newDYWeight_ptLL_ScaRe",f"""return pt_ll_nano >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll_nano, "nom"}}) : 1.f""")
+        df = df.Define("newDYWeight_genpt_ll",f"""return genpt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, genpt_ll, "nom"}}) : 1.f""")
     else:
-        df = df.Define("newDYWeight","""1.f""")
+        df = df.Define("newDYWeight_ptLL_nano","""1.f""")
+        df = df.Define("newDYWeight_genpt_ll","""1.f""")
+        # df = df.Define("newDYWeight","""1.f""")
+        # df = df.Define("newDYWeight","""1.f""")
+
     return df
 
 
