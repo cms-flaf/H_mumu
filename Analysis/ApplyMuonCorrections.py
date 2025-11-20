@@ -121,10 +121,12 @@ def AddNewDYWeights(df, period, isDY):
         ROOT.gROOT.ProcessLine(
             f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/hleprare/DYweightCorrlib/DY_pTll_weights_{year_dict[period]}_v5.json.gz");'
         )
-        df = df.Define("genpt_ll","""GetGenPtLL( GenPart_pt, GenPart_phi, GenPart_eta, GenPart_mass, GenPart_pdgId, GenPart_statusFlags, GenPart_status)""")
+        df = df.Define("pt_ll","""(mu1_p4_nano + mu2_p4_nano).pt()""")
+        # df = df.Define("genpt_ll","""GetGenPtLL( GenPart_pt, GenPart_phi, GenPart_eta, GenPart_mass, GenPart_pdgId, GenPart_statusFlags, GenPart_status)""")
         sample_order = '"NLO"'
 
-        df = df.Define("newDYWeight",f"""return genpt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, genpt_ll, "nom"}}) : 1.f""")
+        df = df.Define("newDYWeight",f"""return pt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll, "nom"}}) : 1.f""")
+        # df = df.Define("newDYWeight",f"""return genpt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, genpt_ll, "nom"}}) : 1.f""")
     else:
         df = df.Define("newDYWeight","""1.f""")
     return df
@@ -213,7 +215,7 @@ def AddScaReOnBS(df, period, isData):
                 f"mu{mu_idx}_reapplied_pt_1_corr",
                 f"pt_resol(mu{mu_idx}_reapplied_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
             )
-            # df.Display({f"mu{mu_idx}_reapplied_pt_1_corr", "mu{mu_idx}_pt", f"mu{mu_idx}_reapplied_pt_1_scale_corr", "mu1_pt_nano"}).Print()
+
             # # MC evaluate scale uncertainty
             # df_mc = df_mc.Define(
             #     'pt_1_scale_corr_up',
@@ -233,4 +235,7 @@ def AddScaReOnBS(df, period, isData):
             #     "pt_1_corr_resoldn",
             #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "dn")'
             # )
+    # df.Filter("event==74738519").Display({"event",f"mu1_pt_nano","mu2_pt_nano"}).Print()
+    # df.Filter("event==74738519").Display({"event",f"mu1_reapplied_pt_1_corr","mu2_reapplied_pt_1_corr"}).Print()
+    # df.Filter("event==74738519").Display({f"mu1_reapplied_pt_1_corr","mu2_reapplied_pt_1_corr"}).Print()
     return df

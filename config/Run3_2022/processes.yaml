@@ -18,6 +18,14 @@ DY:
     # - DYto2Tau_M_50_2J_Filtered_amcatnloFXFX
     - DYto2Tau_M_50_2J_amcatnloFXFX
 
+DY_mll_105To160:
+  name: "DY mll 105 to 160 "
+  cross_section_correction: 12/ 11  # NLO -> NNLO
+  color: "kAzure+7"
+  color_mplhep: lightskyblue
+  datasets:
+    - DYto2Mu_MLL_105to160_amcatnloFXFX
+
 
 DYToMuMu_MiNNLO:
   name: "DY $\\rightarrow \\ell \\ell$ + jets"

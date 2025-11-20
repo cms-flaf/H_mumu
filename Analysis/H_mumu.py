@@ -9,11 +9,13 @@ from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
 from Analysis.ApplyMuonCorrections import *
-
 JetObservables = [
     "PNetRegPtRawCorr",
     "PNetRegPtRawCorrNeutrino",
     "PNetRegPtRawRes",
+    "UParTAK4RegPtRawCorr",
+    "UParTAK4RegPtRawCorrNeutrino",
+    "UParTAK4RegPtRawRes",
     "area",
     "btagDeepFlavB",
     "btagDeepFlavCvB",
@@ -25,12 +27,19 @@ JetObservables = [
     "btagPNetCvNotB",
     "btagPNetQvG",
     "btagPNetTauVJet",
+    "btagUParTAK4B",
+    "btagUParTAK4CvB",
+    "btagUParTAK4CvL",
+    "btagUParTAK4CvNotB",
+    "btagUParTAK4QvG",
+    "btagUParTAK4TauVJet",
     "chEmEF",
     "chHEF",
     "chMultiplicity",
     "electronIdx1",
     "electronIdx2",
     "eta",
+    "genJetIdx",
     "hfEmEF",
     "hfHEF",
     "hfadjacentEtaStripsSize",
@@ -50,13 +59,32 @@ JetObservables = [
     "neEmEF",
     "neHEF",
     "neMultiplicity",
-    "partonFlavour",
     "phi",
     "pt",
+    "puIdDisc",
+    "puId_beta",
+    "puId_dR2Mean",
+    "puId_frac01",
+    "puId_frac02",
+    "puId_frac03",
+    "puId_frac04",
+    "puId_jetR",
+    "puId_jetRchg",
+    "puId_majW",
+    "puId_minW",
+    "puId_nCharged",
+    "puId_ptD",
+    "puId_pull",
     "rawFactor",
     "svIdx1",
     "svIdx2",
+    "ptRes",
+    "vetoMap",
+    "passJetIdTight",
+    "passJetIdTightLepVeto",
+    "isInsideVetoRegion"
 ]
+
 JetObservablesMC = ["hadronFlavour", "partonFlavour", "genJetIdx"]
 
 

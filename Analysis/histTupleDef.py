@@ -123,7 +123,7 @@ def DefineWeightForHistograms(
     process_group = global_params["process_group"]
     isCentral = uncName == "Central"
     total_weight_expression = (
-        analysis.GetWeight() if process_group != "data" else "1"
+        analysis.GetWeight("muMu") if process_group != "data" else "1"
     )  # are we sure?
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
