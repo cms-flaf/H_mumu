@@ -130,6 +130,7 @@ categories:
   # - VBF_JetVeto
 
 
+
 category_definition:
   #### COMPARISON WITH RUN 2 ####
   #  the baseline selection requires OS -- > Opposite Sign of muons charge (as in Run2, obv), and either the first or the second muon matching the online object and passing the pT threshold driven by the trigger (which is always 26 GeV in Run3 up to now) -- See AN/2019_185 lines 123 - 130
@@ -191,3 +192,16 @@ sample_types_to_merge:
   - ST
   - TW
   - TTX
+
+payload_producers:
+  DNN:
+    producers_module_name: Analysis.DNN_Application
+    producer_name: DNNProducer
+    columns:
+      - NNOutput
+    n_cpus: 4
+    max_runtime: 2.0
+    cmssw_env: False
+    awkward_based: True
+    uproot_stepsize: '50MB'
+    dependencies: [ ]

@@ -1,14 +1,26 @@
 import ROOT
 import sys
+import os
 
 if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
 
 from FLAF.Common.HistHelper import *
+from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
-from Analysis.ApplyMuonCorrections import *
+from FLAF.Common import Utilities
+
+for header in [
+    "FLAF/include/Utilities.h",
+    "include/Helper.h",
+    "include/HmumuCore.h",
+    "FLAF/include/AnalysisTools.h",
+    "FLAF/include/AnalysisMath.h",
+]:
+    DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
+
 JetObservables = [
     "PNetRegPtRawCorr",
     "PNetRegPtRawCorrNeutrino",
@@ -584,6 +596,7 @@ def SaveVarsForNNInput(variables):
 
 
 def GetWeight(channel="muMu"):
+def GetWeight(channel="muMu"):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
         "weight_XS",
@@ -634,6 +647,7 @@ def GetWeight(channel="muMu"):
     weights_to_apply.extend(trg_weights_dict[channel])
 
     total_weight = "*".join(weights_to_apply)
+    # print(total_weight)
     return total_weight
 
 
@@ -717,7 +731,9 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.RescaleXS()
+    dfForHistograms.RescaleXS()
     dfForHistograms.defineChannels()
+    # dfForHistograms.defineSampleType()
     # dfForHistograms.defineSampleType()
     dfForHistograms.defineTriggers()
     dfForHistograms.df = AddNewDYWeights(dfForHistograms.df, dfForHistograms.period, f"DY" in dfForHistograms.config["process_name"])
@@ -742,6 +758,10 @@ def PrepareDfForHistograms(dfForHistograms):
 
 
 def PrepareDfForNNInputs(dfBuilder):
+    # dfBuilder.RescaleXS()
+    dfBuilder.defineChannels()
+    dfBuilder.defineTriggers()
+    dfBuilder.AddScaReOnBS()
     dfBuilder.df = GetMuMuObservables(dfBuilder.df)
     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
     dfBuilder.defineSignRegions()
@@ -751,5 +771,4 @@ def PrepareDfForNNInputs(dfBuilder):
     # dfBuilder.df = GetSoftJets(dfBuilder.df)
     # dfBuilder.defineRegions()
     dfBuilder.defineCategories()
-    dfBuilder.colToSave = SaveVarsForNNInput(dfBuilder.colToSave)
     return dfBuilder

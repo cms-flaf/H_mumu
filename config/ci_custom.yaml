@@ -7,4 +7,5 @@ compute_unc_histograms: true
 store_noncentral: true
 
 variables:
+  - DNN_NNOutput
   - mu1_pt

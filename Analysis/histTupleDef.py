@@ -121,6 +121,7 @@ def DefineWeightForHistograms(
 ):
     categories = global_params["categories"]
     process_group = global_params["process_group"]
+    process_group = global_params["process_group"]
     isCentral = uncName == "Central"
     total_weight_expression = (
         analysis.GetWeight("muMu") if process_group != "data" else "1"

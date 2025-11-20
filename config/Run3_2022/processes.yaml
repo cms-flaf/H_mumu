@@ -1,8 +1,10 @@
 ############## DY ##############
 DY:
   name: "DY 012 jets"
+  name: "DY 012 jets"
   cross_section_correction: 12/ 11  # NLO -> NNLO
   color: "kAzure+7"
+  color_mplhep: lightskyblue
   color_mplhep: lightskyblue
   datasets:
     - DYto2E_M_50_0J_amcatnloFXFX

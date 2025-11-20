@@ -336,11 +336,11 @@ def addAllVariables(
     channels,
     sample_name
 ):
-
     dfw.Apply(AnaBaseline.LeptonVeto)
 
     # dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
 
+    # dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
     # dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
 
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)

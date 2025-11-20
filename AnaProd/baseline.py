@@ -29,7 +29,6 @@ def RecoHttCandidateSelection(df, config):
     # these variables are needed to define the H(mumu) candidate structure
     df = df.Define("Muon_B2_muMu_1", "Muon_B0 && Muon_idx[Muon_B0].size()==2")
     df = df.Define("Muon_B2_muMu_2", "Muon_B0  && Muon_idx[Muon_B0].size()==2")
-
     cand_columns = []
     for ch in channels:
         leg1, leg2 = getChannelLegs(ch)
@@ -57,11 +56,14 @@ def LeptonVeto(df):
     df = df.Define(
         "Muon_B0",
         f"""
-        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25) && abs(Muon_dz) < 1. && abs(Muon_dxy) < 0.5""",
+        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_looseId && Muon_iso < 0.4)""", # loose id and very loose iso 
+        # v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25) && abs(Muon_dz) < 1. && abs(Muon_dxy) < 0.5""",
     )
+
     ####  COMPARISON WITH RUN2 ####
     # # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246
     df = df.Filter("Muon_idx[Muon_B0].size()==2", "No extra muons")
+
     ####  COMPARISON WITH RUN2 ####
     # Same electron selection w.r.t. Run 2 -- See AN/2019_185 lines 114 - 116
     df = df.Define(
@@ -72,6 +74,8 @@ def LeptonVeto(df):
     ####  COMPARISON WITH RUN2 ####
     # electron veto, same w.r.t. Run3 - See AN/2019_205 lines 246 - 248
     df = df.Filter("Electron_idx[Electron_B0_veto].size() == 0", "No extra electrons")
+    df = df.Define("mu1_idx","Muon_idx[Muon_B0][0]")
+    df = df.Define("mu2_idx","Muon_idx[Muon_B0][1]")
     return df
 
 
