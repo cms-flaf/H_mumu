@@ -6,8 +6,8 @@ if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
 
-from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
+from FLAF.Common.HistHelper import *
 from Analysis.GetTriggerWeights import *
 from Analysis.CorrectionsRelatedFunctions import *
 from Analysis.MuonRelatedFunctions import *
@@ -305,7 +305,8 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = RedefineMuonsPt(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
-    dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
+    dfForHistograms.df = RedefineDiMuonObservables(dfForHistograms.df)
+
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df) # from here, the pT is needed to be specified as it depends on which muon pT to choose.
 
 

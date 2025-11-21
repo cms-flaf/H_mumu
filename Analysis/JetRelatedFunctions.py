@@ -1,5 +1,10 @@
 import ROOT
 
+if __name__ == "__main__":
+    sys.path.append(os.environ["ANALYSIS_PATH"])
+
+
+from FLAF.Common.Utilities import *
 JetObservables = [
     "PNetRegPtRawCorr",
     "PNetRegPtRawCorrNeutrino",

@@ -1,5 +1,10 @@
 import ROOT
 
+if __name__ == "__main__":
+    sys.path.append(os.environ["ANALYSIS_PATH"])
+
+
+from FLAF.Common.Utilities import *
 def GetMuMuMassResolution(df):
     delta_mu_expr = "sqrt( 0.5 * (pow( ({0}/{1}), 2) + pow( ({2}/{3}), 2) ) ) "
     df = df.Define(
@@ -44,7 +49,7 @@ def GetMuMuMassResolution(df):
 
 def GetAllMuMuPtRelatedObservables(df):
     for idx in [0, 1]:
-        df = Utilities.defineP4(df, f"mu{idx+1}")
+        df = defineP4(df, f"mu{idx+1}")
         df = df.Define(
             f"mu{idx+1}_p4_reapplied",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_reapplied_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",

@@ -4,6 +4,11 @@ import os
 
 correctionlib.register_pyroot_binding()
 
+if __name__ == "__main__":
+    sys.path.append(os.environ["ANALYSIS_PATH"])
+
+
+from FLAF.Common.Utilities import *
 ROOT.gInterpreter.Declare(
     """
     float GetGenPtLL(const ROOT::VecOps::RVec<float> &GenPart_pt,
