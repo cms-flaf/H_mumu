@@ -9,7 +9,7 @@ if __name__ == "__main__":
 from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
 from Analysis.GetTriggerWeights import *
-from Analysis.ApplyMuonCorrections import *
+from Analysis.CorrectionsRelatedFunctions import *
 from Analysis.MuonRelatedFunctions import *
 from Analysis.JetRelatedFunctions import *
 
