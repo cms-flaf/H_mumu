@@ -65,7 +65,7 @@ ROOT.gInterpreter.Declare(
 from Analysis.GetTriggerWeights import *
 
 
-def AddMuTightIDWeights(df, period):
+def RedefineIsoTrgAndIDWeights(df, period):
     correctionlib.register_pyroot_binding()
 
     year = period.split("_")[1]
@@ -85,23 +85,23 @@ def AddMuTightIDWeights(df, period):
         # NUM_IsoMu24_DEN_CutBasedIdTight_and_PFIsoTight --> Trg
 
         ### new tight ID - tight iso weights ####
-        df = df.Define(f"""weight_mu{muon_idx}_tightID""",f"""mu{muon_idx}_pt > 15 ?cset->at("NUM_TightID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
-        df = df.Define(f"""weight_mu{muon_idx}_tightID_tightIso""",f"""mu{muon_idx}_pt > 15 ?cset->at("NUM_TightPFIso_DEN_TightID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
-        df = df.Define(f"""weight_mu{muon_idx}_TRG_tightID_tightIso""",f"""mu{muon_idx}_pt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdTight_and_PFIsoTight")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_tightID""",f"""mu{muon_idx}_pt_nano > 15 ?cset->at("NUM_TightID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_tightID_tightIso""",f"""mu{muon_idx}_pt_nano > 15 ?cset->at("NUM_TightPFIso_DEN_TightID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_TRG_tightID_tightIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdTight_and_PFIsoTight")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
 
         ### new medium ID - loose/medium iso weights ####
         # NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
         # NUM_MediumID_DEN_TrackerMuons
         # NUM_LoosePFIso_DEN_MediumID
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt > 15 ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt > 15 ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
-        df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt_nano > 15 ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt_nano > 15 ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
 
     df = df.Define(f"weight_trigSF_singleMu_tightID_tightIso",
-        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso,mu2_pt, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso) ;} return 1.f;",
+        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt_nano, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso,mu2_pt_nano, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso) ;} return 1.f;",
         )
     df = df.Define(f"weight_trigSF_singleMu_mediumID_mediumIso",
-        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso,mu2_pt, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso) ;} return 1.f;",
+        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt_nano, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso,mu2_pt_nano, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso) ;} return 1.f;",
         )
     return df
 
@@ -248,4 +248,24 @@ def AddScaReOnBS(df, period, isData):
     # df.Filter("event==74738519").Display({"event",f"mu1_pt_nano","mu2_pt_nano"}).Print()
     # df.Filter("event==74738519").Display({"event",f"mu1_reapplied_pt_1_corr","mu2_reapplied_pt_1_corr"}).Print()
     # df.Filter("event==74738519").Display({f"mu1_reapplied_pt_1_corr","mu2_reapplied_pt_1_corr"}).Print()
+    return df
+
+
+
+
+def RescaleXS(df, config):
+    import yaml
+    xsFile = config["crossSectionsFile"]
+    xsFilePath = os.path.join(os.environ["ANALYSIS_PATH"], xsFile)
+    with open(xsFilePath, "r") as xs_file:
+        xs_dict = yaml.safe_load(xs_file)
+    xs_condition = f"DY" in config["process_name"] #== "DY"
+    xs_to_scale = (
+        xs_dict["DY_NNLO_QCD+NLO_EW"]["crossSec"] if xs_condition else "1.f"
+    )
+    weight_XS_string = f"xs_to_scale/current_xs" if xs_condition else "1."
+    total_denunmerator_nJets = 5378.0 / 3 + 1017.0 / 3 + 385.5 / 3
+    df = df.Define(f"current_xs", f"{total_denunmerator_nJets}")
+    df = df.Define(f"xs_to_scale", f"{xs_to_scale}")
+    df = df.Define(f"weight_XS", weight_XS_string)
     return df

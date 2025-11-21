@@ -51,6 +51,7 @@ def GetDfw(
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
     kwargset["colToSave"] = []
 
+    
     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
 
     if df_caches:
