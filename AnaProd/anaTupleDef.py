@@ -264,7 +264,6 @@ defaultColToSave = [
     "luminosityBlock",
     "run",
     "event",
-    "sample_type",
     "period",
     "isData",
     "PV_npvs",
