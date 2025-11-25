@@ -133,6 +133,8 @@ def DefineWeightForHistograms(
         if (
             uncName in unc_cfg_dict["norm"].keys()
             and "expression" in unc_cfg_dict["norm"][uncName].keys()
+            and process_name
+            in unc_cfg_dict["norm"][uncName].get("processes", [process_name])
         ):
             weight_name = unc_cfg_dict["norm"][uncName]["expression"].format(
                 scale=uncScale
