@@ -192,7 +192,7 @@ def JetCollectionDef(df):
     df = df.Define(
         "JetTagSel",
         "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2",
-    )
+    ) 
 
     # df = df.Define(
     #     "VBFCandJet_selection", "Jet_NoOverlapWithMuons && Jet_pt > 25 && ((ROOT::VecOps::abs(Jet_eta) < 2.5 ||  )) ];

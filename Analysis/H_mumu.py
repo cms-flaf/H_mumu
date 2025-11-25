@@ -160,8 +160,8 @@ def GetWeight(channel="muMu"):
 
     trg_weights_dict = {
         # "muMu": ["weight_trigSF_singleMu"]
-        "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
-        # "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
+        # "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
+        "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
 
     }
     # ID_weights_dict = {
@@ -180,18 +180,18 @@ def GetWeight(channel="muMu"):
     # }
 
     ID_weights_dict = {
-        # "muMu": [
-        #     "weight_mu1_tightID",
-        #     "weight_mu1_tightID_tightIso",
-        #     "weight_mu2_tightID",
-        #     "weight_mu2_tightID_tightIso",
-        # ]
         "muMu": [
-            "weight_mu1_mediumID",
-            "weight_mu1_mediumID_looseIso",
-            "weight_mu2_mediumID",
-            "weight_mu2_mediumID_looseIso",
+            "weight_mu1_tightID",
+            "weight_mu1_tightID_tightIso",
+            "weight_mu2_tightID",
+            "weight_mu2_tightID_tightIso",
         ]
+        # "muMu": [
+        #     "weight_mu1_mediumID",
+        #     "weight_mu1_mediumID_looseIso",
+        #     "weight_mu2_mediumID",
+        #     "weight_mu2_mediumID_looseIso",
+        # ]
     }
 
 
