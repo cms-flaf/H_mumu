@@ -170,7 +170,6 @@ corrections:
   - trgSF
   #  - btagWP
   - mu
-  - Vpt
   - pu
   - muScaRe
 
@@ -179,17 +178,6 @@ scales:
   - Down
 
 ApplyBweight: False
-
-sample_types_to_merge:
-  - DY
-  - TT
-  - W
-  - EWK
-  - VVV
-  - VV
-  - ST
-  - TW
-  - TTX
 
 payload_producers:
   DNN:

@@ -121,9 +121,10 @@ def DefineWeightForHistograms(
 ):
     categories = global_params["categories"]
     process_group = global_params["process_group"]
+    process_name = global_params["process_name"]
     isCentral = uncName == "Central"
     total_weight_expression = (
-        analysis.GetWeight() if process_group != "data" else "1"
+        analysis.GetWeight("muMu", process_name) if process_group != "data" else "1"
     )  # are we sure?
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
@@ -132,6 +133,8 @@ def DefineWeightForHistograms(
         if (
             uncName in unc_cfg_dict["norm"].keys()
             and "expression" in unc_cfg_dict["norm"][uncName].keys()
+            and process_name
+            in unc_cfg_dict["norm"][uncName].get("processes", [process_name])
         ):
             weight_name = unc_cfg_dict["norm"][uncName]["expression"].format(
                 scale=uncScale

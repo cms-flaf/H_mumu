@@ -527,13 +527,19 @@ def SaveVarsForNNInput(variables):
     return variables
 
 
-def GetWeight(channel="muMu"):
+def GetWeight(channel, process_name):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
         "weight_XS",
-        "weight_EWKCorr_VptCentral",
-        "weight_DYw_DYWeightCentral",
-    ]  # ,"weight_EWKCorr_ewcorrCentral"] #
+    ]
+    # quick fix for DY weights. In future should pass the full dataset and process info to DefineWeightForHistograms
+    if process_name.startswith("DY"):
+        weights_to_apply.extend(
+            [
+                "weight_EWKCorr_VptCentral",
+                "weight_DYw_DYWeightCentral",
+            ]
+        )  # ,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
         "muMu": ["weight_trigSF_singleMu"]
