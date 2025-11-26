@@ -12,6 +12,9 @@ DY:
 DY_M_10to50:
   name: "DY M10to50"
   color: "kAzure+10"
+  corrections:
+    - name: Vpt
+      type: DY
   datasets:
     - DYto2E_M_10to50_amcatnloFXFX
     - DYto2Mu_M_10to50_amcatnloFXFX
@@ -19,6 +22,9 @@ DY_M_10to50:
 
 DYto2E_M_50:
   processors: *DY_processors
+  corrections:
+    - name: Vpt
+      type: DY
   datasets:
     - DYto2E_M_50_amcatnloFXFX
     - DYto2E_M_50_0J_amcatnloFXFX
@@ -37,6 +43,9 @@ DYto2E_M_50:
 
 DYto2Mu_M_50:
   processors: *DY_processors
+  corrections:
+    - name: Vpt
+      type: DY
   datasets:
     - DYto2Mu_M_50_amcatnloFXFX
     - DYto2Mu_M_50_0J_amcatnloFXFX
@@ -55,6 +64,9 @@ DYto2Mu_M_50:
 
 DYto2Tau_M_50:
   processors: *DY_processors
+  corrections:
+    - name: Vpt
+      type: DY
   datasets:
     - DYto2Tau_M_50_0J_amcatnloFXFX
     - DYto2Tau_M_50_1J_amcatnloFXFX
