@@ -534,10 +534,12 @@ def GetWeight(channel, process_name):
     ]
     # quick fix for DY weights. In future should pass the full dataset and process info to DefineWeightForHistograms
     if process_name.startswith("DY"):
-        weights_to_apply.extend([
-            "weight_EWKCorr_VptCentral",
-            "weight_DYw_DYWeightCentral",
-        ])  # ,"weight_EWKCorr_ewcorrCentral"] #
+        weights_to_apply.extend(
+            [
+                "weight_EWKCorr_VptCentral",
+                "weight_DYw_DYWeightCentral",
+            ]
+        )  # ,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
         "muMu": ["weight_trigSF_singleMu"]
