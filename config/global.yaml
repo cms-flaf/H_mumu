@@ -9,8 +9,6 @@ signal_types:
 #  - VH
 
 storeFatJets: False
-bjet_preselection_branch: "Jet_B0"
-tagger_name: particleNet
 met_type: "PuppiMET"
 
 treeName: "Events"
@@ -164,14 +162,24 @@ category_definition:
 # - VBF Jets selection compared to Run2. It is the same selection, but since there could be MORE than one jet pair, the one with highest invariant mass is excluded, keeping the DeltaEta threshold fixed to 2.5
 
 corrections:
-  - JEC
-  - Jet_horns_fix
-  - JER
-  - trgSF
-  #  - btagWP
-  - mu
-  - pu
-  - muScaRe
+  mu:
+    stage: HistTuple
+    columns:
+      pfRelIso04_all: pfRelIso04_all
+      tightId: tightId
+      tkRelIso: tkRelIso
+      highPtId: highPtId
+      mediumId: mediumId
+  trigger:
+    stage: HistTuple
+    mode: SF
+  muScaRe: { stage: HistTuple }
+  MC_Lumi_pu: { stage: AnaTuple }
+  pu: { stages: [ AnaCache, AnaTuple ] }
+  JEC: { stage: AnaTuple }
+  JER:
+    stage: AnaTuple
+    apply_jet_horns_fix: true
 
 scales:
   - Up
