@@ -717,8 +717,6 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
     dfForHistograms.df = GetSoftJets(dfForHistograms.df)
-    if not dfForHistograms.isData:
-        defineTriggerWeights(dfForHistograms)
     #     if dfForHistograms.wantTriggerSFErrors:
     #         defineTriggerWeightsErrors(dfForHistograms)
     dfForHistograms.SignRegionDef()
