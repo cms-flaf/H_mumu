@@ -256,7 +256,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     def defineCategories(self):  # at the end
         singleMuTh = self.config["singleMu_th"][self.period]
 
-        print( f"At the beginning there are  {self.df.Count().GetValue()} events")
+        # print( f"At the beginning there are  {self.df.Count().GetValue()} events")
 
         for category_to_def in self.config["category_definition"].keys():
             category_name = category_to_def
@@ -266,14 +266,15 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
             self.df = self.df.Define(category_to_def, cat_str)
             self.colToSave.append(category_to_def)
 
-        filter_to_use = "baseline_muonJet"
-        print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
-        filter_to_use = "Z_sideband && baseline_muonJet"
-        print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
+        # filter_to_use = "baseline_muonJet"
+        # print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
+        # filter_to_use = "Z_sideband && baseline_muonJet"
+        # print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
 
-        self.df = self.df.Define("JetOutsideOfHornVetoRegion", "Jet_NoOverlapWithMuons && ( abs(v_ops::eta(Jet_p4)) < 2.5 || abs(v_ops::eta(Jet_p4)) > 3 || v_ops::pt(Jet_p4) > 50 ) ")
-        filter_to_use = "Z_sideband && baseline_muonJet && Jet_p4[JetOutsideOfHornVetoRegion].size()>=2"
-        print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
+
+
+        # filter_to_use = "Z_sideband && baseline_muonJet && Jet_p4[JetOutsideOfHornVetoRegion].size()>=2"
+        # print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
             # for reg_name, reg_cut in region_defs.items():
             #     string_to_filter = f"({reg_cut}) && ({category_to_def})"
             #     print(f"when filtering for {string_to_filter}")
@@ -321,11 +322,12 @@ def PrepareDfForHistograms(dfForHistograms):
 
     dfForHistograms.df = GetAllMuMuPtRelatedObservables(dfForHistograms.df) # this can go before redefinition of pT because it defines for all the specific combinations
 
-    dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df) # this can go before redefinition of pT because it defines for all the specific combinations
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = RedefineMuonsPt(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
     dfForHistograms.df = RedefineDiMuonObservables(dfForHistograms.df)
+    if "m_mumu_resolution" in dfForHistograms.config["variables"]:
+        dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
 
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df) # from here, the pT is needed to be specified as it depends on which muon pT to choose.
 

@@ -141,11 +141,9 @@ def DefineWeightForHistograms(
             )
     dfw.df = dfw.df.Define(final_weight_name, weight_name)
 
-    filter_to_use = "baseline_muonJet"
-    print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")
-    filter_to_use = "Z_sideband && baseline_muonJet"
-    print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")
-
-    # dfw.df = dfw.df.Define("JetOutsideOfHornVetoRegion", "Jet_NoOverlapWithMuons && ( abs(v_ops::eta(Jet_p4)) < 2.5 || abs(v_ops::eta(Jet_p4)) > 3 || v_ops::pt(Jet_p4) > 50 ) ")
-    filter_to_use = "Z_sideband && baseline_muonJet && Jet_p4[JetOutsideOfHornVetoRegion].size()>=2"
-    print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")
+    # filter_to_use = "baseline_muonJet"
+    # print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")
+    # filter_to_use = "Z_sideband && baseline_muonJet"
+    # print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")
+    # filter_to_use = "Z_sideband && baseline_muonJet && Jet_p4[JetOutsideOfHornVetoRegion].size()>=2"
+    # print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")

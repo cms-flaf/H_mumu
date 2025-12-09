@@ -83,8 +83,8 @@ def RedefineIsoTrgAndIDWeights(df, period):
     }
     ROOT.gROOT.ProcessLine(
         f'auto cset = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");'
-        f'auto cset_lowPt = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");'
-        f'auto cset_highPt = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");'
+        f'auto cset_lowPt = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");' # change the name this is wrong
+        f'auto cset_highPt = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");' # change the name this is wrong
     )
     for muon_idx in [1,2]:
         # NUM_TightPFIso_DEN_TightID --> Iso
@@ -92,16 +92,16 @@ def RedefineIsoTrgAndIDWeights(df, period):
         # NUM_IsoMu24_DEN_CutBasedIdTight_and_PFIsoTight --> Trg
 
         ### new tight ID - tight iso weights ####
-        df = df.Define(f"""weight_mu{muon_idx}_tightID""",f"""mu{muon_idx}_pt_nano > 15 && mu{muon_idx}_pt_nano < 200  ?cset->at("NUM_TightID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
-        df = df.Define(f"""weight_mu{muon_idx}_tightID_tightIso""",f"""mu{muon_idx}_pt_nano > 15 && mu{muon_idx}_pt_nano < 200  ?cset->at("NUM_TightPFIso_DEN_TightID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_tightID""",f"""mu{muon_idx}_pt_nano > 15 ? cset->at("NUM_TightID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") #  && mu{muon_idx}_pt_nano < 200
+        df = df.Define(f"""weight_mu{muon_idx}_tightID_tightIso""",f"""mu{muon_idx}_pt_nano > 15 ? cset->at("NUM_TightPFIso_DEN_TightID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") #  && mu{muon_idx}_pt_nano < 200
         df = df.Define(f"""weight_mu{muon_idx}_TRG_tightID_tightIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdTight_and_PFIsoTight")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
 
         ### new medium ID - loose/medium iso weights ####
         # NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
         # NUM_MediumID_DEN_TrackerMuons
         # NUM_LoosePFIso_DEN_MediumID
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt_nano > 15 && mu{muon_idx}_pt_nano < 200  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt_nano > 15 && mu{muon_idx}_pt_nano < 200  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
         df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
 
         ####### low pt
@@ -214,6 +214,8 @@ def AddScaReOnBS(df, period, isData):
     analysis_path = os.environ["ANALYSIS_PATH"]
     ROOT.gROOT.ProcessLine(
         # f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Analysis/schemaV2_VXBS.json");' # only for 2024
+        # f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Analysis/CustomScaRe2023.json");' # only for 2023
+
         f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
     )
     ROOT.gROOT.ProcessLine(f'#include "{analysis_path}/include/MuonScaRe.cc"')
@@ -225,20 +227,51 @@ def AddScaReOnBS(df, period, isData):
                 f"pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
             )
             df = df.Define(
+                f"mu{mu_idx}_BS_pt_1_corr_up",
+                f"""mu{mu_idx}_BS_pt_1_corr""",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_BS_pt_1_corr_dn",
+                f"""mu{mu_idx}_BS_pt_1_corr""",
+            )
+            df = df.Define(
                 f"mu{mu_idx}_reapplied_pt_1_corr",
                 f"pt_scale(1, mu{mu_idx}_pt_nano, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
             )
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_corr_up",
+                f"""mu{mu_idx}_reapplied_pt_1_corr""",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_corr_dn",
+                f"""mu{mu_idx}_reapplied_pt_1_corr""",
+            )
+
         else:
             df = df.Define(
                 f"mu{mu_idx}_BS_pt_1_scale_corr",
                 f"pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
             )
-
             df = df.Define(
                 f"mu{mu_idx}_BS_pt_1_corr",
                 f"pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
             )
-
+            df = df.Define(
+                f"mu{mu_idx}_BS_pt_1_scale_corr_up",
+                f"""pt_scale_var(mu{mu_idx}_BS_pt_1_corr, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge, "up")""",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_BS_pt_1_scale_corr_dn",
+                f"""pt_scale_var(mu{mu_idx}_BS_pt_1_corr, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge, "dn")""",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_BS_pt_1_corr_up",
+                f"""pt_resol_var(mu{mu_idx}_BS_pt_1_scale_corr,  mu{mu_idx}_BS_pt_1_corr,mu{mu_idx}_eta, "up")""",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_BS_pt_1_corr_dn",
+                f"""pt_resol_var(mu{mu_idx}_BS_pt_1_scale_corr,  mu{mu_idx}_BS_pt_1_corr, mu{mu_idx}_eta, "dn")""",
+            )
             df = df.Define(
                 f"mu{mu_idx}_reapplied_pt_1_scale_corr",
                 f"pt_scale(0, mu{mu_idx}_pt_nano, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
@@ -247,26 +280,26 @@ def AddScaReOnBS(df, period, isData):
                 f"mu{mu_idx}_reapplied_pt_1_corr",
                 f"pt_resol(mu{mu_idx}_reapplied_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
             )
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_scale_corr_up",
+                f"""pt_scale_var(mu{mu_idx}_reapplied_pt_1_corr, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge, "up")""",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_scale_corr_dn",
+                f"""pt_scale_var(mu{mu_idx}_reapplied_pt_1_corr, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge, "dn")""",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_corr_up",
+                f"""pt_resol_var(mu{mu_idx}_reapplied_pt_1_scale_corr,  mu{mu_idx}_reapplied_pt_1_corr,mu{mu_idx}_eta, "up")""",
+            )
+            df = df.Define(
+                f"mu{mu_idx}_reapplied_pt_1_corr_dn",
+                f"""pt_resol_var(mu{mu_idx}_reapplied_pt_1_scale_corr,  mu{mu_idx}_reapplied_pt_1_corr, mu{mu_idx}_eta, "dn")""",
+            )
 
-            # # MC evaluate scale uncertainty
-            # df_mc = df_mc.Define(
-            #     'pt_1_scale_corr_up',
-            #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "up")'
-            # )
-            # df_mc = df_mc.Define(
-            #     'pt_1_scale_corr_dn',
-            #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "dn")'
-            # )
+    # df.Display({"mu1_reapplied_pt_1_corr_up","mu1_reapplied_pt_1_corr_dn"}).Print()
+    # df.Display({"mu2_reapplied_pt_1_corr_up","mu2_reapplied_pt_1_corr_dn"}).Print()
 
-            # # MC evaluate resolution uncertainty
-            # df_mc = df_mc.Define(
-            #     "pt_1_corr_resolup",
-            #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "up")'
-            # )
-            # df_mc = df_mc.Define(
-            #     "pt_1_corr_resoldn",
-            #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "dn")'
-            # )
     # df.Filter("event==74738519").Display({"event",f"mu1_pt_nano","mu2_pt_nano"}).Print()
     # df.Filter("event==74738519").Display({"event",f"mu1_reapplied_pt_1_corr","mu2_reapplied_pt_1_corr"}).Print()
     # df.Filter("event==74738519").Display({f"mu1_reapplied_pt_1_corr","mu2_reapplied_pt_1_corr"}).Print()

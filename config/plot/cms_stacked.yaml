@@ -58,7 +58,7 @@ legend_mplhep:
   pos_ref: inner_left_top
   pos: [ 0.42, 0.95 ]
   size: [ 0.5, 0.5 ]
-  ncols: 3
+  ncols: 1
   fill_color: white
   fill_style: 0
   border_size: 0
