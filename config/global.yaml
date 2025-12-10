@@ -171,6 +171,9 @@ category_definition:
   AtLeastTwoJetOutOfVetoRegions: "Jet_p4[JetOutsideOfHornVetoRegion].size()>=2"
   baseline_AtLeastTwoJetOutOfVetoRegions: "baseline_muonJet && AtLeastTwoJetOutOfVetoRegions"
   ggH: "baseline_muonJet && !(VBF_JetVeto)"
+  # baseline_noID_Iso: "OS && trigger_sel && JetTagSel"
+  # # VBF_JetVeto_noID_Iso: "baseline_noID_Iso && HasVBF && j1_pt >= 35 && j2_pt >= 25 && HornJetVeto_def"
+  # ggH_noID_Iso: "baseline_noID_Iso && !(VBF_JetVeto_noID_Iso)"
 
   # trigger_sel_ScaRe: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
   # baseline_muonJet_ScaRe: "OS_sel && trigger_sel_ScaRe && JetTagSel" # &&  abs(mu1_dz) < 1. && abs(mu1_dxy) < 0.5 && abs(mu2_dz) < 1. && abs(mu2_dxy) < 0.5"
