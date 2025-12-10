@@ -1,0 +1,80 @@
+for region in mass_inclusive Z_sideband Signal_Fit H_sideband
+    do for cat in VBF_JetVeto baseline ggH ;
+        do mkdir -p /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat} ;
+        cp /eos/user/v/vdamante/www/H_mumu/index.php /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/ ;
+        cp /eos/user/v/vdamante/www/H_mumu/Parsedown.php /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/ ;
+        # for var in cosTheta_CS eta_mumu  m_mumu_BS m_mumu_nano phi_CS pt_mumu pt_mumu_BS_ScaRe VBFjets_pt dR_mumu m_mumu m_mumu_BS_ScaRe phi_mumu pt_mumu_BS pt_mumu_nano y_mumu;
+        for var in cosTheta_CS m_mumu_BS mu1_eta mu2_bsConstrainedPt mu2_pt  pt_mumu  y_mumu dR_mumu m_mumu_BS_ScaRe  mu1_phi mu2_BS_pt_1_corr  mu2_pt_nano pt_mumu_BS eta_mumu  m_mumu_nano mu1_bsConstrainedPt mu1_pt  mu2_eta phi_CS  pt_mumu_BS_ScaRe m_mumu  mu1_BS_pt_1_corr  mu1_pt_nano mu2_phi phi_mumu pt_mumu_nano ;
+        do
+
+            echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}.root --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_Sig${var}_${region}_${cat} --var ${var} --period Run3_${year} --region ${region} --category ${cat} --contribution ${contrib},TT,VV,EWK_LLJJ,W_NJets,ST,TW,VVV,TTX,data,VBFHto2Mu,GluGluHto2Mu --rebin --wantLogY --wantSignal --wantRatio --wantData; done; done ; done ;
+            python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}.root --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_Sig${var}_${region}_${cat} --var ${var} --period Run3_${year} --region ${region} --category ${cat} --contribution ${contrib},TT,VV,EWK_LLJJ,W_NJets,ST,TW,VVV,TTX,data,VBFHto2Mu,GluGluHto2Mu --rebin --wantLogY --wantSignal --wantRatio --wantData; done; done ; done ;
+            # echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantSignal --wantData --wantRatio ;
+            # python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantSignal --wantData --wantRatio ;
+            # echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio --wantLogY ;
+            # python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio --wantLogY ;
+            # echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio ;
+            # python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio ;
+        done
+    done
+done
+
+
+# for region in mass_inclusive Z_sideband Signal_Fit H_sideband
+#     do for cat in ggH VBF_JetVeto baseline VBF ;
+#         do mkdir -p /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat} ;
+#         cp /eos/user/v/vdamante/www/H_mumu/index.php /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/ ;
+#         cp /eos/user/v/vdamante/www/H_mumu/Parsedown.php /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/ ;
+#         for var in m_mumu m_mumu_BS m_mumu_BS_ScaRe m_mumu_nano pt_mumu pt_mumu_BS pt_mumu_BS_ScaRe pt_mumu_nano eta_mumu dR_mumu y_mumu phi_mumu ; # m_mumu_resolution_relerr m_mumu_resolution_bsConstrained m_mumu_resolution phi_CS cosTheta_CS;
+#         do
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantLogY --wantSignal --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantLogY --wantSignal --wantData --wantRatio ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantSignal --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantSignal --wantData --wantRatio ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio --wantLogY ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio --wantLogY ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio ;
+#         done
+#     done
+# done
+
+
+# for region in mass_inclusive Z_sideband Signal_Fit H_sideband
+#     do for cat in VBF_JetVeto VBF ;
+#         do mkdir -p /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat} ;
+#         cp /eos/user/v/vdamante/www/H_mumu/index.php /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/ ;
+#         cp /eos/user/v/vdamante/www/H_mumu/Parsedown.php /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/ ;
+#         for var in m_jj VBFjets_pt delta_eta_jj VBFjets_eta j1_eta j1_phi j1_pt j2_eta j2_pt j2_phi VBFjets_phi ; # eta_mumu y_mumu phi_mumu   ; # ;  pt_mumu  pt_mumu_BS_ScaRe pt_mumu_BS pt_mumu_nano  ;
+#         do
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantLogY --wantSignal --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantLogY --wantSignal --wantData --wantRatio ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantSignal --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantSignal --wantData --wantRatio ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio --wantLogY ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio --wantLogY ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio ;
+#         done
+#     done
+# done
+
+
+# for region in mass_inclusive Z_sideband H_sideband Signal_Fit
+#     do for cat in baseline ggH VBF_JetVeto VBF ;
+#         do mkdir -p /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat} ;
+#         cp /eos/user/v/vdamante/www/H_mumu/index.php /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/ ;
+#         cp /eos/user/v/vdamante/www/H_mumu/Parsedown.php /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/ ;
+#         for var in mu1_eta mu1_phi mu1_bsConstrainedPt mu1_pt mu1_BS_pt_1_corr mu1_pt_nano mu2_eta mu2_phi mu2_bsConstrainedPt mu2_pt mu2_BS_pt_1_corr mu2_pt_nano;
+#         do
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantLogY --wantSignal --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantLogY --wantSignal --wantData --wantRatio ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantSignal --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_Sig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantSignal --wantData --wantRatio ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio --wantLogY ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_LogY_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio --wantLogY ;
+#             echo python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio ;
+#             python3 Analysis/plotting_tools/main_plotter.py --inFile /eos/user/v/vdamante/H_mumu/merged_hists/v3_muons_observables/Run3_${year}/${var}/${var}. --outFile /eos/user/v/vdamante/www/H_mumu/plots/Run3_2022/13Oct/${region}/${cat}/${var}_noSig --var ${var} --period Run3_2022 --mass_region ${region} --category ${cat} --contribution all --rebin --wantData --wantRatio ;
+#         done
+#     done
+# done
