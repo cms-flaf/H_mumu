@@ -3,16 +3,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 import os
-def parse_value_error(s):
-    """Converte stringhe del tipo '1.1411 ± 0.0022' → (1.1411, 0.0022)."""
-    val, err = s.replace(" ", "").split("±")
-    return float(val), float(err)
+# def parse_value_error(s):
+#     """Converte stringhe del tipo '1.1411 ± 0.0022' → (1.1411, 0.0022)."""
+#     val, err = s.replace(" ", "").split("±")
+#     return float(val), float(err)
 
-parser = argparse.ArgumentParser(description="Esegui un fit su istogrammi di dati o MC.")
-parser.add_argument('--year', required=True, help="year")
-parser.add_argument('--pt_type', required=False, default="ScaRe_reapplied_subregions_1Dec", help="")
-parser.add_argument('--var_to_plot', required=False, default="sigma", help="sigma or mean")
-parser.add_argument('--isMC', action='store_true', help="Set this flag if the input is a Monte Carlo signal.")
+# parser = argparse.ArgumentParser(description="Esegui un fit su istogrammi di dati o MC.")
+# parser.add_argument('--year', required=True, help="year")
+# parser.add_argument('--pt_type', required=False, default="ScaRe_reapplied_subregions_1Dec", help="")
+# parser.add_argument('--var_to_plot', required=False, default="sigma", help="sigma or mean")
+# parser.add_argument('--isMC', action='store_true', help="Set this flag if the input is a Monte Carlo signal.")
+
+def parse_value_error(s):
+    """parse robusto: se vuoto → None."""
+    if pd.isna(s) or str(s).strip() == "":
+        return None
+    try:
+        val, err = s.replace(" ", "").split("±")
+        return float(val), float(err)
+    except Exception:
+        return None
 
 
 args = parser.parse_args()
