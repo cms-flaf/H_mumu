@@ -100,30 +100,38 @@ def RedefineIsoTrgAndIDWeights(df, period):
         # NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
         # NUM_MediumID_DEN_TrackerMuons
         # NUM_LoosePFIso_DEN_MediumID
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
-        df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
-
-        ####### low pt
-        # NUM_MediumID_DEN_TrackerMuons
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID_lowPt""",f"""mu{muon_idx}_pt_nano < 15  ? cset_lowPt->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        # df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
+        # df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
+        # df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
 
 
-        ####### highPt
-        # NUM_MediumID_DEN_GlobalMuonProbes
-        # NUM_HLT_DEN_MediumIDLooseRelIsoProbes
-        # NUM_HLT_DEN_HighPtLooseRelIsoProbes
 
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID_highPt""",f"""mu{muon_idx}_pt_nano > 200  ? cset_highPt->at("NUM_MediumID_DEN_GlobalMuonProbes")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
-        # df = df.Define(f"""weight_mu{muon_idx}_mediumID_highPt_HLT""",f"""mu{muon_idx}_pt_nano > 200  ? cset_highPt->at("NUM_HLT_DEN_MediumIDLooseRelIsoProbes")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
-        # df = df.Define(f"""weight_mu{muon_idx}_looseIso_highPt_HLT""",f"""mu{muon_idx}_pt_nano > 200  ? cset_highPt->at("NUM_HLT_DEN_HighPtLooseRelIsoProbes")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
+        df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_bsConstrainedPt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""")
+
+        # ####### low pt
+        # # NUM_MediumID_DEN_TrackerMuons
+        # # df = df.Define(f"""weight_mu{muon_idx}_mediumID_lowPt""",f"""mu{muon_idx}_pt_nano < 15  ? cset_lowPt->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        # df = df.Define(f"""weight_mu{muon_idx}_mediumID_lowPt""",f"""mu{muon_idx}_bsConstrainedPt < 15  ? cset_lowPt->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+
+
+        # ####### highPt
+        # # NUM_MediumID_DEN_GlobalMuonProbes
+        # # NUM_HLT_DEN_MediumIDLooseRelIsoProbes
+        # # NUM_HLT_DEN_HighPtLooseRelIsoProbes
+
+        # df = df.Define(f"""weight_mu{muon_idx}_mediumID_highPt""",f"""mu{muon_idx}_pt_nano > 200  ? cset_highPt->at("NUM_MediumID_DEN_GlobalMuonProbes")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        # # df = df.Define(f"""weight_mu{muon_idx}_mediumID_highPt_HLT""",f"""mu{muon_idx}_pt_nano > 200  ? cset_highPt->at("NUM_HLT_DEN_MediumIDLooseRelIsoProbes")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        # # df = df.Define(f"""weight_mu{muon_idx}_looseIso_highPt_HLT""",f"""mu{muon_idx}_pt_nano > 200  ? cset_highPt->at("NUM_HLT_DEN_HighPtLooseRelIsoProbes")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
 
 
     df = df.Define(f"weight_trigSF_singleMu_tightID_tightIso",
-        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt_nano, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso,mu2_pt_nano, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso) ;} return 1.f;",
+        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_bsConstrainedPt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso,mu2_bsConstrainedPt, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_tightID_tightIso) ;} return 1.f;",
         )
     df = df.Define(f"weight_trigSF_singleMu_mediumID_mediumIso",
-        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_pt_nano, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso,mu2_pt_nano, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso) ;} return 1.f;",
+        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_bsConstrainedPt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso,mu2_bsConstrainedPt, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso) ;} return 1.f;",
         )
     return df
 
@@ -148,7 +156,17 @@ def AddNewDYWeights(df, period, isDY):
         ROOT.gROOT.ProcessLine(
             f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/hleprare/DYweightCorrlib/DY_pTll_weights_{year_dict[period]}_v5.json.gz");'
         )
-        df = df.Define("pt_ll_nano","""(mu1_p4_nano + mu2_p4_nano).pt()""")
+
+        df = df.Define(
+            f"mu1_p4_bsConstrainedPt",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu1_bsConstrainedPt,mu1_eta,mu1_phi,mu1_mass)",
+        )
+        df = df.Define(
+            f"mu2_p4_bsConstrainedPt",
+            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu2_bsConstrainedPt,mu2_eta,mu2_phi,mu2_mass)",
+        )
+        df = df.Define("pt_ll_nano","""(mu1_p4_bsConstrainedPt + mu2_p4_bsConstrainedPt).pt()""")
+        # df = df.Define("pt_ll_nano","""(mu1_p4_nano + mu2_p4_nano).pt()""")
         df = df.Define("genpt_ll","""GetGenPtLL( GenPart_pt, GenPart_phi, GenPart_eta, GenPart_mass, GenPart_pdgId, GenPart_statusFlags, GenPart_status)""")
         sample_order = '"NLO"'
 

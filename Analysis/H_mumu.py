@@ -153,7 +153,7 @@ def GetWeight(channel="muMu"):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
         "weight_XS",
-        "newDYWeight_ptLL_nano"
+        # "newDYWeight_ptLL_nano"
         # "weight_DYw_DYWeightCentral",
         # "weight_EWKCorr_VptCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
@@ -322,13 +322,15 @@ def PrepareDfForHistograms(dfForHistograms):
 
     dfForHistograms.df = GetAllMuMuPtRelatedObservables(dfForHistograms.df) # this can go before redefinition of pT because it defines for all the specific combinations
 
-    dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
-    dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = RedefineMuonsPt(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
     dfForHistograms.df = RedefineDiMuonObservables(dfForHistograms.df)
     if "m_mumu_resolution" in dfForHistograms.config["variables"]:
         dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
 
+
+    dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
+    dfForHistograms.df = JetObservablesDef(dfForHistograms.df)
+    dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df) # from here, the pT is needed to be specified as it depends on which muon pT to choose.
 
 
@@ -346,6 +348,7 @@ def PrepareDfForNNInputs(dfBuilder):
     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
     dfBuilder.defineSignRegions()
     dfBuilder.df = JetCollectionDef(dfBuilder.df)
+    JetObservablesDef(df)
     # dfBuilder.df = VBFJetSelection(dfBuilder.df)
     # dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
     # dfBuilder.df = GetSoftJets(dfBuilder.df)

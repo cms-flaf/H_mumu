@@ -151,33 +151,38 @@ def JetCollectionDef(df):
         "Jet_preSel_andDeadZoneVetoMap",
         "Jet_preSel && !Jet_vetoMap",
     )
+    df = df.Filter("Jet_p4[Jet_preSel && Jet_vetoMap].size()==0") # NO JETS IN DEAD ZONE
 
     df = df.Define(
         f"Jet_NoOverlapWithMuons",
         f"RemoveOverlaps(Jet_p4, Jet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
     )
+    df = df.Define("Jet_IsOutsideOfHornVetoRegion", "Jet_NoOverlapWithMuons && ( abs(v_ops::eta(Jet_p4)) < 2.5 || abs(v_ops::eta(Jet_p4)) > 3 || v_ops::pt(Jet_p4) > 50 ) ")
+    # exclude completely the jets in Horn region
     df = df.Define(
         f"SelectedJet_p4",
-        f"Jet_p4[Jet_NoOverlapWithMuons]",
+        f"Jet_p4[Jet_IsOutsideOfHornVetoRegion]",
     )
     df = df.Define(
         f"SelectedJet_index",
-        f"Jet_idx[Jet_NoOverlapWithMuons]",
+        f"Jet_idx[Jet_IsOutsideOfHornVetoRegion]",
     )
 
-    ### Final state definitions: removing bTagged jets - deepJet ####
-    df = df.Define(
-        "Jet_btag_Veto_loose_deepJet",
-        "Jet_btagDeepFlavB >= 0.0614 && abs(v_ops::eta(Jet_p4))< 2.5 ",
-    )
-    df = df.Define(
-        "Jet_btag_Veto_medium_deepJet",
-        "Jet_btagDeepFlavB >= 0.3196 && abs(v_ops::eta(Jet_p4))< 2.5 ",
-    )
-    df = df.Define(
-        "JetTagSel_deepJet",
-        "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
-    )
+    df = df.Define(f"N_SelectedJets", "SelectedJet_index.size()")
+
+    # ### Final state definitions: removing bTagged jets - deepJet ####
+    # df = df.Define(
+    #     "Jet_btag_Veto_loose_deepJet",
+    #     "Jet_btagDeepFlavB >= 0.0614 && abs(v_ops::eta(Jet_p4))< 2.5 ",
+    # )
+    # df = df.Define(
+    #     "Jet_btag_Veto_medium_deepJet",
+    #     "Jet_btagDeepFlavB >= 0.3196 && abs(v_ops::eta(Jet_p4))< 2.5 ",
+    # )
+    # df = df.Define(
+    #     "JetTagSel_deepJet",
+    #     "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
+    # )
 
     #### Final state definitions: removing bTagged jets - pNet ####
     df = df.Define(
@@ -191,18 +196,30 @@ def JetCollectionDef(df):
     # df = df.Define("Jet_Veto_tight", "Jet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
     df = df.Define(
         "JetTagSel",
-        "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2",
+        "Jet_p4[Jet_IsOutsideOfHornVetoRegion && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_IsOutsideOfHornVetoRegion && Jet_btag_Veto_loose].size() < 2",
     )
-
-
-    df = df.Define(f"leadingjet_pt", "if (SelectedJet_p4.size()>0) return static_cast<float>(v_ops::pt(SelectedJet_p4)[0]); else return -1000.f;")
-    df = df.Define(f"leadingjet_eta", "if (SelectedJet_p4.size()>0) return static_cast<float>(v_ops::eta(SelectedJet_p4)[0]); else return -1000.f;")
-    df = df.Define("JetOutsideOfHornVetoRegion", "Jet_NoOverlapWithMuons && ( abs(v_ops::eta(Jet_p4)) < 2.5 || abs(v_ops::eta(Jet_p4)) > 3 || v_ops::pt(Jet_p4) > 50 ) ")
-    # df = df.Define(
-    #     "VBFCandJet_selection", "Jet_NoOverlapWithMuons && Jet_pt > 25 && ((ROOT::VecOps::abs(Jet_eta) < 2.5 ||  )) ];
-    # )©
-    # df = df.Define("VBFCand_pt", "Jet_pt[VBFCandJet_selection]")
     return df
+
+def JetObservablesDef(df):
+    jet_names = {
+        0:"leading",
+        1:"subleading",
+        2:"third",
+        3:"fourth",
+    }
+    for jet_idx,jet_type in jet_names.items():
+        # for JetObservable in JetObservables:
+        #     df = df.Define(f"{jet_type}jet_{JetObservable}", "if (SelectedJet_index.size()>{jet_idx}) return static_cast<float>({JetObservable}.at(SelectedJet_index[{jet_idx}])); else return -1000.f;")
+        for jet_obs in ['pt','eta','phi','rapidity']:
+            df = df.Define(f"{jet_type}jet_{jet_obs}", f"if (SelectedJet_p4.size()>{jet_idx}) return static_cast<float>(v_ops::{jet_obs}(SelectedJet_p4)[{jet_idx}]); else return -1000.f;")
+    # define Jet HT:
+    if "SelectedJet_pt" not in df.GetColumnNames():
+        df = df.Define("SelectedJet_pt","v_ops::pt(SelectedJet_p4)")
+    df = df.Define(f"SelectedJets_HT","float SelectedJet_HT; for(size_t jet_idx = 0; jet_idx < SelectedJet_pt.size() ; jet_idx++){SelectedJet_HT+=SelectedJet_pt[jet_idx];} return SelectedJet_HT;")
+    # df.Display({"SelectedJets_HT"}).Print()
+
+    return df
+
 
 
 def VBFJetSelection(df):
