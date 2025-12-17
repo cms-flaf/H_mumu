@@ -107,9 +107,9 @@ def RedefineIsoTrgAndIDWeights(df, period):
 
 
 
-        # df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
-        # df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
-        # df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_bsConstrainedPt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_bscPt_mediumID""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
+        df = df.Define(f"""weight_mu{muon_idx}_bscPt_mediumID_looseIso""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
+        df = df.Define(f"""weight_mu{muon_idx}_bscPt_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_bsConstrainedPt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""")
 
         # ####### low pt
         # # NUM_MediumID_DEN_TrackerMuons
@@ -132,6 +132,9 @@ def RedefineIsoTrgAndIDWeights(df, period):
         )
     df = df.Define(f"weight_trigSF_singleMu_mediumID_mediumIso",
         "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_bsConstrainedPt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso,mu2_bsConstrainedPt, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_TRG_mediumID_mediumIso) ;} return 1.f;",
+        )
+    df = df.Define(f"weight_trigSF_singleMu_bscPt_mediumID_mediumIso",
+        "if (HLT_singleMu && muMu) {return getCorrectSingleLepWeight(mu1_bsConstrainedPt, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_bscPt_TRG_mediumID_mediumIso,mu2_bsConstrainedPt, mu2_eta, mu2_HasMatching_singleMu, weight_mu1_bscPt_TRG_mediumID_mediumIso) ;} return 1.f;",
         )
     return df
 
@@ -175,6 +178,7 @@ def AddNewDYWeights(df, period, isDY):
         # df = df.Define("newDYWeight_ptLL_ScaRe",f"""return pt_ll_nano >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll_nano, "nom"}}) : 1.f""")
         df = df.Define("newDYWeight_genpt_ll",f"""return genpt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, genpt_ll, "nom"}}) : 1.f""")
     else:
+        df = df.Define("newDYWeight_ptLL_bsConstrained","""1.f""")
         df = df.Define("newDYWeight_ptLL_nano","""1.f""")
         df = df.Define("newDYWeight_genpt_ll","""1.f""")
         # df = df.Define("newDYWeight","""1.f""")

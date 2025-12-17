@@ -160,8 +160,9 @@ def GetWeight(channel="muMu"):
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
-        # "muMu": ["weight_trigSF_singleMu"]
-        "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
+        # "muMu": ["weight_trigSF_singleMu"] 
+        "muMu": ["weight_trigSF_singleMu_bscPt_mediumID_mediumIso"] # when want to look at BSC pT for SF evaluation
+        # "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
         # "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
 
     }
@@ -188,14 +189,18 @@ def GetWeight(channel="muMu"):
         #     "weight_mu2_tightID_tightIso",
         # ]
         "muMu": [
-            "weight_mu1_mediumID",
-            "weight_mu1_mediumID_looseIso",
-            "weight_mu2_mediumID",
-            "weight_mu2_mediumID_looseIso",
-            # "weight_mu1_mediumID_lowPt",
-            # "weight_mu1_mediumID_highPt",
-            # "weight_mu2_mediumID_lowPt",
-            # "weight_mu2_mediumID_highPt"
+
+            # "weight_mu1_mediumID",
+            # "weight_mu1_mediumID_looseIso",
+            # "weight_mu2_mediumID",
+            # "weight_mu2_mediumID_looseIso",
+
+
+            "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
+            "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+            "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
+            "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+
         ]
     }
 
