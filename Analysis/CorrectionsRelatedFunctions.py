@@ -100,16 +100,16 @@ def RedefineIsoTrgAndIDWeights(df, period):
         # NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
         # NUM_MediumID_DEN_TrackerMuons
         # NUM_LoosePFIso_DEN_MediumID
-        # df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
-        # df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
-        # df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
+        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
+        df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
 
 
 
 
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
-        df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
-        df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_bsConstrainedPt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""")
+        # df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
+        # df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
+        # df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_bsConstrainedPt > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""")
 
         # ####### low pt
         # # NUM_MediumID_DEN_TrackerMuons
@@ -165,11 +165,12 @@ def AddNewDYWeights(df, period, isDY):
             f"mu2_p4_bsConstrainedPt",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu2_bsConstrainedPt,mu2_eta,mu2_phi,mu2_mass)",
         )
-        df = df.Define("pt_ll_nano","""(mu1_p4_bsConstrainedPt + mu2_p4_bsConstrainedPt).pt()""")
-        # df = df.Define("pt_ll_nano","""(mu1_p4_nano + mu2_p4_nano).pt()""")
+        df = df.Define("pt_ll_bsConstrained","""(mu1_p4_bsConstrainedPt + mu2_p4_bsConstrainedPt).pt()""")
+        df = df.Define("pt_ll_nano","""(mu1_p4_nano + mu2_p4_nano).pt()""")
         df = df.Define("genpt_ll","""GetGenPtLL( GenPart_pt, GenPart_phi, GenPart_eta, GenPart_mass, GenPart_pdgId, GenPart_statusFlags, GenPart_status)""")
         sample_order = '"NLO"'
 
+        df = df.Define("newDYWeight_ptLL_bsConstrained",f"""return pt_ll_bsConstrained >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll_bsConstrained, "nom"}}) : 1.f""")
         df = df.Define("newDYWeight_ptLL_nano",f"""return pt_ll_nano >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll_nano, "nom"}}) : 1.f""")
         # df = df.Define("newDYWeight_ptLL_ScaRe",f"""return pt_ll_nano >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll_nano, "nom"}}) : 1.f""")
         df = df.Define("newDYWeight_genpt_ll",f"""return genpt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, genpt_ll, "nom"}}) : 1.f""")

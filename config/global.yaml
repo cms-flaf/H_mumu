@@ -31,7 +31,7 @@ custom_regions: MuMuMassRegions
 custom_categories: ""
 custom_subcategories: [ ]
 
-further_cuts: {} 
+further_cuts: {}
 #  etamm_0p9: ["eta_mumu","abs(eta_mumu) < 0.9"]
 #  etamm_1p4: ["eta_mumu","abs(eta_mumu) >= 0.9 && abs(eta_mumu) < 1.4"]
 #  etamm_2p4: ["eta_mumu","abs(eta_mumu) >= 1.4 && abs(eta_mumu) < 2.4"]
@@ -168,8 +168,8 @@ categories:
 
 category_definition:
   no_cuts: "true"
-  # baseline_WPIso: "mu1_pfRelIso04_all < 0.2 &&  mu2_pfRelIso04_all< 0.2 && mu1_mediumId && mu2_mediumId"
-  baseline_WPIso: "mu1_pfRelIso04_all < 0.25 &&  mu2_pfRelIso04_all< 0.25 && mu1_mediumId && mu2_mediumId"
+  baseline_WPIso: "mu1_pfRelIso04_all < 0.2 &&  mu2_pfRelIso04_all< 0.2 && mu1_mediumId && mu2_mediumId"
+  # baseline_WPIso: "mu1_pfRelIso04_all < 0.25 &&  mu2_pfRelIso04_all< 0.25 && mu1_mediumId && mu2_mediumId"
   OS_sel: "baseline_WPIso && OS"
   trigger_sel: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
   baseline_muonJet: "OS_sel && trigger_sel && JetTagSel" # &&  abs(mu1_dz) < 1. && abs(mu1_dxy) < 0.5 && abs(mu2_dz) < 1. && abs(mu2_dxy) < 0.5"

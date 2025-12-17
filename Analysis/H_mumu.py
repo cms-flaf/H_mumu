@@ -154,6 +154,7 @@ def GetWeight(channel="muMu"):
         "weight_MC_Lumi_pu",
         "weight_XS",
         # "newDYWeight_ptLL_nano"
+        # newDYWeight_ptLL_bsConstrained
         # "weight_DYw_DYWeightCentral",
         # "weight_EWKCorr_VptCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
