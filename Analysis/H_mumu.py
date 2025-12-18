@@ -154,16 +154,16 @@ def GetWeight(channel="muMu"):
         "weight_MC_Lumi_pu",
         "weight_XS",
         # "newDYWeight_ptLL_nano"
-        # newDYWeight_ptLL_bsConstrained
+        # "newDYWeight_ptLL_bsConstrained"
         # "weight_DYw_DYWeightCentral",
         # "weight_EWKCorr_VptCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
-        # "muMu": ["weight_trigSF_singleMu"] 
-        "muMu": ["weight_trigSF_singleMu_bscPt_mediumID_mediumIso"] # when want to look at BSC pT for SF evaluation
+        # "muMu": ["weight_trigSF_singleMu"]
+        # "muMu": ["weight_trigSF_singleMu_bscPt_mediumID_mediumIso"] # when want to look at BSC pT for SF evaluation
         # "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
-        # "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
+        "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
 
     }
     # ID_weights_dict = {
@@ -182,26 +182,26 @@ def GetWeight(channel="muMu"):
     # }
 
     ID_weights_dict = {
-        # "muMu": [
-        #     "weight_mu1_tightID",
-        #     "weight_mu1_tightID_tightIso",
-        #     "weight_mu2_tightID",
-        #     "weight_mu2_tightID_tightIso",
-        # ]
         "muMu": [
-
-            # "weight_mu1_mediumID",
-            # "weight_mu1_mediumID_looseIso",
-            # "weight_mu2_mediumID",
-            # "weight_mu2_mediumID_looseIso",
-
-
-            "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
-            "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
-            "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
-            "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
-
+            "weight_mu1_tightID",
+            "weight_mu1_tightID_tightIso",
+            "weight_mu2_tightID",
+            "weight_mu2_tightID_tightIso",
         ]
+        # "muMu": [
+
+        #     # "weight_mu1_mediumID",
+        #     # "weight_mu1_mediumID_looseIso",
+        #     # "weight_mu2_mediumID",
+        #     # "weight_mu2_mediumID_looseIso",
+
+
+        #     "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
+        #     "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+        #     "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
+        #     "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+
+        # ]
     }
 
 
@@ -261,30 +261,16 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
     def defineCategories(self):  # at the end
         singleMuTh = self.config["singleMu_th"][self.period]
-
-        # print( f"At the beginning there are  {self.df.Count().GetValue()} events")
+        WP_to_use = self.config["WPToUse"]
 
         for category_to_def in self.config["category_definition"].keys():
             category_name = category_to_def
             cat_str = self.config["category_definition"][category_to_def].format(
-                MuPtTh=singleMuTh
+                MuPtTh=singleMuTh, WPToUse=WPToUse
             )
             self.df = self.df.Define(category_to_def, cat_str)
             self.colToSave.append(category_to_def)
 
-        # filter_to_use = "baseline_muonJet"
-        # print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
-        # filter_to_use = "Z_sideband && baseline_muonJet"
-        # print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
-
-
-
-        # filter_to_use = "Z_sideband && baseline_muonJet && Jet_p4[JetOutsideOfHornVetoRegion].size()>=2"
-        # print( f"There are {self.df.Filter(filter_to_use).Count().GetValue()} events in {filter_to_use}")
-            # for reg_name, reg_cut in region_defs.items():
-            #     string_to_filter = f"({reg_cut}) && ({category_to_def})"
-            #     print(f"when filtering for {string_to_filter}")
-            #     print( f"There are {self.df.Filter(string_to_filter).Count().GetValue()} events in {string_to_filter}")
 
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
@@ -313,6 +299,7 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
     dfForHistograms.SignRegionDef()
+
 
     dfForHistograms.df = AddScaReOnBS(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
     dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)

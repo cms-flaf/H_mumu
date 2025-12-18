@@ -72,7 +72,6 @@ from Analysis.GetTriggerWeights import *
 
 def RedefineIsoTrgAndIDWeights(df, period):
     correctionlib.register_pyroot_binding()
-
     year = period.split("_")[1]
     analysis_path = os.environ["ANALYSIS_PATH"]
     year_dict = {
@@ -81,11 +80,13 @@ def RedefineIsoTrgAndIDWeights(df, period):
         "Run3_2023":"2023_Summer23",
         "Run3_2023BPix":"2023_Summer23BPix",
     }
+
     ROOT.gROOT.ProcessLine(
         f'auto cset = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");'
         f'auto cset_lowPt = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");' # change the name this is wrong
         f'auto cset_highPt = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");' # change the name this is wrong
     )
+    
     for muon_idx in [1,2]:
         # NUM_TightPFIso_DEN_TightID --> Iso
         # NUM_TightID_DEN_TrackerMuons --> ID
@@ -103,9 +104,6 @@ def RedefineIsoTrgAndIDWeights(df, period):
         df = df.Define(f"""weight_mu{muon_idx}_mediumID""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
         df = df.Define(f"""weight_mu{muon_idx}_mediumID_looseIso""",f"""mu{muon_idx}_pt_nano > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""") # && mu{muon_idx}_pt_nano < 200
         df = df.Define(f"""weight_mu{muon_idx}_TRG_mediumID_mediumIso""",f"""mu{muon_idx}_pt_nano > 26 ?cset->at("NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_pt_nano, "nominal"}}) : 1.f""")
-
-
-
 
         df = df.Define(f"""weight_mu{muon_idx}_bscPt_mediumID""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_MediumID_DEN_TrackerMuons")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200
         df = df.Define(f"""weight_mu{muon_idx}_bscPt_mediumID_looseIso""",f"""mu{muon_idx}_bsConstrainedPt > 15  ?cset->at("NUM_LoosePFIso_DEN_MediumID")->evaluate({{mu{muon_idx}_eta, mu{muon_idx}_bsConstrainedPt, "nominal"}}) : 1.f""") # && mu{muon_idx}_bsConstrainedPt < 200

@@ -139,7 +139,7 @@ def RedefineMuonsPt(df, pt_to_use):
         "BS_RoccoR":"BS_RoccoR_pt" # BSC pT + ScaRe
     }
     pt_suffix = pt_names_dict[pt_to_use]
-    print(f"using the pT: {pt_suffix}")
+    print(f"redefining the pT: {pt_suffix}")
     for idx in [0,1]:
         df = df.Redefine(f"mu{idx+1}_pt",f"mu{idx+1}_{pt_suffix}")
         df = df.Redefine(
