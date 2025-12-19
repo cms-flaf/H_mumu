@@ -122,10 +122,11 @@ further_cuts: {}
 
 MuMuMassRegions:  ### ALL same w.r.t. Run 2 ###
   Z_sideband: "m_mumu > 70 && m_mumu < 110"
-  # Signal_Fit: "m_mumu > 115 && m_mumu < 135"
-  # H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
-  # Signal_ext: "m_mumu > 110 && m_mumu < 150"
-  mass_inclusive: "true"
+  Signal_Fit: "m_mumu > 115 && m_mumu < 135"
+  H_sideband: "((m_mumu > 110 && m_mumu < 115) || (m_mumu > 135 && m_mumu < 150))"
+  Signal_ext: "m_mumu > 110 && m_mumu < 150"
+  mass_inclusive: "m_mumu > 60 && m_mumu < 150"
+  # mass_inclusive: "true"
 
 triggers:
   muMu: [ singleMu ]
@@ -144,37 +145,39 @@ singleMu_th:
   Run3_2023BPix: 26
 
 categories:
-  # - baseline_MuonPOG
-  - no_cuts
-  - baseline_WPIso
-  - OS_sel
-  - trigger_sel
-  - baseline_muonJet
-  - VBF_def
-  - VBF_JetVeto
-  - ggH
-  - baseline_muonJet_0J
-  - baseline_muonJet_1J
-  - baseline_muonJet_2J
-  - VBF_def_2J
-  - VBF_JetVeto_2J
-  - ggH_2J
-  - baseline_muonJet_MoreThan2J
-  - VBF_def_MoreThan2J
-  - VBF_JetVeto_MoreThan2J
-  - ggH_MoreThan2J
+  - baseline_MuonPOG
+  # - ggH_muonPtSel
+  # - no_cuts
+  # - baseline_WPIso
+  # - OS_sel
+  # - trigger_sel
+  # - baseline_muonJet
+  # - VBF_def
+  # - VBF_JetVeto
+  # - ggH
+  # - baseline_muonJet_0J
+  # - baseline_muonJet_1J
+  # - baseline_muonJet_2J
+  # - VBF_def_2J
+  # - VBF_JetVeto_2J
+  # - ggH_2J
+  # - baseline_muonJet_MoreThan2J
+  # - VBF_def_MoreThan2J
+  # - VBF_JetVeto_MoreThan2J
+  # - ggH_MoreThan2J
 
 
-
+WP_to_use: "MM"
 category_definition:
   no_cuts: "true"
-  baseline_WPIso: "mu1_pfRelIso04_all < 0.2 &&  mu2_pfRelIso04_all< 0.2 && mu1_mediumId && mu2_mediumId"
-  # baseline_WPIso: "mu1_pfRelIso04_all < 0.25 &&  mu2_pfRelIso04_all< 0.25 && mu1_mediumId && mu2_mediumId"
-  OS_sel: "baseline_WPIso && OS"
+  baseline_WPIso_MM: "mu1_pfRelIso04_all < 0.2 &&  mu2_pfRelIso04_all< 0.2 && mu1_mediumId && mu2_mediumId"
+  baseline_WPIso_ML: "mu1_pfRelIso04_all < 0.25 &&  mu2_pfRelIso04_all< 0.25 && mu1_mediumId && mu2_mediumId"
+  OS_sel: "baseline_WPIso_{WP_to_use} && OS"
   trigger_sel: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
   baseline_muonJet: "OS_sel && trigger_sel && JetTagSel" # &&  abs(mu1_dz) < 1. && abs(mu1_dxy) < 0.5 && abs(mu2_dz) < 1. && abs(mu2_dxy) < 0.5"
   VBF_def: "baseline_muonJet && HasVBF"
   VBF_JetVeto: "VBF_def && j1_pt >= 35 && j2_pt >= 25 "
+  ggH_muonPtSel: "baseline_muonJet && !(VBF_JetVeto) && mu1_pt > 26 && mu2_pt>26"
   ggH: "baseline_muonJet && !(VBF_JetVeto)"
   #### 0 jets
   baseline_muonJet_0J: "baseline_muonJet && N_SelectedJets == 0"
@@ -190,7 +193,7 @@ category_definition:
   VBF_def_MoreThan2J: "baseline_muonJet_MoreThan2J && HasVBF"
   VBF_JetVeto_MoreThan2J: "VBF_def && j1_pt >= 35 && j2_pt >= 25 "
   ggH_MoreThan2J: "baseline_muonJet_MoreThan2J && !(VBF_JetVeto_MoreThan2J)"
-  # baseline_MuonPOG: "OS_sel && trigger_sel && mu1_pfRelIso04_all < 0.15 && mu2_pfRelIso04_all< 0.15 && mu1_tightId && mu2_tightId && mu1_pt > 26 && mu2_pt>26"
+  baseline_MuonPOG: "OS_sel && trigger_sel && mu1_pfRelIso04_all < 0.15 && mu2_pfRelIso04_all< 0.15 && mu1_tightId && mu2_tightId && mu1_pt > 26 && mu2_pt>26"
 
 
 

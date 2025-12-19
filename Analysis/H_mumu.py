@@ -190,10 +190,10 @@ def GetWeight(channel="muMu"):
         ]
         # "muMu": [
 
-        #     # "weight_mu1_mediumID",
-        #     # "weight_mu1_mediumID_looseIso",
-        #     # "weight_mu2_mediumID",
-        #     # "weight_mu2_mediumID_looseIso",
+            # "weight_mu1_mediumID",
+            # "weight_mu1_mediumID_looseIso",
+            # "weight_mu2_mediumID",
+            # "weight_mu2_mediumID_looseIso",
 
 
         #     "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
@@ -261,12 +261,12 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
     def defineCategories(self):  # at the end
         singleMuTh = self.config["singleMu_th"][self.period]
-        WP_to_use = self.config["WPToUse"]
+        WP_to_use = self.config["WP_to_use"]
 
         for category_to_def in self.config["category_definition"].keys():
             category_name = category_to_def
             cat_str = self.config["category_definition"][category_to_def].format(
-                MuPtTh=singleMuTh, WPToUse=WPToUse
+                MuPtTh=singleMuTh, WP_to_use=WP_to_use
             )
             self.df = self.df.Define(category_to_def, cat_str)
             self.colToSave.append(category_to_def)
