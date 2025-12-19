@@ -182,13 +182,13 @@ def GetWeight(channel="muMu"):
     # }
 
     ID_weights_dict = {
-        "muMu": [
-            "weight_mu1_tightID",
-            "weight_mu1_tightID_tightIso",
-            "weight_mu2_tightID",
-            "weight_mu2_tightID_tightIso",
-        ]
         # "muMu": [
+        #     "weight_mu1_tightID",
+        #     "weight_mu1_tightID_tightIso",
+        #     "weight_mu2_tightID",
+        #     "weight_mu2_tightID_tightIso",
+        # ]
+        "muMu": [
 
             # "weight_mu1_mediumID",
             # "weight_mu1_mediumID_looseIso",
@@ -196,12 +196,12 @@ def GetWeight(channel="muMu"):
             # "weight_mu2_mediumID_looseIso",
 
 
-        #     "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
-        #     "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
-        #     "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
-        #     "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+            "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
+            "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+            "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
+            "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
 
-        # ]
+        ]
     }
 
 

@@ -145,26 +145,26 @@ singleMu_th:
   Run3_2023BPix: 26
 
 categories:
-  - baseline_MuonPOG
-  # - ggH_muonPtSel
-  # - no_cuts
-  # - baseline_WPIso
-  # - OS_sel
-  # - trigger_sel
-  # - baseline_muonJet
-  # - VBF_def
-  # - VBF_JetVeto
-  # - ggH
-  # - baseline_muonJet_0J
-  # - baseline_muonJet_1J
-  # - baseline_muonJet_2J
-  # - VBF_def_2J
-  # - VBF_JetVeto_2J
-  # - ggH_2J
-  # - baseline_muonJet_MoreThan2J
-  # - VBF_def_MoreThan2J
-  # - VBF_JetVeto_MoreThan2J
-  # - ggH_MoreThan2J
+  # - baseline_MuonPOG
+  - no_cuts
+  - baseline_WPIso_MM # baseline_WPIso_ML
+  - OS_sel
+  - trigger_sel
+  - baseline_muonJet
+  - VBF_def
+  - VBF_JetVeto
+  - ggH
+  - ggH_muonPtSel
+  - baseline_muonJet_0J
+  - baseline_muonJet_1J
+  - baseline_muonJet_2J
+  - VBF_def_2J
+  - VBF_JetVeto_2J
+  - ggH_2J
+  - baseline_muonJet_MoreThan2J
+  - VBF_def_MoreThan2J
+  - VBF_JetVeto_MoreThan2J
+  - ggH_MoreThan2J
 
 
 WP_to_use: "MM"
