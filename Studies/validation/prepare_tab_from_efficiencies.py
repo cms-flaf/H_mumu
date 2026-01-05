@@ -9,7 +9,9 @@ import argparse
 # -------------------------------
 parser = argparse.ArgumentParser()
 parser.add_argument("--year", required=True)
-parser.add_argument("--region", default=None, help="Filtra per regione specifica (opzionale)")
+parser.add_argument(
+    "--region", default=None, help="Filtra per regione specifica (opzionale)"
+)
 args = parser.parse_args()
 
 # -------------------------------
@@ -29,6 +31,7 @@ ISO_MAP = {
     0.25: "loose Iso",
 }
 
+
 # -------------------------------
 # Funzioni di parsing
 # -------------------------------
@@ -44,6 +47,7 @@ def parse_entry(entry):
 
     key = f"{iso1}|{iso2}|{id1}|{id2}"
     return key, iso1, iso2, id1, id2
+
 
 # -------------------------------
 # Funzione pivot e scrittura TSV
@@ -77,7 +81,9 @@ def create_pivot_and_format(df, value_col, year, region_filter=None):
 
     for col in df_pivot.columns:
         if col not in ["Iso_mu1", "Iso_mu2", "ID_mu1", "ID_mu2"]:
-            df_pivot[col] = df_pivot[col].apply(lambda x: fmt.format(x) if pd.notnull(x) else "")
+            df_pivot[col] = df_pivot[col].apply(
+                lambda x: fmt.format(x) if pd.notnull(x) else ""
+            )
 
     # Nome file
     metric_name = value_col.replace(" (%)", "").replace("_", "")
@@ -88,6 +94,7 @@ def create_pivot_and_format(df, value_col, year, region_filter=None):
 
     df_pivot.to_csv(filename, sep="\t", index=False)
     return filename
+
 
 # -------------------------------
 # MAIN
@@ -115,17 +122,19 @@ for entry in data:
 
     key, iso1, iso2, id1, id2 = parse_entry(entry)
 
-    rows.append({
-        "Key": key,
-        "Iso_mu1": iso1,
-        "Iso_mu2": iso2,
-        "ID_mu1": id1,
-        "ID_mu2": id2,
-        "Region": entry.get("region", "N/A"),
-        "Eff_Signal (%)": signal_eff,
-        "Eff_Background (%)": background_eff,
-        "S_sqrtB": s_sqrtB
-    })
+    rows.append(
+        {
+            "Key": key,
+            "Iso_mu1": iso1,
+            "Iso_mu2": iso2,
+            "ID_mu1": id1,
+            "ID_mu2": id2,
+            "Region": entry.get("region", "N/A"),
+            "Eff_Signal (%)": signal_eff,
+            "Eff_Background (%)": background_eff,
+            "S_sqrtB": s_sqrtB,
+        }
+    )
 
 if not rows:
     print("Nessun dato valido trovato. Uscita.")
@@ -135,8 +144,12 @@ df = pd.DataFrame(rows)
 
 # Creazione TSV
 f1 = create_pivot_and_format(df.copy(), "S_sqrtB", args.year, region_filter=args.region)
-f2 = create_pivot_and_format(df.copy(), "Eff_Signal (%)", args.year, region_filter=args.region)
-f3 = create_pivot_and_format(df.copy(), "Eff_Background (%)", args.year, region_filter=args.region)
+f2 = create_pivot_and_format(
+    df.copy(), "Eff_Signal (%)", args.year, region_filter=args.region
+)
+f3 = create_pivot_and_format(
+    df.copy(), "Eff_Background (%)", args.year, region_filter=args.region
+)
 
 print(f"→ S/sqrt(B) salvato in: {f1}")
 print(f"→ Efficienza Signal salvata in: {f2}")
