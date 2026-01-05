@@ -56,7 +56,7 @@ def LeptonVeto(df):
     df = df.Define(
         "Muon_B0",
         f"""
-        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_looseId && Muon_iso < 0.4)""", # loose id and very loose iso 
+        v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_looseId && Muon_iso < 0.4)""",  # loose id and very loose iso
         # v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25) && abs(Muon_dz) < 1. && abs(Muon_dxy) < 0.5""",
     )
 
@@ -74,8 +74,8 @@ def LeptonVeto(df):
     ####  COMPARISON WITH RUN2 ####
     # electron veto, same w.r.t. Run3 - See AN/2019_205 lines 246 - 248
     df = df.Filter("Electron_idx[Electron_B0_veto].size() == 0", "No extra electrons")
-    df = df.Define("mu1_idx","Muon_idx[Muon_B0][0]")
-    df = df.Define("mu2_idx","Muon_idx[Muon_B0][1]")
+    df = df.Define("mu1_idx", "Muon_idx[Muon_B0][0]")
+    df = df.Define("mu2_idx", "Muon_idx[Muon_B0][1]")
     return df
 
 

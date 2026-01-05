@@ -5,41 +5,52 @@ if __name__ == "__main__":
 
 
 from FLAF.Common.Utilities import *
+
+
 def GetMuMuMassResolution(df, pt_to_use):
     sigma_pt = {
-        "scare":"mu{0}_ptErr/mu{0}_pt",
-        "nano":"mu{0}_ptErr/mu{0}_pt",
-        "scare_reapplied":"mu{0}_ptErr/mu{0}_pt",
-        "BS":"mu{0}_bsConstrainedPtErr/mu{0}_bsConstrainedPt",
-        "BS_scare":"mu{0}_bsConstrainedPtErr/mu{0}_bsConstrainedPt",
-        "RoccoR":"mu{0}_ptErr/mu{0}_pt",
-        "BS_RoccoR":"mu{0}_bsConstrainedPtErr/mu{0}_bsConstrainedPt",
+        "scare": "mu{0}_ptErr/mu{0}_pt",
+        "nano": "mu{0}_ptErr/mu{0}_pt",
+        "scare_reapplied": "mu{0}_ptErr/mu{0}_pt",
+        "BS": "mu{0}_bsConstrainedPtErr/mu{0}_bsConstrainedPt",
+        "BS_scare": "mu{0}_bsConstrainedPtErr/mu{0}_bsConstrainedPt",
+        "RoccoR": "mu{0}_ptErr/mu{0}_pt",
+        "BS_RoccoR": "mu{0}_bsConstrainedPtErr/mu{0}_bsConstrainedPt",
     }
     sigma_scaleandresol = {
-        "scare":"0.5*(((mu{0}_pt_1_corr_up-mu{0}_pt_1_scale_corr)*(mu{0}_pt_1_corr_up-mu{0}_pt_1_scale_corr))+((mu{0}_pt_1_corr_dn-mu{0}_pt_1_scale_corr)*(mu{0}_pt_1_corr_dn-mu{0}_pt_1_scale_corr)))",
-        "nano":"0.",
-        "scare_reapplied":"0.5*(((mu{0}_pt_1_corr_up-mu{0}_pt_1_scale_corr)*(mu{0}_pt_1_corr_up-mu{0}_pt_1_scale_corr))+((mu{0}_pt_1_corr_dn-mu{0}_pt_1_scale_corr)*(mu{0}_pt_1_corr_dn-mu{0}_pt_1_scale_corr)))",
-        "BS":"0.",
-        "BS_scare":"0.5*(((mu{0}_BS_pt_1_corr_up-mu{0}_BS_pt_1_corr)*(mu{0}_BS_pt_1_corr_up-mu{0}_BS_pt_1_corr))+((mu{0}_BS_pt_1_corr_dn-mu{0}_BS_pt_1_corr)*(mu{0}_BS_pt_1_corr_dn-mu{0}_BS_pt_1_corr)))",
-        "RoccoR":"0.",
-        "BS_RoccoR":"0.",
+        "scare": "0.5*(((mu{0}_pt_1_corr_up-mu{0}_pt_1_scale_corr)*(mu{0}_pt_1_corr_up-mu{0}_pt_1_scale_corr))+((mu{0}_pt_1_corr_dn-mu{0}_pt_1_scale_corr)*(mu{0}_pt_1_corr_dn-mu{0}_pt_1_scale_corr)))",
+        "nano": "0.",
+        "scare_reapplied": "0.5*(((mu{0}_pt_1_corr_up-mu{0}_pt_1_scale_corr)*(mu{0}_pt_1_corr_up-mu{0}_pt_1_scale_corr))+((mu{0}_pt_1_corr_dn-mu{0}_pt_1_scale_corr)*(mu{0}_pt_1_corr_dn-mu{0}_pt_1_scale_corr)))",
+        "BS": "0.",
+        "BS_scare": "0.5*(((mu{0}_BS_pt_1_corr_up-mu{0}_BS_pt_1_corr)*(mu{0}_BS_pt_1_corr_up-mu{0}_BS_pt_1_corr))+((mu{0}_BS_pt_1_corr_dn-mu{0}_BS_pt_1_corr)*(mu{0}_BS_pt_1_corr_dn-mu{0}_BS_pt_1_corr)))",
+        "RoccoR": "0.",
+        "BS_RoccoR": "0.",
     }
-    for mu_idx in [1,2]:
+    for mu_idx in [1, 2]:
         print(sigma_pt[pt_to_use].format(mu_idx))
         print(sigma_scaleandresol[pt_to_use].format(mu_idx))
-        df=df.Define(f"sigma_mu{mu_idx}_pt_rel", sigma_pt[pt_to_use].format(mu_idx))
+        df = df.Define(f"sigma_mu{mu_idx}_pt_rel", sigma_pt[pt_to_use].format(mu_idx))
         # df.Display({f"sigma_mu{mu_idx}_pt_rel"}).Print()
         # df=df.Define(f"sigma_mu{mu_idx}_pt_rel", f"sigma_mu{mu_idx}_pt_rel/mu{mu_idx}_pt") # is it alreadt relative??
-        df=df.Define(f"sigma_mu{mu_idx}_scaleresolution", sigma_scaleandresol[pt_to_use].format(mu_idx))
-        df=df.Define(f"sigma_mu{mu_idx}_scaleresolution_rel", f"sigma_mu{mu_idx}_scaleresolution/mu{mu_idx}_pt")
+        df = df.Define(
+            f"sigma_mu{mu_idx}_scaleresolution",
+            sigma_scaleandresol[pt_to_use].format(mu_idx),
+        )
+        df = df.Define(
+            f"sigma_mu{mu_idx}_scaleresolution_rel",
+            f"sigma_mu{mu_idx}_scaleresolution/mu{mu_idx}_pt",
+        )
         # df.Display({f"sigma_mu{mu_idx}_scaleresolution"}).Print()
-        df = df.Define(f"sigma_mu{mu_idx}_total_pt_rel", f"sqrt( pow(sigma_mu{mu_idx}_pt_rel,2) + sigma_mu{mu_idx}_scaleresolution_rel )")
+        df = df.Define(
+            f"sigma_mu{mu_idx}_total_pt_rel",
+            f"sqrt( pow(sigma_mu{mu_idx}_pt_rel,2) + sigma_mu{mu_idx}_scaleresolution_rel )",
+        )
         # df.Display({f"sigma_mu{mu_idx}_total_pt_rel"}).Print()
     delta_mu_expr = "0.5*sqrt({0}*{0}+{1}*{1}) "
     # delta_mu_expr = "sqrt( 0.5 * (pow( ({0}/{1}), 2) + pow( ({2}/{3}), 2) ) ) "
     df = df.Define(
         "m_mumu_resolution",
-        delta_mu_expr.format("sigma_mu1_total_pt_rel","sigma_mu2_total_pt_rel")
+        delta_mu_expr.format("sigma_mu1_total_pt_rel", "sigma_mu2_total_pt_rel"),
     )
     # df.Display({"m_mumu_resolution"}).Print()
     # df = df.Define(
@@ -119,7 +130,6 @@ def GetAllMuMuPtRelatedObservables(df):
     df = df.Define(f"pt_mumu_RoccoR", "(mu1_p4_RoccoR+mu2_p4_RoccoR).Pt()")
     df = df.Define(f"pt_mumu_BS_RoccoR", "(mu1_p4_BS_RoccoR+mu2_p4_BS_RoccoR).Pt()")
 
-
     df = df.Define(f"m_mumu_reapplied", "(mu1_p4_reapplied+mu2_p4_reapplied).M()")
     df = df.Define(f"m_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).M()")
     df = df.Define(f"m_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).M()")
@@ -128,25 +138,27 @@ def GetAllMuMuPtRelatedObservables(df):
     df = df.Define(f"m_mumu_BS_RoccoR", "(mu1_p4_BS_RoccoR+mu2_p4_BS_RoccoR).M()")
     return df
 
+
 def RedefineMuonsPt(df, pt_to_use):
     pt_names_dict = {
-        "nano":"pt_nano", # raw nanoAOD pT
-        "scare":"pt", # anatuple pT corrected by scare (not working - because of problems in applying res)
-        "scare_reapplied":"reapplied_pt_1_corr", # pT with scare correctly applied
-        "BS":"bsConstrainedPt", # BSC pT
-        "BS_scare":"BS_pt_1_corr", # BSC pT + scare
-        "RoccoR":"RoccoR_pt", # rochester corrected pT
-        "BS_RoccoR":"BS_RoccoR_pt" # BSC pT + ScaRe
+        "nano": "pt_nano",  # raw nanoAOD pT
+        "scare": "pt",  # anatuple pT corrected by scare (not working - because of problems in applying res)
+        "scare_reapplied": "reapplied_pt_1_corr",  # pT with scare correctly applied
+        "BS": "bsConstrainedPt",  # BSC pT
+        "BS_scare": "BS_pt_1_corr",  # BSC pT + scare
+        "RoccoR": "RoccoR_pt",  # rochester corrected pT
+        "BS_RoccoR": "BS_RoccoR_pt",  # BSC pT + ScaRe
     }
     pt_suffix = pt_names_dict[pt_to_use]
     print(f"redefining the pT: {pt_suffix}")
-    for idx in [0,1]:
-        df = df.Redefine(f"mu{idx+1}_pt",f"mu{idx+1}_{pt_suffix}")
+    for idx in [0, 1]:
+        df = df.Redefine(f"mu{idx+1}_pt", f"mu{idx+1}_{pt_suffix}")
         df = df.Redefine(
             f"mu{idx+1}_p4",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
         )
     return df
+
 
 def RedefineDiMuonObservables(df):
     df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")

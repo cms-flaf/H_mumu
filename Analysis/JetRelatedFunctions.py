@@ -5,6 +5,7 @@ if __name__ == "__main__":
 
 
 from FLAF.Common.Utilities import *
+
 JetObservables = [
     "PNetRegPtRawCorr",
     "PNetRegPtRawCorrNeutrino",
@@ -78,7 +79,7 @@ JetObservables = [
     "vetoMap",
     "passJetIdTight",
     "passJetIdTightLepVeto",
-    "isInsideVetoRegion"
+    "isInsideVetoRegion",
 ]
 
 JetObservablesMC = ["hadronFlavour", "partonFlavour", "genJetIdx"]
@@ -151,13 +152,18 @@ def JetCollectionDef(df):
         "Jet_preSel_andDeadZoneVetoMap",
         "Jet_preSel && !Jet_vetoMap",
     )
-    df = df.Filter("Jet_p4[Jet_preSel && Jet_vetoMap].size()==0") # NO JETS IN DEAD ZONE
+    df = df.Filter(
+        "Jet_p4[Jet_preSel && Jet_vetoMap].size()==0"
+    )  # NO JETS IN DEAD ZONE
 
     df = df.Define(
         f"Jet_NoOverlapWithMuons",
         f"RemoveOverlaps(Jet_p4, Jet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
     )
-    df = df.Define("Jet_IsOutsideOfHornVetoRegion", "Jet_NoOverlapWithMuons && ( abs(v_ops::eta(Jet_p4)) < 2.5 || abs(v_ops::eta(Jet_p4)) > 3 || v_ops::pt(Jet_p4) > 50 ) ")
+    df = df.Define(
+        "Jet_IsOutsideOfHornVetoRegion",
+        "Jet_NoOverlapWithMuons && ( abs(v_ops::eta(Jet_p4)) < 2.5 || abs(v_ops::eta(Jet_p4)) > 3 || v_ops::pt(Jet_p4) > 50 ) ",
+    )
     # exclude completely the jets in Horn region
     df = df.Define(
         f"SelectedJet_p4",
@@ -200,26 +206,32 @@ def JetCollectionDef(df):
     )
     return df
 
+
 def JetObservablesDef(df):
     jet_names = {
-        0:"leading",
-        1:"subleading",
-        2:"third",
-        3:"fourth",
+        0: "leading",
+        1: "subleading",
+        2: "third",
+        3: "fourth",
     }
-    for jet_idx,jet_type in jet_names.items():
+    for jet_idx, jet_type in jet_names.items():
         # for JetObservable in JetObservables:
         #     df = df.Define(f"{jet_type}jet_{JetObservable}", "if (SelectedJet_index.size()>{jet_idx}) return static_cast<float>({JetObservable}.at(SelectedJet_index[{jet_idx}])); else return -1000.f;")
-        for jet_obs in ['pt','eta','phi','rapidity']:
-            df = df.Define(f"{jet_type}jet_{jet_obs}", f"if (SelectedJet_p4.size()>{jet_idx}) return static_cast<float>(v_ops::{jet_obs}(SelectedJet_p4)[{jet_idx}]); else return -1000.f;")
+        for jet_obs in ["pt", "eta", "phi", "rapidity"]:
+            df = df.Define(
+                f"{jet_type}jet_{jet_obs}",
+                f"if (SelectedJet_p4.size()>{jet_idx}) return static_cast<float>(v_ops::{jet_obs}(SelectedJet_p4)[{jet_idx}]); else return -1000.f;",
+            )
     # define Jet HT:
     if "SelectedJet_pt" not in df.GetColumnNames():
-        df = df.Define("SelectedJet_pt","v_ops::pt(SelectedJet_p4)")
-    df = df.Define(f"SelectedJets_HT","float SelectedJet_HT; for(size_t jet_idx = 0; jet_idx < SelectedJet_pt.size() ; jet_idx++){SelectedJet_HT+=SelectedJet_pt[jet_idx];} return SelectedJet_HT;")
+        df = df.Define("SelectedJet_pt", "v_ops::pt(SelectedJet_p4)")
+    df = df.Define(
+        f"SelectedJets_HT",
+        "float SelectedJet_HT; for(size_t jet_idx = 0; jet_idx < SelectedJet_pt.size() ; jet_idx++){SelectedJet_HT+=SelectedJet_pt[jet_idx];} return SelectedJet_HT;",
+    )
     # df.Display({"SelectedJets_HT"}).Print()
 
     return df
-
 
 
 def VBFJetSelection(df):
@@ -349,5 +361,3 @@ def VBFJetMuonsObservables(df):
     )
 
     return df
-
-
