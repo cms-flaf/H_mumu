@@ -83,9 +83,6 @@ GluGluHto2Mu_M_120_TuneCp5:
   generator: amcatnlo
   fs_nanoAOD: T2_US_MIT:/store/group/phys_higgs/cmshmm/amarini/{}/Run3Summer2022-NANOAODSIMv12/241010_133402/
 
-
-
-
 DYto2Mu_MLL_105to160_amcatnloFXFX:
   crossSection: DYto2Mu_MLL_105to160_amcatnloFXFX
   crossSectionStitch: DYto2Mu_MLL_105to160_amcatnloFXFX

@@ -28,17 +28,7 @@ DYto2E_M_50:
   datasets:
     - DYto2E_M_50_amcatnloFXFX
     - DYto2E_M_50_0J_amcatnloFXFX
-<<<<<<< HEAD
-    - DYto2Mu_M_50_0J_amcatnloFXFX
-    # - DYto2Tau_M_50_0J_Filtered_amcatnloFXFX
-    - DYto2Tau_M_50_0J_amcatnloFXFX
     - DYto2E_M_50_1J_amcatnloFXFX
-    - DYto2Mu_M_50_1J_amcatnloFXFX
-    # - DYto2Tau_M_50_1J_Filtered_amcatnloFXFX
-    - DYto2Tau_M_50_1J_amcatnloFXFX
-=======
-    - DYto2E_M_50_1J_amcatnloFXFX
->>>>>>> abfffcaafb0b10baffca3a694611380a3e092b82
     - DYto2E_M_50_2J_amcatnloFXFX
     - DYto2E_M_50_PTLL_40to100_1J_amcatnloFXFX
     - DYto2E_M_50_PTLL_100to200_1J_amcatnloFXFX
@@ -61,9 +51,6 @@ DYto2Mu_M_50:
     - DYto2Mu_M_50_0J_amcatnloFXFX
     - DYto2Mu_M_50_1J_amcatnloFXFX
     - DYto2Mu_M_50_2J_amcatnloFXFX
-<<<<<<< HEAD
-    # - DYto2Tau_M_50_2J_Filtered_amcatnloFXFX
-=======
     - DYto2Mu_M_50_PTLL_40to100_1J_amcatnloFXFX
     - DYto2Mu_M_50_PTLL_100to200_1J_amcatnloFXFX
     - DYto2Mu_M_50_PTLL_200to400_1J_amcatnloFXFX
@@ -83,7 +70,6 @@ DYto2Tau_M_50:
   datasets:
     - DYto2Tau_M_50_0J_amcatnloFXFX
     - DYto2Tau_M_50_1J_amcatnloFXFX
->>>>>>> abfffcaafb0b10baffca3a694611380a3e092b82
     - DYto2Tau_M_50_2J_amcatnloFXFX
 
 
