@@ -333,8 +333,7 @@ def addAllVariables(
     isSignal,
     applyTriggerFilter,
     global_params,
-    channels,
-    sample_name
+    channels
 ):
     dfw.Apply(AnaBaseline.LeptonVeto)
 
@@ -347,7 +346,7 @@ def addAllVariables(
 
     dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
-    isV12 = (sample_name == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7" or sample_name== "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1" or sample_name=="VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2")
+    isV12 = (global_params["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7" or global_params["process_name"]== "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1" or global_params["process_name"]=="VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2") --> to be fixed!! global_params --> sample_name from there
     dfw.Apply(CommonBaseline.ApplyJetVetoMap, apply_filter=False,isV12=isV12)
 
     # dfw.Apply(AnaBaseline.GetMuMuCandidate)

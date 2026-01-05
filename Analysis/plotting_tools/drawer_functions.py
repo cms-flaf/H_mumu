@@ -439,7 +439,7 @@ def plot_histogram_from_config(
     var_plot_opts = hist_cfg.get("plot_options", {})
     plot_opts.update(var_plot_opts)
 
-    enable_kde = bool(plot_opts.get("enable_kde", True))
+    enable_kde = bool(plot_opts.get("enable_kde", False))
     kde_scope = plot_opts.get("kde_scope", "total_mc")  # default
     kde_bw = plot_opts.get("kde_bw", None)
     kde_points = int(plot_opts.get("kde_points", 500))

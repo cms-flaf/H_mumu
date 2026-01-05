@@ -36,11 +36,11 @@ sig_patterns = [
 ]
 
 ggh_files = expand_filelist([
-    f"/eos/user/e/eusebi/Hmumu/anaTuples/v4_20Nov_NewJetIDs_LooseMuons/{period}/GluGluHto2Mu/anaTuple*.root"
+    f"/eos/user/e/eusebi/Hmumu/anaTuples/v5_diMuonTriggerIncluded/{period}/GluGluHto2Mu/split/nano*.root"
 ])
 
 vbf_files = expand_filelist([
-    f"/eos/user/e/eusebi/Hmumu/anaTuples/v4_20Nov_NewJetIDs_LooseMuons/{period}/VBFHto2Mu/anaTuple*.root"
+    f"/eos/user/e/eusebi/Hmumu/anaTuples/v5_diMuonTriggerIncluded/{period}/VBFHto2Mu/split/nano*.root"
 ])
 
 
@@ -105,16 +105,16 @@ rdf_sig = rdf_sig.Define(
     "isggH",
     'std::string(ROOT::RDF::RSampleInfo().AsString()).find("ggHto2Mu") != std::string::npos'
 )
-rdf_bkg = ROOT.RDataFrame("Events", Utilities.ListToVector(full_bkg_list))
-rdf_bkg = rdf_bkg.Define("isVBF","0")
-rdf_bkg = rdf_bkg.Define("isggH","0")
+# rdf_bkg = ROOT.RDataFrame("Events", Utilities.ListToVector(full_bkg_list))
+# rdf_bkg = rdf_bkg.Define("isVBF","0")
+# rdf_bkg = rdf_bkg.Define("isggH","0")
 
 # Build DataFrame wrappers using the analysis-provided builder
 dfw_sig = analysis.DataFrameBuilderForHistograms(rdf_sig, gp_sig, period, **kwargset)
-dfw_bkg = analysis.DataFrameBuilderForHistograms(rdf_bkg, gp_bkg, period, **kwargset)
+# dfw_bkg = analysis.DataFrameBuilderForHistograms(rdf_bkg, gp_bkg, period, **kwargset)
 
 # common definitions and pre-caching (appliazione una sola volta)
-for dfw in (dfw_sig, dfw_bkg):
+for dfw in [dfw_sig]:  # , dfw_bkg):
     dfw.df = Utilities.defineP4(dfw.df, f"mu1")
     dfw.df = Utilities.defineP4(dfw.df, f"mu2")
     dfw.df = dfw.df.Define("m_mumu", f"(mu1_p4 + mu2_p4).M()")
@@ -129,12 +129,17 @@ for dfw in (dfw_sig, dfw_bkg):
     dfw.SignRegionDef()
     dfw.defineRegions()
     dfw.defineCategories()
+    dfw.df = dfw.df.Define(f"baseline_noID_Iso_withDiMuonTrg","OS && (trigger_sel || ( (mu1_pt > 19 && mu1_HasMatching_diMu) && (mu2_pt > 10 && mu2_HasMatching_diMu) ) )")
     dfw.df = dfw.df.Define(f"baseline_noID_Iso","OS && trigger_sel")
     dfw.df = dfw.df.Define(f"VBF_JetVeto_noID_Iso","baseline_noID_Iso && HasVBF && j1_pt >= 35 && j2_pt >= 25")
     dfw.df = dfw.df.Define(f"ggH_noID_Iso","baseline_noID_Iso && !(VBF_JetVeto_noID_Iso)")
-    dfw.df = dfw.df.Define(f"mu1_isTrigger","(mu1_pt > 26 && mu1_HasMatching_singleMu)")
-    dfw.df = dfw.df.Define(f"mu2_isTrigger","(mu2_pt > 26 && mu2_HasMatching_singleMu)")
-    dfw.df = dfw.df.Define("Signal_Fit", "m_mumu > 115 && m_mumu < 135")
+    dfw.df = dfw.df.Define(f"mu1_isSingleMu","(mu1_pt > 26 && mu1_HasMatching_singleMu)")
+    dfw.df = dfw.df.Define(f"mu2_isSingleMu","(mu2_pt > 26 && mu2_HasMatching_singleMu)")
+    ## assuming muons ordered by pT ##
+    dfw.df = dfw.df.Define(f"mu1_isdiMu","(mu1_pt > 19 && mu1_HasMatching_diMu)")
+    dfw.df = dfw.df.Define(f"mu2_isdiMu","(mu2_pt > 10 && mu1_HasMatching_diMu)")
+
+    # dfw.df = dfw.df.Define("Signal_Fit", "m_mumu > 115 && m_mumu < 135")
     # dfw.df = dfw.df.Define("looseID_mu1_looseID_mu2",  "mu1_looseId  && mu2_looseId")
     # dfw.df = dfw.df.Define("looseID_mu1_mediumID_mu2",  "mu1_looseId  && mu2_mediumId")
     # dfw.df = dfw.df.Define("mediumID_mu1_looseID_mu2",  "mu1_mediumId  && mu2_looseId")
@@ -145,13 +150,13 @@ for dfw in (dfw_sig, dfw_bkg):
 # Snapshot
 # -------------------------
 cols_to_save = [
-    "Signal_Fit","baseline_noID_Iso", "VBF_JetVeto_noID_Iso","ggH_noID_Iso","weight_MC_Lumi_pu","isggH","isVBF"]
+    "Signal_Fit","baseline_noID_Iso", "baseline_noID_Iso_withDiMuonTrg", "VBF_JetVeto_noID_Iso","ggH_noID_Iso","weight_MC_Lumi_pu","isggH","isVBF"]
 
-for muCol in ["looseId","mediumId","tightId","pfRelIso04_all","isTrigger"]:
+for muCol in ["looseId","mediumId","tightId","pfRelIso04_all","isSingleMu","isdiMu"]:
     for muIdx in [1,2]:
         cols_to_save.append(f"mu{muIdx}_{muCol}")
 
-# dfw_sig.df.Snapshot("Mini", f"/afs/cern.ch/work/v/vdamante/H_mumu/Studies/validation/stuff/mini_signal_{args.year}.root", cols_to_save)
-dfw_bkg.df.Snapshot("Mini", f"/afs/cern.ch/work/v/vdamante/H_mumu/Studies/validation/stuff/mini_bkgTTbar_{args.year}.root", cols_to_save)
+dfw_sig.df.Snapshot("Mini", f"/afs/cern.ch/work/v/vdamante/H_mumu/Studies/validation/stuff/mini_signal_{args.year}_diMuonTrg.root", cols_to_save)
+# dfw_bkg.df.Snapshot("Mini", f"/afs/cern.ch/work/v/vdamante/H_mumu/Studies/validation/stuff/mini_bkgTTbar_{args.year}.root", cols_to_save)
 
 print("Mini-ntupla salvata. Pronta per calcolo efficienze.")

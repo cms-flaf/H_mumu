@@ -48,8 +48,8 @@ for var in $(find "${base_path}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n')
     fi
 
     echo "Found variable: ${var}"
-    read -t 5 -p "Do you wish to process this variable? [y/n/q] (default: no in 5s) " yn
-    yn=${yn:-n}  # se timeout o input vuoto, consideriamo "n"
+    read -t 2 -p "Do you wish to process this variable? [y/n/q] (default: yes in 2s) " yn
+    yn=${yn:-y}  # se timeout o input vuoto, consideriamo "n"
 
     case $yn in
         [Yy]* )
@@ -69,9 +69,11 @@ for var in $(find "${base_path}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n')
                         --period "Run3_${year}" \
                         --region "${region}" \
                         --category "${cat}" \
-                        --contribution GluGluHto2Mu\
-                        ${subregion_opt} # --wantLogY --wantSignal --rebin DY,TT,VV,data,ST,EWK,W_NJets,TW,VVV,TTX,VBFHto2Mu,--wantRatio --wantData
-                        #
+                        --contribution DY,TT,VV,data,ST,EWK,W_NJets,TW,VVV,TTX,VBFHto2Mu,GluGluHto2Mu \
+                        --wantRatio \
+                        --wantData \
+                        --wantSignal \
+                        ${subregion_opt} # --wantLogY  --rebin
                     python3 /afs/cern.ch/work/v/vdamante/H_mumu/Analysis/plotting_tools/main_plotter.py \
                         --inFile "${input_file}" \
                         --outFile "${output_file}" \
@@ -79,9 +81,11 @@ for var in $(find "${base_path}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n')
                         --period "Run3_${year}" \
                         --region "${region}" \
                         --category "${cat}" \
-                        --contribution GluGluHto2Mu\
-                        ${subregion_opt} # --wantLogY --wantSignal --rebin DY,TT,VV,data,ST,EWK,W_NJets,TW,VVV,TTX,VBFHto2Mu,--wantRatio --wantData
-                        #
+                        --contribution DY,TT,VV,data,ST,EWK,W_NJets,TW,VVV,TTX,VBFHto2Mu,GluGluHto2Mu \
+                        --wantRatio \
+                        --wantData \
+                        --wantSignal \
+                        ${subregion_opt} # --wantLogY  --rebin
                 done
             done
             ;;

@@ -86,7 +86,7 @@ def RedefineIsoTrgAndIDWeights(df, period):
         f'auto cset_lowPt = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");' # change the name this is wrong
         f'auto cset_highPt = correction::CorrectionSet::from_file("/cvmfs/cms.cern.ch/rsync/cms-nanoAOD/jsonpog-integration/POG/MUO/{year_dict[period]}/muon_Z.json.gz");' # change the name this is wrong
     )
-    
+
     for muon_idx in [1,2]:
         # NUM_TightPFIso_DEN_TightID --> Iso
         # NUM_TightID_DEN_TrackerMuons --> ID
@@ -175,6 +175,78 @@ def AddNewDYWeights(df, period, isDY):
         df = df.Define("newDYWeight_ptLL_nano",f"""return pt_ll_nano >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll_nano, "nom"}}) : 1.f""")
         # df = df.Define("newDYWeight_ptLL_ScaRe",f"""return pt_ll_nano >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, pt_ll_nano, "nom"}}) : 1.f""")
         df = df.Define("newDYWeight_genpt_ll",f"""return genpt_ll >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, genpt_ll, "nom"}}) : 1.f""")
+
+        ###### Giorgio's reweighting #####
+        # nJet related correction
+        df = df.Define("nJet_corr", "nJet > 3 ? 3 : nJet")
+        df = df.Define("nJet_8Max", "nJet > 8 ? 8 : nJet")
+        region = "ggH_Z"
+        syst = "ptll_rwgt"
+        df = df.Define("weight_ggH_Z",f"""return cset_g->at("DY_njet_reweighting")->evaluate({{ {sample_order}, {region}, nJet_8Max}}) : 1.f""")
+        df = df.Define(f"weight_ggH_Z_{syst}_up",f"""return pt_ll_nano >= 0 ? cset->at("DY_pTll_reweighting")->evaluate({{ {sample_order}, {region}, nJet_8Max}}) : 1.f""")
+
+
+        events["weight_ggH_Z"] = corrDY_njet.evaluate(
+            region,
+            ak.where(events.njet > 8, 8, ak.where(events.njet < 0, 0, events.njet)),
+        )
+        events[f"weight_ggH_Z_{syst}_up"] = events.weight_ggH_Z * corrDY.evaluate(
+            region,
+            events.njet_corr,
+            "up",
+            events.ptll,
+        )
+        events[f"weight_ggH_Z_{syst}_down"] = events.weight_ggH_Z * corrDY.evaluate(
+            region,
+            events.njet_corr,
+            "down",
+            events.ptll,
+        )
+        events["weight_ggH_Z"] = events.weight_ggH_Z * corrDY.evaluate(
+            region,
+            events.njet_corr,
+            "nom",
+            events.ptll,
+        )
+
+        region = "VBF_Z"
+        njet_corr = ak.where(events.njet_corr >= 2, events.njet_corr, 2)
+        events["weight_VBF_Z"] = corrDY_njet.evaluate(
+            region,
+            ak.where(events.njet > 8, 8, ak.where(events.njet < 2, 2, events.njet)),
+        )
+        events[f"weight_VBF_Z_{syst}_up"] = events.weight_VBF_Z * corrDY.evaluate(
+            region,
+            njet_corr,
+            "up",
+            events.ptll,
+        )
+        events[f"weight_VBF_Z_{syst}_down"] = events.weight_VBF_Z * corrDY.evaluate(
+            region,
+            njet_corr,
+            "down",
+            events.ptll,
+        )
+
+        events["weight_VBF_Z"] = events.weight_VBF_Z * corrDY.evaluate(
+            region,
+            njet_corr,
+            "nom",
+            events.ptll,
+        )
+        events[f"weight_VBF_Z_{syst}_up"] = ak.where(
+            events.njet_corr >= 2, events[f"weight_VBF_Z_{syst}_up"], 1.0
+        )
+        events[f"weight_VBF_Z_{syst}_down"] = ak.where(
+            events.njet_corr >= 2, events[f"weight_VBF_Z_{syst}_down"], 1.0
+        )
+        events["weight_VBF_Z"] = ak.where(
+            events.njet_corr >= 2, events["weight_VBF_Z"], 1.0
+        )
+        # print([k for k in events.fields if 'weight_' in k])
+
+
+
     else:
         df = df.Define("newDYWeight_ptLL_bsConstrained","""1.f""")
         df = df.Define("newDYWeight_ptLL_nano","""1.f""")

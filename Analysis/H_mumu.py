@@ -190,16 +190,16 @@ def GetWeight(channel="muMu"):
         # ]
         "muMu": [
 
-            # "weight_mu1_mediumID",
-            # "weight_mu1_mediumID_looseIso",
-            # "weight_mu2_mediumID",
-            # "weight_mu2_mediumID_looseIso",
+            "weight_mu1_mediumID",
+            "weight_mu1_mediumID_looseIso",
+            "weight_mu2_mediumID",
+            "weight_mu2_mediumID_looseIso",
 
 
-            "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
-            "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
-            "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
-            "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+            # "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
+            # "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+            # "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
+            # "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
 
         ]
     }

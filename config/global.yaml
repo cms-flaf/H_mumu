@@ -174,6 +174,7 @@ category_definition:
   baseline_WPIso_ML: "mu1_pfRelIso04_all < 0.25 &&  mu2_pfRelIso04_all< 0.25 && mu1_mediumId && mu2_mediumId"
   OS_sel: "baseline_WPIso_{WP_to_use} && OS"
   trigger_sel: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
+  trigger_sel_withDiMuon: "trigger_sel || ( (mu1_pt > 19 && mu1_HasMatching_diMu) && (mu2_pt > 10 && mu2_HasMatching_diMu) )"
   baseline_muonJet: "OS_sel && trigger_sel && JetTagSel" # &&  abs(mu1_dz) < 1. && abs(mu1_dxy) < 0.5 && abs(mu2_dz) < 1. && abs(mu2_dxy) < 0.5"
   VBF_def: "baseline_muonJet && HasVBF"
   VBF_JetVeto: "VBF_def && j1_pt >= 35 && j2_pt >= 25 "
