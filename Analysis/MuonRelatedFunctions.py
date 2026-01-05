@@ -112,10 +112,11 @@ def GetMuMuP4Observables(df):
     df = df.Define(f"m_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).M()")
     return df
 
+
 def GetAllMuMuCorrectedPtRelatedObservables(df):
     df = df.Define(f"pt_mumu_corr", "(mu1_p4_corr+mu2_p4_corr).Pt()")
     df = df.Define(f"m_mumu_corr", "(mu1_p4_corr+mu2_p4_corr).M()")
-    for mu_idx in [1,2]:
+    for mu_idx in [1, 2]:
         df = df.Define(f"mu{mu_idx}_pt_corr", f"mu{mu_idx}_p4_corr.Pt()")
     return df
 
@@ -129,10 +130,14 @@ def RedefineOtherDiMuonObservables(df):
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
 
-    df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4_corr, mu2_p4_corr)")
+    df = df.Define(
+        "dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4_corr, mu2_p4_corr)"
+    )
 
     df = df.Define("Ebeam", "13600.0/2")
-    df = df.Define("cosTheta_Phi_CS", "ComputeCosThetaPhiCS(mu1_p4_corr, mu2_p4_corr,  Ebeam)")
+    df = df.Define(
+        "cosTheta_Phi_CS", "ComputeCosThetaPhiCS(mu1_p4_corr, mu2_p4_corr,  Ebeam)"
+    )
     df = df.Define("cosTheta_CS", "static_cast<float>(std::get<0>(cosTheta_Phi_CS))")
     df = df.Define("phi_CS", "static_cast<float>(std::get<1>(cosTheta_Phi_CS))")
     return df

@@ -9,7 +9,6 @@ if __name__ == "__main__":
 from FLAF.Common.Utilities import *
 from FLAF.Common.HistHelper import *
 from Analysis.GetTriggerWeights import *
-from Analysis.CorrectionsRelatedFunctions import *
 from Analysis.MuonRelatedFunctions import *
 from Analysis.JetRelatedFunctions import *
 
@@ -21,7 +20,6 @@ for header in [
     "FLAF/include/AnalysisMath.h",
 ]:
     DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
-
 
 
 def createKeyFilterDict(global_params, period):
@@ -172,7 +170,6 @@ def GetWeight(channel, process_name):
         # "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
         # "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
         "muMu": ["weight_trigSF_singleMu"]
-
     }
 
     ID_weights_dict = {
@@ -183,7 +180,6 @@ def GetWeight(channel, process_name):
         #     "weight_mu2_tightID_tightIso",
         # ]
         "muMu": [
-
             # "weight_mu1_mediumID",
             # "weight_mu1_mediumID_looseIso",
             # "weight_mu2_mediumID",
@@ -192,15 +188,12 @@ def GetWeight(channel, process_name):
             # "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
             # "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
             # "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
-
             "weight_mu1_MuonID_SF_MediumID_TrkCentral",
             "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
             "weight_mu2_MuonID_SF_MediumID_TrkCentral",
             "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
-
         ]
     }
-
 
     # should be moved to config
     weights_to_apply.extend(ID_weights_dict[channel])
@@ -251,7 +244,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
             self.df = self.df.Define(category_to_def, cat_str)
             self.colToSave.append(category_to_def)
 
-
     def defineChannels(self):
         self.df = self.df.Define(f"muMu", f"return true;")
         self.colToSave.append("muMu")
@@ -279,7 +271,9 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
     dfForHistograms.SignRegionDef()
-    dfForHistograms.df = GetAllMuMuCorrectedPtRelatedObservables(dfForHistograms.df) # before corrections applied
+    dfForHistograms.df = GetAllMuMuCorrectedPtRelatedObservables(
+        dfForHistograms.df
+    )  # before corrections applied
     dfForHistograms.df = RedefineOtherDiMuonObservables(dfForHistograms.df)
     # if "m_mumu_resolution" in dfForHistograms.config["variables"]:
     #     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
@@ -288,9 +282,8 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
     # dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df) # from here, the pT is needed to be specified as it depends on which muon pT to choose.
 
-    dfForHistograms.defineRegions() # this depends on which muon pT to choose.
-    dfForHistograms.defineCategories() # this depends on which muon  pT to choose.
-
+    dfForHistograms.defineRegions()  # this depends on which muon pT to choose.
+    dfForHistograms.defineCategories()  # this depends on which muon  pT to choose.
 
     # # dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
 

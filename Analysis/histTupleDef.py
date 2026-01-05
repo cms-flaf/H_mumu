@@ -5,6 +5,7 @@ from Corrections.Corrections import Corrections
 from Corrections.CorrectionsCore import getSystName, central
 from Analysis.GetTriggerWeights import defineTriggerWeights
 from Analysis.MuonRelatedFunctions import *
+
 initialized = False
 analysis = None
 
@@ -49,14 +50,13 @@ def GetDfw(
     kwargset["isData"] = global_params["process_group"] == "data"
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
     kwargset["colToSave"] = []
-    is_central = shift=="Central"
-    return_variations= is_central and global_params["compute_unc_histograms"]
+    is_central = shift == "Central"
+    return_variations = is_central and global_params["compute_unc_histograms"]
 
     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
-    dfw.df = GetMuMuP4Observables(dfw.df) # before corrections applied
+    dfw.df = GetMuMuP4Observables(dfw.df)  # before corrections applied
     if "muScaRe" in Corrections.getGlobal().to_apply:
         dfw.df = Corrections.getGlobal().muScaRe.getP4VariationsForLegs(dfw.df)
-
 
     if df_caches:
         k = 0
@@ -80,6 +80,7 @@ def GetDfw(
                 if var_to_add not in new_dfw.colToSave:
                     new_dfw.colToSave.append(var_to_add)
     return new_dfw
+
 
 central_df_weights_computed = False
 
@@ -126,12 +127,16 @@ def DefineWeightForHistograms(
             isCentral=is_central,
             use_genWeight_sign_only=True,
         )
-        defineTriggerWeights(dfw, global_params.get("triggers", {}).get("muon_pt", "pt_nano"))
+        defineTriggerWeights(
+            dfw, global_params.get("triggers", {}).get("muon_pt", "pt_nano")
+        )
         # print(all_weights)
         if df_is_central:
             central_df_weights_computed = True
-        if uncScale != 'Central':
-            defineTriggerWeightsErrors(dfBuilder,  global_params.get("triggers", {}).get("muon_pt", "pt_nano"))
+        if uncScale != "Central":
+            defineTriggerWeightsErrors(
+                dfBuilder, global_params.get("triggers", {}).get("muon_pt", "pt_nano")
+            )
 
     categories = global_params["categories"]
     process_group = global_params["process_group"]
