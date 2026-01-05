@@ -235,7 +235,7 @@ JetObservables = [
     "vetoMapEle",
     "passJetIdTight",
     "passJetIdTightLepVeto",
-    "isInsideVetoRegion"
+    "isInsideVetoRegion",
 ]
 
 JetObservablesMC = ["hadronFlavour", "partonFlavour"]
@@ -333,14 +333,18 @@ def addAllVariables(
     applyTriggerFilter,
     global_params,
     channels,
-    dataset_cfg
+    dataset_cfg,
 ):
     dfw.Apply(AnaBaseline.LeptonVeto)
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
     dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
-    isV12 = (dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7" or dataset_cfg["process_name"]== "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1" or dataset_cfg["process_name"]=="VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2")
-    dfw.Apply(CommonBaseline.ApplyJetVetoMap, apply_filter=False,isV12=isV12)
+    isV12 = (
+        dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7"
+        or dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1"
+        or dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2"
+    )
+    dfw.Apply(CommonBaseline.ApplyJetVetoMap, apply_filter=False, isV12=isV12)
 
     n_legs = 2
 
@@ -413,7 +417,7 @@ def addAllVariables(
                 var_cond=f"mu{leg_idx+1}_genMatchIdx>=0",
                 default="-10",
             )
-        else: 
+        else:
             LegVar(
                 "gen_kind",
                 f"-1",
@@ -435,14 +439,15 @@ def addAllVariables(
             f"Muon_p4_nano.at(mu{leg_idx+1}_idx)",
         )
     jet_obs_names = []
-    for jvar in ["pt","eta","phi","mass"]:
+    for jvar in ["pt", "eta", "phi", "mass"]:
         jet_obs_name = f"Jet_{jvar}"
         if f"{jet_obs_name}" in dfw.df.GetColumnNames():
-            dfw.DefineAndAppend(f"{jet_obs_name}_nano",jet_obs_name)
+            dfw.DefineAndAppend(f"{jet_obs_name}_nano", jet_obs_name)
 
     if not isData:
         JetObservables.extend(JetObservablesMC)
-    for jetobs in JetObservables + ["idx"]:
+
+    for jetobs in list(set(JetObservables)) + ["idx"]:
         jet_obs_name = f"Jet_{jetobs}"
         if jet_obs_name in dfw.df.GetColumnNames():
             jet_obs_names.append(jet_obs_name)
