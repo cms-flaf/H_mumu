@@ -336,19 +336,11 @@ def addAllVariables(
     dataset_cfg
 ):
     dfw.Apply(AnaBaseline.LeptonVeto)
-
-    # dfw.Apply(AnaBaseline.RecoHttCandidateSelection, global_params)
-
-    # dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
-    # dfw.Apply(AnaBaseline.JetSelection, global_params["era"])
-
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
-
     dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
+
     isV12 = (dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7" or dataset_cfg["process_name"]== "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1" or dataset_cfg["process_name"]=="VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2")
     dfw.Apply(CommonBaseline.ApplyJetVetoMap, apply_filter=False,isV12=isV12)
-
-    # dfw.Apply(AnaBaseline.GetMuMuCandidate)
 
     n_legs = 2
 
@@ -373,7 +365,6 @@ def addAllVariables(
                 define_expr = f"{cond} ? ({define_expr}) : {default}"
             dfw.DefineAndAppend(f"mu{leg_idx+1}_{var_name}", define_expr)
 
-        # LegVar("legType", f"HttCandidate.leg_type[{leg_idx}]", check_leg_type=False)
         LegVar("legType", f"Leg::mu", check_leg_type=False)
         for var in ["pt", "eta", "phi", "mass"]:
             LegVar(
@@ -382,8 +373,6 @@ def addAllVariables(
                 var_type="float",
                 default="-1000.f",
             )
-        # fix: add muon index:
-
         LegVar(
             f"index",
             f"Muon_idx[mu{leg_idx+1}_idx]",
@@ -410,10 +399,6 @@ def addAllVariables(
                 default="-100000.f",
             )
         if not isData:
-            # dfw.Define(
-            #     f"mu{leg_idx+1}_genMatchIdx",
-            #     f"HttCandidate.leg_type[{leg_idx}] != Leg::none ? HttCandidate.leg_genMatchIdx[{leg_idx}] : -1",
-            # )
             LegVar(
                 "gen_kind",
                 f"genLeptons.at(mu{leg_idx+1}_genMatchIdx).kind()",
@@ -428,11 +413,7 @@ def addAllVariables(
                 var_cond=f"mu{leg_idx+1}_genMatchIdx>=0",
                 default="-10",
             )
-        else:
-            # dfw.Define(
-            #     f"mu{leg_idx+1}_genMatchIdx",
-            #     f"-1",
-            # )
+        else: 
             LegVar(
                 "gen_kind",
                 f"-1",
