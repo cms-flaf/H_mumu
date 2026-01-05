@@ -94,13 +94,9 @@ def GetMuMuMassResolution(df, pt_to_use):
     return df
 
 
-def GetAllMuMuPtRelatedObservables(df):
+def GetMuMuP4Observables(df):
     for idx in [0, 1]:
         df = defineP4(df, f"mu{idx+1}")
-        df = df.Define(
-            f"mu{idx+1}_p4_reapplied",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_reapplied_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
         df = df.Define(
             f"mu{idx+1}_p4_BS",
             f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_bsConstrainedPt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
@@ -110,70 +106,33 @@ def GetAllMuMuPtRelatedObservables(df):
                 f"mu{idx+1}_p4_nano",
                 f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
             )
-        df = df.Define(
-            f"mu{idx+1}_p4_BS_ScaRe",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
-
-        df = df.Define(
-            f"mu{idx+1}_p4_RoccoR",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_RoccoR_pt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
-        df = df.Define(
-            f"mu{idx+1}_p4_BS_RoccoR",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_RoccoR_pt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
-    df = df.Define(f"pt_mumu_reapplied", "(mu1_p4_reapplied+mu2_p4_reapplied).Pt()")
     df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
     df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
-    df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
-    df = df.Define(f"pt_mumu_RoccoR", "(mu1_p4_RoccoR+mu2_p4_RoccoR).Pt()")
-    df = df.Define(f"pt_mumu_BS_RoccoR", "(mu1_p4_BS_RoccoR+mu2_p4_BS_RoccoR).Pt()")
-
-    df = df.Define(f"m_mumu_reapplied", "(mu1_p4_reapplied+mu2_p4_reapplied).M()")
     df = df.Define(f"m_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).M()")
     df = df.Define(f"m_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).M()")
-    df = df.Define(f"m_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M()")
-    df = df.Define(f"m_mumu_RoccoR", "(mu1_p4_RoccoR+mu2_p4_RoccoR).M()")
-    df = df.Define(f"m_mumu_BS_RoccoR", "(mu1_p4_BS_RoccoR+mu2_p4_BS_RoccoR).M()")
+    return df
+
+def GetAllMuMuCorrectedPtRelatedObservables(df):
+    df = df.Define(f"pt_mumu_corr", "(mu1_p4_corr+mu2_p4_corr).Pt()")
+    df = df.Define(f"m_mumu_corr", "(mu1_p4_corr+mu2_p4_corr).M()")
+    for mu_idx in [1,2]:
+        df = df.Define(f"mu{mu_idx}_pt_corr", f"mu{mu_idx}_p4_corr.Pt()")
     return df
 
 
-def RedefineMuonsPt(df, pt_to_use):
-    pt_names_dict = {
-        "nano": "pt_nano",  # raw nanoAOD pT
-        "scare": "pt",  # anatuple pT corrected by scare (not working - because of problems in applying res)
-        "scare_reapplied": "reapplied_pt_1_corr",  # pT with scare correctly applied
-        "BS": "bsConstrainedPt",  # BSC pT
-        "BS_scare": "BS_pt_1_corr",  # BSC pT + scare
-        "RoccoR": "RoccoR_pt",  # rochester corrected pT
-        "BS_RoccoR": "BS_RoccoR_pt",  # BSC pT + ScaRe
-    }
-    pt_suffix = pt_names_dict[pt_to_use]
-    print(f"redefining the pT: {pt_suffix}")
-    for idx in [0, 1]:
-        df = df.Redefine(f"mu{idx+1}_pt", f"mu{idx+1}_{pt_suffix}")
-        df = df.Redefine(
-            f"mu{idx+1}_p4",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
-    return df
-
-
-def RedefineDiMuonObservables(df):
-    df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
-    df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
-    df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
-    df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
-    df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
+def RedefineOtherDiMuonObservables(df):
+    df = df.Define(f"y_mumu", "(mu1_p4_corr+mu2_p4_corr).Rapidity()")
+    df = df.Define(f"eta_mumu", "(mu1_p4_corr+mu2_p4_corr).Eta()")
+    df = df.Define(f"phi_mumu", "(mu1_p4_corr+mu2_p4_corr).Phi()")
+    df = df.Define("m_mumu", "static_cast<float>((mu1_p4_corr+mu2_p4_corr).M())")
 
     for idx in [0, 1]:
         df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
 
-    df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
+    df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4_corr, mu2_p4_corr)")
 
     df = df.Define("Ebeam", "13600.0/2")
-    df = df.Define("cosTheta_Phi_CS", "ComputeCosThetaPhiCS(mu1_p4, mu2_p4,  Ebeam)")
+    df = df.Define("cosTheta_Phi_CS", "ComputeCosThetaPhiCS(mu1_p4_corr, mu2_p4_corr,  Ebeam)")
     df = df.Define("cosTheta_CS", "static_cast<float>(std::get<0>(cosTheta_Phi_CS))")
     df = df.Define("phi_CS", "static_cast<float>(std::get<1>(cosTheta_Phi_CS))")
     return df

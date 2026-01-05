@@ -4,7 +4,7 @@ from FLAF.Common.HistHelper import *
 from Corrections.Corrections import Corrections
 from Corrections.CorrectionsCore import getSystName, central
 from Analysis.GetTriggerWeights import defineTriggerWeights
-
+from Analysis.MuonRelatedFunctions import *
 initialized = False
 analysis = None
 
@@ -49,9 +49,14 @@ def GetDfw(
     kwargset["isData"] = global_params["process_group"] == "data"
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
     kwargset["colToSave"] = []
-
+    is_central = shift=="Central"
+    return_variations= is_central and global_params["compute_unc_histograms"]
 
     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
+    dfw.df = GetMuMuP4Observables(dfw.df) # before corrections applied
+    if "muScaRe" in Corrections.getGlobal().to_apply:
+        dfw.df = Corrections.getGlobal().muScaRe.getP4VariationsForLegs(dfw.df)
+
 
     if df_caches:
         k = 0
@@ -75,39 +80,6 @@ def GetDfw(
                 if var_to_add not in new_dfw.colToSave:
                     new_dfw.colToSave.append(var_to_add)
     return new_dfw
-
-
-# def GetDfw(
-#     df,
-#     df_cache,
-#     global_params,
-#     shift="Central",
-#     col_names_central=[],
-#     col_types_central=[],
-#     cache_map_name="cache_map_Central",
-# ):
-#     period = global_params["era"]
-#     kwargset = (
-#         {}
-#     )  # here go the customisations for each analysis eventually extrcting stuff from the global params
-#     kwargset["isData"] = global_params["process_group"] == "data"
-#     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
-#     kwargset["colToSave"] = []
-
-#     dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
-
-#     if df_cache:
-
-#         dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
-#             df_cache, global_params, **kwargset
-#         )
-#         AddCacheColumnsInDf(dfw, dfWrapped_cache, cache_map_name)
-#     if shift == "Valid" and global_params["compute_unc_variations"]:
-#         dfw.CreateFromDelta(col_names_central, col_types_central)
-#     if shift != "Central" and global_params["compute_unc_variations"]:
-#         dfw.AddMissingColumns(col_names_central, col_types_central)
-#     new_dfw = analysis.PrepareDfForHistograms(dfw)
-#     return new_dfw
 
 central_df_weights_computed = False
 
@@ -154,25 +126,25 @@ def DefineWeightForHistograms(
             isCentral=is_central,
             use_genWeight_sign_only=True,
         )
-        defineTriggerWeights(dfw)
-
+        defineTriggerWeights(dfw, global_params.get("triggers", {}).get("muon_pt", "pt_nano"))
+        # print(all_weights)
         if df_is_central:
             central_df_weights_computed = True
+        if uncScale != 'Central':
+            defineTriggerWeightsErrors(dfBuilder,  global_params.get("triggers", {}).get("muon_pt", "pt_nano"))
 
     categories = global_params["categories"]
-    process_group = global_params["process_group"]
     process_group = global_params["process_group"]
     process_name = global_params["process_name"]
     isCentral = uncName == "Central"
     total_weight_expression = (
-        analysis.GetWeight("muMu") if process_group != "data" else "1"
         analysis.GetWeight("muMu", process_name) if process_group != "data" else "1"
     )  # are we sure?
-    print(total_weight_expression)
+    # print(total_weight_expression)
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
         dfw.df = dfw.df.Define(weight_name, total_weight_expression)
-    if not isCentral:  # and type(unc_cfg_dict['norm']) == dict:
+    if not isCentral:
         if (
             uncName in unc_cfg_dict["norm"].keys()
             and "expression" in unc_cfg_dict["norm"][uncName].keys()
@@ -183,10 +155,3 @@ def DefineWeightForHistograms(
                 scale=uncScale
             )
     dfw.df = dfw.df.Define(final_weight_name, weight_name)
-
-    # filter_to_use = "baseline_muonJet"
-    # print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")
-    # filter_to_use = "Z_sideband && baseline_muonJet"
-    # print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")
-    # filter_to_use = "Z_sideband && baseline_muonJet && Jet_p4[JetOutsideOfHornVetoRegion].size()>=2"
-    # print( f"There are {dfw.df.Filter(filter_to_use).Sum(final_weight_name).GetValue()} events in {filter_to_use}")

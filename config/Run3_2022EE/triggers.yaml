@@ -4,9 +4,10 @@ singleMu:
     - muMu
   path:
     - HLT_IsoMu24
+  muon_pt: bsConstrainedPt
   legs:
     - offline_obj:
-        cut: "{obj}_legType == Leg::mu && {obj}_pt > 26"  # {obj}_pt > 26 && abs({obj}_eta) < 2.4
+        cut: "{obj}_legType == Leg::mu && {obj}_{muon_pt} > 26"  # {obj}_{muon_pt} > 26 && abs({obj}_eta) < 2.4
       online_obj:
         cut: TrigObj_id == 13 && (TrigObj_filterBits&8)!=0
       doMatching: True
@@ -24,9 +25,10 @@ diMu:
     - muMu
   path:
     - HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL
+  muon_pt: bsConstrainedPt
   legs:
     - offline_obj:
-        cut: "{obj}_legType == Leg::mu && {obj}_pt > 19"
+        cut: "{obj}_legType == Leg::mu && {obj}_{muon_pt} > 19"
       online_obj:
         cut: TrigObj_id==13 && ( (TrigObj_filterBits&16)!=0 || (TrigObj_filterBits&1)!=0 ) # https://github.com/cms-sw/cmssw/blob/b0efeefd50e1ea7f64083f0aa1af9066f3430e10/PhysicsTools/NanoAOD/python/triggerObjects_cff.py https://cmshltcfg.app.cern.ch/cfg?path=/cdaq/physics/Run2023/2e34/v1.2.3/HLT/V1&db=online
       doMatching: True
@@ -37,9 +39,9 @@ diMu:
         2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
       jsonTRGcorrection_elepath: "placeholder"
     - offline_obj:
-        cut: "{obj}_legType == Leg::mu && {obj}_pt > 10"
+        cut: "{obj}_legType == Leg::mu && {obj}_{muon_pt} > 10"
       online_obj:
-        cut: TrigObj_id==13 && ( (TrigObj_filterBits&16)!=0 || (TrigObj_filterBits&1)!=0 ) # https://github.com/cms-sw/cmssw/blob/b0efeefd50e1ea7f64083f0aa1af9066f3430e10/PhysicsTools/NanoAOD/python/triggerObjects_cff.py https://cmshltcfg.app.cern.ch/cfg?path=/cdaq/physics/Run2023/2e34/v1.2.3/HLT/V1&db=online 
+        cut: TrigObj_id==13 && ( (TrigObj_filterBits&16)!=0 || (TrigObj_filterBits&1)!=0 ) # https://github.com/cms-sw/cmssw/blob/b0efeefd50e1ea7f64083f0aa1af9066f3430e10/PhysicsTools/NanoAOD/python/triggerObjects_cff.py https://cmshltcfg.app.cern.ch/cfg?path=/cdaq/physics/Run2023/2e34/v1.2.3/HLT/V1&db=online
       doMatching: True
       jsonTRGcorrection_key:
         2022_Summer22: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium

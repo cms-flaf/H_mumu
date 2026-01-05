@@ -152,13 +152,12 @@ def SaveVarsForNNInput(variables):
 def GetWeight(channel, process_name):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
-        "weight_XS",
+        # "weight_XS",
         # "newDYWeight_ptLL_nano"
         # "newDYWeight_ptLL_bsConstrained"
         # "weight_DYw_DYWeightCentral",
         # "weight_EWKCorr_VptCentral",
     ]  # ,"weight_EWKCorr_ewcorrCentral"] #
-    ]
     # quick fix for DY weights. In future should pass the full dataset and process info to DefineWeightForHistograms
     if process_name.startswith("DY"):
         weights_to_apply.extend(
@@ -169,26 +168,12 @@ def GetWeight(channel, process_name):
         )  # ,"weight_EWKCorr_ewcorrCentral"] #
 
     trg_weights_dict = {
-        # "muMu": ["weight_trigSF_singleMu"]
         # "muMu": ["weight_trigSF_singleMu_bscPt_mediumID_mediumIso"] # when want to look at BSC pT for SF evaluation
         # "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
-        "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
+        # "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
+        "muMu": ["weight_trigSF_singleMu"]
 
     }
-    # ID_weights_dict = {
-    #     "muMu": [
-    #         # "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
-    #         # "weight_mu1_LowPt_MuonID_SF_MediumIDCentral",
-    #         # "weight_mu1_MuonID_SF_LoosePFIsoCentral",
-    #         "weight_mu1_MuonID_SF_MediumID_TrkCentral",
-    #         "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
-    #         # "weight_mu2_HighPt_MuonID_SF_MediumIDCentral",
-    #         # "weight_mu2_LowPt_MuonID_SF_MediumIDCentral",
-    #         "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
-    #         # "weight_mu2_MuonID_SF_LoosePFIsoCentral",
-    #         "weight_mu2_MuonID_SF_MediumID_TrkCentral",
-    #     ]
-    # }
 
     ID_weights_dict = {
         # "muMu": [
@@ -199,16 +184,19 @@ def GetWeight(channel, process_name):
         # ]
         "muMu": [
 
-            "weight_mu1_mediumID",
-            "weight_mu1_mediumID_looseIso",
-            "weight_mu2_mediumID",
-            "weight_mu2_mediumID_looseIso",
-
-
+            # "weight_mu1_mediumID",
+            # "weight_mu1_mediumID_looseIso",
+            # "weight_mu2_mediumID",
+            # "weight_mu2_mediumID_looseIso",
             # "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
             # "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
             # "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
             # "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
+
+            "weight_mu1_MuonID_SF_MediumID_TrkCentral",
+            "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
+            "weight_mu2_MuonID_SF_MediumID_TrkCentral",
+            "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
 
         ]
     }
@@ -287,40 +275,27 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-    dfForHistograms.df = RescaleXS(dfForHistograms.df,dfForHistograms.config)
+    # dfForHistograms.df = RescaleXS(dfForHistograms.df,dfForHistograms.config)
     dfForHistograms.defineChannels()
     dfForHistograms.defineTriggers()
     dfForHistograms.SignRegionDef()
-
-
-    dfForHistograms.df = AddScaReOnBS(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
-    dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
-
-    dfForHistograms.df = RedefineIsoTrgAndIDWeights(dfForHistograms.df, dfForHistograms.period) # here nano pT is needed in any case because corrections are derived on nano pT
-
-    # if not dfForHistograms.isData:
-    #     defineTriggerWeights(dfForHistograms)
-    #     if dfForHistograms.wantTriggerSFErrors:
-    #         defineTriggerWeightsErrors(dfForHistograms)
-
-    dfForHistograms.df = AddNewDYWeights(dfForHistograms.df, dfForHistograms.period, f"DY" in dfForHistograms.config["process_name"]) # here nano pT is needed in any case because corrections are derived on nano pT
-
-    dfForHistograms.df = GetAllMuMuPtRelatedObservables(dfForHistograms.df) # this can go before redefinition of pT because it defines for all the specific combinations
-
-    dfForHistograms.df = RedefineMuonsPt(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
-    dfForHistograms.df = RedefineDiMuonObservables(dfForHistograms.df)
-    if "m_mumu_resolution" in dfForHistograms.config["variables"]:
-        dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
-
-
+    dfForHistograms.df = GetAllMuMuCorrectedPtRelatedObservables(dfForHistograms.df) # before corrections applied
+    dfForHistograms.df = RedefineOtherDiMuonObservables(dfForHistograms.df)
+    # if "m_mumu_resolution" in dfForHistograms.config["variables"]:
+    #     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = JetObservablesDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
-    dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df) # from here, the pT is needed to be specified as it depends on which muon pT to choose.
-
+    # dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df) # from here, the pT is needed to be specified as it depends on which muon pT to choose.
 
     dfForHistograms.defineRegions() # this depends on which muon pT to choose.
     dfForHistograms.defineCategories() # this depends on which muon  pT to choose.
+
+
+    # # dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
+
+    # dfForHistograms.df = AddNewDYWeights(dfForHistograms.df, dfForHistograms.period, f"DY" in dfForHistograms.config["process_name"]) # here nano pT is needed in any case because corrections are derived on nano pT
+
     return dfForHistograms
 
 

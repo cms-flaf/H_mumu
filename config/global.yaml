@@ -241,10 +241,13 @@ corrections:
       tkRelIso: tkRelIso
       highPtId: highPtId
       mediumId: mediumId
+      p4: p4_BS # p4_nano
   trigger:
     stage: HistTuple
     mode: SF
-  muScaRe: { stage: HistTuple }
+  muScaRe:
+    stage: HistTuple # later it will become anaTuple.
+    pt_for_ScaRe: bsConstrainedPt # pt_nano
   MC_Lumi_pu: { stage: AnaTuple }
   pu: { stages: [ AnaCache, AnaTuple ] }
   JEC: { stage: AnaTuple }
