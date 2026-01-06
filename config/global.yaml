@@ -164,8 +164,6 @@ categories:
   - VBF_JetVeto_MoreThan2J
   - ggH_MoreThan2J
 
-
-
 WP_to_use: "MM"
 
 # muons pT choice options:
