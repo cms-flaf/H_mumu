@@ -482,6 +482,10 @@ def addAllVariables(
 
     if trigger_class is not None:
         hltBranches = dfw.Apply(
-            trigger_class.ApplyTriggers, lepton_legs, isData, applyTriggerFilter
+            trigger_class.ApplyTriggers,
+            lepton_legs,
+            isData,
+            applyTriggerFilter,
+            global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
         )
         dfw.colToSave.extend(hltBranches)

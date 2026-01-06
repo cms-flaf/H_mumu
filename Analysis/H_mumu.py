@@ -229,10 +229,7 @@ def InitializeCorrections(period, dataset_name, stage="HistTuple"):
     trigger_class = None
     if triggerFile is not None:
         triggerFile = os.path.join(os.environ["ANALYSIS_PATH"], triggerFile)
-        trigger_class = Triggers.Triggers(
-            triggerFile,
-            setup.global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
-        )
+        trigger_class = Triggers.Triggers(triggerFile)
     if Corrections._global_instance is None:
         Corrections.initializeGlobal(
             global_params=setup.global_params,
