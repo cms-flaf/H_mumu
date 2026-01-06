@@ -335,7 +335,10 @@ def addAllVariables(
     channels,
     dataset_cfg,
 ):
-    dfw.Apply(AnaBaseline.LeptonVeto)
+    dfw.Apply(
+        AnaBaseline.LeptonVeto,
+        muon_pt_to_use=global_params.get("muon_pt_for_presel", "pt_nano"),
+    )
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
     dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
@@ -435,8 +438,12 @@ def addAllVariables(
             f"Muon_p4.at(mu{leg_idx+1}_idx)",
         )
         dfw.Define(
-            f"mu{leg_idx+1}_p4_nano",
+            f"mu{leg_idx+1}_p4_pt_nano",
             f"Muon_p4_nano.at(mu{leg_idx+1}_idx)",
+        )
+        dfw.Define(
+            f"mu{leg_idx+1}_p4_bsConstrainedPt",
+            f"Muon_p4_bsConstrainedPt.at(mu{leg_idx+1}_idx)",
         )
     jet_obs_names = []
     for jvar in ["pt", "eta", "phi", "mass"]:

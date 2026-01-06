@@ -17,9 +17,6 @@ def Initialize():
         ROOT.gROOT.ProcessLine(f".include {os.environ['ANALYSIS_PATH']}")
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/HistHelper.h"')
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/Utilities.h"')
-        ROOT.gInterpreter.Declare(
-            f'#include "FLAF/include/pnetSF.h"'
-        )  # do we need this??
         ROOT.gROOT.ProcessLine('#include "FLAF/include/AnalysisTools.h"')
         ROOT.gROOT.ProcessLine('#include "FLAF/include/AnalysisMath.h"')
         ROOT.gInterpreter.Declare(
@@ -52,18 +49,19 @@ def GetDfw(
     kwargset["colToSave"] = []
     is_central = shift == "Central"
     return_variations = is_central and global_params["compute_unc_histograms"]
+    corrections = Corrections.getGlobal()
+    dfw = analysis.DataFrameBuilderForHistograms(
+        df, global_params, period, corrections, **kwargset
+    )
 
-    dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
-    dfw.df = GetMuMuP4Observables(dfw.df)  # before corrections applied
-    if "muScaRe" in Corrections.getGlobal().to_apply:
-        dfw.df = Corrections.getGlobal().muScaRe.getP4VariationsForLegs(dfw.df)
-
+    # dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
+    # dfForHistograms.df = AddNewDYWeights(dfForHistograms.df, dfForHistograms.period, f"DY" in dfForHistograms.config["process_name"]) # here nano pT is needed in any case because corrections are derived on nano pT
     if df_caches:
         k = 0
 
         for df_cache in df_caches:
             dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
-                df_cache, global_params, period, **kwargset
+                df_cache, global_params, period, corrections, **kwargset, isCache=True
             )
             AddCacheColumnsInDf(dfw, dfWrapped_cache, f"{cache_map_name}_{k}")
             k += 1
@@ -72,7 +70,9 @@ def GetDfw(
         dfw.CreateFromDelta(col_names_central, col_types_central)
     if shift != "Central" and global_params["compute_unc_variations"]:
         dfw.AddMissingColumns(col_names_central, col_types_central)
-    new_dfw = analysis.PrepareDfForHistograms(dfw)
+
+    new_dfw = analysis.PrepareDFBuilder(dfw)
+
     if global_params["further_cuts"]:
         for key in global_params["further_cuts"].keys():
             vars_to_add = global_params["further_cuts"][key][0]
@@ -127,15 +127,18 @@ def DefineWeightForHistograms(
             isCentral=is_central,
             use_genWeight_sign_only=True,
         )
+        # print(all_weights)
+        # dfw.df.Display({"weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"}).Print()
         defineTriggerWeights(
-            dfw, global_params.get("triggers", {}).get("muon_pt", "pt_nano")
+            dfw, global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano")
         )
         # print(all_weights)
         if df_is_central:
             central_df_weights_computed = True
         if uncScale != "Central":
             defineTriggerWeightsErrors(
-                dfBuilder, global_params.get("triggers", {}).get("muon_pt", "pt_nano")
+                dfBuilder,
+                global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
             )
 
     categories = global_params["categories"]

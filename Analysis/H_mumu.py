@@ -7,10 +7,13 @@ if __name__ == "__main__":
 
 
 from FLAF.Common.Utilities import *
+from FLAF.Common.Setup import *
+import FLAF.Common.triggerSel as Triggers
 from FLAF.Common.HistHelper import *
 from Analysis.GetTriggerWeights import *
 from Analysis.MuonRelatedFunctions import *
 from Analysis.JetRelatedFunctions import *
+from Corrections.Corrections import Corrections
 
 for header in [
     "FLAF/include/Utilities.h",
@@ -204,6 +207,47 @@ def GetWeight(channel, process_name):
     return total_weight
 
 
+def InitializeCorrections(period, dataset_name, stage="HistTuple"):
+    setup = Setup.getGlobal(os.environ["ANALYSIS_PATH"], period)
+    if dataset_name == "data":
+        dataset_cfg = {}
+        process_name = "data"
+        process = {}
+        isData = True
+        processors_cfg = {}
+        processor_instances = {}
+    else:
+        dataset_cfg = setup.datasets[dataset_name]
+        process_name = dataset_cfg["process_name"]
+        process = setup.base_processes[process_name]
+        isData = dataset_cfg["process_group"] == "data"
+        processors_cfg, processor_instances = setup.get_processors(
+            process_name, stage="HistTuple", create_instances=True
+        )
+
+    triggerFile = setup.global_params.get("triggerFile")
+    trigger_class = None
+    if triggerFile is not None:
+        triggerFile = os.path.join(os.environ["ANALYSIS_PATH"], triggerFile)
+        trigger_class = Triggers.Triggers(
+            triggerFile,
+            setup.global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
+        )
+    if Corrections._global_instance is None:
+        Corrections.initializeGlobal(
+            global_params=setup.global_params,
+            stage="HistTuple",
+            dataset_name=dataset_name,
+            dataset_cfg=dataset_cfg,
+            process_name=process_name,
+            process_cfg=process,
+            processors=processor_instances,
+            isData=isData,
+            load_corr_lib=True,
+            trigger_class=trigger_class,
+        )
+
+
 class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     def defineTriggers(self):
         for ch in self.config["channelSelection"]:
@@ -235,12 +279,14 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     def defineCategories(self):  # at the end
         singleMuTh = self.config["singleMu_th"][self.period]
         WP_to_use = self.config["WP_to_use"]
-        pt_to_use = self.config["pt_to_use"]
+        mu_pt_for_selection = self.config["mu_pt_for_selection"]
 
         for category_to_def in self.config["category_definition"].keys():
             category_name = category_to_def
             cat_str = self.config["category_definition"][category_to_def].format(
-                MuPtTh=singleMuTh, WP_to_use=WP_to_use, pt_to_use=pt_to_use
+                MuPtTh=singleMuTh,
+                WP_to_use=WP_to_use,
+                mu_pt_for_selection=mu_pt_for_selection,
             )
             self.df = self.df.Define(category_to_def, cat_str)
             self.colToSave.append(category_to_def)
@@ -254,10 +300,12 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         df,
         config,
         period,
+        corrections,
         isData=False,
         isCentral=True,
         wantTriggerSFErrors=False,
         colToSave=[],
+        isCache=False,
     ):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
@@ -265,34 +313,27 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.period = period
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
+        self.corrections = corrections
+        if not isCache:
+            self.df = GetMuMuP4Observables(self.df)  # before corrections applied
+            if "muScaRe" in self.corrections.to_apply:
+                self.df = self.corrections.muScaRe.getP4VariationsForLegs(self.df)
 
 
-def PrepareDfForHistograms(dfForHistograms):
-    dfForHistograms.df = GetAllMuMuCorrectedPtRelatedObservables(dfForHistograms.df)
-    dfForHistograms.df = RedefineOtherDiMuonObservables(dfForHistograms.df)
-    # if "m_mumu_resolution" in dfForHistograms.config["variables"]:
-    #     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
-    dfForHistograms.defineChannels()
-    dfForHistograms.defineTriggers()
-    dfForHistograms.SignRegionDef()
-    dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
-    dfForHistograms.df = JetObservablesDef(dfForHistograms.df)
-    dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
-    # dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
-    dfForHistograms.defineRegions()
-    dfForHistograms.defineCategories()
-
-    return dfForHistograms
-
-
-def PrepareDfForNNInputs(dfBuilder):
-    dfBuilder.df = GetAllMuMuCorrectedPtRelatedObservables(dfBuilder.df)
-    dfBuilder.df = RedefineOtherDiMuonObservables(dfBuilder.df)
+def PrepareDFBuilder(dfBuilder):
+    print("Preparing DFBuilder...")
+    dfBuilder.df = GetAllMuMuCorrectedPtRelatedObservables(
+        dfBuilder.df, suffix=dfBuilder.config["mu_pt_for_definitions"]
+    )
+    # if "m_mumu_resolution" in dfBuilder.config["variables"]:
+    #     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df, dfBuilder.config["pt_to_use"])
     dfBuilder.defineChannels()
     dfBuilder.defineTriggers()
     dfBuilder.SignRegionDef()
     dfBuilder.df = JetCollectionDef(dfBuilder.df)
     dfBuilder.df = JetObservablesDef(dfBuilder.df)
-    dfForHistograms.defineRegions()
-    dfForHistograms.defineCategories()
+    dfBuilder.df = VBFJetSelection(dfBuilder.df)
+    dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
+    dfBuilder.defineRegions()
+    dfBuilder.defineCategories()
     return dfBuilder
