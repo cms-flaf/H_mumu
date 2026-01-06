@@ -267,16 +267,15 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-    # dfForHistograms.df = RescaleXS(dfForHistograms.df,dfForHistograms.config)
-    dfForHistograms.defineChannels()
-    dfForHistograms.defineTriggers()
-    dfForHistograms.SignRegionDef()
     dfForHistograms.df = GetAllMuMuCorrectedPtRelatedObservables(
         dfForHistograms.df
-    )  # before corrections applied
+    )
     dfForHistograms.df = RedefineOtherDiMuonObservables(dfForHistograms.df)
     # if "m_mumu_resolution" in dfForHistograms.config["variables"]:
     #     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
+    dfForHistograms.defineChannels()
+    dfForHistograms.defineTriggers()
+    dfForHistograms.SignRegionDef()
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = JetObservablesDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
