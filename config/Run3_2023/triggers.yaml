@@ -6,7 +6,6 @@ singleMu:
     - muMu
   path:
     - HLT_IsoMu24  # ####  COMPARISON WITH RUN2 #### --> What whas done in Run2 analysis: Require event to pass HLT IsoMu24 or HL IsoTkMu24 triggers in 2016, HLT IsoMu27 in 2017 and HLT IsoMu24 in 2018. -- See AN/2019_185 lines 123 - 130
-  muon_pt: bsConstrainedPt
   legs:
     - offline_obj:
         cut: "{obj}_legType == Leg::mu && {obj}_{muon_pt} > 26"  # selection for offline object matching to the trigger, same w.r.t. run 2
@@ -26,7 +25,6 @@ diMu:
     - muMu
   path:
     - HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL
-  muon_pt: bsConstrainedPt
   legs:
     - offline_obj:
         cut: "{obj}_legType == Leg::mu && {obj}_{muon_pt} > 19"
