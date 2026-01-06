@@ -114,10 +114,10 @@ def GetMuMuP4Observables(df):
 
 
 def GetAllMuMuCorrectedPtRelatedObservables(df):
-    for mu_idx in [1,2]:
-        if f"mu{mu_idx}_pt" in df.GetColumnNames():
-            df = df.Redefine(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_corr.Pt()")
-        if df = df.Define(f"pt_mumu_corr", "(mu1_p4_corr+mu2_p4_corr).Pt()")
+    for mu_idx in [1, 2]:
+        if f"mu{mu_idx}_pt" not in df.GetColumnNames():
+            df = df.Define(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_corr.Pt()")
+        df = df.Redefine(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_corr.Pt()")
     df = df.Define(f"pt_mumu_corr", "(mu1_p4_corr+mu2_p4_corr).Pt()")
     df = df.Define(f"m_mumu_corr", "(mu1_p4_corr+mu2_p4_corr).M()")
     for mu_idx in [1, 2]:

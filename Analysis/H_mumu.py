@@ -267,9 +267,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
 
 def PrepareDfForHistograms(dfForHistograms):
-    dfForHistograms.df = GetAllMuMuCorrectedPtRelatedObservables(
-        dfForHistograms.df
-    )
+    dfForHistograms.df = GetAllMuMuCorrectedPtRelatedObservables(dfForHistograms.df)
     dfForHistograms.df = RedefineOtherDiMuonObservables(dfForHistograms.df)
     # if "m_mumu_resolution" in dfForHistograms.config["variables"]:
     #     dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df, dfForHistograms.config["pt_to_use"])
