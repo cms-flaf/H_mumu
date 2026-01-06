@@ -277,31 +277,21 @@ def PrepareDfForHistograms(dfForHistograms):
     dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
     dfForHistograms.df = JetObservablesDef(dfForHistograms.df)
     dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
-    # dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df) # from here, the pT is needed to be specified as it depends on which muon pT to choose.
-
-    dfForHistograms.defineRegions()  # this depends on which muon pT to choose.
-    dfForHistograms.defineCategories()  # this depends on which muon  pT to choose.
-
-    # # dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
-
-    # dfForHistograms.df = AddNewDYWeights(dfForHistograms.df, dfForHistograms.period, f"DY" in dfForHistograms.config["process_name"]) # here nano pT is needed in any case because corrections are derived on nano pT
+    # dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
+    dfForHistograms.defineRegions()
+    dfForHistograms.defineCategories()
 
     return dfForHistograms
 
 
 def PrepareDfForNNInputs(dfBuilder):
-    # dfBuilder.RescaleXS()
+    dfBuilder.df = GetAllMuMuCorrectedPtRelatedObservables(dfBuilder.df)
+    dfBuilder.df = RedefineOtherDiMuonObservables(dfBuilder.df)
     dfBuilder.defineChannels()
     dfBuilder.defineTriggers()
-    dfBuilder.AddScaReOnBS()
-    dfBuilder.df = GetMuMuObservables(dfBuilder.df)
-    dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
-    dfBuilder.defineSignRegions()
+    dfBuilder.SignRegionDef()
     dfBuilder.df = JetCollectionDef(dfBuilder.df)
-    JetObservablesDef(df)
-    # dfBuilder.df = VBFJetSelection(dfBuilder.df)
-    # dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
-    # dfBuilder.df = GetSoftJets(dfBuilder.df)
-    # dfBuilder.defineRegions()
-    dfBuilder.defineCategories()
+    dfBuilder.df = JetObservablesDef(dfBuilder.df)
+    dfForHistograms.defineRegions()
+    dfForHistograms.defineCategories()
     return dfBuilder
