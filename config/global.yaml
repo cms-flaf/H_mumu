@@ -166,17 +166,20 @@ categories:
 
 
 WP_to_use: "MM"
+pt_to_use: "pt" # options: pt = corrected pT, can be either nano or BSC according on which pT has been used for scare application; pt_nano = pT from nanoAOD without scale and resol; bsConstrainedPt: BSC pT without scale and resol; pt_roccor: pT with RoccoR corrections applied, can be either nano or BSC according on which pT has been used for Rocccor application;
+
+
 category_definition:
   no_cuts: "true"
   baseline_WPIso_MM: "mu1_pfRelIso04_all < 0.2 &&  mu2_pfRelIso04_all< 0.2 && mu1_mediumId && mu2_mediumId"
   baseline_WPIso_ML: "mu1_pfRelIso04_all < 0.25 &&  mu2_pfRelIso04_all< 0.25 && mu1_mediumId && mu2_mediumId"
   OS_sel: "baseline_WPIso_{WP_to_use} && OS"
-  trigger_sel: "( (mu1_pt > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_pt > {MuPtTh} && mu2_HasMatching_singleMu) )"
-  trigger_sel_withDiMuon: "trigger_sel || ( (mu1_pt > 19 && mu1_HasMatching_diMu) && (mu2_pt > 10 && mu2_HasMatching_diMu) )"
+  trigger_sel: "( (mu1_{pt_to_use} > {MuPtTh} && mu1_HasMatching_singleMu) || (mu2_{pt_to_use} > {MuPtTh} && mu2_HasMatching_singleMu) )"
+  trigger_sel_withDiMuon: "trigger_sel || ( (mu1_{pt_to_use} > 19 && mu1_HasMatching_diMu) && (mu2_{pt_to_use} > 10 && mu2_HasMatching_diMu) )"
   baseline_muonJet: "OS_sel && trigger_sel && JetTagSel" # &&  abs(mu1_dz) < 1. && abs(mu1_dxy) < 0.5 && abs(mu2_dz) < 1. && abs(mu2_dxy) < 0.5"
   VBF_def: "baseline_muonJet && HasVBF"
   VBF_JetVeto: "VBF_def && j1_pt >= 35 && j2_pt >= 25 "
-  ggH_muonPtSel: "baseline_muonJet && !(VBF_JetVeto) && mu1_pt > 26 && mu2_pt>26"
+  ggH_muonPtSel: "baseline_muonJet && !(VBF_JetVeto) && mu1_{pt_to_use} > {MuPtTh} && mu2_{pt_to_use}>{MuPtTh}"
   ggH: "baseline_muonJet && !(VBF_JetVeto)"
   #### 0 jets
   baseline_muonJet_0J: "baseline_muonJet && N_SelectedJets == 0"
@@ -192,7 +195,7 @@ category_definition:
   VBF_def_MoreThan2J: "baseline_muonJet_MoreThan2J && HasVBF"
   VBF_JetVeto_MoreThan2J: "VBF_def && j1_pt >= 35 && j2_pt >= 25 "
   ggH_MoreThan2J: "baseline_muonJet_MoreThan2J && !(VBF_JetVeto_MoreThan2J)"
-  baseline_MuonPOG: "OS_sel && trigger_sel && mu1_pfRelIso04_all < 0.15 && mu2_pfRelIso04_all< 0.15 && mu1_tightId && mu2_tightId && mu1_pt > 26 && mu2_pt>26"
+  baseline_MuonPOG: "OS_sel && trigger_sel && mu1_pfRelIso04_all < 0.15 && mu2_pfRelIso04_all< 0.15 && mu1_tightId && mu2_tightId && mu1_{pt_to_use} > {MuPtTh} && mu2_{pt_to_use}>{MuPtTh}"
 
 # category_definition:
 #   #### COMPARISON WITH RUN 2 ####
@@ -238,7 +241,7 @@ corrections:
       tkRelIso: tkRelIso
       highPtId: highPtId
       mediumId: mediumId
-      p4: p4_BS # p4_nano
+      p4: p4_bsConstrainedPt # p4_nano
   trigger:
     stage: HistTuple
     mode: SF
