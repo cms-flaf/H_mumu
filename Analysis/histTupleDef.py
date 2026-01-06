@@ -127,12 +127,9 @@ def DefineWeightForHistograms(
             isCentral=is_central,
             use_genWeight_sign_only=True,
         )
-        # print(all_weights)
-        # dfw.df.Display({"weight_mu1_TrgSF_singleMu_Central","weight_mu2_TrgSF_singleMu_Central"}).Print()
         defineTriggerWeights(
             dfw, global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano")
         )
-        # print(all_weights)
         if df_is_central:
             central_df_weights_computed = True
         if uncScale != "Central":
