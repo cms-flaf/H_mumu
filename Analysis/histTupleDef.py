@@ -60,8 +60,9 @@ def GetDfw(
         k = 0
 
         for df_cache in df_caches:
+            kwargset["isCache"] = True
             dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
-                df_cache, global_params, period, corrections, **kwargset, isCache=True
+                df_cache, global_params, period, corrections, **kwargset
             )
             AddCacheColumnsInDf(dfw, dfWrapped_cache, f"{cache_map_name}_{k}")
             k += 1

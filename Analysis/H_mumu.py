@@ -293,6 +293,9 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.wantTriggerSFErrors = wantTriggerSFErrors
         self.corrections = corrections
         if not isCache:
+            print(
+                "TMP check: it should not be cache tree, so defining all the p4 and applying corrections.."
+            )
             self.df = GetMuMuP4Observables(self.df)  # before corrections applied
             if "muScaRe" in self.corrections.to_apply:
                 self.df = self.corrections.muScaRe.getP4VariationsForLegs(self.df)
