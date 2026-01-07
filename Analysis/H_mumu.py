@@ -283,7 +283,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         isCentral=True,
         wantTriggerSFErrors=False,
         colToSave=[],
-        isCache=False,
+        is_not_Cache=False,
     ):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
@@ -292,17 +292,15 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
         self.corrections = corrections
-        if not isCache:
-            print(
-                "TMP check: it should not be cache tree, so defining all the p4 and applying corrections.."
-            )
-            self.df = GetMuMuP4Observables(self.df)  # before corrections applied
-            if "muScaRe" in self.corrections.to_apply:
-                self.df = self.corrections.muScaRe.getP4VariationsForLegs(self.df)
 
 
 def PrepareDFBuilder(dfBuilder):
     print("Preparing DFBuilder...")
+    dfBuilder.df = GetMuMuP4Observables(dfBuilder.df)
+    if "muScaRe" in dfBuilder.corrections.to_apply:
+        dfBuilder.df = dfBuilder.corrections.muScaRe.getP4VariationsForLegs(
+            dfBuilder.df
+        )
     dfBuilder.df = GetAllMuMuCorrectedPtRelatedObservables(
         dfBuilder.df, suffix=dfBuilder.config["mu_pt_for_definitions"]
     )

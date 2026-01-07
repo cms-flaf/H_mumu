@@ -3,7 +3,7 @@ from FLAF.Common.Utilities import *
 from FLAF.Common.HistHelper import *
 from Corrections.Corrections import Corrections
 from Corrections.CorrectionsCore import getSystName, central
-from Analysis.GetTriggerWeights import defineTriggerWeights
+from Analysis.GetTriggerWeights import defineTriggerWeights, defineTriggerWeightsErrors
 from Analysis.MuonRelatedFunctions import *
 
 initialized = False
@@ -50,19 +50,22 @@ def GetDfw(
     is_central = shift == "Central"
     return_variations = is_central and global_params["compute_unc_histograms"]
     corrections = Corrections.getGlobal()
+    kwargset["isCentral"] = is_central
     dfw = analysis.DataFrameBuilderForHistograms(
-        df, global_params, period, corrections, **kwargset
+        df, global_params, period, corrections, **kwargset, is_not_Cache=True
     )
-
     # dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
     # dfForHistograms.df = AddNewDYWeights(dfForHistograms.df, dfForHistograms.period, f"DY" in dfForHistograms.config["process_name"]) # here nano pT is needed in any case because corrections are derived on nano pT
     if df_caches:
         k = 0
-
         for df_cache in df_caches:
-            kwargset["isCache"] = True
             dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
-                df_cache, global_params, period, corrections, **kwargset
+                df_cache,
+                global_params,
+                period,
+                corrections,
+                **kwargset,
+                is_not_Cache=False,
             )
             AddCacheColumnsInDf(dfw, dfWrapped_cache, f"{cache_map_name}_{k}")
             k += 1
@@ -134,9 +137,9 @@ def DefineWeightForHistograms(
         )
         if df_is_central:
             central_df_weights_computed = True
-        if uncScale != "Central":
+        if uncScale != "Central" and uncName in unc_cfg_dict["norm"].keys():
             defineTriggerWeightsErrors(
-                dfBuilder,
+                dfw,
                 global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
             )
 
@@ -164,6 +167,8 @@ def DefineWeightForHistograms(
             in unc_cfg_dict["norm"][uncName].get("processes", [process_name])
         ):
             weight_name = unc_cfg_dict["norm"][uncName]["expression"].format(
-                scale=uncScale
+                scale=uncScale,
+                muID_WP_for_SF=muID_WP_for_SF,
+                muIso_WP_for_SF=muIso_WP_for_SF,
             )
     dfw.df = dfw.df.Define(final_weight_name, weight_name)
