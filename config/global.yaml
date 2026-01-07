@@ -174,7 +174,6 @@ WP_to_use: "MM"
 
 muon_pt_for_presel: "bsConstrainedPt"
 mu_pt_for_triggerMatchingAndSF: "bsConstrainedPt"
-mu_pt_for_ScaReApplication: "bsConstrainedPt"
 mu_pt_for_selection: "pt"
 
 mu_pt_for_definitions: "corr" # here options are different: corr, nano, bsConstrainedPt, roccor
@@ -258,6 +257,7 @@ corrections:
     mode: SF
   muScaRe:
     stage: HistTuple # later it will become anaTuple.
+    mu_pt_for_ScaReApplication: "bsConstrainedPt"
   MC_Lumi_pu: { stage: AnaTuple }
   pu: { stages: [ AnaCache, AnaTuple ] }
   JEC: { stage: AnaTuple }
