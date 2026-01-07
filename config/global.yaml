@@ -164,7 +164,7 @@ categories:
   - VBF_JetVeto_MoreThan2J
   - ggH_MoreThan2J
 
-WP_to_use: "MM"
+
 
 # muons pT choice options:
 #   pt = ScaRe corrected pT, can be either nano or BSC according on which pT has been used for scare application;
@@ -177,7 +177,10 @@ mu_pt_for_triggerMatchingAndSF: "bsConstrainedPt"
 mu_pt_for_selection: "pt"
 
 mu_pt_for_definitions: "corr" # here options are different: corr, nano, bsConstrainedPt, roccor
-
+muonID_WP_for_triggerSF: "Medium" # only medium or tight for trigger SF, both iso and ID
+muIDWP: "Medium"
+muIsoWP: "Loose"
+WP_to_use: "MM"
 
 category_definition:
   no_cuts: "true"
@@ -251,6 +254,7 @@ corrections:
       tkRelIso: tkRelIso
       highPtId: highPtId
       mediumId: mediumId
+      looseId: looseId
       p4: p4_bsConstrainedPt # p4_pt_nano
   trigger:
     stage: HistTuple

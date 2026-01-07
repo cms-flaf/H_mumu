@@ -150,7 +150,7 @@ def SaveVarsForNNInput(variables):
     return variables
 
 
-def GetWeight(channel, process_name):
+def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
         # "weight_XS",
@@ -166,35 +166,16 @@ def GetWeight(channel, process_name):
                 "weight_EWKCorr_VptCentral",
                 "weight_DYw_DYWeightCentral",
             ]
-        )  # ,"weight_EWKCorr_ewcorrCentral"] #
+        )
 
-    trg_weights_dict = {
-        # "muMu": ["weight_trigSF_singleMu_bscPt_mediumID_mediumIso"] # when want to look at BSC pT for SF evaluation
-        # "muMu": ["weight_trigSF_singleMu_mediumID_mediumIso"]
-        # "muMu": ["weight_trigSF_singleMu_tightID_tightIso"]
-        "muMu": ["weight_trigSF_singleMu"]
-    }
+    trg_weights_dict = {"muMu": ["weight_trigSF_singleMu"]}
 
     ID_weights_dict = {
-        # "muMu": [
-        #     "weight_mu1_tightID",
-        #     "weight_mu1_tightID_tightIso",
-        #     "weight_mu2_tightID",
-        #     "weight_mu2_tightID_tightIso",
-        # ]
         "muMu": [
-            # "weight_mu1_mediumID",
-            # "weight_mu1_mediumID_looseIso",
-            # "weight_mu2_mediumID",
-            # "weight_mu2_mediumID_looseIso",
-            # "weight_mu1_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
-            # "weight_mu1_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
-            # "weight_mu2_bscPt_mediumID", # when want to look at BSC pT for SF evaluation
-            # "weight_mu2_bscPt_mediumID_looseIso", # when want to look at BSC pT for SF evaluation
-            "weight_mu1_MuonID_SF_MediumID_TrkCentral",
-            "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
-            "weight_mu2_MuonID_SF_MediumID_TrkCentral",
-            "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
+            f"weight_mu1_MuonID_SF_{muID_WP_for_SF}ID_TrkCentral",
+            f"weight_mu1_MuonID_SF_{muIso_WP_for_SF}PFIso_{muID_WP_for_SF}IDCentral",
+            f"weight_mu2_MuonID_SF_{muID_WP_for_SF}ID_TrkCentral",
+            f"weight_mu2_MuonID_SF_{muIso_WP_for_SF}PFIso_{muID_WP_for_SF}IDCentral",
         ]
     }
 
