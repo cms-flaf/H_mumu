@@ -164,8 +164,6 @@ categories:
   - VBF_JetVeto_MoreThan2J
   - ggH_MoreThan2J
 
-
-
 # muons pT choice options:
 #   pt = ScaRe corrected pT, can be either nano or BSC according on which pT has been used for scare application;
 #   pt_nano = pT from nanoAOD without scale and resol;
