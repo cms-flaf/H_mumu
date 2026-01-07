@@ -151,8 +151,6 @@ mu[0-9]+_phi(_.*)?:
 
 ########## \mu END ##########
 
-
-
 ########## jets collection BEGIN ##########
 N_SelectedJets:
   x_bins: "11|-0.5:10.5"
@@ -164,6 +162,7 @@ N_SelectedJets:
   # use_log_y: True
   # max_y_sf: 20.2
   divide_by_bin_width: False
+
 SelectedJets_HT:
   x_bins: "2000|0:2000"
   x_rebin: [ 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 120, 140, 150, 160, 180, 200, 250, 300, 350, 400 ]
@@ -176,7 +175,6 @@ SelectedJets_HT:
   # max_y_sf: 20.2
   divide_by_bin_width: True
   # divide_by_bin_width: False
-
 
 (leading|subleading|third|fourth)jet_pt(_.*)?:
   x_bins: "1300|0:455"
@@ -208,7 +206,6 @@ SelectedJets_HT:
   use_log_y: False
   max_y_sf: 2.
   divide_by_bin_width: False
-
 
 ########## jets BEGIN ##########
 
