@@ -347,7 +347,12 @@ def addAllVariables(
         or dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1"
         or dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2"
     )
-    dfw.Apply(CommonBaseline.ApplyJetVetoMap, apply_filter=False, isV12=isV12)
+    dfw.Apply(
+        CommonBaseline.ApplyJetVetoMap,
+        apply_filter=False,
+        defineElectronCleaning=True,
+        isV12=isV12,
+    )
 
     n_legs = 2
 
