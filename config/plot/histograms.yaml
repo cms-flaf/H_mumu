@@ -22,7 +22,8 @@ m_mumu(_.*)?:
   x_title: "$m(\\mu\\mu) (\\mathrm{GeV})$"
   # y_title: Events
   # y_title: "$\\frac{\\mathrm{Events}}{\\mathrm{bin\\ width}}\\, \\left(\\frac{1}{\\mathrm{GeV}}\\right)$"
-  y_title: "$\\frac{\\mathrm{Events}}{\\mathrm{bin\\ width}}\\, \\left(\\frac{1}{\\mathrm{GeV}}\\right)$"
+  y_title: "$\\frac{\\mathrm{Events}}{\\mathrm{bin\\ width}}, \\left( \\frac{1}{\\mathrm{GeV}}\\right)$"
+  # y_title: "$\\frac{\\mathrm{Events}}{\\mathrm{bin\\ width}}\\, \\left( \\frac{1}{\\mathrm{GeV}}\\right)$"
   use_log_x: False
   use_log_y: False
   # max_y_sf: 2.
