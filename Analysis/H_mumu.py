@@ -168,7 +168,7 @@ def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
             ]
         )
 
-    trg_weights_dict = {"muMu": ["weight_trigSF_singleMu"]}
+    trg_weights_dict = {"muMu": ["weight_TrgSF_singleMu_IsoMu24Central"]}
 
     ID_weights_dict = {
         "muMu": [

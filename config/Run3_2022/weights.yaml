@@ -2,21 +2,6 @@ norm:
   PileUp_Lumi_MC:
     expression: weight_MC_Lumi_pu{scale}_rel  * final_weight
     name: CMS_pileup_{}
-  # HighPt_MuonID_SF_MediumID:
-  #   expression: weight_mu1_HighPt_MuonID_SF_MediumID{scale}_rel * weight_mu2_HighPt_MuonID_SF_MediumID{scale}_rel * final_weight
-  #   name: CMS_eff_m_id_highpt_{}
-  # HighPt_MuonID_SF_MediumIDLooseRelIsoHLT:
-  #   expression: weight_mu1_HighPt_MuonID_SF_MediumIDLooseRelIsoHLT{scale}_rel * weight_mu2_HighPt_MuonID_SF_MediumIDLooseRelIsoHLT{scale}_rel * final_weight
-  #   name: CMS_eff_m_id_iso_hlt_highpt_{}
-  # HighPt_MuonID_SF_MediumIdLooseRelTkIso:
-  #   expression: weight_mu1_HighPt_MuonID_SF_MediumIdLooseRelTkIso{scale}_rel * weight_mu2_HighPt_MuonID_SF_MediumIdLooseRelTkIso{scale}_rel * final_weight
-  #   name: CMS_eff_m_id_iso_highpt_{}
-  # HighPt_MuonID_SF_Reco:
-  #   expression: weight_mu1_HighPt_MuonID_SF_Reco{scale}_rel * weight_mu2_HighPt_MuonID_SF_Reco{scale}_rel * final_weight
-  #   name: CMS_eff_m_reco_highpt_{}
-  # LowPt_MuonID_SF_MediumID:
-  #   expression: weight_mu1_LowPt_MuonID_SF_MediumID{scale}_rel * weight_mu2_LowPt_MuonID_SF_MediumID{scale}_rel * final_weight
-  #   name: CMS_eff_m_id_lowpt_{}
   MuonID_SF_Iso_ID:
     expression: weight_mu1_MuonID_SF_{muIso_WP_for_SF}PFIso_{muID_WP_for_SF}ID{scale}_rel * weight_mu2_MuonID_SF_{muIso_WP_for_SF}PFIso_{muID_WP_for_SF}ID{scale}_rel * final_weight
     name: CMS_eff_m_id_iso_{}
@@ -24,7 +9,7 @@ norm:
     expression: weight_mu1_MuonID_SF_{muID_WP_for_SF}ID_Trk{scale}_rel * weight_mu2_MuonID_SF_{muID_WP_for_SF}ID_Trk{scale}_rel * final_weight
     name: CMS_eff_m_id_{}
   HLT_singleMu:
-    expression: weight_trigSF_singleMu{scale}_rel * final_weight
+    expression: weight_TrgSF_singleMu_IsoMu24{scale}_rel * final_weight
     name: CMS_trig_singleMu_{}
   # DYWeight:
   #   expression: weight_DYw_DYWeight{scale}_rel * final_weight
@@ -51,5 +36,5 @@ shape:
     name: CMS_scale_j_{}
   JER:
     name: CMS_res_j_{}
-  ScaRe:
-    name: CMS_ScaRe_mu_{}
+  # ScaRe:
+  #   name: CMS_ScaRe_mu_{}

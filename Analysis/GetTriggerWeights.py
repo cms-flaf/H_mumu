@@ -85,17 +85,17 @@ def get_scale_factor_error(eff_data, eff_mc, err_data, err_mc):
 def defineTriggerWeights(dfBuilder, pt_to_use):  # needs application region def
     print(f"using pt = {pt_to_use} for trigger SFs")
     dfBuilder.df = dfBuilder.df.Define(
-        f"weight_trigSF_singleMu",
+        f"weight_TrgSF_singleMu_IsoMu24Central",
         f"if (HLT_singleMu && muMu) {{return getCorrectSingleLepWeight(mu1_{pt_to_use}, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TrgSF_singleMu_Central,mu2_{pt_to_use}, mu2_eta, mu2_HasMatching_singleMu, weight_mu2_TrgSF_singleMu_Central) ;}}return 1.f;",
     )
 
 
 def defineTriggerWeightsErrors(dfBuilder, pt_to_use):
-    print(f"using pt = {pt_to_use} for shifted trigger SFs")
     for scale in ["Up", "Down"]:
-        trg_name = "singleMu"
+        # weight_mu2_TrgSF_singleMu_IsoMu24
+        trg_name = "singleMu_IsoMu24"  # "singleMu_IsoMu24"
         dfBuilder.df = dfBuilder.df.Define(
-            f"weight_trigSF_{trg_name}{scale}_rel",
+            f"weight_TrgSF_{trg_name}{scale}_rel",
             f"""if (HLT_singleMu && muMu) {{return getCorrectSingleLepWeight(mu1_{pt_to_use}, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TrgSF_{trg_name}{scale}_rel,mu2_{pt_to_use}, mu2_eta, mu2_HasMatching_singleMu, weight_mu2_TrgSF_{trg_name}{scale}_rel) ;}} return 1.f;""",
         )
 

@@ -118,7 +118,6 @@ def DefineWeightForHistograms(
                 triggers_to_use.add(trigger)
         syst_name = getSystName(uncName, uncScale)
         is_central = uncName == central
-
         dfw.df, all_weights = corrections.getNormalisationCorrections(
             dfw.df,
             lepton_legs=lepton_legs,
@@ -132,16 +131,17 @@ def DefineWeightForHistograms(
             use_genWeight_sign_only=True,
             extraFormat=global_params.get("mu_pt_for_triggerMatchingAndSF", ""),
         )
+
         defineTriggerWeights(
             dfw, global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano")
         )
         if df_is_central:
-            central_df_weights_computed = True
-        if uncScale != "Central" and uncName in unc_cfg_dict["norm"].keys():
             defineTriggerWeightsErrors(
                 dfw,
                 global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
             )
+        if df_is_central:
+            central_df_weights_computed = True
 
     categories = global_params["categories"]
     process_group = global_params["process_group"]
@@ -155,10 +155,11 @@ def DefineWeightForHistograms(
         if process_group != "data"
         else "1"
     )  # are we sure?
-    # print(total_weight_expression)
+    # print(f"the total weight expression is {total_weight_expression}")
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
         dfw.df = dfw.df.Define(weight_name, total_weight_expression)
+
     if not isCentral:
         if (
             uncName in unc_cfg_dict["norm"].keys()
@@ -171,4 +172,5 @@ def DefineWeightForHistograms(
                 muID_WP_for_SF=muID_WP_for_SF,
                 muIso_WP_for_SF=muIso_WP_for_SF,
             )
+    # print(f"Defining final weight: {final_weight_name} as {weight_name}")
     dfw.df = dfw.df.Define(final_weight_name, weight_name)
