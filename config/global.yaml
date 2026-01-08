@@ -173,7 +173,7 @@ corrections:
   trigger:
     stage: HistTuple
     mode: SF
-  muScaRe: { stage: HistTuple }
+  # muScaRe: { stage: HistTuple }
   MC_Lumi_pu: { stage: AnaTuple }
   pu: { stages: [ AnaCache, AnaTuple ] }
   JEC: { stage: AnaTuple }
