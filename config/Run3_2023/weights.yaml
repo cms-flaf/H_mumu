@@ -51,5 +51,5 @@ shape:
     name: CMS_scale_j_{}
   JER:
     name: CMS_res_j_{}
-  ScaRe:
-    name: CMS_ScaRe_mu_{}
+  # ScaRe:
+  #   name: CMS_ScaRe_mu_{}

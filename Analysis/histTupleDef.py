@@ -31,15 +31,7 @@ def analysis_setup(setup):
     analysis = importlib.import_module(f"{analysis_import}")
 
 
-def GetDfw(
-    df,
-    df_caches,
-    global_params,
-    shift="Central",
-    col_names_central=[],
-    col_types_central=[],
-    cache_map_name="cache_map_Central",
-):
+def GetDfw(df, global_params):
     period = global_params["era"]
     kwargset = (
         {}
@@ -47,6 +39,7 @@ def GetDfw(
     kwargset["isData"] = global_params["process_group"] == "data"
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
     kwargset["colToSave"] = []
+<<<<<<< HEAD
     is_central = shift == "Central"
     return_variations = is_central and global_params["compute_unc_histograms"]
     corrections = Corrections.getGlobal()
@@ -77,6 +70,12 @@ def GetDfw(
 
     new_dfw = analysis.PrepareDFBuilder(dfw)
 
+=======
+
+    dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
+
+    new_dfw = analysis.PrepareDfForHistograms(dfw)
+>>>>>>> f61c2ae661378947b1d7331f420cedb408ddfd27
     if global_params["further_cuts"]:
         for key in global_params["further_cuts"].keys():
             vars_to_add = global_params["further_cuts"][key][0]
@@ -101,6 +100,7 @@ def DefineWeightForHistograms(
     final_weight_name,
     df_is_central,
 ):
+    is_central = uncName == central
     global central_df_weights_computed
     if not isData and (not central_df_weights_computed or not df_is_central):
         corrections = Corrections.getGlobal()
@@ -116,18 +116,21 @@ def DefineWeightForHistograms(
                         f"Trigger does not exist in triggers.yaml, {trigger}"
                     )
                 triggers_to_use.add(trigger)
+<<<<<<< HEAD
         syst_name = getSystName(uncName, uncScale)
         is_central = uncName == central
+=======
+
+>>>>>>> f61c2ae661378947b1d7331f420cedb408ddfd27
         dfw.df, all_weights = corrections.getNormalisationCorrections(
             dfw.df,
             lepton_legs=lepton_legs,
             offline_legs=offline_legs,
             trigger_names=triggers_to_use,
-            syst_name=syst_name,
-            source_name=uncName,
+            unc_source=uncName,
+            unc_scale=uncScale,
             ana_caches=None,
             return_variations=is_central and global_params["compute_unc_histograms"],
-            isCentral=is_central,
             use_genWeight_sign_only=True,
             extraFormat=global_params.get("mu_pt_for_triggerMatchingAndSF", ""),
         )
@@ -146,10 +149,13 @@ def DefineWeightForHistograms(
     categories = global_params["categories"]
     process_group = global_params["process_group"]
     process_name = global_params["process_name"]
+<<<<<<< HEAD
     isCentral = uncName == "Central"
     muID_WP_for_SF = global_params.get("muIDWP", "Loose")
     muIso_WP_for_SF = global_params.get("muIsoWP", "Medium")
 
+=======
+>>>>>>> f61c2ae661378947b1d7331f420cedb408ddfd27
     total_weight_expression = (
         analysis.GetWeight("muMu", process_name, muID_WP_for_SF, muIso_WP_for_SF)
         if process_group != "data"
@@ -159,8 +165,12 @@ def DefineWeightForHistograms(
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
         dfw.df = dfw.df.Define(weight_name, total_weight_expression)
+<<<<<<< HEAD
 
     if not isCentral:
+=======
+    if not is_central:  # and type(unc_cfg_dict['norm']) == dict:
+>>>>>>> f61c2ae661378947b1d7331f420cedb408ddfd27
         if (
             uncName in unc_cfg_dict["norm"].keys()
             and "expression" in unc_cfg_dict["norm"][uncName].keys()
