@@ -280,7 +280,6 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         period,
         corrections,
         isData=False,
-        isCentral=True,
         wantTriggerSFErrors=False,
         colToSave=[],
         is_not_Cache=False,

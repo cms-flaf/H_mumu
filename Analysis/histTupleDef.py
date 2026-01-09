@@ -39,43 +39,12 @@ def GetDfw(df, global_params):
     kwargset["isData"] = global_params["process_group"] == "data"
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
     kwargset["colToSave"] = []
-<<<<<<< HEAD
-    is_central = shift == "Central"
-    return_variations = is_central and global_params["compute_unc_histograms"]
     corrections = Corrections.getGlobal()
-    kwargset["isCentral"] = is_central
     dfw = analysis.DataFrameBuilderForHistograms(
         df, global_params, period, corrections, **kwargset, is_not_Cache=True
     )
-    # dfForHistograms.df = AddRoccoR(dfForHistograms.df, dfForHistograms.period, dfForHistograms.isData)
-    # dfForHistograms.df = AddNewDYWeights(dfForHistograms.df, dfForHistograms.period, f"DY" in dfForHistograms.config["process_name"]) # here nano pT is needed in any case because corrections are derived on nano pT
-    if df_caches:
-        k = 0
-        for df_cache in df_caches:
-            dfWrapped_cache = analysis.DataFrameBuilderForHistograms(
-                df_cache,
-                global_params,
-                period,
-                corrections,
-                **kwargset,
-                is_not_Cache=False,
-            )
-            AddCacheColumnsInDf(dfw, dfWrapped_cache, f"{cache_map_name}_{k}")
-            k += 1
-
-    if shift == "Valid" and global_params["compute_unc_variations"]:
-        dfw.CreateFromDelta(col_names_central, col_types_central)
-    if shift != "Central" and global_params["compute_unc_variations"]:
-        dfw.AddMissingColumns(col_names_central, col_types_central)
 
     new_dfw = analysis.PrepareDFBuilder(dfw)
-
-=======
-
-    dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
-
-    new_dfw = analysis.PrepareDfForHistograms(dfw)
->>>>>>> f61c2ae661378947b1d7331f420cedb408ddfd27
     if global_params["further_cuts"]:
         for key in global_params["further_cuts"].keys():
             vars_to_add = global_params["further_cuts"][key][0]
@@ -116,12 +85,9 @@ def DefineWeightForHistograms(
                         f"Trigger does not exist in triggers.yaml, {trigger}"
                     )
                 triggers_to_use.add(trigger)
-<<<<<<< HEAD
         syst_name = getSystName(uncName, uncScale)
         is_central = uncName == central
-=======
 
->>>>>>> f61c2ae661378947b1d7331f420cedb408ddfd27
         dfw.df, all_weights = corrections.getNormalisationCorrections(
             dfw.df,
             lepton_legs=lepton_legs,
@@ -149,13 +115,10 @@ def DefineWeightForHistograms(
     categories = global_params["categories"]
     process_group = global_params["process_group"]
     process_name = global_params["process_name"]
-<<<<<<< HEAD
     isCentral = uncName == "Central"
     muID_WP_for_SF = global_params.get("muIDWP", "Loose")
     muIso_WP_for_SF = global_params.get("muIsoWP", "Medium")
 
-=======
->>>>>>> f61c2ae661378947b1d7331f420cedb408ddfd27
     total_weight_expression = (
         analysis.GetWeight("muMu", process_name, muID_WP_for_SF, muIso_WP_for_SF)
         if process_group != "data"
@@ -165,12 +128,8 @@ def DefineWeightForHistograms(
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
         dfw.df = dfw.df.Define(weight_name, total_weight_expression)
-<<<<<<< HEAD
 
     if not isCentral:
-=======
-    if not is_central:  # and type(unc_cfg_dict['norm']) == dict:
->>>>>>> f61c2ae661378947b1d7331f420cedb408ddfd27
         if (
             uncName in unc_cfg_dict["norm"].keys()
             and "expression" in unc_cfg_dict["norm"][uncName].keys()

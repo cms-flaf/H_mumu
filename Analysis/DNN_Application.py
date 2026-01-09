@@ -97,7 +97,11 @@ class DNNProducer:
         dfw = analysis.DataFrameBuilderForHistograms(
             dfw.df, self.global_cfg, self.period, corrections
         )
+        print(
+            f"when creating DataFrameBuilderForHistograms, dfw has {dfw.df.Count().GetValue()} entries"
+        )
         dfw = analysis.PrepareDFBuilder(dfw)
+        print(f"on top of PrepareDFBuilder it has {dfw.df.Count().GetValue()} entries")
         return dfw
 
     def ApplyDNN(self, branches):

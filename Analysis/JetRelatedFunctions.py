@@ -152,8 +152,8 @@ def JetCollectionDef(df):
         "Jet_preSel_andDeadZoneVetoMap",
         "Jet_preSel && !Jet_vetoMap",
     )
-    df = df.Filter(
-        "Jet_p4[Jet_preSel && Jet_vetoMap].size()==0"
+    df = df.Define(
+        "No_Jets_in_dead_Zone", "Jet_p4[Jet_preSel && Jet_vetoMap].size()==0"
     )  # NO JETS IN DEAD ZONE
 
     df = df.Define(
@@ -202,7 +202,7 @@ def JetCollectionDef(df):
     # df = df.Define("Jet_Veto_tight", "Jet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
     df = df.Define(
         "JetTagSel",
-        "Jet_p4[Jet_IsOutsideOfHornVetoRegion && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_IsOutsideOfHornVetoRegion && Jet_btag_Veto_loose].size() < 2",
+        "Jet_p4[Jet_IsOutsideOfHornVetoRegion && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_IsOutsideOfHornVetoRegion && Jet_btag_Veto_loose].size() < 2 && No_Jets_in_dead_Zone",
     )
     return df
 
