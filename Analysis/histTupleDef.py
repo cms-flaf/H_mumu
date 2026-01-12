@@ -98,7 +98,6 @@ def DefineWeightForHistograms(
             ana_caches=None,
             return_variations=is_central and global_params["compute_unc_histograms"],
             use_genWeight_sign_only=True,
-            extraFormat=global_params.get("mu_pt_for_triggerMatchingAndSF", ""),
         )
 
         defineTriggerWeights(

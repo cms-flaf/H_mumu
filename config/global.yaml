@@ -169,7 +169,8 @@ categories:
 #   pt_nano = pT from nanoAOD without scale and resol;
 #   bsConstrainedPt: BSC pT without scale and resol;
 #   pt_roccor: pT with RoccoR corrections applied, can be either nano or BSC according on which pT has been used for Rocccor application; not yet implemented
-
+extraFormat_for_triggerMatchingAndSF:
+  pt: "bsConstrainedPt"
 muon_pt_for_presel: "bsConstrainedPt"
 mu_pt_for_triggerMatchingAndSF: "bsConstrainedPt"
 mu_pt_for_selection: "pt"
@@ -257,8 +258,11 @@ corrections:
   trigger:
     stage: HistTuple
     mode: SF
+    extraFormat:
+      pt: "bsConstrainedPt"
   muScaRe:
-    stage: HistTuple # later it will become anaTuple.
+    stage: AnaTuple # later it will become anaTuple.
+    # stage: HistTuple # later it will become anaTuple.
     mu_pt_for_ScaReApplication: "bsConstrainedPt"
   MC_Lumi_pu: { stage: AnaTuple }
   pu: { stages: [ AnaCache, AnaTuple ] }

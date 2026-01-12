@@ -491,6 +491,6 @@ def addAllVariables(
             lepton_legs,
             isData,
             applyTriggerFilter,
-            global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
+            global_params.get("extraFormat_for_triggerMatchingAndSF", {}),
         )
         dfw.colToSave.extend(hltBranches)
