@@ -2,8 +2,6 @@
 import ROOT, sys, os, glob
 
 ROOT.EnableImplicitMT()
-
-# append analysis path
 if "ANALYSIS_PATH" not in os.environ:
     raise RuntimeError("Devi avere ANALYSIS_PATH settato nell'ambiente.")
 sys.path.append(os.environ["ANALYSIS_PATH"])
@@ -11,7 +9,6 @@ sys.path.append(os.environ["ANALYSIS_PATH"])
 from FLAF.Common.HistHelper import *
 from Analysis.H_mumu import *
 
-# user packages (usati nel tuo esempio)
 import FLAF.Common.Utilities as Utilities
 from FLAF.Common.Setup import Setup
 import importlib
@@ -32,9 +29,6 @@ def expand_filelist(patterns):
     return files
 
 
-# -------------------------
-# File lists
-# -------------------------
 sig_patterns = [
     f"/eos/user/e/eusebi/Hmumu/anaTuples/v4_20Nov_NewJetIDs_LooseMuons/{period}/GluGluHto2Mu/anaTuple*.root",
     f"/eos/user/e/eusebi/Hmumu/anaTuples/v4_20Nov_NewJetIDs_LooseMuons/{period}/VBFHto2Mu/anaTuple*.root",
@@ -74,12 +68,10 @@ bkg_patterns = [
 sig_files = [f for p in sig_patterns for f in glob.glob(p)]
 bkg_files = [f for p in bkg_patterns for f in glob.glob(p)]
 all_sig_files = vbf_files + ggh_files
-# setup from your framework
 setup = Setup.getGlobal(os.environ["ANALYSIS_PATH"], period, "")
 analysis_import = setup.global_params["analysis_import"]
 analysis = importlib.import_module(analysis_import)
 
-# samples: set process_name for signal and background builders
 gp_sig = dict(setup.global_params)
 gp_sig["process_name"] = setup.samples["VBFHto2Mu"]["process_name"]
 gp_sig["process_group"] = setup.samples["VBFHto2Mu"]["process_group"]
@@ -93,7 +85,6 @@ kwargset["isData"] = False
 kwargset["wantTriggerSFErrors"] = False
 kwargset["colToSave"] = []
 
-# expand file lists
 full_sig_list = expand_filelist(sig_patterns)
 full_bkg_list = expand_filelist(bkg_patterns)
 
@@ -119,11 +110,9 @@ rdf_sig = rdf_sig.Define(
 # rdf_bkg = rdf_bkg.Define("isVBF","0")
 # rdf_bkg = rdf_bkg.Define("isggH","0")
 
-# Build DataFrame wrappers using the analysis-provided builder
 dfw_sig = analysis.DataFrameBuilderForHistograms(rdf_sig, gp_sig, period, **kwargset)
 # dfw_bkg = analysis.DataFrameBuilderForHistograms(rdf_bkg, gp_bkg, period, **kwargset)
 
-# common definitions and pre-caching (appliazione una sola volta)
 for dfw in [dfw_sig]:  # , dfw_bkg):
     dfw.df = Utilities.defineP4(dfw.df, f"mu1")
     dfw.df = Utilities.defineP4(dfw.df, f"mu2")
@@ -168,9 +157,6 @@ for dfw in [dfw_sig]:  # , dfw_bkg):
     # dfw.df = dfw.df.Define("mediumID_mu1_mediumID_mu2",  "mu1_mediumId  && mu2_mediumId")
     # dfw.df = dfw.df.Define("tightID_mu1_tightID_mu2",  "mu1_tightId  && mu2_tightId")
 
-# -------------------------
-# Snapshot
-# -------------------------
 cols_to_save = [
     "Signal_Fit",
     "baseline_noID_Iso",

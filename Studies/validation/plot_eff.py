@@ -7,19 +7,11 @@ from collections import defaultdict
 import argparse
 import os
 
-# Stile CMS
 hep.style.use("CMS")
-
-# ------------------------
-# Argomenti
-# ------------------------
 parser = argparse.ArgumentParser()
 parser.add_argument("--year", required=True)
 args = parser.parse_args()
 
-# ------------------------
-# Carica dati
-# ------------------------
 try:
     with open(
         f"/afs/cern.ch/work/v/vdamante/H_mumu/Studies/validation/stuff/json/efficienciesWithFake_{args.year}.json"
@@ -42,17 +34,11 @@ lumi = period_dict.get(args.year, "N/A")
 
 regions = ["baseline_noID_Iso", "VBF_JetVeto_noID_Iso", "ggH_noID_Iso"]
 
-# ------------------------
-# Raggruppa per regione
-# ------------------------
 region_dict = defaultdict(list)
 for entry in data:
     region_dict[entry["region"]].append(entry)
 
 
-# ------------------------
-# Label compatte
-# ------------------------
 def compact_label(entry):
     id_dict = {"loose": "L", "medium": "M", "tight": "T"}
     iso_dict = {0.25: "L", 0.2: "M", 0.15: "T"}
@@ -72,9 +58,6 @@ def compact_label(entry):
     return f"mu1{mu1_id_label},{iso1_label}\nmu2{mu2_id_label},{iso2_label}"
 
 
-# ------------------------
-# Funzione plotting
-# ------------------------
 def plot_region(region_entries, region_name, lumi):
 
     region_entries = sorted(
@@ -90,7 +73,6 @@ def plot_region(region_entries, region_name, lumi):
     x = np.arange(len(region_entries))
     labels = [compact_label(e) for e in region_entries]
 
-    # Estrai quantità ed errori
     s_sqrtB = np.array([e["s_sqrtB"]["s_sqrtB"] for e in region_entries])
     s_sqrtB_e = np.array([e["s_sqrtB"].get("s_sqrtB_err", 0.0) for e in region_entries])
 
@@ -119,13 +101,11 @@ def plot_region(region_entries, region_name, lumi):
         hep.cms.label("Preliminary", data=True, lumi=lumi)
         plt.subplots_adjust(left=0.12, right=0.95, top=0.92, bottom=0.25)
         plt.savefig(outname, dpi=300)
-        # plt.savefig(outname, dpi=500)
         print(f"file salvato in {outname}")
         plt.close()
 
     pre_path_common = f"/afs/cern.ch/work/v/vdamante/H_mumu/Studies/validation/stuff/plots_effs_Fakes/Run3_{args.year}"
     os.makedirs(pre_path_common, exist_ok=True)
-    # Plot S/√B
     make_plot(
         s_sqrtB,
         s_sqrtB_e,
@@ -133,7 +113,6 @@ def plot_region(region_entries, region_name, lumi):
         outname=f"{pre_path_common}/s_sqrtB_{region_name}.png",
     )
 
-    # Plot efficienza segnale
     make_plot(
         eff_sig,
         eff_sig_e,
@@ -141,16 +120,13 @@ def plot_region(region_entries, region_name, lumi):
         outname=f"{pre_path_common}/eff_signal_{region_name}.png",
     )
 
-    # Plot efficienza background
     make_plot(
         eff_bck,
         eff_bck_e,
         ylabel="Background efficiency",
         outname=f"{pre_path_common}/eff_background_{region_name}.png",
     )
-    # --------------------------
-    # Plot sqrt(ΔS/S)
-    # --------------------------
+
     sqrtDS_over_S = np.array([e.get("sqrtDS_over_S", 0.0) for e in region_entries])
     make_plot(
         sqrtDS_over_S,
@@ -160,9 +136,6 @@ def plot_region(region_entries, region_name, lumi):
     )
 
 
-# ------------------------
-# Loop sulle regioni
-# ------------------------
 for reg in regions:
     if reg in region_dict:
         plot_region(region_dict[reg], reg, lumi)
