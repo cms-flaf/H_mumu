@@ -378,38 +378,20 @@ def addAllVariables(
             dfw.DefineAndAppend(f"mu{leg_idx+1}_{var_name}", define_expr)
 
         LegVar("legType", f"Leg::mu", check_leg_type=False)
-        for var in ["pt", "eta", "phi", "mass"]:
-            LegVar(
-                var,
-                f"Muon_p4[mu{leg_idx+1}_idx].{var}()",
-                var_type="float",
-                default="-1000.f",
-            )
-        LegVar(
-            f"index",
-            f"Muon_idx[mu{leg_idx+1}_idx]",
-            var_type="int",
-            default="-1",
-        )
-
-        LegVar("charge", f"Muon_charge[mu{leg_idx+1}_idx]", var_type="int")
-        LegVar(
-            f"pt_nano",
-            f"static_cast<float>(Muon_p4_nano.at(mu{leg_idx+1}_idx).pt())",
-        )
-
-        for muon_obs in Muon_observables:
+        for col in dfw.df.GetColumnNames():  # Muon_observables:
+            muon_obs_split = str(col).split("_")
+            if not muon_obs_split[0] == "Muon":
+                continue
+            muon_obs = "_".join(muon_obs_split[1:])
             if f"mu{leg_idx+1}_{muon_obs}" in dfw.df.GetColumnNames():
                 continue
-            if f"Muon_{muon_obs}" not in dfw.df.GetColumnNames():
-                continue
-
             LegVar(
                 muon_obs,
-                f"Muon_{muon_obs}.at(mu{leg_idx+1}_idx)",
+                f"{col}.at(mu{leg_idx+1}_idx)",
                 # var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
                 default="-100000.f",
             )
+
         if not isData:
             LegVar(
                 "gen_kind",
@@ -438,18 +420,7 @@ def addAllVariables(
                 var_type="int",
                 default="-10",
             )
-        dfw.Define(
-            f"mu{leg_idx+1}_p4",
-            f"Muon_p4.at(mu{leg_idx+1}_idx)",
-        )
-        dfw.Define(
-            f"mu{leg_idx+1}_p4_pt_nano",
-            f"Muon_p4_nano.at(mu{leg_idx+1}_idx)",
-        )
-        dfw.Define(
-            f"mu{leg_idx+1}_p4_bsConstrainedPt",
-            f"Muon_p4_bsConstrainedPt.at(mu{leg_idx+1}_idx)",
-        )
+
     jet_obs_names = []
     for jvar in ["pt", "eta", "phi", "mass"]:
         jet_obs_name = f"Jet_{jvar}"

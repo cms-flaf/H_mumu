@@ -300,6 +300,7 @@ def PrepareDFBuilder(dfBuilder):
         dfBuilder.df = dfBuilder.corrections.muScaRe.getP4VariationsForLegs(
             dfBuilder.df
         )
+
     dfBuilder.df = GetAllMuMuCorrectedPtRelatedObservables(
         dfBuilder.df, suffix=dfBuilder.config["mu_pt_for_definitions"]
     )
