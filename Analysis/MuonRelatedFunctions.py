@@ -105,10 +105,10 @@ def GetMuMuP4Observables(df):
                 f"mu{idx+1}_p4_pt_nano",
                 f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
             )
-        if f"mu{idx+1}_p4_nano" not in df.GetColumnNames():
+        if f"mu{idx+1}_p4_corr" not in df.GetColumnNames():
             df = df.Define(
-                f"mu{idx+1}_p4_pt_nano",
-                f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
+                f"mu{idx+1}_p4_corr",
+                f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_ScaRe,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
             )
     df = df.Define(
         f"pt_mumu_BS", "(mu1_p4_bsConstrainedPt+mu2_p4_bsConstrainedPt).Pt()"

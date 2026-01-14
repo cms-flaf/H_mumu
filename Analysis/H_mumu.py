@@ -296,7 +296,10 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 def PrepareDFBuilder(dfBuilder):
     print("Preparing DFBuilder...")
     dfBuilder.df = GetMuMuP4Observables(dfBuilder.df)
-    if "muScaRe" in dfBuilder.corrections.to_apply:
+    if (
+        "muScaRe" in dfBuilder.corrections.to_apply
+        and config["corrections"]["muScaRe"]["stage"] == "HistTuples"
+    ):
         dfBuilder.df = dfBuilder.corrections.muScaRe.getP4VariationsForLegs(
             dfBuilder.df
         )
