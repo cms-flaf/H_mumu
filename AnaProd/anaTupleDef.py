@@ -378,6 +378,37 @@ def addAllVariables(
             dfw.DefineAndAppend(f"mu{leg_idx+1}_{var_name}", define_expr)
 
         LegVar("legType", f"Leg::mu", check_leg_type=False)
+        # for var in ["pt", "eta", "phi", "mass"]:
+        #     LegVar(
+        #         var,
+        #         f"Muon_p4[mu{leg_idx+1}_idx].{var}()",
+        #         var_type="float",
+        #         default="-1000.f",
+        #     )
+        # LegVar(
+        #     f"index",
+        #     f"Muon_idx[mu{leg_idx+1}_idx]",
+        #     var_type="int",
+        #     default="-1",
+        # )
+
+        # LegVar("charge", f"Muon_charge[mu{leg_idx+1}_idx]", var_type="int")
+        # LegVar(
+        #     f"pt_nano",
+        #     f"static_cast<float>(Muon_p4_nano.at(mu{leg_idx+1}_idx).pt())",
+        # )
+        # dfw.Define(
+        #     f"mu{leg_idx+1}_p4",
+        #     f"Muon_p4.at(mu{leg_idx+1}_idx)",
+        # )
+        # dfw.Define(
+        #     f"mu{leg_idx+1}_p4_pt_nano",
+        #     f"Muon_p4_nano.at(mu{leg_idx+1}_idx)",
+        # )
+        # dfw.Define(
+        #     f"mu{leg_idx+1}_p4_bsConstrainedPt",
+        #     f"Muon_p4_bsConstrainedPt.at(mu{leg_idx+1}_idx)",
+        # )
         for col in dfw.df.GetColumnNames():  # Muon_observables:
             muon_obs_split = str(col).split("_")
             if not muon_obs_split[0] == "Muon":
@@ -385,12 +416,25 @@ def addAllVariables(
             muon_obs = "_".join(muon_obs_split[1:])
             if f"mu{leg_idx+1}_{muon_obs}" in dfw.df.GetColumnNames():
                 continue
-            LegVar(
-                muon_obs,
-                f"{col}.at(mu{leg_idx+1}_idx)",
-                # var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
-                default="-100000.f",
-            )
+            if "p4" in muon_obs:
+                print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
+                dfw.df = dfw.df.Define(
+                    f"mu{leg_idx+1}_{muon_obs}", f"{col}.at(mu{leg_idx+1}_idx)"
+                )
+                print(f"""defining {muon_obs.replace("p4","pt")}""")
+                LegVar(
+                    muon_obs.replace("p4", "pt"),
+                    f"static_cast<float>({col}.at(mu{leg_idx+1}_idx).pt())",
+                    # var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
+                    default="-100000.f",
+                )
+            else:
+                LegVar(
+                    muon_obs,
+                    f"{col}.at(mu{leg_idx+1}_idx)",
+                    # var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
+                    default="-100000.f",
+                )
 
         if not isData:
             LegVar(
