@@ -96,7 +96,7 @@ def GetMuMuMassResolution(df, pt_to_use):
 
 def GetMuMuP4Observables(df):
     pt_def = [col for col in df.GetColumnNames() if f"mu1_pt_" in col]
-    print(all_muons_pt_defined)
+    print(pt_def)
 
     muon_p4_to_define = ['_'.join(pt_def.split("_")[2:])]
     for pt_suffix in muon_p4_to_define:
