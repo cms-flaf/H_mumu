@@ -98,7 +98,8 @@ def GetMuMuP4Observables(df):
     pt_def = [col for col in df.GetColumnNames() if f"mu1_pt_" in col]
     print(pt_def)
 
-    muon_p4_to_define = ['_'.join(pt_def.split("_")[2:])]
+    muon_p4_to_define = ['_'.join(pt.split("_")[2:]) for pt in pt_def]
+    print(muon_p4_to_define)
     for pt_suffix in muon_p4_to_define:
         for idx in [0, 1]:
             df = df.Define(
@@ -106,8 +107,8 @@ def GetMuMuP4Observables(df):
                 f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_{pt_suffix},mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
             )
         df = df.Define(
-            f"pt_mumu_{pt_suffix}", f"(mu1_p4_{pt_suffix}+mu2_{pt_suffix}).Pt()"
-            f"m_mumu_{pt_suffix}", f"(mu1_p4_{pt_suffix}+mu2_{pt_suffix}).M()"
+            f"pt_mumu_{pt_suffix}", f"(mu1_p4_{pt_suffix}+mu2_p4_{pt_suffix}).Pt()"
+            f"m_mumu_{pt_suffix}", f"(mu1_p4_{pt_suffix}+mu2_p4_{pt_suffix}).M()"
         )
     return df
 
