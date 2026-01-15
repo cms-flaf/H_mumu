@@ -98,7 +98,7 @@ def GetMuMuP4Observables(df):
     pt_def = [col for col in df.GetColumnNames() if f"mu1_pt_" in col]
     print(pt_def)
 
-    muon_p4_to_define = ['_'.join(pt.split("_")[2:]) for pt in pt_def]
+    muon_p4_to_define = ["_".join(pt.split("_")[2:]) for pt in pt_def]
     print(muon_p4_to_define)
     for pt_suffix in muon_p4_to_define:
         for idx in [0, 1]:
