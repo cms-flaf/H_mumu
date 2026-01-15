@@ -120,8 +120,6 @@ def GetAllMuMuCorrectedPtRelatedObservables(
 ):  # suffix can be "", "nano", "bsConstrainedPt", "Central", "JERDown", "JERUp", "JES_TotalDown", "JES_TotalUp", "ScaRe", "ScaReDown", "ScaReUp", "roccor" (last not yet implemented)
 
     df = df.Define("Ebeam", "13600.0/2")
-    df = df.Define(f"pt_mumu_ScaRe", "(mu1_p4_ScaRe+mu2_p4_ScaRe).Pt()")
-    df = df.Define(f"m_mumu_ScaRe", "(mu1_p4_ScaRe+mu2_p4_ScaRe).M()")
     df = df.Define(f"y_mumu_ScaRe", "(mu1_p4_ScaRe+mu2_p4_ScaRe).Rapidity()")
     df = df.Define(f"eta_mumu_ScaRe", "(mu1_p4_ScaRe+mu2_p4_ScaRe).Eta()")
     df = df.Define(f"phi_mumu_ScaRe", "(mu1_p4_ScaRe+mu2_p4_ScaRe).Phi()")
