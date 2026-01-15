@@ -108,6 +108,8 @@ def GetMuMuP4Observables(df):
             )
         df = df.Define(
             f"pt_mumu_{pt_suffix}", f"(mu1_p4_{pt_suffix}+mu2_p4_{pt_suffix}).Pt()"
+        )
+        df = df.Define(
             f"m_mumu_{pt_suffix}", f"(mu1_p4_{pt_suffix}+mu2_p4_{pt_suffix}).M()"
         )
     return df
