@@ -96,10 +96,9 @@ def GetMuMuMassResolution(df, pt_to_use):
 
 def GetMuMuP4Observables(df):
     pt_def = [col for col in df.GetColumnNames() if f"mu1_pt_" in col]
-    print(pt_def)
-
-    muon_p4_to_define = ["_".join(pt.split("_")[2:]) for pt in pt_def]
-    print(muon_p4_to_define)
+    print(f"pt defined are: {pt_def}")
+    muon_p4_to_define = list(set(["_".join(pt.split("_")[2:]) for pt in pt_def]))
+    print(f"suffixes are : {muon_p4_to_define}")
     for pt_suffix in muon_p4_to_define:
         for idx in [0, 1]:
             df = df.Define(
@@ -137,29 +136,24 @@ def GetAllMuMuCorrectedPtRelatedObservables(
     )
 
     df = df.Define(
-        "cosTheta_Phi_CS_corr", "ComputeCosThetaPhiCS(mu1_p4_corr, mu2_p4_corr,  Ebeam)"
-    )
-    df = df.Define(
-        "cosTheta_CS_corr", "static_cast<float>(std::get<0>(cosTheta_Phi_CS_corr))"
-    )
-    df = df.Define(
-        "phi_CS_corr", "static_cast<float>(std::get<1>(cosTheta_Phi_CS_corr))"
-    )
-
-    df = df.Define(
         f"cosTheta_Phi_CS",
         f"ComputeCosThetaPhiCS(mu1_p4_{suffix}, mu2_p4_{suffix},  Ebeam)",
     )
-    df = df.Define("cosTheta_CS", "static_cast<float>(std::get<0>(cosTheta_Phi_CS))")
-    df = df.Define("phi_CS", "static_cast<float>(std::get<1>(cosTheta_Phi_CS))")
+    df = df.Define(f"cosTheta_CS", f"static_cast<float>(std::get<0>(cosTheta_Phi_CS))")
+    df = df.Define(f"phi_CS", f"static_cast<float>(std::get<1>(cosTheta_Phi_CS))")
 
     for mu_idx in [1, 2]:
-        df = df.Define(f"mu{mu_idx}_p4", f"mu{mu_idx}_p4_{suffix}")
-        df = df.Define(f"mu{mu_idx}_pt_corr", f"mu{mu_idx}_p4_corr.Pt()")
+        if f"mu{mu_idx}_p4" not in df.GetColumnNames():
+            df = df.Define(f"mu{mu_idx}_p4", f"mu{mu_idx}_p4_{suffix}")
+        if f"mu{mu_idx}_pt_{suffix}" not in df.GetColumnNames():
+            df = df.Define(f"mu{mu_idx}_pt_{suffix}", f"mu{mu_idx}_p4_{suffix}.Pt()")
         if f"mu{mu_idx}_pt" not in df.GetColumnNames():
             df = df.Define(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_{suffix}.Pt()")
+        df = df.Redefine(f"mu{mu_idx}_p4", f"mu{mu_idx}_p4_{suffix}")
         df = df.Redefine(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_{suffix}.Pt()")
-        df = df.Define(f"mu{mu_idx}_pt_rel_corr", f"mu{mu_idx}_pt_corr/m_mumu_corr")
+        df = df.Define(
+            f"mu{mu_idx}_pt_rel_{suffix}", f"mu{mu_idx}_pt_{suffix}/m_mumu_{suffix}"
+        )
         df = df.Define(f"mu{mu_idx}_pt_rel", f"mu{mu_idx}_pt_{suffix}/m_mumu_{suffix}")
 
     return df

@@ -357,7 +357,6 @@ Data_Muon:
   name: "Data Muon"
   datasets:
     - SingleMuon_Run2022C
-    # - DoubleMuon_Run2022C
     - Muon_Run2022C
     - Muon_Run2022D
 
