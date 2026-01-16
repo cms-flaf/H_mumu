@@ -1,8 +1,8 @@
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
   generator: pythia
-  fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole/Run3Summer2022-NANOAODSIMv12/241010_133402/
-  dirName: "0000"
+  fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/{}/Run3Summer2022-NANOAODSIMv12/241010_133402/
+  # dirName: "0000"
 
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
