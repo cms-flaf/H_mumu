@@ -3,7 +3,8 @@ from FLAF.Common.Utilities import *
 from FLAF.Common.HistHelper import *
 from Corrections.Corrections import Corrections
 from Corrections.CorrectionsCore import getSystName, central
-from Analysis.GetTriggerWeights import defineTriggerWeights
+from Analysis.GetTriggerWeights import defineTriggerWeights, defineTriggerWeightsErrors
+from Analysis.MuonRelatedFunctions import *
 
 initialized = False
 analysis = None
@@ -16,9 +17,6 @@ def Initialize():
         ROOT.gROOT.ProcessLine(f".include {os.environ['ANALYSIS_PATH']}")
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/HistHelper.h"')
         ROOT.gInterpreter.Declare(f'#include "FLAF/include/Utilities.h"')
-        ROOT.gInterpreter.Declare(
-            f'#include "FLAF/include/pnetSF.h"'
-        )  # do we need this??
         ROOT.gROOT.ProcessLine('#include "FLAF/include/AnalysisTools.h"')
         ROOT.gROOT.ProcessLine('#include "FLAF/include/AnalysisMath.h"')
         ROOT.gInterpreter.Declare(
@@ -41,10 +39,12 @@ def GetDfw(df, global_params):
     kwargset["isData"] = global_params["process_group"] == "data"
     kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
     kwargset["colToSave"] = []
+    corrections = Corrections.getGlobal()
+    dfw = analysis.DataFrameBuilderForHistograms(
+        df, global_params, period, corrections, **kwargset, is_not_Cache=True
+    )
 
-    dfw = analysis.DataFrameBuilderForHistograms(df, global_params, period, **kwargset)
-
-    new_dfw = analysis.PrepareDfForHistograms(dfw)
+    new_dfw = analysis.PrepareDFBuilder(dfw)
     if global_params["further_cuts"]:
         for key in global_params["further_cuts"].keys():
             vars_to_add = global_params["further_cuts"][key][0]
@@ -85,6 +85,8 @@ def DefineWeightForHistograms(
                         f"Trigger does not exist in triggers.yaml, {trigger}"
                     )
                 triggers_to_use.add(trigger)
+        syst_name = getSystName(uncName, uncScale)
+        is_central = uncName == central
 
         dfw.df, all_weights = corrections.getNormalisationCorrections(
             dfw.df,
@@ -97,21 +99,36 @@ def DefineWeightForHistograms(
             return_variations=is_central and global_params["compute_unc_histograms"],
             use_genWeight_sign_only=True,
         )
-        defineTriggerWeights(dfw)
 
+        defineTriggerWeights(
+            dfw, global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano")
+        )
+        if df_is_central:
+            defineTriggerWeightsErrors(
+                dfw,
+                global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
+            )
         if df_is_central:
             central_df_weights_computed = True
 
     categories = global_params["categories"]
     process_group = global_params["process_group"]
     process_name = global_params["process_name"]
+    isCentral = uncName == "Central"
+    muID_WP_for_SF = global_params.get("muIDWP", "Loose")
+    muIso_WP_for_SF = global_params.get("muIsoWP", "Medium")
+
     total_weight_expression = (
-        analysis.GetWeight("muMu", process_name) if process_group != "data" else "1"
+        analysis.GetWeight("muMu", process_name, muID_WP_for_SF, muIso_WP_for_SF)
+        if process_group != "data"
+        else "1"
     )  # are we sure?
+    # print(f"the total weight expression is {total_weight_expression}")
     weight_name = "final_weight"
     if weight_name not in dfw.df.GetColumnNames():
         dfw.df = dfw.df.Define(weight_name, total_weight_expression)
-    if not is_central:  # and type(unc_cfg_dict['norm']) == dict:
+
+    if not isCentral:
         if (
             uncName in unc_cfg_dict["norm"].keys()
             and "expression" in unc_cfg_dict["norm"][uncName].keys()
@@ -119,6 +136,9 @@ def DefineWeightForHistograms(
             in unc_cfg_dict["norm"][uncName].get("processes", [process_name])
         ):
             weight_name = unc_cfg_dict["norm"][uncName]["expression"].format(
-                scale=uncScale
+                scale=uncScale,
+                muID_WP_for_SF=muID_WP_for_SF,
+                muIso_WP_for_SF=muIso_WP_for_SF,
             )
+    # print(f"Defining final weight: {final_weight_name} as {weight_name}")
     dfw.df = dfw.df.Define(final_weight_name, weight_name)

@@ -74,6 +74,7 @@ DYto2Tau_M_50:
     - DYto2Tau_M_50_1J_amcatnloFXFX
     - DYto2Tau_M_50_2J_amcatnloFXFX
 
+
 DYToMuMu_MiNNLO:
   name: "DY $\\rightarrow \\ell \\ell$ + jets"
   color: kAzure-9
@@ -356,7 +357,6 @@ Data_Muon:
   name: "Data Muon"
   datasets:
     - SingleMuon_Run2022C
-    # - DoubleMuon_Run2022C
     - Muon_Run2022C
     - Muon_Run2022D
 

@@ -6,10 +6,14 @@ if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
 
-from FLAF.Common.HistHelper import *
 from FLAF.Common.Utilities import *
+from FLAF.Common.Setup import *
+import FLAF.Common.triggerSel as Triggers
+from FLAF.Common.HistHelper import *
 from Analysis.GetTriggerWeights import *
-from FLAF.Common import Utilities
+from Analysis.MuonRelatedFunctions import *
+from Analysis.JetRelatedFunctions import *
+from Corrections.Corrections import Corrections
 
 for header in [
     "FLAF/include/Utilities.h",
@@ -19,55 +23,6 @@ for header in [
     "FLAF/include/AnalysisMath.h",
 ]:
     DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
-
-JetObservables = [
-    "PNetRegPtRawCorr",
-    "PNetRegPtRawCorrNeutrino",
-    "PNetRegPtRawRes",
-    "area",
-    "btagDeepFlavB",
-    "btagDeepFlavCvB",
-    "btagDeepFlavCvL",
-    "btagDeepFlavQG",
-    "btagPNetB",
-    "btagPNetCvB",
-    "btagPNetCvL",
-    "btagPNetCvNotB",
-    "btagPNetQvG",
-    "btagPNetTauVJet",
-    "chEmEF",
-    "chHEF",
-    "chMultiplicity",
-    "electronIdx1",
-    "electronIdx2",
-    "eta",
-    "hfEmEF",
-    "hfHEF",
-    "hfadjacentEtaStripsSize",
-    "hfcentralEtaStripSize",
-    "hfsigmaEtaEta",
-    "hfsigmaPhiPhi",
-    "jetId",
-    "mass",
-    "muEF",
-    "muonIdx1",
-    "muonIdx2",
-    "muonSubtrFactor",
-    "nConstituents",
-    "nElectrons",
-    "nMuons",
-    "nSVs",
-    "neEmEF",
-    "neHEF",
-    "neMultiplicity",
-    "partonFlavour",
-    "phi",
-    "pt",
-    "rawFactor",
-    "svIdx1",
-    "svIdx2",
-]
-JetObservablesMC = ["hadronFlavour", "partonFlavour", "genJetIdx"]
 
 
 def createKeyFilterDict(global_params, period):
@@ -138,338 +93,6 @@ def GetBTagWeight(global_cfg_dict, cat, applyBtag=False):
     return f"{btag_weight}*{btagshape_weight}"
 
 
-def JetCollectionDef(df):
-    if "Jet_idx" not in df.GetColumnNames():
-        print("Jet_idx not in df.GetColumnNames")
-        df = df.Define(f"Jet_idx", f"CreateIndexes(Jet_pt.size())")
-    df = df.Define(
-        f"Jet_p4",
-        f"GetP4(Jet_pt, Jet_eta, Jet_phi, Jet_mass, Jet_idx)",
-    )
-
-    #### Jet PreSelection ####
-    df = df.Define(
-        "Jet_preSel",
-        f"""v_ops::pt(Jet_p4) > 20 && abs(v_ops::eta(Jet_p4))< 4.7 && (Jet_jetId & 2) """,
-    )
-    df = df.Define(
-        "Jet_preSel_andDeadZoneVetoMap",
-        "Jet_preSel && !Jet_vetoMap",
-    )
-
-    df = df.Define(
-        f"Jet_NoOverlapWithMuons",
-        f"RemoveOverlaps(Jet_p4, Jet_preSel_andDeadZoneVetoMap, {{mu1_p4, mu2_p4}}, 0.4)",
-    )
-    df = df.Define(
-        f"SelectedJet_p4",
-        f"Jet_p4[Jet_NoOverlapWithMuons]",
-    )
-    df = df.Define(
-        f"SelectedJet_index",
-        f"Jet_idx[Jet_NoOverlapWithMuons]",
-    )
-
-    ### Final state definitions: removing bTagged jets - deepJet ####
-    df = df.Define(
-        "Jet_btag_Veto_loose_deepJet",
-        "Jet_btagDeepFlavB >= 0.0614 && abs(v_ops::eta(Jet_p4))< 2.5 ",
-    )
-    df = df.Define(
-        "Jet_btag_Veto_medium_deepJet",
-        "Jet_btagDeepFlavB >= 0.3196 && abs(v_ops::eta(Jet_p4))< 2.5 ",
-    )
-    df = df.Define(
-        "JetTagSel_deepJet",
-        "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium_deepJet].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose_deepJet].size() < 2",
-    )
-
-    #### Final state definitions: removing bTagged jets - pNet ####
-    df = df.Define(
-        "Jet_btag_Veto_loose",
-        "Jet_btagPNetB >= 0.0499 && abs(v_ops::eta(Jet_p4))< 2.5 ",
-    )  # 0.0499 is the loose working point for PNet B-tagging in Run3
-    df = df.Define(
-        "Jet_btag_Veto_medium",
-        "Jet_btagPNetB >= 0.2605 && abs(v_ops::eta(Jet_p4))< 2.5 ",
-    )  # 0.2605 is the medium working point for PNet B-tagging in Run3
-    # df = df.Define("Jet_Veto_tight", "Jet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
-    df = df.Define(
-        "JetTagSel",
-        "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2",
-    )
-    return df
-
-
-def VBFJetSelection(df):
-    df = df.Define("VBFJetCand", "FindVBFJets(Jet_p4,Jet_NoOverlapWithMuons)")
-    df = df.Define("HasVBF", "return static_cast<bool>(VBFJetCand.isVBF) ")
-
-    df = df.Define(
-        "m_jj",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.m_inv); return -1000.f",
-    )
-    df = df.Define(
-        "delta_eta_jj",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.eta_separation); return -1000.f",
-    )
-    df = df.Define(
-        "j1_idx",
-        "if (HasVBF) return static_cast<int>(VBFJetCand.leg_index[0]); return -1000; ",
-    )
-    df = df.Define(
-        "j2_idx",
-        "if (HasVBF) return static_cast<int>(VBFJetCand.leg_index[1]); return -1000; ",
-    )
-    df = df.Define(
-        "j1_pt",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Pt()); return -1000.f; ",
-    )
-    df = df.Define(
-        "j2_pt",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Pt()); return -1000.f; ",
-    )
-    df = df.Define(
-        "j1_eta",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Eta()); return -1000.f; ",
-    )
-    df = df.Define(
-        "j2_eta",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Eta()); return -1000.f; ",
-    )
-    df = df.Define(
-        "j1_phi",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Phi()); return -1000.f; ",
-    )
-    df = df.Define(
-        "j2_phi",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Phi()); return -1000.f; ",
-    )
-    df = df.Define(
-        "j1_y",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[0].Rapidity()); return -1000.f; ",
-    )
-    df = df.Define(
-        "j2_y",
-        "if (HasVBF) return static_cast<float>(VBFJetCand.leg_p4[1].Rapidity()); return -1000.f; ",
-    )
-    df = df.Define(
-        "delta_phi_jj",
-        "if (HasVBF) return static_cast<float>(ROOT::Math::VectorUtil::DeltaPhi( VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1] ) ); return -1000.f;",
-    )
-
-    df = df.Define(f"pt_jj", "(VBFJetCand.leg_p4[0]+VBFJetCand.leg_p4[1]).Pt()")
-    df = df.Define(
-        "VBFjets_pt",
-        f"RVecF void_pt {{}} ; if (HasVBF) return v_ops::pt(VBFJetCand.legs_p4); return void_pt;",
-    )
-    df = df.Define(
-        "VBFjets_eta",
-        f"RVecF void_eta {{}} ; if (HasVBF) return v_ops::eta(VBFJetCand.legs_p4); return void_eta;",
-    )
-    df = df.Define(
-        "VBFjets_phi",
-        f"RVecF void_phi {{}} ; if (HasVBF) return v_ops::phi(VBFJetCand.legs_p4); return void_phi;",
-    )
-    df = df.Define(
-        "VBFjets_y",
-        f"RVecF void_y {{}} ; if (HasVBF) return v_ops::rapidity(VBFJetCand.legs_p4); return void_y;",
-    )
-    for var in JetObservables:
-        if f"Jet_{var}" not in df.GetColumnNames():
-            continue
-        if f"j1_{var}" not in df.GetColumnNames():
-            df = df.Define(
-                "j1_" + var,
-                f"if (HasVBF && j1_idx >= 0) return static_cast<float>(Jet_{var}[j1_idx]); return -1000.f;",
-            )
-        if f"j2_{var}" not in df.GetColumnNames():
-            df = df.Define(
-                "j2_" + var,
-                f"if (HasVBF && j2_idx >= 0) return static_cast<float>(Jet_{var}[j2_idx]); return -1000.f;",
-            )
-
-    return df
-
-
-def GetMuMuObservables(df):
-    for idx in [0, 1]:
-        df = Utilities.defineP4(df, f"mu{idx+1}")
-        df = df.Define(
-            f"mu{idx+1}_p4_BS",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_bsConstrainedPt,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
-        df = df.Define(
-            f"mu{idx+1}_p4_nano",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_nano,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
-        df = df.Define(
-            f"mu{idx+1}_p4_BS_ScaRe",
-            f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_BS_pt_1_corr,mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",
-        )
-    df = df.Define(f"pt_mumu", "(mu1_p4+mu2_p4).Pt()")
-    df = df.Define(f"pt_mumu_nano", "(mu1_p4_nano+mu2_p4_nano).Pt()")
-    df = df.Define(f"pt_mumu_BS", "(mu1_p4_BS+mu2_p4_BS).Pt()")
-    df = df.Define(f"pt_mumu_BS_ScaRe", "(mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).Pt()")
-    df = df.Define(f"y_mumu", "(mu1_p4+mu2_p4).Rapidity()")
-    df = df.Define(f"eta_mumu", "(mu1_p4+mu2_p4).Eta()")
-    df = df.Define(f"phi_mumu", "(mu1_p4+mu2_p4).Phi()")
-    df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
-    df = df.Define("m_mumu_nano", "static_cast<float>((mu1_p4_nano+mu2_p4_nano).M())")
-    df = df.Define("m_mumu_BS", "static_cast<float>((mu1_p4_BS+mu2_p4_BS).M())")
-    df = df.Define(
-        "m_mumu_BS_ScaRe", "static_cast<float>((mu1_p4_BS_ScaRe+mu2_p4_BS_ScaRe).M())"
-    )
-    for idx in [0, 1]:
-        df = df.Define(f"mu{idx+1}_pt_rel", f"mu{idx+1}_pt/m_mumu")
-        df = df.Define(f"mu{idx+1}_pt_rel_BS", f"mu{idx+1}_bsConstrainedPt/m_mumu_BS")
-        df = df.Define(f"mu{idx+1}_pt_rel_nano", f"mu{idx+1}_pt_nano/m_mumu_nano")
-        df = df.Define(
-            f"mu{idx+1}_pt_rel_BS_ScaRe", f"mu{idx+1}_BS_pt_1_corr/m_mumu_BS_ScaRe"
-        )
-
-    df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
-
-    df = df.Define("Ebeam", "13600.0/2")
-    df = df.Define("cosTheta_Phi_CS", "ComputeCosThetaPhiCS(mu1_p4, mu2_p4,  Ebeam)")
-    df = df.Define("cosTheta_CS", "static_cast<float>(std::get<0>(cosTheta_Phi_CS))")
-    df = df.Define("phi_CS", "static_cast<float>(std::get<1>(cosTheta_Phi_CS))")
-    return df
-
-
-def GetMuMuMassResolution(df):
-    delta_mu_expr = "sqrt( 0.5 * (pow( ({0}/{1}), 2) + pow( ({2}/{3}), 2) ) ) "
-    df = df.Define(
-        "m_mumu_resolution",
-        delta_mu_expr.format(
-            "mu1_pt",
-            "(mu1_pt-mu1_pt_nano)/mu1_pt",
-            "mu2_pt",
-            "(mu2_pt-mu2_pt_nano)/mu2_pt",
-        ),
-    )
-    df = df.Define(
-        "m_mumu_resolution_relerr",
-        delta_mu_expr.format(
-            "mu1_pt", "(mu1_pt-mu1_pt_nano)", "mu2_pt", "(mu2_pt-mu2_pt_nano)"
-        ),
-    )
-    df = df.Define(
-        "m_mumu_resolution_bsConstrained",
-        delta_mu_expr.format(
-            "mu1_bsConstrainedPt",
-            "mu1_bsConstrainedPtErr",
-            "mu2_bsConstrainedPt",
-            "mu2_bsConstrainedPtErr",
-        ),
-    )
-    return df
-
-
-def VBFJetMuonsObservables(df):
-    df = df.Define(
-        "Zepperfield_Var",
-        "if (HasVBF) return static_cast<float>((y_mumu - 0.5*(j1_y+j2_y))/std::abs(j1_y - j2_y)); return -10000.f;",
-    )
-    df = df.Define(
-        "pT_all_sum",
-        "if(HasVBF) return static_cast<float>(pT_sum ({mu1_p4, mu2_p4, VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1]})); return -10000.f;",
-    )
-    df = df.Define(
-        "R_pt",
-        "if(HasVBF) return static_cast<float>((pT_all_sum)/(pt_mumu + j1_pt + j2_pt)); return -10000.f;",
-    )
-    df = df.Define(
-        "pT_jj_sum",
-        "if(HasVBF) return static_cast<float>(pT_sum ({VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1]})); return -10000.f;",
-    )
-    df = df.Define(
-        "pt_centrality",
-        "if(HasVBF) return static_cast<float>(( (pt_mumu-0.5*(pT_jj_sum)) / pT_diff(VBFJetCand.leg_p4[0], VBFJetCand.leg_p4[1]) )); return -10000.f;",
-    )
-
-    df = df.Define(
-        "minDeltaPhi",
-        "if(HasVBF) return static_cast<float>(std::min(ROOT::Math::VectorUtil::DeltaPhi( (mu1_p4+mu2_p4), VBFJetCand.leg_p4[0]), ROOT::Math::VectorUtil::DeltaPhi((mu1_p4+mu2_p4), VBFJetCand.leg_p4[1]) ) )  ; return -10000.f;",
-    )
-    df = df.Define(
-        "minDeltaEta",
-        "if(HasVBF) return static_cast<float>(std::min(std::abs(eta_mumu - j1_eta),std::abs(eta_mumu - j2_eta))) ; return -10000.f;",
-    )
-    df = df.Define(
-        "minDeltaEtaSigned",
-        "if(HasVBF) return static_cast<float>(std::min((eta_mumu - j1_eta),(eta_mumu - j2_eta))) ; return -10000.f;",
-    )
-
-    return df
-
-
-def GetSoftJets(df):
-    df = df.Define(
-        "SoftJet_def_vtx", "(Jet_svIdx1 < 0 && Jet_svIdx2< 0 ) "
-    )  # no secondary vertex associated
-    df = df.Define("SoftJet_def_pt", " (Jet_pt>2) ")  # pT > 2 GeV
-    df = df.Define(
-        "SoftJet_def_muon",
-        "(Jet_idx != mu1_jetIdx && Jet_idx != mu2_jetIdx)",
-    )  # TMP PATCH. For next round it will be changed to the commented one in next line --> the muon index of the jets (because there can be muons associated to jets) has to be different than the signal muons (i.e. those coming from H decay)
-    # df = df.Define(
-    #     "SoftJet_def_muon",
-    #     "(Jet_muonIdx1 != mu1_index && Jet_muonIdx2 != mu2_index && Jet_muonIdx2 != mu1_index && Jet_muonIdx2 != mu2_index)",
-    # )  # mu1_idx and mu2_idx are not present in the current anaTuples, but need to be introduced for next round . The idx is the index in the original muon collection as well as Jet_muonIdx()
-
-    df = df.Define(
-        "SoftJet_def_VBF",
-        " (HasVBF && Jet_idx != j1_idx && Jet_idx != j2_idx) ",
-    )  # if it is a VBF event, the soft jets are not the VBF jets
-    df = df.Define("SoftJet_def_noVBF", " (!(HasVBF)) ")
-
-    df = df.Define(
-        "SoftJet_def",
-        "SoftJet_def_vtx && SoftJet_def_pt && SoftJet_def_muon && (SoftJet_def_VBF || SoftJet_def_noVBF )",
-    )
-
-    df = df.Define("N_softJet", "Jet_p4[SoftJet_def].size()")
-    df = df.Define("SoftJet_energy", "v_ops::energy(Jet_p4[SoftJet_def])")
-    df = df.Define("SoftJet_Et", "v_ops::Et(Jet_p4[SoftJet_def])")
-    df = df.Define("SoftJet_HtCh_fraction", "Jet_chHEF[SoftJet_def]")
-    df = df.Define("SoftJet_HtNe_fraction", "Jet_neHEF[SoftJet_def]")
-    if "Jet_hfHEF" in df.GetColumnNames():
-        df = df.Define("SoftJet_HtHF_fraction", "Jet_hfHEF[SoftJet_def]")
-    for var in JetObservables:
-        if f"SoftJet_{var}" not in df.GetColumnNames():
-            if (
-                f"SoftJet_{var}" not in df.GetColumnNames()
-                and f"Jet_{var}" in df.GetColumnNames()
-            ):
-                df = df.Define(f"SoftJet_{var}", f"Jet_{var}[SoftJet_def]")
-    for var in JetObservablesMC:
-        if (
-            f"SoftJet_{var}" not in df.GetColumnNames()
-            and f"Jet_{var}" in df.GetColumnNames()
-        ):
-            df = df.Define(f"SoftJet_{var}", f"Jet_{var}[SoftJet_def]")
-    return df
-
-
-def defineP4AndInvMass(df):
-    if "Jet_idx" not in df.GetColumnNames():
-        print("Jet_idx not in df.GetColumnNames")
-        df = df.Define(f"Jet_idx", f"CreateIndexes(Jet_pt.size())")
-    df = df.Define(
-        f"Jet_p4",
-        f"GetP4(Jet_pt, Jet_eta, Jet_phi, Jet_mass, Jet_idx)",
-    )
-    for idx in [0, 1]:
-        df = Utilities.defineP4(df, f"mu{idx+1}")
-    df = df.Define(f"pt_ll", "(mu1_p4+mu2_p4).Pt()")
-
-    df = df.Define("m_mumu", "static_cast<float>((mu1_p4+mu2_p4).M())")
-    df = df.Define("dR_mumu", "ROOT::Math::VectorUtil::DeltaR(mu1_p4, mu2_p4)")
-
-    return df
-
-
 def SaveVarsForNNInput(variables):
     mumu_vars = [
         "pt_mumu",
@@ -527,11 +150,15 @@ def SaveVarsForNNInput(variables):
     return variables
 
 
-def GetWeight(channel, process_name):
+def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
     weights_to_apply = [
         "weight_MC_Lumi_pu",
-        "weight_XS",
-    ]
+        # "weight_XS",
+        # "newDYWeight_ptLL_nano"
+        # "newDYWeight_ptLL_bsConstrained"
+        # "weight_DYw_DYWeightCentral",
+        # "weight_EWKCorr_VptCentral",
+    ]  # ,"weight_EWKCorr_ewcorrCentral"] #
     # quick fix for DY weights. In future should pass the full dataset and process info to DefineWeightForHistograms
     if process_name.startswith("DY"):
         weights_to_apply.extend(
@@ -539,33 +166,20 @@ def GetWeight(channel, process_name):
                 "weight_EWKCorr_VptCentral",
                 "weight_DYw_DYWeightCentral",
             ]
-        )  # ,"weight_EWKCorr_ewcorrCentral"] #
+        )
 
-    trg_weights_dict = {
-        "muMu": ["weight_trigSF_singleMu"]
-    }  # ["weight_mu1_TrgSF_singleMu_Central", "weight_mu2_TrgSF_singleMu_Central"]}  # ["weight_trigSF_singleMu"],
+    trg_weights_dict = {"muMu": ["weight_TrgSF_singleMu_IsoMu24Central"]}
+
     ID_weights_dict = {
         "muMu": [
-            "weight_mu1_HighPt_MuonID_SF_MediumIDCentral",
-            "weight_mu1_HighPt_MuonID_SF_RecoCentral",
-            "weight_mu1_LowPt_MuonID_SF_MediumIDCentral",
-            "weight_mu1_MuonID_SF_LoosePFIsoCentral",
-            "weight_mu1_MuonID_SF_MediumIDLoosePFIsoCentral",
-            "weight_mu1_MuonID_SF_MediumID_TrkCentral",
-            "weight_mu2_HighPt_MuonID_SF_MediumIDCentral",
-            "weight_mu2_HighPt_MuonID_SF_RecoCentral",
-            "weight_mu2_LowPt_MuonID_SF_MediumIDCentral",
-            "weight_mu2_MuonID_SF_LoosePFIsoCentral",
-            "weight_mu2_MuonID_SF_MediumIDLoosePFIsoCentral",
-            "weight_mu2_MuonID_SF_MediumID_TrkCentral",
+            f"weight_mu1_MuonID_SF_{muID_WP_for_SF}ID_TrkCentral",
+            f"weight_mu1_MuonID_SF_{muIso_WP_for_SF}PFIso_{muID_WP_for_SF}IDCentral",
+            f"weight_mu2_MuonID_SF_{muID_WP_for_SF}ID_TrkCentral",
+            f"weight_mu2_MuonID_SF_{muIso_WP_for_SF}PFIso_{muID_WP_for_SF}IDCentral",
         ]
     }
+
     # should be moved to config
-    # what about :
-    #   weight_mu1_HighPt_MuonID_SF_MediumIDLooseRelIsoHLTCentral ?
-    #   weight_mu2_HighPt_MuonID_SF_MediumIDLooseRelIsoHLTCentral
-    #   weight_mu1_HighPt_MuonID_SF_MediumIdLooseRelTkIsoCentral ?
-    #   weight_mu2_HighPt_MuonID_SF_MediumIdLooseRelTkIsoCentral ?
     weights_to_apply.extend(ID_weights_dict[channel])
     weights_to_apply.extend(trg_weights_dict[channel])
 
@@ -574,25 +188,45 @@ def GetWeight(channel, process_name):
     return total_weight
 
 
-class DataFrameBuilderForHistograms(DataFrameBuilderBase):
-
-    def RescaleXS(self):
-        import yaml
-
-        xsFile = self.config["crossSectionsFile"]
-        xsFilePath = os.path.join(os.environ["ANALYSIS_PATH"], xsFile)
-        with open(xsFilePath, "r") as xs_file:
-            xs_dict = yaml.safe_load(xs_file)
-        xs_condition = self.config["process_name"] == "DY"
-        xs_to_scale = (
-            xs_dict["DY_NNLO_QCD+NLO_EW"]["crossSec"] if xs_condition else "1.f"
+def InitializeCorrections(period, dataset_name, stage="HistTuple"):
+    setup = Setup.getGlobal(os.environ["ANALYSIS_PATH"], period)
+    if dataset_name == "data":
+        dataset_cfg = {}
+        process_name = "data"
+        process = {}
+        isData = True
+        processors_cfg = {}
+        processor_instances = {}
+    else:
+        dataset_cfg = setup.datasets[dataset_name]
+        process_name = dataset_cfg["process_name"]
+        process = setup.base_processes[process_name]
+        isData = dataset_cfg["process_group"] == "data"
+        processors_cfg, processor_instances = setup.get_processors(
+            process_name, stage="HistTuple", create_instances=True
         )
-        weight_XS_string = f"xs_to_scale/current_xs" if xs_condition else "1."
-        total_denunmerator_nJets = 5378.0 / 3 + 1017.0 / 3 + 385.5 / 3
-        self.df = self.df.Define(f"current_xs", f"{total_denunmerator_nJets}")
-        self.df = self.df.Define(f"xs_to_scale", f"{xs_to_scale}")
-        self.df = self.df.Define(f"weight_XS", weight_XS_string)
 
+    triggerFile = setup.global_params.get("triggerFile")
+    trigger_class = None
+    if triggerFile is not None:
+        triggerFile = os.path.join(os.environ["ANALYSIS_PATH"], triggerFile)
+        trigger_class = Triggers.Triggers(triggerFile)
+    if Corrections._global_instance is None:
+        Corrections.initializeGlobal(
+            global_params=setup.global_params,
+            stage="HistTuple",
+            dataset_name=dataset_name,
+            dataset_cfg=dataset_cfg,
+            process_name=process_name,
+            process_cfg=process,
+            processors=processor_instances,
+            isData=isData,
+            load_corr_lib=True,
+            trigger_class=trigger_class,
+        )
+
+
+class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     def defineTriggers(self):
         for ch in self.config["channelSelection"]:
             for trg in self.config["triggers"][ch]:
@@ -602,64 +236,11 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
                     print(f"{trg_name} not present in colNames")
                     self.df = self.df.Define(trg_name, "1")
 
-    def defineSampleType(self):
-        self.df = self.df.Define(
-            f"sample_type",
-            f"""std::string process_name = "{self.config["process_name"]}"; return process_name;""",
-        )
-
-    def AddScaReOnBS(self):
-        import correctionlib
-
-        period_files = {
-            "Run3_2022": "2022_Summer22",
-            "Run3_2022EE": "2022_Summer22EE",
-            "Run3_2023": "2023_Summer23",
-            "Run3_2023BPix": "2023_Summer23BPix",
-        }
-        correctionlib.register_pyroot_binding()
-        file_name = period_files.get(self.period, "")
-        analysis_path = os.environ["ANALYSIS_PATH"]
-        ROOT.gROOT.ProcessLine(
-            f'auto cset = correction::CorrectionSet::from_file("{analysis_path}/Corrections/data/MUO/MuonScaRe/{file_name}.json");'
-        )
-        ROOT.gROOT.ProcessLine(f'#include "{analysis_path}/include/MuonScaRe.cc"')
-        for mu_idx in [1, 2]:
-            if self.isData:
-                # Data apply scale correction
-                self.df = self.df.Define(
-                    f"mu{mu_idx}_BS_pt_1_corr",
-                    f"pt_scale(1, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
-                )
-            else:
-                self.df = self.df.Define(
-                    f"mu{mu_idx}_BS_pt_1_scale_corr",
-                    f"pt_scale(0, mu{mu_idx}_bsConstrainedPt, mu{mu_idx}_eta, mu{mu_idx}_phi, mu{mu_idx}_charge)",
-                )
-
-                self.df = self.df.Define(
-                    f"mu{mu_idx}_BS_pt_1_corr",
-                    f"pt_resol(mu{mu_idx}_BS_pt_1_scale_corr, mu{mu_idx}_eta, float(mu{mu_idx}_nTrackerLayers))",
-                )
-                # # MC evaluate scale uncertainty
-                # df_mc = df_mc.Define(
-                #     'pt_1_scale_corr_up',
-                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "up")'
-                # )
-                # df_mc = df_mc.Define(
-                #     'pt_1_scale_corr_dn',
-                #     'pt_scale_var(pt_1_corr, eta_1, phi_1, charge_1, "dn")'
-                # )
-
-                # # MC evaluate resolution uncertainty
-                # df_mc = df_mc.Define(
-                #     "pt_1_corr_resolup",
-                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "up")'
-                # )
-                # df_mc = df_mc.Define(
-                #     "pt_1_corr_resoldn",
-                #     'pt_resol_var(pt_1_scale_corr, pt_1_corr, eta_1, "dn")'
-                # )
+    # def defineSampleType(self):
+    #     self.df = self.df.Define(
+    #         f"sample_type",
+    #         f"""std::string process_name = "{self.config["process_name"]}"; return process_name;""",
+    #     )
 
     def defineRegions(self):
         region_defs = self.config["MuMuMassRegions"]
@@ -675,10 +256,15 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
 
     def defineCategories(self):  # at the end
         singleMuTh = self.config["singleMu_th"][self.period]
+        WP_to_use = self.config["WP_to_use"]
+        mu_pt_for_selection = self.config["mu_pt_for_selection"]
+
         for category_to_def in self.config["category_definition"].keys():
             category_name = category_to_def
             cat_str = self.config["category_definition"][category_to_def].format(
-                MuPtTh=singleMuTh
+                MuPtTh=singleMuTh,
+                WP_to_use=WP_to_use,
+                mu_pt_for_selection=mu_pt_for_selection,
             )
             self.df = self.df.Define(category_to_def, cat_str)
             self.colToSave.append(category_to_def)
@@ -692,10 +278,11 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         df,
         config,
         period,
+        corrections,
         isData=False,
-        isCentral=True,
         wantTriggerSFErrors=False,
         colToSave=[],
+        is_not_Cache=False,
     ):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
@@ -703,40 +290,32 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.period = period
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
+        self.corrections = corrections
 
 
-def PrepareDfForHistograms(dfForHistograms):
-    dfForHistograms.RescaleXS()
-    dfForHistograms.defineChannels()
-    # dfForHistograms.defineSampleType()
-    dfForHistograms.defineTriggers()
-    dfForHistograms.AddScaReOnBS()
-    dfForHistograms.df = GetMuMuObservables(dfForHistograms.df)
-    dfForHistograms.df = GetMuMuMassResolution(dfForHistograms.df)
-    dfForHistograms.df = JetCollectionDef(dfForHistograms.df)
-    dfForHistograms.df = VBFJetSelection(dfForHistograms.df)
-    dfForHistograms.df = VBFJetMuonsObservables(dfForHistograms.df)
-    dfForHistograms.df = GetSoftJets(dfForHistograms.df)
-    #     if dfForHistograms.wantTriggerSFErrors:
-    #         defineTriggerWeightsErrors(dfForHistograms)
-    dfForHistograms.SignRegionDef()
-    dfForHistograms.defineRegions()
-    dfForHistograms.defineCategories()
-    return dfForHistograms
+def PrepareDFBuilder(dfBuilder):
+    print("Preparing DFBuilder...")
+    dfBuilder.df = GetMuMuP4Observables(dfBuilder.df)
+    if (
+        "muScaRe" in dfBuilder.corrections.to_apply
+        and config["corrections"]["muScaRe"]["stage"] == "HistTuples"
+    ):
+        dfBuilder.df = dfBuilder.corrections.muScaRe.getP4VariationsForLegs(
+            dfBuilder.df
+        )
 
-
-def PrepareDfForNNInputs(dfBuilder):
-    # dfBuilder.RescaleXS()
+    dfBuilder.df = GetAllMuMuCorrectedPtRelatedObservables(
+        dfBuilder.df, suffix=dfBuilder.config["mu_pt_for_definitions"]
+    )
+    # if "m_mumu_resolution" in dfBuilder.config["variables"]:
+    #     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df, dfBuilder.config["pt_to_use"])
     dfBuilder.defineChannels()
     dfBuilder.defineTriggers()
-    dfBuilder.AddScaReOnBS()
-    dfBuilder.df = GetMuMuObservables(dfBuilder.df)
-    dfBuilder.df = GetMuMuMassResolution(dfBuilder.df)
+    dfBuilder.SignRegionDef()
     dfBuilder.df = JetCollectionDef(dfBuilder.df)
+    dfBuilder.df = JetObservablesDef(dfBuilder.df)
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
-    dfBuilder.df = GetSoftJets(dfBuilder.df)
-    dfBuilder.SignRegionDef()
     dfBuilder.defineRegions()
     dfBuilder.defineCategories()
     return dfBuilder

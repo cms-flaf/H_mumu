@@ -196,7 +196,7 @@ def create_file(
     # Only need to save the prexisting columns plus the new DNN variables
     # to add kwargset for isData
     dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
-    dfw_out = analysis.PrepareDfForNNInputs(dfw_out)
+    dfw_out = analysis.PrepareDFBuilder(dfw_out)
     dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
     col_to_save = AddColumnsToSave(general_cfg_dict)
 

@@ -74,6 +74,7 @@ DYto2Tau_M_50:
     - DYto2Tau_M_50_1J_amcatnloFXFX
     - DYto2Tau_M_50_2J_amcatnloFXFX
 
+
 ############## TT ##############
 TT:
   name: "t $\\bar{t}$"
@@ -122,24 +123,6 @@ EWK:
   color_mplhep: darkmagenta
   datasets:
     - EWK_2L2J_madgraph_herwig
-
-EWK_LLJJ_herwig:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: darkmagenta
-  datasets: [ ]
-
-EWK_LLJJ_M105_160:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: darkmagenta
-  datasets: [ ]
-
-EWK_LLJJ_M105_160_VBFFilter:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: darkmagenta
-  datasets: [ ]
 
 ############## Other single H  ##############
 H_mainBckg:

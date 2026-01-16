@@ -121,24 +121,6 @@ EWK:
   datasets:
     - EWK_2L2J_madgraph_herwig
 
-EWK_LLJJ_herwig:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: darkmagenta
-  datasets: [ ]
-
-EWK_LLJJ_M105_160:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: darkmagenta
-  datasets: [ ]
-
-EWK_LLJJ_M105_160_VBFFilter:
-  name: "EWK"
-  color: kMagenta+3
-  color_mplhep: darkmagenta
-  datasets: [ ]
-
 ############## Other single H  ##############
 H_mainBckg:
   name: "Single H"
