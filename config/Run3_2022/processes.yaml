@@ -370,3 +370,9 @@ Other:
   color: kGray+1
   color_mplhep: slateblue
   datasets: [ ]
+
+custom_CI:
+  name: "custom for CI and test purposes"
+  color: "kAzure+10"
+  datasets:
+    - VBFHto2Mu

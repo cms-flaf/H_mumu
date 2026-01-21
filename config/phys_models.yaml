@@ -15,7 +15,13 @@ BaseModel:
     - VH_inclusive
   signals:
     - VBFHto2Mu
-    - VBFHto2Mu_Herwig
+    # - VBFHto2Mu_Herwig
     - GluGluHto2Mu
-  data:
-    - Data_Muon
+  # data:
+    # - Data_Muon
+
+
+TestModel:
+  name: "Test model for CI"
+  signals:
+    - custom_CI

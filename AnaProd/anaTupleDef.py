@@ -417,11 +417,11 @@ def addAllVariables(
             if f"mu{leg_idx+1}_{muon_obs}" in dfw.df.GetColumnNames():
                 continue
             if "p4" in muon_obs:
-                print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
+                # print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
                 dfw.df = dfw.df.Define(
                     f"mu{leg_idx+1}_{muon_obs}", f"{col}.at(mu{leg_idx+1}_idx)"
                 )
-                print(f"""defining {muon_obs.replace("p4","pt")}""")
+                # print(f"""defining {muon_obs.replace("p4","pt")}""")
                 LegVar(
                     muon_obs.replace("p4", "pt"),
                     f"static_cast<float>({col}.at(mu{leg_idx+1}_idx).pt())",
@@ -483,7 +483,7 @@ def addAllVariables(
         PUObservables
         + FSRPhotonObservables
         + SoftActivityJetObservables
-        + additional_VBFStudies_vars
+        # + additional_VBFStudies_vars
     ):
         if recoObsNew in dfw.df.GetColumnNames():
             dfw.colToSave.extend([recoObsNew])
