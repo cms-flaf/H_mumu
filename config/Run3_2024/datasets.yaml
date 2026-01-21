@@ -8,7 +8,7 @@ TTH_Hto2Mu:
 
 VBFHto2Mu:
   crossSection: VBFHto2Mu
-  generator: powheg 
+  generator: powheg =
 
 custom_CI:
   crossSection: VBFHto2Mu
