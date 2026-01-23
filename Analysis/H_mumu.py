@@ -25,6 +25,38 @@ for header in [
     DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
 
 
+WorkingPointsParticleNet = {
+    "Run3_2022": {
+        "Loose": 0.047,  # /cvmfs/cms-griddata.cern.ch/cat/metadata/BTV/Run3-22CDSep23-Summer22-NanoAODv12/2025-08-20/btagging.json.g
+        "Medium": 0.245,
+        "Tight": 0.6734,
+    },
+    "Run3_2022EE": {"Loose": 0.0499, "Medium": 0.2605, "Tight": 0.6915},
+    "Run3_2023": {"Loose": 0.0358, "Medium": 0.1917, "Tight": 0.6172},
+    "Run3_2023BPix": {"Loose": 0.0359, "Medium": 0.1919, "Tight": 0.6133},
+}
+WorkingPointsDeepFlav = {
+    "Run3_2022": {"Loose": 0.0583, "Medium": 0.3086, "Tight": 0.7183},
+    "Run3_2022EE": {"Loose": 0.0614, "Medium": 0.3196, "Tight": 0.73},
+    "Run3_2023": {"Loose": 0.0479, "Medium": 0.2431, "Tight": 0.6553},
+    "Run3_2023BPix": {"Loose": 0.048, "Medium": 0.2435, "Tight": 0.6563},
+}
+WorkingPointsUParTAK4 = {
+    "Run3_2024": {"Loose": 0.0246, "Medium": 0.1272, "Tight": 0.4648}
+}
+
+Taggers_branchesNames = {
+    "particleNet": "PNetB",
+    "deepJet": "DeepFlavB",
+    "UParTAK4": "UParTAK4B",
+}
+Taggers_dict = {
+    "particleNet": WorkingPointsParticleNet,
+    "deepJet": WorkingPointsDeepFlav,
+    "UParTAK4": WorkingPointsUParTAK4,
+}
+
+
 def createKeyFilterDict(global_params, period):
     filter_dict = {}
     filter_str = ""
@@ -286,11 +318,18 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     ):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
+        print(self.config)
         self.isData = isData
         self.period = period
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
         self.corrections = corrections
+        self.bTagAlgo = Taggers_branchesNames[
+            self.config.get("bTagAlgo", "particleNet")
+        ]
+        self.bTagWPDict = Taggers_dict[self.config.get("bTagAlgo", "particleNet")][
+            self.period
+        ]
 
 
 def PrepareDFBuilder(dfBuilder):
@@ -312,7 +351,12 @@ def PrepareDFBuilder(dfBuilder):
     dfBuilder.defineChannels()
     dfBuilder.defineTriggers()
     dfBuilder.SignRegionDef()
-    dfBuilder.df = JetCollectionDef(dfBuilder.df)
+    dfBuilder.df = JetCollectionDef(
+        dfBuilder.df,
+        dfBuilder.bTagAlgo,
+        dfBuilder.bTagWPDict["Loose"],
+        dfBuilder.bTagWPDict["Medium"],
+    )
     dfBuilder.df = JetObservablesDef(dfBuilder.df)
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)

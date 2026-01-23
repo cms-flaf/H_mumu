@@ -271,6 +271,13 @@ corrections:
   JER:
     stage: AnaTuple
     apply_jet_horns_fix: true
+  btag:
+    stages: [ AnaTuple ]
+    modes:
+      AnaTuple: none
+    tagger: particleNet
+    jetCollection: Jet
+
 
 scales:
   - Up

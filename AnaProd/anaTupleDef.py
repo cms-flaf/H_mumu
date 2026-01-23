@@ -340,6 +340,7 @@ def addAllVariables(
         muon_pt_to_use=global_params.get("muon_pt_for_presel", "pt_nano"),
     )
     dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
+    dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
     dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
     isV12 = (

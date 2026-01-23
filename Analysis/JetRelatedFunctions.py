@@ -133,7 +133,7 @@ def GetSoftJets(df):
     return df
 
 
-def JetCollectionDef(df):
+def JetCollectionDef(df, bTagAlgo, LooseWPValue, MediumWPValue):
     if "Jet_idx" not in df.GetColumnNames():
         print("Jet_idx not in df.GetColumnNames")
         df = df.Define(f"Jet_idx", f"CreateIndexes(Jet_pt.size())")
@@ -177,15 +177,15 @@ def JetCollectionDef(df):
     df = df.Define(f"N_SelectedJets", "SelectedJet_index.size()")
 
     #### Final state definitions: removing bTagged jets - pNet ####
+
     df = df.Define(
         "Jet_btag_Veto_loose",
-        "Jet_btagPNetB >= 0.0499  && abs(v_ops::eta(Jet_p4))< 2.5 ",
-    )  # 0.0499 is the loose working point for PNet B-tagging in Run3
+        f"Jet_btag{bTagAlgo} >= {LooseWPValue}  && abs(v_ops::eta(Jet_p4))< 2.5 ",
+    )
     df = df.Define(
         "Jet_btag_Veto_medium",
-        "Jet_btagPNetB >= 0.2605 && abs(v_ops::eta(Jet_p4))< 2.5 ",
-    )  # 0.2605 is the medium working point for PNet B-tagging in Run3
-    # df = df.Define("Jet_Veto_tight", "Jet_btagPNetB >= 0.6484")  # 0.6484 is the tight working point for PNet B-tagging in Run3
+        f"Jet_btag{bTagAlgo} >= {MediumWPValue} && abs(v_ops::eta(Jet_p4))< 2.5 ",
+    )
     df = df.Define(
         "JetTagSel",
         "Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_medium].size() < 1  && Jet_p4[Jet_NoOverlapWithMuons && Jet_btag_Veto_loose].size() < 2 && No_Jets_in_dead_Zone",
