@@ -17,6 +17,7 @@ singleMu:
         2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
         2023_Summer23: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
         2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2024_Summer24: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
       jsonTRGcorrection_elepath: "placeholder"
 
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/TauTrigger#Updates_for_2022_data_taking
@@ -32,10 +33,11 @@ diMu:
         cut: TrigObj_id==13 && ( (TrigObj_filterBits&16)!=0 || (TrigObj_filterBits&1)!=0 ) # https://github.com/cms-sw/cmssw/blob/b0efeefd50e1ea7f64083f0aa1af9066f3430e10/PhysicsTools/NanoAOD/python/triggerObjects_cff.py https://cmshltcfg.app.cern.ch/cfg?path=/cdaq/physics/Run2023/2e34/v1.2.3/HLT/V1&db=online
       doMatching: True
       jsonTRGcorrection_key:
-        2022_Summer22: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
-        2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
-        2023_Summer23: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
-        2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
+        2022_Summer22: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2023_Summer23: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2024_Summer24: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
       jsonTRGcorrection_elepath: "placeholder"
     - offline_obj:
         cut: "{obj}_legType == Leg::mu && {obj}_{pt}> 10"
@@ -43,8 +45,9 @@ diMu:
         cut: TrigObj_id==13 && ( (TrigObj_filterBits&16)!=0 || (TrigObj_filterBits&1)!=0 ) # https://github.com/cms-sw/cmssw/blob/b0efeefd50e1ea7f64083f0aa1af9066f3430e10/PhysicsTools/NanoAOD/python/triggerObjects_cff.py https://cmshltcfg.app.cern.ch/cfg?path=/cdaq/physics/Run2023/2e34/v1.2.3/HLT/V1&db=online
       doMatching: True
       jsonTRGcorrection_key:
-        2022_Summer22: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
-        2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
-        2023_Summer23: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
-        2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedIdMedium_and_PFIsoMedium
+        2022_Summer22: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2022_Summer22EE: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2023_Summer23: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2023_Summer23BPix: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
+        2024_Summer24: NUM_IsoMu24_DEN_CutBasedId{MuIDWP}_and_PFIso{MuIDWP}
       jsonTRGcorrection_elepath: "placeholder"

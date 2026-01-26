@@ -318,3 +318,9 @@ Data_MuonEG:
     - MuonEG_Run2023C_v2
     - MuonEG_Run2023C_v3
     - MuonEG_Run2023C_v4
+
+custom_CI:
+  name: "custom for CI and test purposes"
+  color: "kAzure+10"
+  datasets:
+    - VBFHto2Mu

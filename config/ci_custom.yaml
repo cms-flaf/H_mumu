@@ -6,6 +6,7 @@ compute_unc_variations: true
 compute_unc_histograms: true
 store_noncentral: true
 
+phys_model: TestModel
 variables:
   - DNN_NNOutput
   - mu1_pt

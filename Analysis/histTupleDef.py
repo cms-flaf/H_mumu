@@ -103,7 +103,7 @@ def DefineWeightForHistograms(
         defineTriggerWeights(
             dfw, global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano")
         )
-        if df_is_central:
+        if df_is_central and global_params["compute_unc_histograms"]:
             defineTriggerWeightsErrors(
                 dfw,
                 global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),
