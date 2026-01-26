@@ -25,3 +25,5 @@ TestModel:
   name: "Test model for CI"
   signals:
     - custom_CI
+  data:
+    - custom_CI_data

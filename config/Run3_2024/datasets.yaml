@@ -16,6 +16,10 @@ custom_CI:
   fs_nanoAOD: T3_CH_CERNBOX:/store/user/vdamante/
   dirName: "nano24"
 
+Muon1_Run2024C:
+  fs_nanoAOD: T3_CH_CERNBOX:/store/user/vdamante/
+  dirName: "nano24_data"
+
 WminusH_Hto2Mu_WtoAll:
   crossSection: WminusH_Hto2Mu_WtoAll
   generator: powheg

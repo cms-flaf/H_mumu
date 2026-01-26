@@ -32,14 +32,18 @@ def analysis_setup(setup):
 
 
 def GetDfw(df, global_params):
+    corrections = Corrections.getGlobal()
     period = global_params["era"]
     kwargset = (
         {}
     )  # here go the customisations for each analysis eventually extrcting stuff from the global params
     kwargset["isData"] = global_params["process_group"] == "data"
-    kwargset["wantTriggerSFErrors"] = global_params["compute_rel_weights"]
+    kwargset["wantTriggerSFErrors"] = (
+        global_params["compute_rel_weights"]
+        and "trigger" in corrections.to_apply.keys()
+    )
+    print(kwargset["wantTriggerSFErrors"])
     kwargset["colToSave"] = []
-    corrections = Corrections.getGlobal()
     dfw = analysis.DataFrameBuilderForHistograms(
         df, global_params, period, corrections, **kwargset, is_not_Cache=True
     )
@@ -103,7 +107,11 @@ def DefineWeightForHistograms(
         defineTriggerWeights(
             dfw, global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano")
         )
-        if df_is_central and global_params["compute_unc_histograms"]:
+        if (
+            df_is_central
+            and global_params["compute_unc_histograms"]
+            and "trigger" in corrections.to_apply.keys()
+        ):
             defineTriggerWeightsErrors(
                 dfw,
                 global_params.get("mu_pt_for_triggerMatchingAndSF", "pt_nano"),

@@ -376,3 +376,8 @@ custom_CI:
   color: "kAzure+10"
   datasets:
     - custom_CI
+
+custom_CI_data:
+  name: "Data custom CI"
+  datasets:
+    - Muon1_Run2024C
