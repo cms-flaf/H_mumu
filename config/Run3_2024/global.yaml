@@ -2,9 +2,10 @@ triggerFile: config/Run3_2024/triggers.yaml
 bTagAlgo: UParTAK4
 corrections:
   btag:
-    stages: [ AnaTuple ]
+    stages: [ AnaTuple, HistTuple ]
     modes:
       AnaTuple: none
+      HistTuple: none
     tagger: UParTAK4
     jetCollection: Jet
     wantShape: False

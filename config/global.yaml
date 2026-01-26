@@ -1,6 +1,7 @@
 anaTupleDef: AnaProd/anaTupleDef.py
 histTupleDef: Analysis/histTupleDef.py
 analysis_import: Analysis.H_mumu
+phys_model: BaseModel
 signal_types:
   - ggH
   - VBFH
@@ -272,9 +273,10 @@ corrections:
     stage: AnaTuple
     apply_jet_horns_fix: true
   btag:
-    stages: [ AnaTuple ]
+    stages: [ AnaTuple, HistTuple ]
     modes:
       AnaTuple: none
+      HistTuple: none
     tagger: particleNet
     jetCollection: Jet
 
