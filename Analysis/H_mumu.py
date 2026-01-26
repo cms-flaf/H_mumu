@@ -24,6 +24,12 @@ for header in [
 ]:
     DeclareHeader(os.environ["ANALYSIS_PATH"] + "/" + header)
 
+Taggers_branchesNames = {
+    "particleNet": "PNetB",
+    "deepJet": "DeepFlavB",
+    "UParTAK4": "UParTAK4B",
+}
+
 
 def createKeyFilterDict(global_params, period):
     filter_dict = {}
@@ -291,6 +297,10 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
         self.corrections = corrections
+        self.bTagAlgo = Taggers_branchesNames[
+            self.config.get("bTagAlgo", "particleNet")
+        ]
+        self.bTagWPDict = corrections.btag.getWPValues()
 
 
 def PrepareDFBuilder(dfBuilder):
@@ -312,7 +322,15 @@ def PrepareDFBuilder(dfBuilder):
     dfBuilder.defineChannels()
     dfBuilder.defineTriggers()
     dfBuilder.SignRegionDef()
-    dfBuilder.df = JetCollectionDef(dfBuilder.df)
+
+    from FLAF.Common.Utilities import WorkingPointsbTag
+
+    dfBuilder.df = JetCollectionDef(
+        dfBuilder.df,
+        dfBuilder.bTagAlgo,
+        dfBuilder.bTagWPDict[WorkingPointsbTag.Loose],
+        dfBuilder.bTagWPDict[WorkingPointsbTag.Medium],
+    )
     dfBuilder.df = JetObservablesDef(dfBuilder.df)
     dfBuilder.df = VBFJetSelection(dfBuilder.df)
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)

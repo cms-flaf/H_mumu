@@ -22,10 +22,10 @@ class DNNProducer:
     def __init__(self, cfg, payload_name, period):
         print("DNN Producer init!")
         # cfg is H_mumu/configs/global.yaml
+        self.period = period
         self.cfg = cfg
         self.global_cfg = self._load_global_config()
         self.payload_name = payload_name
-        self.period = period
         self._load_framework()
         self.parity, self.input_features = self._load_dnn_config()
         # Columns for tmp file
@@ -54,6 +54,11 @@ class DNNProducer:
         filepath = os.path.join(os.environ["ANALYSIS_PATH"], "config", "global.yaml")
         with open(filepath, "r") as f:
             global_config = yaml.safe_load(f)
+        period_based_config_filepath = os.path.join(
+            os.environ["ANALYSIS_PATH"], "config", self.period, "global.yaml"
+        )
+        with open(period_based_config_filepath, "r") as f:
+            global_config.update(yaml.safe_load(f))
         return global_config
 
     def _load_models(self):

@@ -375,4 +375,4 @@ custom_CI:
   name: "custom for CI and test purposes"
   color: "kAzure+10"
   datasets:
-    - VBFHto2Mu
+    - custom_CI
