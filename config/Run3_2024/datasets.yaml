@@ -29,3 +29,16 @@ WplusH_Hto2Mu_WtoAll:
 ZH_Hto2Mu_ZtoAll:
   crossSection: ZH_Hto2Mu_ZtoAll
   generator: powheg
+# to add:
+# /GluGluH-Hto2Mu_Par-M-125_TuneCP5_13p6TeV_powheg-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
+# /VBF-Hto2Mu_Par-M-125_TuneCP5Up_13p6TeV_amcatnlo-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
+DYto2Mu_MLL_105to160_amcatnloFXFX:
+  crossSection: DYto2Mu_MLL_105to160_amcatnloFXFX
+  generator: amcatnlo
+  nanoAOD:
+    v15: /DYto2Mu-2Jets_Bin-MLL-105to160_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
+EWK_2Mu2J_MLL_105to160_herwig:
+  crossSection: EWK_2Mu2J_madgraph_herwig # https://cms-pdmv-prod.web.cern.ch/mcm/requests?dataset_name=EWK_2Mu2J_Bin-MLL-105to160_TuneCH3_13p6TeV_madgraph-herwig7&page=0&shown=3407999, the tarball should be '/cvmfs/cms.cern.ch/phys_generator/gridpacks/RunIII/13p6TeV/slc7_amd64_gcc10/MadGraph5_aMCatNLO/LLJJ_105-160_EWK_SM_5f_LO_slc7_amd64_gcc10_CMSSW_12_4_8_tarball.tar.xz') so basically the same XS used for EWK_2L2J_madgraph_herwig but considering only 2 muons in the final state..
+  generator: amcatnlo
+  nanoAOD:
+    v15: /EWK-2Mu2J_Bin-MLL-105to160_TuneCH3_13p6TeV_madgraph-herwig7/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM

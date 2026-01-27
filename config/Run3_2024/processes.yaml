@@ -371,13 +371,20 @@ Other:
   color_mplhep: slateblue
   datasets: [ ]
 
-custom_CI:
-  name: "custom for CI and test purposes"
+custom_CI_background:
+  name: "CI -- Background"
+  color: "kGreen-3"
+  datasets:
+    - EWK_2Mu2J_madgraph_herwig
+
+custom_CI_signal:
+  name: "CI -- signals"
   color: "kAzure+10"
   datasets:
-    - custom_CI
+    - VBFHto2Mu
 
 custom_CI_data:
-  name: "Data custom CI"
+  name: "CI -- data"
+  color: "kAzure+10"
   datasets:
     - Muon1_Run2024C

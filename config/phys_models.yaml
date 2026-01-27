@@ -17,17 +17,14 @@ BaseModel:
     - VBFHto2Mu
     # - VBFHto2Mu_Herwig
     - GluGluHto2Mu
-  # data:
-    # - Data_Muon
+  data:
+    - Data_Muon
 
 TestModel:
   name: "Test model for CI"
+  backgrounds:
+    - custom_CI_background
   signals:
-    - custom_CI
-
-TestModel_withData:
-  name: "Test model for CI"
-  signals:
-    - custom_CI
+    - custom_CI_signal
   data:
     - custom_CI_data
