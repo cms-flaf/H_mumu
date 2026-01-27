@@ -381,7 +381,7 @@ custom_CI_signal:
   name: "CI -- signals"
   color: "kAzure+10"
   datasets:
-    - VBFHto2Mu
+    - custom_CI_signal
 
 custom_CI_data:
   name: "CI -- data"
