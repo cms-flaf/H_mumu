@@ -20,8 +20,12 @@ BaseModel:
   # data:
     # - Data_Muon
 
-
 TestModel:
+  name: "Test model for CI"
+  signals:
+    - custom_CI 
+
+TestModel_withData:
   name: "Test model for CI"
   signals:
     - custom_CI
