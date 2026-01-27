@@ -308,7 +308,7 @@ def PrepareDFBuilder(dfBuilder):
     dfBuilder.df = GetMuMuP4Observables(dfBuilder.df)
     if (
         "muScaRe" in dfBuilder.corrections.to_apply
-        and config["corrections"]["muScaRe"]["stage"] == "HistTuples"
+        and dfBuilder.config["corrections"]["muScaRe"]["stage"] == "HistTuple"
     ):
         dfBuilder.df = dfBuilder.corrections.muScaRe.getP4VariationsForLegs(
             dfBuilder.df
