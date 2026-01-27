@@ -375,7 +375,7 @@ custom_CI_background:
   name: "CI -- Background"
   color: "kGreen-3"
   datasets:
-    - EWK_2Mu2J_madgraph_herwig
+    - EWK_2Mu2J_MLL_105to160_herwig
 
 custom_CI_signal:
   name: "CI -- signals"
