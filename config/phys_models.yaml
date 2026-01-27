@@ -23,7 +23,7 @@ BaseModel:
 TestModel:
   name: "Test model for CI"
   signals:
-    - custom_CI 
+    - custom_CI
 
 TestModel_withData:
   name: "Test model for CI"
