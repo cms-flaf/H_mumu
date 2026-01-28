@@ -385,6 +385,5 @@ custom_CI_signal:
 
 custom_CI_data:
   name: "CI -- data"
-  color: "kAzure+10"
   datasets:
-    - Muon_Run2022C
+    - Muon_Run2022D
