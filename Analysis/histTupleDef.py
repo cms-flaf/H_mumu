@@ -31,7 +31,8 @@ def analysis_setup(setup):
     analysis = importlib.import_module(f"{analysis_import}")
 
 
-def GetDfw(df, global_params):
+def GetDfw(df, setup, dataset_name):
+    global_params = setup.global_params
     corrections = Corrections.getGlobal()
     period = global_params["era"]
     kwargset = (
