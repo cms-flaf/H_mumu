@@ -151,6 +151,10 @@ def GetAllMuMuCorrectedPtRelatedObservables(
             df = df.Define(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_{suffix}.Pt()")
         df = df.Redefine(f"mu{mu_idx}_p4", f"mu{mu_idx}_p4_{suffix}")
         df = df.Redefine(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_{suffix}.Pt()")
+        if f"m_mumu_{suffix}" not in df.GetColumnNames():
+            df = df.Define(
+                f"m_mumu_{suffix}", f"(mu1_p4_{suffix} + mu2_p4_{suffix}).M()"
+            )
         df = df.Define(
             f"mu{mu_idx}_pt_rel_{suffix}", f"mu{mu_idx}_pt_{suffix}/m_mumu_{suffix}"
         )
