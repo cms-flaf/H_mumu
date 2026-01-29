@@ -95,10 +95,16 @@ def GetMuMuMassResolution(df, pt_to_use):
 
 
 def GetMuMuP4Observables(df):
+    for mu_idx in [1, 2]:  # tmp patch for back compatibility with old AnaTuples
+        if f"mu{mu_idx}_bsConstrainedPt" in df.GetColumnNames():
+            if f"mu{mu_idx}_pt_bsConstrained" not in df.GetColumnNames():
+                df = df.Define(
+                    f"mu{mu_idx}_pt_bsConstrained", f"mu{mu_idx}_bsConstrainedPt"
+                )
     pt_def = [col for col in df.GetColumnNames() if f"mu1_pt_" in col]
-    print(f"pt defined are: {pt_def}")
+    # print(f"pt defined are: {pt_def}")
     muon_p4_to_define = list(set(["_".join(pt.split("_")[2:]) for pt in pt_def]))
-    print(f"suffixes are : {muon_p4_to_define}")
+    # print(f"suffixes are : {muon_p4_to_define}")
     for pt_suffix in muon_p4_to_define:
         for idx in [0, 1]:
             df = df.Define(
@@ -114,18 +120,8 @@ def GetMuMuP4Observables(df):
     return df
 
 
-def GetAllMuMuCorrectedPtRelatedObservables(
-    df, suffix="ScaRe"
-):  # suffix can be "", "nano", "bsConstrainedPt", "Central", "JERDown", "JERUp", "JES_TotalDown", "JES_TotalUp", "ScaRe", "ScaReDown", "ScaReUp", "roccor" (last not yet implemented)
-
+def GetAllMuMuCorrectedPtRelatedObservables(df, suffix="Central"):
     df = df.Define("Ebeam", "13600.0/2")
-    df = df.Define(f"y_mumu_ScaRe", "(mu1_p4_ScaRe+mu2_p4_ScaRe).Rapidity()")
-    df = df.Define(f"eta_mumu_ScaRe", "(mu1_p4_ScaRe+mu2_p4_ScaRe).Eta()")
-    df = df.Define(f"phi_mumu_ScaRe", "(mu1_p4_ScaRe+mu2_p4_ScaRe).Phi()")
-    df = df.Define(
-        "dR_mumu_ScaRe", "ROOT::Math::VectorUtil::DeltaR(mu1_p4_ScaRe, mu2_p4_ScaRe)"
-    )
-
     df = df.Define(f"pt_mumu", f"(mu1_p4_{suffix}+mu2_p4_{suffix}).Pt()")
     df = df.Define(f"m_mumu", f"(mu1_p4_{suffix}+mu2_p4_{suffix}).M()")
     df = df.Define(f"y_mumu", f"(mu1_p4_{suffix}+mu2_p4_{suffix}).Rapidity()")
@@ -151,6 +147,10 @@ def GetAllMuMuCorrectedPtRelatedObservables(
             df = df.Define(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_{suffix}.Pt()")
         df = df.Redefine(f"mu{mu_idx}_p4", f"mu{mu_idx}_p4_{suffix}")
         df = df.Redefine(f"mu{mu_idx}_pt", f"mu{mu_idx}_p4_{suffix}.Pt()")
+        if f"m_mumu_{suffix}" not in df.GetColumnNames():
+            df = df.Define(
+                f"m_mumu_{suffix}", f"(mu1_p4_{suffix} + mu2_p4_{suffix}).M()"
+            )
         df = df.Define(
             f"mu{mu_idx}_pt_rel_{suffix}", f"mu{mu_idx}_pt_{suffix}/m_mumu_{suffix}"
         )

@@ -97,7 +97,6 @@ class DNNProducer:
 
     def prepare_dfw(self, dfw, dataset_name):
         print("*********** Running prepare_dfw...")
-        analysis.InitializeCorrections(self.period, dataset_name, stage="HistTuple")
         corrections = Corrections.getGlobal()
         dfw = analysis.DataFrameBuilderForHistograms(
             dfw.df, self.global_cfg, self.period, corrections

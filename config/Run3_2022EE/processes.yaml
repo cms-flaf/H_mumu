@@ -318,8 +318,20 @@ Data_MuonEG:
     - MuonEG_Run2022F
     - MuonEG_Run2022G
 
-custom_CI:
-  name: "custom for CI and test purposes"
+custom_CI_background:
+  name: "CI -- Background"
+  color: "kGreen-3"
+  datasets:
+    - EWK_2L2J_madgraph_herwig
+
+custom_CI_signal:
+  name: "CI -- signals"
   color: "kAzure+10"
   datasets:
     - VBFHto2Mu
+
+custom_CI_data:
+  name: "CI -- data"
+  color: "kAzure+10"
+  datasets:
+    - Muon_Run2022E
