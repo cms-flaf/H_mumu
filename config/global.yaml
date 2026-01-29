@@ -273,7 +273,7 @@ corrections:
     stage: AnaTuple
     apply_jet_horns_fix: true
   btag:
-    stages: [ AnaTuple , HistTuple ]
+    stages: [ AnaTuple, HistTuple ]
     modes:
       AnaTuple: none
       HistTuple: none
