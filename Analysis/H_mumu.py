@@ -194,44 +194,6 @@ def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
     return total_weight
 
 
-def InitializeCorrections(period, dataset_name, stage="HistTuple"):
-    setup = Setup.getGlobal(os.environ["ANALYSIS_PATH"], period)
-    if dataset_name == "data":
-        dataset_cfg = {}
-        process_name = "data"
-        process = {}
-        isData = True
-        processors_cfg = {}
-        processor_instances = {}
-    else:
-        dataset_cfg = setup.datasets[dataset_name]
-        process_name = dataset_cfg["process_name"]
-        process = setup.base_processes[process_name]
-        isData = dataset_cfg["process_group"] == "data"
-        processors_cfg, processor_instances = setup.get_processors(
-            process_name, stage="HistTuple", create_instances=True
-        )
-
-    triggerFile = setup.global_params.get("triggerFile")
-    trigger_class = None
-    if triggerFile is not None:
-        triggerFile = os.path.join(os.environ["ANALYSIS_PATH"], triggerFile)
-        trigger_class = Triggers.Triggers(triggerFile)
-    if Corrections._global_instance is None:
-        Corrections.initializeGlobal(
-            global_params=setup.global_params,
-            stage="HistTuple",
-            dataset_name=dataset_name,
-            dataset_cfg=dataset_cfg,
-            process_name=process_name,
-            process_cfg=process,
-            processors=processor_instances,
-            isData=isData,
-            load_corr_lib=True,
-            trigger_class=trigger_class,
-        )
-
-
 class DataFrameBuilderForHistograms(DataFrameBuilderBase):
     def defineTriggers(self):
         for ch in self.config["channelSelection"]:
