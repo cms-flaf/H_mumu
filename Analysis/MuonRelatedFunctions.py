@@ -95,7 +95,7 @@ def GetMuMuMassResolution(df, pt_to_use):
 
 
 def GetMuMuP4Observables(df):
-    for mu_idx in [1,2]: # tmp patch for back compatibility with old AnaTuples
+    for mu_idx in [1, 2]:  # tmp patch for back compatibility with old AnaTuples
         if f"mu{mu_idx}_bsConstrainedPt" in df.GetColumnNames():
             if f"mu{mu_idx}_pt_bsConstrained" not in df.GetColumnNames():
                 df = df.Define(
@@ -120,9 +120,7 @@ def GetMuMuP4Observables(df):
     return df
 
 
-def GetAllMuMuCorrectedPtRelatedObservables(
-    df, suffix="Central"
-):
+def GetAllMuMuCorrectedPtRelatedObservables(df, suffix="Central"):
     df = df.Define("Ebeam", "13600.0/2")
     df = df.Define(f"pt_mumu", f"(mu1_p4_{suffix}+mu2_p4_{suffix}).Pt()")
     df = df.Define(f"m_mumu", f"(mu1_p4_{suffix}+mu2_p4_{suffix}).M()")

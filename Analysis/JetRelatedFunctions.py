@@ -219,22 +219,32 @@ def JetObservablesDef(df):
 
     return df
 
+
 def VBFNetJetCollectionDef(df, max_jets=4):
     # Define jets for VBF selector network
     df = df.Define(
         "VBFCandJet_selection",
-        "Jet_NoOverlapWithMuons && Jet_pt > 20 && ((ROOT::VecOps::abs(Jet_eta) < 2.5) || (ROOT::VecOps::abs(Jet_eta) > 3.0) || (Jet_pt > 50));"
+        "Jet_NoOverlapWithMuons && Jet_pt > 20 && ((ROOT::VecOps::abs(Jet_eta) < 2.5) || (ROOT::VecOps::abs(Jet_eta) > 3.0) || (Jet_pt > 50));",
     )
     # Add the desired variables
-    jet_vars = ['pt', 'eta', 'phi', 'btagPNetB', 'btagPNetCvB', 'btagPNetCvL', 'btagPNetCvNotB', 'btagPNetQvG', 'btagPNetTauVJet', 'puIdDisc']
+    jet_vars = [
+        "pt",
+        "eta",
+        "phi",
+        "btagPNetB",
+        "btagPNetCvB",
+        "btagPNetCvL",
+        "btagPNetCvNotB",
+        "btagPNetQvG",
+        "btagPNetTauVJet",
+        "puIdDisc",
+    ]
     for var in jet_vars:
-        df = df.Define(
-            f"FilteredJet_{var}_vec", f"Jet_{var}[VBFCandJet_selection]"
-        )
+        df = df.Define(f"FilteredJet_{var}_vec", f"Jet_{var}[VBFCandJet_selection]")
         for i in range(max_jets):
             df = df.Define(
                 f"FilteredJet_{var}_{i+1}",
-                f"static_cast<float>(FilteredJet_{var}_vec.size()>{i} ? FilteredJet_{var}_vec[{i}] : 0.0)"
+                f"static_cast<float>(FilteredJet_{var}_vec.size()>{i} ? FilteredJet_{var}_vec[{i}] : 0.0)",
             )
 
     return df
