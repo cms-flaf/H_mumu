@@ -334,36 +334,117 @@ TTH_inclusive:
     - TTHtoNon2B_M125
     - TTHto2B_M125
 
-
 Data_Full:
   name: "Data"
   datasets:
-    - EGamma_Run2022C
-    - EGamma_Run2022D
-    - Muon_Run2022C
-    - Muon_Run2022D
-    - SingleMuon_Run2022C
-    - DoubleMuon_Run2022C
-    - MuonEG_Run2022C
-    - MuonEG_Run2022D
+    - Muon0_Run2024A
+    - Muon0_Run2024B
+    - Muon0_Run2024C
+    - Muon0_Run2024D
+    - Muon0_Run2024E_v1
+    - Muon0_Run2024E_v2
+    - Muon0_Run2024F
+    - Muon0_Run2024G
+    - Muon0_Run2024H
+    - Muon0_Run2024I_v1
+    - Muon0_Run2024I_v2
+    - Muon0_Run2024J
+    - Muon1_Run2024A
+    - Muon1_Run2024B
+    - Muon1_Run2024C
+    - Muon1_Run2024D
+    - Muon1_Run2024E_v1
+    - Muon1_Run2024E_v2
+    - Muon1_Run2024F
+    - Muon1_Run2024G
+    - Muon1_Run2024H
+    - Muon1_Run2024I_v1
+    - Muon1_Run2024I_v2
+    - Muon1_Run2024J
+    - MuonEG_Run2024A
+    - MuonEG_Run2024B
+    - MuonEG_Run2024C
+    - MuonEG_Run2024D
+    - MuonEG_Run2024E_v1
+    - MuonEG_Run2024E_v2
+    - MuonEG_Run2024F
+    - MuonEG_Run2024G
+    - MuonEG_Run2024H
+    - MuonEG_Run2024I_v1
+    - MuonEG_Run2024I_v2
+    - MuonEG_Run2024J
 
 Data_EGamma:
   name: "Data EGamma"
   datasets:
-    - EGamma_Run2022C
-    - EGamma_Run2022D
+    - EGamma0_Run2024A
+    - EGamma0_Run2024B
+    - EGamma0_Run2024C
+    - EGamma0_Run2024D
+    - EGamma0_Run2024E_v1
+    - EGamma0_Run2024E_v2
+    - EGamma0_Run2024F
+    - EGamma0_Run2024G
+    - EGamma0_Run2024H
+    - EGamma0_Run2024I_v1
+    - EGamma0_Run2024I_v2
+    - EGamma0_Run2024J
+    - EGamma1_Run2024A
+    - EGamma1_Run2024B
+    - EGamma1_Run2024C
+    - EGamma1_Run2024D
+    - EGamma1_Run2024E_v1
+    - EGamma1_Run2024E_v2
+    - EGamma1_Run2024F
+    - EGamma1_Run2024G
+    - EGamma1_Run2024H
+    - EGamma1_Run2024I_v1
+    - EGamma1_Run2024I_v2
+    - EGamma1_Run2024J
 
 Data_Muon:
   name: "Data Muon"
   datasets:
-    - SingleMuon_Run2022C
-    - Muon_Run2022C
-    - Muon_Run2022D
+    - Muon0_Run2024A
+    - Muon0_Run2024B
+    - Muon0_Run2024C
+    - Muon0_Run2024D
+    - Muon0_Run2024E_v1
+    - Muon0_Run2024E_v2
+    - Muon0_Run2024F
+    - Muon0_Run2024G
+    - Muon0_Run2024H
+    - Muon0_Run2024I_v1
+    - Muon0_Run2024I_v2
+    - Muon0_Run2024J
+    - Muon1_Run2024A
+    - Muon1_Run2024B
+    - Muon1_Run2024C
+    - Muon1_Run2024D
+    - Muon1_Run2024E_v1
+    - Muon1_Run2024E_v2
+    - Muon1_Run2024F
+    - Muon1_Run2024G
+    - Muon1_Run2024H
+    - Muon1_Run2024I_v1
+    - Muon1_Run2024I_v2
+    - Muon1_Run2024J
 
 Data_MuonEG:
   name: "Data MuonEG"
   datasets:
-    - MuonEG_Run2022C
+    - MuonEG_Run2024A
+    - MuonEG_Run2024B
+    - MuonEG_Run2024C
+    - MuonEG_Run2024D
+    - MuonEG_Run2024E_v1
+    - MuonEG_Run2024E_v2
+    - MuonEG_Run2024F
+    - MuonEG_Run2024G
+    - MuonEG_Run2024H
+    - MuonEG_Run2024I_v1
+    - MuonEG_Run2024I_v2
+    - MuonEG_Run2024J
 
 Other:
   name: "Other"
