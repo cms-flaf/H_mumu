@@ -11,8 +11,6 @@ EWK_2Mu2J_MLL_105to160_herwig:
   generator: madgraph
   nanoAOD:
     v15: /EWK-2Mu2J_Bin-MLL-105to160_TuneCH3_13p6TeV_madgraph-herwig7/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
-  fs_nanoAOD: T3_CH_CERNBOX:/store/user/vdamante/
-  dirName: "nano24_EWK"
 # EWK_2L2J_MLL_105to160_herwig:
 #   crossSection: EWK_2L2J_madgraph_herwig
 #   generator: madgraph
