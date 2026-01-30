@@ -27,20 +27,20 @@ DYto2E_M_50:
       type: DY
   datasets:
     - DYto2E_M_50_amcatnloFXFX
-    - DYto2E_M_50_amcatnloFXFX_ext1
+    # - DYto2E_M_50_amcatnloFXFX_ext1
     - DYto2E_M_50_0J_amcatnloFXFX
     - DYto2E_M_50_1J_amcatnloFXFX
     - DYto2E_M_50_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_40to100_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_100to200_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_200to400_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_400to600_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_600_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_40to100_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_100to200_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_200to400_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_400to600_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_600_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_40to100_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_100to200_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_200to400_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_400to600_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_600_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_40to100_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_100to200_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_200to400_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_400to600_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2Mu_M_50:
   processors: *DY_processors
@@ -49,20 +49,20 @@ DYto2Mu_M_50:
       type: DY
   datasets:
     - DYto2Mu_M_50_amcatnloFXFX
-    - DYto2Mu_M_50_amcatnloFXFX_ext1
+    # - DYto2Mu_M_50_amcatnloFXFX_ext1
     - DYto2Mu_M_50_0J_amcatnloFXFX
     - DYto2Mu_M_50_1J_amcatnloFXFX
     - DYto2Mu_M_50_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_40to100_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_100to200_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_200to400_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_400to600_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_600_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_40to100_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_100to200_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_200to400_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_400to600_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_600_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_40to100_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_100to200_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_200to400_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_400to600_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_600_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_40to100_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_100to200_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_200to400_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_400to600_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2Tau_M_50:
   processors: *DY_processors
@@ -70,6 +70,7 @@ DYto2Tau_M_50:
     Vpt:
       type: DY
   datasets:
+    # - DYto2Tau_M_50_amcatnloFXFX
     - DYto2Tau_M_50_0J_amcatnloFXFX
     - DYto2Tau_M_50_1J_amcatnloFXFX
     - DYto2Tau_M_50_2J_amcatnloFXFX
@@ -121,10 +122,10 @@ W_NJets:
   name: "W $\\rightarrow \\ell \\nu$+ jets"
   color: "kGreen"  # eliminates need for plot.yaml
   color_mplhep: yellow
-  datasets:
-    - WtoLNu_0J_amcatnloFXFX
-    - WtoLNu_1J_amcatnloFXFX
-    - WtoLNu_2J_amcatnloFXFX
+  datasets: [ ]
+    # - WtoLNu_0J_amcatnloFXFX
+    # - WtoLNu_1J_amcatnloFXFX
+    # - WtoLNu_2J_amcatnloFXFX
 
 ############## EWK ##############
 EWK_LLJJ:
@@ -246,11 +247,11 @@ ST:
   name: "ST"
   color: kCyan-1
   color_mplhep: cyan
-  datasets:
-    - TbarBtoLminusNuB_s_channel_4FS
-    - TBbartoLplusNuBbar_s_channel_4FS
-    - TbarBQ_t_channel_4FS
-    - TBbarQ_t_channel_4FS
+  datasets: [ ]
+    # - TbarBtoLminusNuB_s_channel_4FS
+    # - TBbartoLplusNuBbar_s_channel_4FS
+    # - TbarBQ_t_channel_4FS
+    # - TBbarQ_t_channel_4FS
 
 
 ############## TW ##############
@@ -271,12 +272,12 @@ TTX:
   name: "TT+X"
   color: kBlue-10
   color_mplhep: pink
-  datasets:
-    - TTWH
-    - TTWW
-    - TTZH
-    - TTZZ
-    - TTZ_Zto2Q
+  datasets: [ ]
+    # - TTWH
+    # - TTWW
+    # - TTZH
+    # - TTZZ
+    # - TTZ_Zto2Q
 
 
 ############## VBF signal ##############
@@ -462,7 +463,7 @@ custom_CI_signal:
   name: "CI -- signals"
   color: "kAzure+10"
   datasets:
-    - custom_CI_signal
+    - VBFHto2Mu
 
 custom_CI_data:
   name: "CI -- data"
