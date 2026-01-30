@@ -1,6 +1,6 @@
 norm:
   PileUp_Lumi_MC:
-    expression: weight_MC_Lumi_pu{scale}_rel  * final_weight
+    expression: weight_base_pu{scale}_rel  * final_weight
     name: CMS_pileup_{}
   # HighPt_MuonID_SF_MediumID:
   #   expression: weight_mu1_HighPt_MuonID_SF_MediumID{scale}_rel * weight_mu2_HighPt_MuonID_SF_MediumID{scale}_rel * final_weight

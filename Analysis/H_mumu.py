@@ -158,7 +158,7 @@ def SaveVarsForNNInput(variables):
 
 def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
     weights_to_apply = [
-        "weight_MC_Lumi_pu",
+        "weight_base",
         # "weight_XS",
         # "newDYWeight_ptLL_nano"
         # "newDYWeight_ptLL_bsConstrained"
