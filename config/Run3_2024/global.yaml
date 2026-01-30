@@ -39,6 +39,7 @@ corrections:
     enabled:
       AnaTuple: true
       AnaTupleMerge: false
+  base: { stage: AnaTupleMerge }
   JEC: { stage: AnaTuple }
   JER:
     stage: AnaTuple
