@@ -122,7 +122,7 @@ W_NJets:
   name: "W $\\rightarrow \\ell \\nu$+ jets"
   color: "kGreen"  # eliminates need for plot.yaml
   color_mplhep: yellow
-  datasets: []
+  datasets: [ ]
     # - WtoLNu_0J_amcatnloFXFX
     # - WtoLNu_1J_amcatnloFXFX
     # - WtoLNu_2J_amcatnloFXFX
@@ -247,7 +247,7 @@ ST:
   name: "ST"
   color: kCyan-1
   color_mplhep: cyan
-  datasets: []
+  datasets: [ ]
     # - TbarBtoLminusNuB_s_channel_4FS
     # - TBbartoLplusNuBbar_s_channel_4FS
     # - TbarBQ_t_channel_4FS
@@ -272,7 +272,7 @@ TTX:
   name: "TT+X"
   color: kBlue-10
   color_mplhep: pink
-  datasets: []
+  datasets: [ ]
     # - TTWH
     # - TTWW
     # - TTZH
