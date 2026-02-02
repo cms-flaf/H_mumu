@@ -1,6 +1,5 @@
 from FLAF.Common.Utilities import *
 
-
 channels = ["muMu"]  # in order of importance during the channel selection
 leg_names = ["Electron", "Muon", "Tau"]
 
