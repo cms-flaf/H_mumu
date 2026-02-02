@@ -1,7 +1,7 @@
 triggerFile: config/Run3_2024/triggers.yaml
 nano_version: v15
 nanoAODVersions:
-  data: v15
+  data: PromptReco
   mc: v15
 bTagAlgo: UParTAK4
 corrections:
