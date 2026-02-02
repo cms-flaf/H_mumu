@@ -3,4 +3,4 @@
 	url = https://github.com/cms-flaf/FLAF.git
 [submodule "Corrections"]
 	path = Corrections
-	url = https://github.com/cms-flaf/Corrections.git
+	url = git@github.com:cms-flaf/Corrections.git
