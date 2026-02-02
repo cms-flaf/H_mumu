@@ -343,9 +343,7 @@ def addAllVariables(
     dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
     dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
-    isV12 = (
-        global_params["nano_version"] == "v12"
-    )
+    isV12 = global_params["nano_version"] == "v12"
     dfw.Apply(
         CommonBaseline.ApplyJetVetoMap,
         apply_filter=False,
@@ -465,7 +463,7 @@ def addAllVariables(
             )
     dfw.Apply(
         AnaBaseline.LowerMassCut,
-        suffixes = ["p4_Central", "p4_nano", "p4_bsConstrainedPt"]
+        suffixes=["p4_Central", "p4_nano", "p4_bsConstrainedPt"],
     )
     jet_obs_names = []
     for jvar in ["pt", "eta", "phi", "mass"]:
@@ -511,4 +509,3 @@ def addAllVariables(
             global_params.get("extraFormat_for_triggerMatchingAndSF", {}),
         )
         dfw.colToSave.extend(hltBranches)
-

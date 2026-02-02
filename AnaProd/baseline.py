@@ -48,17 +48,19 @@ def RecoHttCandidateSelection(df, config):
         "HttCandidate", f"GetBestHTTCandidate<2>({{ {cand_list_str} }}, event)"
     )
 
+
 def LowerMassCut(df, suffixes=None):
     if suffixes is None:
         for dfCol in df.GetColumnNames():
-            if f"mu1_p4" in dfCol and 'delta' not in dfCol:
+            if f"mu1_p4" in dfCol and "delta" not in dfCol:
                 print(dfCol)
-                suffixes.append('_'.join(dfCol.split('_')[1:]))
+                suffixes.append("_".join(dfCol.split("_")[1:]))
     for suffix in suffixes:
         df = df.Define(f"m_mumu_{suffix}", f"(mu1_{suffix}+mu2_{suffix}).M()")
     masses_cut = " || ".join([f"m_mumu_{s} > 45" for s in suffixes])
     df = df.Filter(masses_cut, "m(mumu) > 45 ")
     return df
+
 
 def LeptonVeto(df, muon_pt_to_use="pt_nano"):
     df = df.Define("Muon_iso", "Muon_pfRelIso04_all")
