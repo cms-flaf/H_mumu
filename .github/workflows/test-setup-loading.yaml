@@ -2,9 +2,7 @@ name: Test Setup Loading
 
 on:
   pull_request:
-    types: [ "opened", "synchronize", "reopened" ]
-    branches: [ "main" ]
-  push:
+    types: [ "opened", "synchronize", "reopened", "labeled" ]
     branches: [ "main" ]
 
 permissions:
