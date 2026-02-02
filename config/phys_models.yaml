@@ -5,6 +5,8 @@ BaseModel:
     - TT
     - VV
     - EWK
+    - EWK_2Mu2J_MLL_105to160_pythia
+    - EWK_2Mu2J_MLL_105to160_herwig
     - W_NJets
     - ST
     - TW
@@ -14,9 +16,15 @@ BaseModel:
     - TTH_inclusive
     - VH_inclusive
   signals:
-    - VBFHto2Mu
-    # - VBFHto2Mu_Herwig
+    - VBFHto2Mu_m125_amcatnlo
+    - VBFHto2Mu_m125_powheg
+    - VBFHto2Mu_m120
+    - VBFHto2Mu_m130
+    - VBFHto2Mu_m125_tuneDown
+    - VBFHto2Mu_m125_tuneUp
     - GluGluHto2Mu
+    - GluGluHto2Mu_MiNNLO
+    # - VBFHto2Mu_Herwig
   data:
     - Data_Muon
 

@@ -27,6 +27,7 @@ DYto2E_M_50:
       type: DY
   datasets:
     - DYto2E_M_50_amcatnloFXFX
+    # - DYto2E_M_50_amcatnloFXFX_ext1
     - DYto2E_M_50_0J_amcatnloFXFX
     - DYto2E_M_50_1J_amcatnloFXFX
     - DYto2E_M_50_2J_amcatnloFXFX
@@ -48,6 +49,7 @@ DYto2Mu_M_50:
       type: DY
   datasets:
     - DYto2Mu_M_50_amcatnloFXFX
+    # - DYto2Mu_M_50_amcatnloFXFX_ext1
     - DYto2Mu_M_50_0J_amcatnloFXFX
     - DYto2Mu_M_50_1J_amcatnloFXFX
     - DYto2Mu_M_50_2J_amcatnloFXFX
@@ -72,6 +74,12 @@ DYto2Tau_M_50:
     - DYto2Tau_M_50_1J_amcatnloFXFX
     - DYto2Tau_M_50_2J_amcatnloFXFX
 
+DYto2Mu_MLL105To160:
+  name: "DY"
+  color: "kAzure+7"
+  color_mplhep: lightskyblue
+  sub_processes:
+    - DYto2Mu_MLL_105to160_amcatnloFXFX
 ############## TT ##############
 TT:
   name: "t $\\bar{t}$"
@@ -121,6 +129,19 @@ EWK:
   datasets:
     - EWK_2L2J_madgraph_herwig
 
+EWK_2Mu2J_MLL_105to160_herwig:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets:
+    - EWK_2Mu2J_MLL_105to160_herwig
+
+EWK_2Mu2J_MLL_105to160_pythia:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets:
+    - EWK_2Mu2J_MLL_105to160_pythia
 ############## Other single H  ##############
 H_mainBckg:
   name: "Single H"
@@ -221,27 +242,51 @@ TTX:
     - TTWH
     - TTWW
     - TTZH
-    - TTZZ
-    # - TTZ_Zto2Q
+    - TTZZ 
 
-TTX_2023:
-  name: "TT+X"
-  color: kBlue-10
-  color_mplhep: pink
-  datasets:
-    - TTWH
-    - TTWW
-    - TTZH
-    - TTZZ
 
 ############## VBF signal ##############
-
-VBFHto2Mu:
+VBFHto2Mu_m125_amcatnlo:
   name: "VBFHto2Mu"
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu
+    - VBFHto2Mu_M125_amcatnlo
+
+VBFHto2Mu_m125_powheg:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets:
+    - VBFHto2Mu_M125_powheg
+
+VBFHto2Mu_m120:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets:
+    - VBFHto2Mu_M120_amcatnlo
+
+VBFHto2Mu_m130:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets:
+    - VBFHto2Mu_M130_amcatnlo
+
+VBFHto2Mu_m125_tuneDown:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets:
+    - VBFHto2Mu_M125_tuneCP5Down_amcatnlo
+
+VBFHto2Mu_m125_tuneUp:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets:
+    - VBFHto2Mu_M125_tuneCP5Up_amcatnlo
 
 VBFHto2Mu_Herwig:
   name: "VBFHto2Mu_Herwig"
@@ -253,6 +298,13 @@ VBFHto2Mu_Herwig:
 #     # - VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2
 
 ############## ggH signal ##############
+
+GluGluHto2Mu_MiNNLO:
+  name: "GluGluHto2Mu"
+  color: "kCyan"
+  color_mplhep: cyan
+  datasets:
+    - GluGluHto2Mu_MiNNLO
 
 GluGluHto2Mu:
   name: "GluGluHto2Mu"
@@ -268,9 +320,9 @@ VHto2Mu:
   color: "kPink"
   color_mplhep: red
   datasets:
-    - WminusH_Hto2Mu_WtoAll
-    - WplusH_Hto2Mu_WtoAll
-    - ZH_Hto2Mu_ZtoAll
+    - WminusH_Hto2Mu
+    - WplusH_Hto2Mu
+    - ZH_Hto2Mu
 
 ############## TTH signal ##############
 
@@ -279,7 +331,7 @@ TTHto2Mu:
   color: "kPink"
   color_mplhep: red
   datasets:
-    - TTHto2Mu
+    - TTH_Hto2Mu
 
 TTH_inclusive:
   name: "ttH"
@@ -289,6 +341,7 @@ TTH_inclusive:
     - TTHtoNon2B_M125
     - TTHto2B_M125
 
+############### Data ##############
 Data_Full:
   name: "Data"
   datasets: [ ]

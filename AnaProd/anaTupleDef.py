@@ -187,7 +187,7 @@ JetObservables = [
     "btagUParTAK4TauVJet",
     "chEmEF",
     "chHEF",
-    "chMultiplicity",
+    # "chMultiplicity", # N/A in NanoAOD V12
     "electronIdx1",
     "electronIdx2",
     "eta",
@@ -210,7 +210,7 @@ JetObservables = [
     "nSVs",
     "neEmEF",
     "neHEF",
-    "neMultiplicity",
+    # "neMultiplicity", # N/A in NanoAOD V12
     "phi",
     "pt",
     "puIdDisc",
@@ -344,9 +344,7 @@ def addAllVariables(
     dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
 
     isV12 = (
-        dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7"
-        or dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1"
-        or dataset_cfg["process_name"] == "VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2"
+        global_params["nano_version"] == "v12"
     )
     dfw.Apply(
         CommonBaseline.ApplyJetVetoMap,
@@ -418,7 +416,7 @@ def addAllVariables(
             if f"mu{leg_idx+1}_{muon_obs}" in dfw.df.GetColumnNames():
                 continue
             if "p4" in muon_obs:
-                # print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
+                print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
                 dfw.df = dfw.df.Define(
                     f"mu{leg_idx+1}_{muon_obs}", f"{col}.at(mu{leg_idx+1}_idx)"
                 )
@@ -465,7 +463,10 @@ def addAllVariables(
                 var_type="int",
                 default="-10",
             )
-
+    dfw.Apply(
+        AnaBaseline.LowerMassCut,
+        suffixes = ["p4_Central", "p4_nano", "p4_bsConstrainedPt"]
+    )
     jet_obs_names = []
     for jvar in ["pt", "eta", "phi", "mass"]:
         jet_obs_name = f"Jet_{jvar}"
@@ -510,3 +511,4 @@ def addAllVariables(
             global_params.get("extraFormat_for_triggerMatchingAndSF", {}),
         )
         dfw.colToSave.extend(hltBranches)
+

@@ -1,144 +1,211 @@
+#### DY samples ####
+DYto2Mu_MLL_105to160_amcatnloFXFX:
+  crossSection: DYto2Mu_MLL_105to160_amcatnloFXFX
+  crossSectionStitch: DYto2Mu_MLL_105to160_amcatnloFXFX
+  generator: amcatnlo
+  miniAOD: /DYto2Mu_MLL_105to160_amcatnloFXFX/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v1/MINIAODSIM
+  nanoAOD:
+    v12: /DYto2Mu-2Jets_MLL-105To160_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+
+# to be added - currently no NanoAOD available: /DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV-powhegMiNNLO-pythia8-photos/Run3Summer23MiniAODv4-PUAVE1_130X_mcRun3_2023_realistic_v15-v2/MINIAODSIM
+
+##### EWK Samples #####
+
+EWK_2L2J_madgraph_herwig:
+  crossSection: EWK_2L2J_MLL50_MJJ120
+  generator: madgraph
+  miniAOD: /EWK_2L2J_TuneCH3_13p6TeV_madgraph-herwig7/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v2/MINIAODSIM
+  nanoAOD:
+    v12: /EWK_2L2J_TuneCH3_13p6TeV_madgraph-herwig7/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+
+EWK_2Mu2J_MLL_105to160_herwig:
+  crossSection: EWK_2Mu2J_MLL105to160_MJJ120
+  generator: madgraph
+  nanoAOD:
+    v12: /EWK_2Mu2J_Bin-MLL-105to160_TuneCH3_13p6TeV_madgraph-herwig7/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+
+EWK_2Mu2J_MLL_105to160_pythia:
+  crossSection: EWK_2Mu2J_MLL105to160_MJJ120
+  generator: madgraph
+  nanoAOD:
+    v12: /EWK-2Mu2J_M2Mu-105to160_M2J-120_TuneCP5_13p6TeV_madgraph-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+
+### Higgs samples ###
+GluGluHto2Mu:
+  crossSection: GluGluHto2Mu
+  generator: powheg
+  miniAOD: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v3/MINIAODSIM
+  nanoAOD:
+    v12: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v3/NANOAODSIM
+GluGluHto2Mu_MiNNLO:
+  crossSection: GluGluHto2Mu
+  generator: powheg
+  miniAOD: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powhegMiNNLO-pythia8/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v2/MINIAODSIM
+  nanoAOD:
+    v12: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powhegMiNNLO-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+
+VBFHto2Mu_M125_powheg:
+  crossSection: VBFHto2Mu
+  generator: powheg
+  nanoAOD:
+    v12: /VBFHto2Mu_M-125_TuneCP5_withDipoleRecoil_13p6TeV_powheg-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v3/NANOAODSIM
+VBFHto2Mu_M125_tuneCP5Up_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcanlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-125_TuneCP5Up_13p6TeV_amcatnlo-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+VBFHto2Mu_M125_tuneCP5Down_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcanlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-125_TuneCP5Down_13p6TeV_amcatnlo-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+VBFHto2Mu_M120_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcanlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-120_TuneCP5_13p6TeV_amcatnlo-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+VBFHto2Mu_M125_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcanlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-125_TuneCP5_13p6TeV_amcatnlo-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+VBFHto2Mu_M130_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcanlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-130_TuneCP5_13p6TeV_amcatnlo-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM
+ZH_Hto2Mu:
+  crossSection: ZH_Hto2Mu_ZtoAll
+  generator: powheg
+  miniAOD: /ZH_Hto2Mu_ZtoAll_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v3/MINIAODSIM
+  nanoAOD:
+    v12: /ZH_Hto2Mu_ZtoAll_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v3/NANOAODSIM
+WminusH_Hto2Mu:
+  crossSection: WminusH_Hto2Mu_WtoAll
+  generator: powheg
+  miniAOD: /WminusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v3/MINIAODSIM
+  nanoAOD:
+    v12: /WminusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v3/NANOAODSIM
+WplusH_Hto2Mu:
+  crossSection: WplusH_Hto2Mu_WtoAll
+  generator: powheg
+  miniAOD: /WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v3/MINIAODSIM
+  nanoAOD:
+    v12: /WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v3/NANOAODSIM
+TTH_Hto2Mu:
+  crossSection: TTH_Hto2Mu
+  generator: powheg
+  miniAOD: /TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v3/MINIAODSIM
+  nanoAOD:
+    v12: /TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer22NanoAODv12-130X_mcRun3_2022_realistic_v5-v3/NANOAODSIM
+
+#### private productions ####
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/{}/Run3Summer2022-NANOAODSIMv12/241010_133402/
   # dirName: "0000"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext1:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole/Run3Summer2022-NANOAODSIMv12/241010_133402/
   dirName: "0001"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_ext2:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole/Run3Summer2022-NANOAODSIMv12/241010_133402/
   dirName: "0002"
-
 LLJJ_SM_M-50_MJJ120_13p6TeV_dipole:
   crossSection: LLJJ_SM_M-50_MJJ120_13p6TeV_dipole
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M-50_MJJ120_13p6TeV_dipole/Run3Summer2022-NANOAODSIMv12/241010_133237/
   dirName: "0000"
-
 LLJJ_SM_M-50_MJJ120_13p6TeV_dipole_ext1:
   crossSection: LLJJ_SM_M-50_MJJ120_13p6TeV_dipole
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M-50_MJJ120_13p6TeV_dipole/Run3Summer2022-NANOAODSIMv12/241010_133237/
   dirName: "0001"
-
 LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7:
   crossSection: LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7/Run3Summer2022-NANOAODSIMv12/241011_074040/
   dirName: "0000"
-
 LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext1:
   crossSection: LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7/Run3Summer2022-NANOAODSIMv12/241011_074040/
   dirName: "0001"
-
 LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7_ext2:
   crossSection: LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M-50_MJJ120_13p6TeV_herwig7/Run3Summer2022-NANOAODSIMv12/241011_074040/
   dirName: "0002"
-
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0000"
-
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext1:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0001"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext2:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0002"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext3:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0003"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext4:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0004"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext5:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0005"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext6:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0006"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext7:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0007"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext8:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0008"
-
 LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter_ext9:
   crossSection: LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/LLJJ_SM_M105-160_MJJ120_13p6TeV_dipole_vbffilter/Run3Summer2022-NANOAODSIMv12/250402_165919/
   dirName: "0009"
 
-DYto2Mu_MLL_105to160_amcatnloFXFX:
-  crossSection: DYto2Mu_MLL_105to160_amcatnloFXFX
-  crossSectionStitch: DYto2Mu_MLL_105to160_amcatnloFXFX
-  generator: amcatnlo
-  miniAOD: /DYto2Mu_MLL_105to160_amcatnloFXFX/Run3Summer22MiniAODv4-130X_mcRun3_2022_realistic_v5-v1/MINIAODSIM
-
-# missing entries to add:
-# DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
-# DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
-# dymumu012j_5f_NLO_FXFX_M105to180 # no xs available
-# dymumu012j_5f_NLO_FXFX_M105to180_vbffilter # no xs available
-# DY012j_NLO_5f # no xs available
-
 DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8:
   crossSection: DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
   dirName: "0000"
-
 DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8_ext1:
   crossSection: DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141647/
   dirName: "0001"
-
 DYToMuMu-M50_13p6TeV_MiNNLO_pythia8:
   crossSection: DYto2L_M_50_amcatnloFXFX # DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/DYToMuMu-M50_13p6TeV_MiNNLO_pythia8/Run3Summer2022-NANOAODSIMv12-POWEHGFIX/241205_141556/
   dirName: "0000"
-
 DYToMuMu-M50_13p6TeV_MiNNLO_pythia8_ext1:
   crossSection: DYto2L_M_50_amcatnloFXFX # DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
   generator: pythia
@@ -150,15 +217,20 @@ VBFHto2Mu_M-125_13p6TeV_powheg-herwig7:
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/VBFHto2Mu_M-125_13p6TeV_powheg-herwig7/Run3Summer2022-NANOAODSIMv12/241010_115528/
   dirName: "0000"
-
 VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext1:
   crossSection: VBFHto2Mu
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/VBFHto2Mu_M-125_13p6TeV_powheg-herwig7/Run3Summer2022-NANOAODSIMv12/241010_115528/
   dirName: "0001"
-
 VBFHto2Mu_M-125_13p6TeV_powheg-herwig7_ext2:
   crossSection: VBFHto2Mu
   generator: pythia
   fs_nanoAOD: T2_CH_CERN:/store/group/phys_higgs/cmshmm/amarini/VBFHto2Mu_M-125_13p6TeV_powheg-herwig7/Run3Summer2022-NANOAODSIMv12/241010_115528/
   dirName: "0002"
+
+# missing entries to add:
+# DYToMuMu-M50_13p6TeV_MiNNLO_pythia8
+# DYToMuMu-M105-180_13p6TeV_MiNNLO_pythia8
+# dymumu012j_5f_NLO_FXFX_M105to180 # no xs available
+# dymumu012j_5f_NLO_FXFX_M105to180_vbffilter # no xs available
+# DY012j_NLO_5f # no xs available
