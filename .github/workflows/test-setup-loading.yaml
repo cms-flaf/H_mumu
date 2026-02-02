@@ -16,9 +16,7 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
+      uses: cms-flaf/FLAF/.github/actions/checkout-flaf@main
     
     - name: Set up Python
       uses: actions/setup-python@v5
