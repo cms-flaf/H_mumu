@@ -318,7 +318,7 @@ GluGluHto2Mu_MiNNLO:
   name: "GluGluHto2Mu"
   color: "kCyan"
   color_mplhep: cyan
-  datasets: []
+  datasets: [ ]
 
 GluGluHto2Mu:
   name: "GluGluHto2Mu"
