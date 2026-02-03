@@ -414,7 +414,7 @@ def addAllVariables(
             if f"mu{leg_idx+1}_{muon_obs}" in dfw.df.GetColumnNames():
                 continue
             if "p4" in muon_obs:
-                print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
+                # print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
                 dfw.df = dfw.df.Define(
                     f"mu{leg_idx+1}_{muon_obs}", f"{col}.at(mu{leg_idx+1}_idx)"
                 )

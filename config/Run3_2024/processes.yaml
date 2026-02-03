@@ -21,7 +21,7 @@ DY_M_10to50:
     - DYto2Tau_M_10to50_amcatnloFXFX
 
 DYto2E_M_50:
-  processors: *DY_processors
+  processors: *DY_processors_singleFlavor
   corrections:
     Vpt:
       type: DY
@@ -43,7 +43,7 @@ DYto2E_M_50:
     - DYto2E_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2Mu_M_50:
-  processors: *DY_processors
+  processors: *DY_processors_singleFlavor
   corrections:
     Vpt:
       type: DY
@@ -65,7 +65,7 @@ DYto2Mu_M_50:
     - DYto2Mu_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2Tau_M_50:
-  processors: *DY_processors
+  processors: *DY_processors_singleFlavor
   corrections:
     Vpt:
       type: DY

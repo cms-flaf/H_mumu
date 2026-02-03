@@ -4,10 +4,46 @@ DY:
   color: "kAzure+7"
   color_mplhep: lightskyblue
   sub_processes:
-    - DY_M_10to50
-    - DYto2E_M_50
-    - DYto2Mu_M_50
-    - DYto2Tau_M_50
+    # - DY_M_10to50 # nanoAOD do not exist ...
+    - DYto2L_InclusivePlusBinned
+
+DYto2L:
+  name: "DY"
+  color: "kAzure+7"
+  color_mplhep: lightskyblue
+  datasets:
+    - DYto2L_M_50_amcatnloFXFX
+DYto2L_jet_binned:
+  processors: *DY_processors_allFlavors
+  corrections:
+    Vpt:
+      type: DY
+  datasets:
+    - DYto2L_M_50_0J_amcatnloFXFX
+    - DYto2L_M_50_1J_amcatnloFXFX
+    - DYto2L_M_50_2J_amcatnloFXFX
+
+DYto2L_InclusivePlusBinned:
+  processors: *DY_processors_allFlavors
+  corrections:
+    Vpt:
+      type: DY
+  datasets:
+    - DYto2L_M_50_amcatnloFXFX
+    - DYto2L_M_50_0J_amcatnloFXFX
+    - DYto2L_M_50_1J_amcatnloFXFX
+    - DYto2L_M_50_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_40to100_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_100to200_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_200to400_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_400to600_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_600_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_40to100_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_100to200_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_200to400_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_400to600_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_600_2J_amcatnloFXFX
+
 
 DY_M_10to50:
   name: "DY M10to50"
@@ -16,17 +52,18 @@ DY_M_10to50:
     Vpt:
       type: DY
   datasets:
-    - DYto2E_M_10to50_amcatnloFXFX
-    - DYto2Mu_M_10to50_amcatnloFXFX
-    - DYto2Tau_M_10to50_amcatnloFXFX
+    - DYto2L_M_10to50_amcatnloFXFX
+    # - DYto2E_M_10to50_amcatnloFXFX
+    # - DYto2Mu_M_10to50_amcatnloFXFX
+    # - DYto2Tau_M_10to50_amcatnloFXFX
 
 DYto2E_M_50:
-  processors: *DY_processors
+  processors: *DY_processors_singleFlavor
   corrections:
     Vpt:
       type: DY
   datasets:
-    - DYto2E_M_50_amcatnloFXFX
+    # - DYto2E_M_50_amcatnloFXFX
     # - DYto2E_M_50_amcatnloFXFX_ext1
     - DYto2E_M_50_0J_amcatnloFXFX
     - DYto2E_M_50_1J_amcatnloFXFX
@@ -43,12 +80,12 @@ DYto2E_M_50:
     - DYto2E_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2Mu_M_50:
-  processors: *DY_processors
+  processors: *DY_processors_singleFlavor
   corrections:
     Vpt:
       type: DY
   datasets:
-    - DYto2Mu_M_50_amcatnloFXFX
+    # - DYto2Mu_M_50_amcatnloFXFX
     # - DYto2Mu_M_50_amcatnloFXFX_ext1
     - DYto2Mu_M_50_0J_amcatnloFXFX
     - DYto2Mu_M_50_1J_amcatnloFXFX
@@ -65,7 +102,7 @@ DYto2Mu_M_50:
     - DYto2Mu_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2Tau_M_50:
-  processors: *DY_processors
+  processors: *DY_processors_singleFlavor
   corrections:
     Vpt:
       type: DY
