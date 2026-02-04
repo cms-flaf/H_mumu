@@ -174,7 +174,7 @@ categories:
 extraFormat_for_triggerMatchingAndSF:
   pt: "bsConstrainedPt"
 muon_pt_for_presel: "bsConstrainedPt"
-mu_pt_for_triggerMatchingAndSF: "bsConstrainedPt"
+mu_pt_for_triggerMatchingAndSF: "pt_Central"
 mu_pt_for_selection: "pt_Central"
 
 mu_pt_for_definitions: "Central" # here options are different: corr, nano, bsConstrainedPt, roccor
