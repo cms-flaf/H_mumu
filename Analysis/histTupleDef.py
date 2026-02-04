@@ -126,9 +126,17 @@ def DefineWeightForHistograms(
     isCentral = uncName == "Central"
     muID_WP_for_SF = global_params.get("muIDWP", "Loose")
     muIso_WP_for_SF = global_params.get("muIsoWP", "Medium")
-
+    enable_trigger = "trigger" in corrections.to_apply.keys()
+    enable_ID = "mu" in corrections.to_apply.keys()
     total_weight_expression = (
-        analysis.GetWeight("muMu", process_name, muID_WP_for_SF, muIso_WP_for_SF)
+        analysis.GetWeight(
+            "muMu",
+            process_name,
+            muID_WP_for_SF,
+            muIso_WP_for_SF,
+            enable_trigger=enable_trigger,
+            enable_ID=enable_ID,
+        )
         if process_group != "data"
         else "1"
     )  # are we sure?
