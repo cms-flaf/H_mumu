@@ -98,8 +98,9 @@ def GetMuMuP4Observables(df):
     for mu_idx in [1, 2]:  # tmp patch for back compatibility with old AnaTuples
         if f"mu{mu_idx}_bsConstrainedPt" in df.GetColumnNames():
             if f"mu{mu_idx}_pt_bsConstrained" not in df.GetColumnNames():
+                # print(f"defining mu{mu_idx}_pt_bsConstrainedPt" )
                 df = df.Define(
-                    f"mu{mu_idx}_pt_bsConstrained", f"mu{mu_idx}_bsConstrainedPt"
+                    f"mu{mu_idx}_pt_bsConstrainedPt", f"mu{mu_idx}_bsConstrainedPt"
                 )
     pt_def = [col for col in df.GetColumnNames() if f"mu1_pt_" in col]
     # print(f"pt defined are: {pt_def}")
@@ -107,6 +108,7 @@ def GetMuMuP4Observables(df):
     # print(f"suffixes are : {muon_p4_to_define}")
     for pt_suffix in muon_p4_to_define:
         for idx in [0, 1]:
+            # print(f"defining mu{idx+1}_p4_{pt_suffix}")
             df = df.Define(
                 f"mu{idx+1}_p4_{pt_suffix}",
                 f"ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(mu{idx+1}_pt_{pt_suffix},mu{idx+1}_eta,mu{idx+1}_phi,mu{idx+1}_mass)",

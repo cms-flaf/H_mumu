@@ -158,7 +158,8 @@ def SaveVarsForNNInput(variables):
 
 def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
     weights_to_apply = [
-        "weight_base",
+        "weight_MC_Lumi_pu", # tmp patch for current anatuple version
+        # "weight_base",
         # "weight_XS",
         # "newDYWeight_ptLL_nano"
         # "newDYWeight_ptLL_bsConstrained"
@@ -298,4 +299,8 @@ def PrepareDFBuilder(dfBuilder):
     dfBuilder.df = VBFJetMuonsObservables(dfBuilder.df)
     dfBuilder.defineRegions()
     dfBuilder.defineCategories()
+    return dfBuilder
+
+def PrepareDfForVBFNetworkInputs(dfBuilder):
+    dfBuilder.df = VBFNetJetCollectionDef(dfBuilder.df)
     return dfBuilder
