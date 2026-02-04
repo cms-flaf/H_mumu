@@ -1,21 +1,128 @@
+#### DY samples ####
+DYto2L_2Jets_EWK_MLL_50:
+  crossSection: DYto2L_2Jets_EWK_MLL_50_LO
+  crossSectionStitch: DYto2Mu_MLL_105to160_amcatnloFXFX
+  generator: amcatnlo
+  miniAOD: /DYto2L-2Jets-EWK_MLL-50_TuneCP5_13p6TeV_madgraph-pythia8/Run3Summer23BPixMiniAODv4-130X_mcRun3_2023_realistic_postBPix_v6-v2/MINIAODSIM
+  nanoAOD:
+    v12: /DYto2L-2Jets-EWK_MLL-50_TuneCP5_13p6TeV_madgraph-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+
+DYto2Mu_MLL_105to160_amcatnloFXFX:
+  crossSection: DYto2Mu_MLL_105to160_amcatnloFXFX
+  crossSectionStitch: DYto2Mu_MLL_105to160_amcatnloFXFX
+  generator: amcatnlo
+  miniAOD: /DYto2Mu-2Jets_MLL-105To160_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/Run3Summer23BPixMiniAODv4-130X_mcRun3_2023_realistic_postBPix_v6-v2/MINIAODSIM
+  nanoAOD:
+    v12: /DYto2Mu-2Jets_MLL-105To160_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+
+# to be added - currently no NanoAOD available: /DYJetsToMuMu_H2ErratumFix_TuneCP5_13p6TeV-powhegMiNNLO-pythia8-photos/Run3Summer23MiniAODv4-PUAVE1_130X_mcRun3_2023_realistic_v15-v2/MINIAODSIM
+
+##### EWK Samples #####
+
+EWK_2L2J_madgraph_herwig:
+  crossSection: EWK_2L2J_MLL50_MJJ120
+  generator: madgraph
+  nanoAOD:
+    v12: /EWK_2L2J_TuneCH3_13p6TeV_madgraph-herwig7/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+
+EWK_2Mu2J_MLL_105to160_herwig:
+  crossSection: EWK_2Mu2J_MLL105to160_MJJ120
+  generator: madgraph
+  nanoAOD:
+    v12: /EWK_2Mu2J_Bin-MLL-105to160_TuneCH3_13p6TeV_madgraph-herwig7/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+
+EWK_2Mu2J_MLL_105to160_pythia:
+  crossSection: EWK_2Mu2J_MLL105to160_MJJ120
+  generator: madgraph
+  nanoAOD:
+    v12: /EWK-2Mu2J_M2Mu-105to160_M2J-120_TuneCP5_13p6TeV_madgraph-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v3/NANOAODSIM
+
+
+#### TTLNu-EWK Samples ####
+TTLNu-EWK_amcatnlo:
+  crossSection: TTLNu_EWK
+  generator: amcatnlo
+  nanoAOD:
+    v12: /TTLNu-EWK_TuneCP5_13p6TeV_amcatnlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+
+### Other EWK samples ###
+WZto3LNu-2Jets_EWK_QCD:
+  crossSection: WZto3LNu_2Jets_EWK_QCD
+  generator: madgraph
+  nanoAOD:
+    v12: /WZto3LNu-2Jets_EWK-QCD_TuneCP5_13p6TeV_madgraph-madspin-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+
+WmWmJJ_EWK:
+  crossSection: WmWmJJ_EWK
+  generator: powheg
+  nanoAOD:
+    v12: /WmWmJJ-EWK_TuneCP5_13p6TeV-powheg-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+
+### Higgs samples ###
 GluGluHto2Mu:
   crossSection: GluGluHto2Mu
   generator: powheg
+  miniAOD: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixMiniAODv4-130X_mcRun3_2023_realistic_postBPix_v6-v2/MINIAODSIM
+  nanoAOD:
+    v12: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+GluGluHto2Mu_MiNNLO:
+  crossSection: GluGluHto2Mu
+  generator: powheg
+  miniAOD: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powhegMiNNLO-pythia8/Run3Summer23BPixMiniAODv4-130X_mcRun3_2023_realistic_postBPix_v6-v2/MINIAODSIM
+  nanoAOD:
+    v12: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powhegMiNNLO-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+ZH_Hto2Mu:
+  crossSection: ZH_Hto2Mu_ZtoAll
+  generator: powheg
+  miniAOD: /ZH_Hto2Mu_ZtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23BPixMiniAODv4-130X_mcRun3_2023_realistic_postBPix_v6-v2/MINIAODSIM
+  nanoAOD:
+    v12: /ZH_Hto2Mu_ZtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+WplusH_Hto2Mu:
+  crossSection: WplusH_Hto2Mu_WtoAll
+  generator: powheg
+  miniAOD: /WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23BPixMiniAODv4-130X_mcRun3_2023_realistic_postBPix_v6-v2/MINIAODSIM
+  nanoAOD:
+    v12: /WplusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+WminusH_Hto2Mu:
+  crossSection: WminusH_Hto2Mu_WtoAll
+  generator: powheg
+  miniAOD: /WminusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23BPixMiniAODv4-130X_mcRun3_2023_realistic_postBPix_v6-v2/MINIAODSIM
+  nanoAOD:
+    v12: /WminusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
 
+VBFHto2Mu_M125_powheg:
+  crossSection: VBFHto2Mu
+  generator: powheg
+  nanoAOD:
+    v12: /VBFHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+VBFHto2Mu_M125_tuneCP5Up_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcatnlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-125_TuneCP5Up_13p6TeV_amcatnlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+VBFHto2Mu_M125_tuneCP5Down_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcatnlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-125_TuneCP5Down_13p6TeV_amcatnlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+VBFHto2Mu_M120_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcatnlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-120_TuneCP5_13p6TeV_amcatnlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+VBFHto2Mu_M125_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcatnlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-125_TuneCP5_13p6TeV_amcatnlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
+VBFHto2Mu_M130_amcatnlo:
+  crossSection: VBFHto2Mu
+  generator: amcanlo
+  nanoAOD:
+    v12: /VBFH_Hto2Mu_M-130_TuneCP5_13p6TeV_amcatnlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
 TTH_Hto2Mu:
   crossSection: TTH_Hto2Mu
   generator: powheg
-
-VBFHto2Mu:
-  crossSection: VBFHto2Mu
-  generator: powheg
-
-WminusH_Hto2Mu_WtoAll:
-  crossSection: WminusH_Hto2Mu_WtoAll
-  generator: powheg
-WplusH_Hto2Mu_WtoAll:
-  crossSection: WplusH_Hto2Mu_WtoAll
-  generator: powheg
-ZH_Hto2Mu_ZtoAll:
-  crossSection: ZH_Hto2Mu_ZtoAll
-  generator: powheg
+  miniAOD: /TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixMiniAODv4-130X_mcRun3_2023_realistic_postBPix_v6-v2/MINIAODSIM
+  nanoAOD:
+    v12: /TTH_Hto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
