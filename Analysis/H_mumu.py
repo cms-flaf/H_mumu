@@ -188,7 +188,7 @@ def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
 
     # should be moved to config
     weights_to_apply.extend(ID_weights_dict[channel])
-    weights_to_apply.extend(trg_weights_dict[channel])
+    # weights_to_apply.extend(trg_weights_dict[channel])
 
     total_weight = "*".join(weights_to_apply)
     # print(total_weight)
