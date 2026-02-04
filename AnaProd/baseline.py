@@ -50,9 +50,9 @@ def RecoHttCandidateSelection(df, config):
 
 def LowerMassCut(df, suffixes=None):
     if suffixes is None:
+        suffixes = []
         for dfCol in df.GetColumnNames():
             if f"mu1_p4" in dfCol and "delta" not in dfCol:
-                print(dfCol)
                 suffixes.append("_".join(dfCol.split("_")[1:]))
     for suffix in suffixes:
         df = df.Define(f"m_mumu_{suffix}", f"(mu1_{suffix}+mu2_{suffix}).M()")
