@@ -174,7 +174,7 @@ categories:
 extraFormat_for_triggerMatchingAndSF:
   pt: "bsConstrainedPt"
 muon_pt_for_presel: "bsConstrainedPt"
-mu_pt_for_triggerMatchingAndSF: "pt_Central"
+mu_pt_for_triggerMatchingAndSF: "bsConstrainedPt"
 mu_pt_for_selection: "pt_Central"
 
 mu_pt_for_definitions: "Central" # here options are different: corr, nano, bsConstrainedPt, roccor
@@ -257,14 +257,14 @@ corrections:
       mediumId: mediumId
       looseId: looseId
       p4: p4_bsConstrainedPt # p4_pt_nano
-  # trigger:
-  #   stage: HistTuple
-  #   mode: SF
-  #   extraFormat:
-  #     pt: "bsConstrainedPt"
+  trigger:
+    stage: HistTuple
+    mode: SF
+    extraFormat:
+      pt: "bsConstrainedPt"
   muScaRe:
-    # stage: AnaTuple # later it will become anaTuple.
-    stage: HistTuple # later it will become anaTuple.
+    stage: AnaTuple
+    # stage: HistTuple # later it will become anaTuple.
     mu_pt_for_ScaReApplication: "bsConstrainedPt"
   lumi: { stage: AnaTuple }
   xs: { stage: AnaTuple }

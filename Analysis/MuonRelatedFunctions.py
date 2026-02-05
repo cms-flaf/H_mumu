@@ -97,7 +97,7 @@ def GetMuMuMassResolution(df, pt_to_use):
 def GetMuMuP4Observables(df):
     for mu_idx in [1, 2]:  # tmp patch for back compatibility with old AnaTuples
         if f"mu{mu_idx}_bsConstrainedPt" in df.GetColumnNames():
-            if f"mu{mu_idx}_pt_bsConstrained" not in df.GetColumnNames():
+            if f"mu{mu_idx}_pt_bsConstrainedPt" not in df.GetColumnNames():
                 # print(f"defining mu{mu_idx}_pt_bsConstrainedPt" )
                 df = df.Define(
                     f"mu{mu_idx}_pt_bsConstrainedPt", f"mu{mu_idx}_bsConstrainedPt"
