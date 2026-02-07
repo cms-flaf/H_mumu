@@ -156,15 +156,12 @@ def SaveVarsForNNInput(variables):
     return variables
 
 
-def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
+def GetWeight(
+    channel, process_name, muID_WP_for_SF, muIso_WP_for_SF, enable_ID, enable_trigger
+):
     weights_to_apply = [
         "weight_base",
-        # "weight_XS",
-        # "newDYWeight_ptLL_nano"
-        # "newDYWeight_ptLL_bsConstrained"
-        # "weight_DYw_DYWeightCentral",
-        # "weight_EWKCorr_VptCentral",
-    ]  # ,"weight_EWKCorr_ewcorrCentral"] #
+    ]
     # quick fix for DY weights. In future should pass the full dataset and process info to DefineWeightForHistograms
     if process_name.startswith("DY"):
         weights_to_apply.extend(
@@ -186,8 +183,10 @@ def GetWeight(channel, process_name, muID_WP_for_SF, muIso_WP_for_SF):
     }
 
     # should be moved to config
-    weights_to_apply.extend(ID_weights_dict[channel])
-    weights_to_apply.extend(trg_weights_dict[channel])
+    if enable_ID:
+        weights_to_apply.extend(ID_weights_dict[channel])
+    if enable_trigger:
+        weights_to_apply.extend(trg_weights_dict[channel])
 
     total_weight = "*".join(weights_to_apply)
     # print(total_weight)

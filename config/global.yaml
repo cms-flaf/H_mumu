@@ -263,7 +263,7 @@ corrections:
     extraFormat:
       pt: "bsConstrainedPt"
   muScaRe:
-    stage: AnaTuple # later it will become anaTuple.
+    stage: AnaTuple
     # stage: HistTuple # later it will become anaTuple.
     mu_pt_for_ScaReApplication: "bsConstrainedPt"
   lumi: { stage: AnaTuple }
