@@ -3,17 +3,15 @@
     module: FLAF.Processors.MCStitching
     class: MCStitcher
     config: FLAF/config/Processors/stitching_DY_amcatnlo_Vpt_NpNLO_allFlavors.yaml
-    stages: [ AnaCache, AnaTuple ]
+    stages: [ AnaTuple, AnaTupleMerge ]
     dependency_level:
-      AnaCache: dataset
       AnaTuple: process
 
 .DY_processors_singleFlavor: &DY_processors_singleFlavor
   - name: Stitcher
     module: FLAF.Processors.MCStitching
     class: MCStitcher
-    config: FLAF/config/Processors/stitching_DY_amcatnlo_Vpt_NpNLO_singleFlavor.yaml
-    stages: [ AnaCache, AnaTuple ]
+    config: FLAF/config/Processors/stitching_DY_amcatnlo_Vpt_NpNLO.yaml
+    stages: [ AnaTuple, AnaTupleMerge ]
     dependency_level:
-      AnaCache: dataset
       AnaTuple: process
