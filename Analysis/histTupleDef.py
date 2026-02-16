@@ -76,8 +76,8 @@ def DefineWeightForHistograms(
 ):
     is_central = uncName == central
     global central_df_weights_computed
+    corrections = Corrections.getGlobal()
     if not isData and (not central_df_weights_computed or not df_is_central):
-        corrections = Corrections.getGlobal()
         lepton_legs = ["mu1", "mu2"]
         offline_legs = ["mu1", "mu2"]
         triggers_to_use = set()

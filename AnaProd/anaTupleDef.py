@@ -279,6 +279,18 @@ defaultColToSave = [
     "BeamSpot_zError",
 ]
 
+LHE_vars = [
+    # "LHEPart_eta",
+    # "LHEPart_incomingpz",
+    # "LHEPart_mass",
+    # "LHEPart_pdgId",
+    # "LHEPart_phi",
+    # "LHEPart_pt",
+    # "LHEPart_spin",
+    # "LHEPart_status",
+    "LHE_NpNLO",
+    "LHE_Vpt",
+]
 additional_VBFStudies_vars = [
     "GenJet_eta",
     "GenJet_hadronFlavour",
@@ -461,10 +473,10 @@ def addAllVariables(
                 var_type="int",
                 default="-10",
             )
-    dfw.Apply(
-        AnaBaseline.LowerMassCut,
-        suffixes=["p4_Central", "p4_nano", "p4_bsConstrainedPt"],
-    )
+    # dfw.Apply(
+    #     AnaBaseline.LowerMassCut,
+    #     suffixes=["p4_Central", "p4_nano", "p4_bsConstrainedPt"],
+    # )
     jet_obs_names = []
     for jvar in ["pt", "eta", "phi", "mass"]:
         jet_obs_name = f"Jet_{jvar}"
@@ -482,7 +494,7 @@ def addAllVariables(
     for recoObsNew in (
         PUObservables
         + FSRPhotonObservables
-        + SoftActivityJetObservables
+        + SoftActivityJetObservables + LHE_vars
         # + additional_VBFStudies_vars
     ):
         if recoObsNew in dfw.df.GetColumnNames():
@@ -505,7 +517,8 @@ def addAllVariables(
             trigger_class.ApplyTriggers,
             lepton_legs,
             isData,
-            applyTriggerFilter,
+            # applyTriggerFilter,
+            False, # --> for sync purposes
             global_params.get("extraFormat_for_triggerMatchingAndSF", {}),
         )
         dfw.colToSave.extend(hltBranches)
