@@ -3,7 +3,7 @@ DY:
   name: "DY"
   color: "kAzure+7"
   color_mplhep: lightskyblue
-  sub_processes: 
+  sub_processes:
     - DYto2L_InclusivePlusBinned
 
 DYto2L:
