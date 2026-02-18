@@ -21,7 +21,7 @@ met_type: "PuppiMET"
 treeName: "Events"
 nEventsPerFile:
   data: 1000000
-  signal: 1000000
+  signals: 1000000
   backgrounds: 1000000
 
 channelSelection:
