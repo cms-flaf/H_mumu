@@ -69,15 +69,20 @@ def LeptonVeto(df, muon_pt_to_use="pt_nano"):
     print(f"Using muon p4: {muon_sel_p4} for lepton veto preselection")
     df = df.Define(
         "Muon_B0",
-        f"""
-        v_ops::pt({muon_sel_p4}) > 10 && abs(v_ops::eta({muon_sel_p4})) < 2.4 && (Muon_looseId && Muon_iso < 0.4)""",  #  loose id and very loose iso
+        f"""v_ops::pt({muon_sel_p4}) > 10 && abs(v_ops::eta({muon_sel_p4})) < 2.4 """,  #  loose id and very loose iso
+        # v_ops::pt({muon_sel_p4}) > 10 && abs(v_ops::eta({muon_sel_p4})) < 2.4 && (Muon_looseId && Muon_iso < 0.4)""",  #  loose id and very loose iso
+        # f"""
+        # v_ops::pt(Muon_p4) > 20 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""", # uncomment for sync purposes
+
         # v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25) && abs(Muon_dz) < 1. && abs(Muon_dxy) < 0.5""",
     )
 
     ####  COMPARISON WITH RUN2 ####
     # # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246
-    df = df.Filter("Muon_idx[Muon_B0].size()==2", "No extra muons")
-
+    df = df.Filter("Muon_idx[Muon_B0].size()==2", "Exactly 2 muons")
+    df = df.Define("mu1_idx", "Muon_idx[Muon_B0][0]")
+    df = df.Define("mu2_idx", "Muon_idx[Muon_B0][1]")
+    df = df.Filter("Muon_charge[mu1_idx]*Muon_charge[mu2_idx]<0", "OS muons")
     ####  COMPARISON WITH RUN2 ####
     # Same electron selection w.r.t. Run 2 -- See AN/2019_185 lines 114 - 116
     df = df.Define(
@@ -88,8 +93,6 @@ def LeptonVeto(df, muon_pt_to_use="pt_nano"):
     ####  COMPARISON WITH RUN2 ####
     # electron veto, same w.r.t. Run3 - See AN/2019_205 lines 246 - 248
     df = df.Filter("Electron_idx[Electron_B0_veto].size() == 0", "No extra electrons")
-    df = df.Define("mu1_idx", "Muon_idx[Muon_B0][0]")
-    df = df.Define("mu2_idx", "Muon_idx[Muon_B0][1]")
     return df
 
 
@@ -136,7 +139,7 @@ def getChannelLegs(channel):
         ch_str = ch_str[len(obj_name):]
     return legs
 
-def PassGenAcceptance(df):
+def PassGenAcceptance(df):code
     df = df.Filter("genHttCandidate.get() != nullptr", "genHttCandidate present")
     return df.Filter("PassGenAcceptance(*genHttCandidate)", "genHttCandidate Acceptance")
 
