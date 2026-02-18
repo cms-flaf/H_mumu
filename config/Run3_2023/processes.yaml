@@ -3,13 +3,8 @@ DY:
   name: "DY"
   color: "kAzure+7"
   color_mplhep: lightskyblue
-  sub_processes:
-    # - DY_M_10to50 # nanoAOD do not exist ...
+  sub_processes: 
     - DYto2L_InclusivePlusBinned
-    - DYto2L
-    - DYto2L_PtBinned
-    - DYto2L_jet_binned
-
 DYto2L:
   processors: *DY_processors_allFlavors
   name: "DY"
