@@ -2,6 +2,13 @@ anaTupleDef: AnaProd/anaTupleDef.py
 histTupleDef: Analysis/histTupleDef.py
 analysis_import: Analysis.H_mumu
 phys_model: BaseModel
+
+WLCGFileSystem:
+  remotePathCacheHost: cms-flaf.cern.ch
+  remotePathCachePort: 5000
+  localPathCacheValidity: 600
+  verbose: 0
+
 signal_types:
   - ggH
   - VBFH
@@ -12,6 +19,11 @@ storeFatJets: False
 met_type: "PuppiMET"
 
 treeName: "Events"
+nEventsPerFile:
+  data: 1000000
+  signal: 1000000
+  backgrounds: 1000000
+
 channelSelection:
   - muMu
 

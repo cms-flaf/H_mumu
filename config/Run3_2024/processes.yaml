@@ -31,16 +31,16 @@ DYto2E_M_50:
     - DYto2E_M_50_0J_amcatnloFXFX
     - DYto2E_M_50_1J_amcatnloFXFX
     - DYto2E_M_50_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_40to100_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_100to200_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_200to400_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_400to600_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_600_1J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_40to100_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_100to200_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_200to400_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_400to600_2J_amcatnloFXFX
-    - DYto2E_M_50_PTLL_600_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_40to100_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_100to200_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_200to400_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_400to600_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_600_1J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_40to100_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_100to200_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_200to400_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_400to600_2J_amcatnloFXFX
+    # - DYto2E_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2Mu_M_50:
   processors: *DY_processors_singleFlavor
@@ -53,16 +53,16 @@ DYto2Mu_M_50:
     - DYto2Mu_M_50_0J_amcatnloFXFX
     - DYto2Mu_M_50_1J_amcatnloFXFX
     - DYto2Mu_M_50_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_40to100_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_100to200_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_200to400_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_400to600_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_600_1J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_40to100_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_100to200_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_200to400_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_400to600_2J_amcatnloFXFX
-    - DYto2Mu_M_50_PTLL_600_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_40to100_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_100to200_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_200to400_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_400to600_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_600_1J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_40to100_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_100to200_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_200to400_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_400to600_2J_amcatnloFXFX
+    # - DYto2Mu_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2Tau_M_50:
   processors: *DY_processors_singleFlavor
@@ -204,9 +204,9 @@ VH_inclusive:
     - ZH_Hto2B_Zto2Q
     - ggZH_Hto2B_Zto2L
     - ggZH_Hto2B_Zto2Q
-    - WminusH_Hto2B_Wto2Q
+    # - WminusH_Hto2B_Wto2Q
     - WminusH_Hto2B_WtoLNu
-    - WplusH_Hto2B_Wto2Q
+    # - WplusH_Hto2B_Wto2Q
     - WplusH_Hto2B_WtoLNu
 
 ############## VVV inclusive ##############
@@ -256,7 +256,7 @@ TTX:
     - TTWH
     - TTWW
     - TTZH_ZHto4B
-    - TTZZ_ZZto4B
+    # - TTZZ_ZZto4B
     - TTZ_Zto2Q
 
 
