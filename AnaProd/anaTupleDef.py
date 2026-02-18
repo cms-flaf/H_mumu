@@ -507,7 +507,8 @@ def addAllVariables(
     for recoObsNew in (
         PUObservables
         + FSRPhotonObservables
-        + SoftActivityJetObservables + LHE_vars
+        + SoftActivityJetObservables
+        + LHE_vars
         # + additional_VBFStudies_vars
     ):
         if recoObsNew in dfw.df.GetColumnNames():
