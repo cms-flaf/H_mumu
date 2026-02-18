@@ -69,17 +69,17 @@ GluGluHto2Mu_MiNNLO: # currently missing
   miniAOD:
   nanoAOD:
     v15:
-VBFHto2Mu_M125_powheg:
+VBFHto2Mu_m125_powheg:
   crossSection: VBFHto2Mu
   generator: powheg
   nanoAOD:
     v15: /VBFH-Hto2Mu_Par-M-125_TuneCP5_13p6TeV_powheg-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
-VBFHto2Mu_M125_tuneCP5Up_amcatnlo:
+VBFHto2Mu_m125_tuneCP5Up_amcatnlo:
   crossSection: VBFHto2Mu
   generator: amcatnlo
   nanoAOD:
     v15: /VBF-Hto2Mu_Par-M-125_TuneCP5Up_13p6TeV_amcatnlo-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
-VBFHto2Mu_M125_tuneCP5Down_amcatnlo:
+VBFHto2Mu_m125_tuneCP5Down_amcatnlo:
   crossSection: VBFHto2Mu
   generator: amcatnlo
   nanoAOD:
@@ -89,7 +89,7 @@ VBFHto2Mu_M120_amcatnlo:
   generator: amcatnlo
   nanoAOD:
     v15: /VBF-Hto2Mu_Par-M-120_TuneCP5_13p6TeV_amcatnlo-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
-VBFHto2Mu_M125_amcatnlo:
+VBFHto2Mu_m125_amcatnlo:
   crossSection: VBFHto2Mu
   generator: amcatnlo
   nanoAOD:
