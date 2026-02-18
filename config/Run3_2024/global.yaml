@@ -3,6 +3,10 @@ nano_version: v15
 nanoAODVersions:
   data: v15
   mc: v15
+ignore_missing_nanoAOD_files:
+  data: False
+  signals: True
+  backgrounds: True
 bTagAlgo: UParTAK4
 corrections:
   btag:
