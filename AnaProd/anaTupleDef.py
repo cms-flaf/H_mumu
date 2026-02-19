@@ -291,18 +291,6 @@ LHE_vars = [
     "LHE_NpNLO",
     "LHE_Vpt",
 ]
-LHE_vars = [
-    # "LHEPart_eta",
-    # "LHEPart_incomingpz",
-    # "LHEPart_mass",
-    # "LHEPart_pdgId",
-    # "LHEPart_phi",
-    # "LHEPart_pt",
-    # "LHEPart_spin",
-    # "LHEPart_status",
-    "LHE_NpNLO",
-    "LHE_Vpt",
-]
 additional_VBFStudies_vars = [
     "GenJet_eta",
     "GenJet_hadronFlavour",
@@ -508,7 +496,6 @@ def addAllVariables(
         PUObservables
         + FSRPhotonObservables
         + SoftActivityJetObservables
-        + LHE_vars
         # + additional_VBFStudies_vars
     ):
         if recoObsNew in dfw.df.GetColumnNames():
