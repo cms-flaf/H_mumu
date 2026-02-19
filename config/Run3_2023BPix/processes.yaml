@@ -4,15 +4,16 @@ DY:
   color: "kAzure+7"
   color_mplhep: lightskyblue
   sub_processes:
-    # - DY_M_10to50 # nanoAOD do not exist ...
     - DYto2L_InclusivePlusBinned
 
 DYto2L:
+  processors: *DY_processors_allFlavors
   name: "DY"
   color: "kAzure+7"
   color_mplhep: lightskyblue
   datasets:
     - DYto2L_M_50_amcatnloFXFX
+
 DYto2L_jet_binned:
   processors: *DY_processors_allFlavors
   corrections:
@@ -22,6 +23,23 @@ DYto2L_jet_binned:
     - DYto2L_M_50_0J_amcatnloFXFX
     - DYto2L_M_50_1J_amcatnloFXFX
     - DYto2L_M_50_2J_amcatnloFXFX
+
+DYto2L_PtBinned:
+  processors: *DY_processors_allFlavors
+  corrections:
+    Vpt:
+      type: DY
+  datasets:
+    - DYto2L_M_50_PTLL_40to100_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_100to200_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_200to400_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_400to600_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_600_1J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_40to100_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_100to200_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_200to400_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_400to600_2J_amcatnloFXFX
+    - DYto2L_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2L_InclusivePlusBinned:
   processors: *DY_processors_allFlavors
@@ -288,14 +306,14 @@ VBFHto2Mu_m125_amcatnlo:
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_M125_amcatnlo
+    - VBFHto2Mu_m125_amcatnlo
 
 VBFHto2Mu_m125_powheg:
   name: "VBFHto2Mu"
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_M125_powheg
+    - VBFHto2Mu_m125_powheg
 
 VBFHto2Mu_m120:
   name: "VBFHto2Mu"
@@ -316,14 +334,14 @@ VBFHto2Mu_m125_tuneDown:
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_M125_tuneCP5Down_amcatnlo
+    - VBFHto2Mu_m125_tuneCP5Down_amcatnlo
 
 VBFHto2Mu_m125_tuneUp:
   name: "VBFHto2Mu"
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_M125_tuneCP5Up_amcatnlo
+    - VBFHto2Mu_m125_tuneCP5Up_amcatnlo
 
 VBFHto2Mu_Herwig:
   name: "VBFHto2Mu_Herwig"
@@ -417,7 +435,7 @@ custom_CI_signal:
   name: "CI -- signals"
   color: "kAzure+10"
   datasets:
-    - VBFHto2Mu_M125_powheg
+    - VBFHto2Mu_m125_powheg
 
 custom_CI_data:
   name: "CI -- data"
