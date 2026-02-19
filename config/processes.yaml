@@ -5,7 +5,8 @@
     config: FLAF/config/Processors/stitching_DY_amcatnlo_Vpt_NpNLO_allFlavors.yaml
     stages: [ AnaTuple, AnaTupleMerge ]
     dependency_level:
-      AnaTuple: process
+      AnaTuple: file
+      AnaTupleMerge: process
 
 .DY_processors_singleFlavor: &DY_processors_singleFlavor
   - name: Stitcher
@@ -14,4 +15,5 @@
     config: FLAF/config/Processors/stitching_DY_amcatnlo_Vpt_NpNLO.yaml
     stages: [ AnaTuple, AnaTupleMerge ]
     dependency_level:
-      AnaTuple: process
+      AnaTuple: file
+      AnaTupleMerge: process
