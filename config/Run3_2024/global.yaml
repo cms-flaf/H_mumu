@@ -10,10 +10,11 @@ ignore_missing_nanoAOD_files:
 bTagAlgo: UParTAK4
 corrections:
   btag:
-    stages: [ AnaTuple, HistTuple ]
+    stages: [ AnaTuple, AnalysisCache, HistTuple ]
     modes:
       AnaTuple: none
       HistTuple: none
+      AnalysisCache: none
     tagger: UParTAK4
     jetCollection: Jet
     wantShape: False
