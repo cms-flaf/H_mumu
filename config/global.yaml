@@ -292,10 +292,11 @@ corrections:
     stage: AnaTuple
     apply_jet_horns_fix: true
   btag:
-    stages: [ AnaTuple, HistTuple ]
+    stages: [ AnaTuple, AnalysisCache, HistTuple ]
     modes:
       AnaTuple: none
       HistTuple: none
+      AnalysisCache: none
     tagger: particleNet
     jetCollection: Jet
 
