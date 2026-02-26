@@ -44,7 +44,7 @@ def test_setup_loading():
         print(f"\nTesting era: {era}")
         try:
             # Create Setup instance - this will load global.yaml and other configs
-            setup = Setup(ana_path=ana_path, period=era)
+            setup = Setup(ana_path=ana_path, period=era, law_run_version="test")
 
             # Verify that global_params were loaded
             assert setup.global_params is not None, "global_params is None"
