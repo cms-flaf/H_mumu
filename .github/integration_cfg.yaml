@@ -2,6 +2,7 @@ authorized_users:
   - kandrosov
   - valeriadamante
   - acyeagle
+  - giorgiopizz
 
 expected_headers:
   - "@cms-flaf-bot test"
