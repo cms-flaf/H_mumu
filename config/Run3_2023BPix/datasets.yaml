@@ -90,6 +90,11 @@ WminusH_Hto2Mu:
   nanoAOD:
     v12: /WminusH_Hto2Mu_WtoAll_M-125_TuneCP5_13p6TeV_powheg-minlo-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
 
+VBFHto2Mu_M125_powheg:
+  crossSection: VBFHto2Mu
+  generator: powheg
+  nanoAOD:
+    v12: /VBFHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixNanoAODv12-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM
 VBFHto2Mu_m125_powheg:
   crossSection: VBFHto2Mu
   generator: powheg

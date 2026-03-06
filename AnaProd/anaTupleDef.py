@@ -280,16 +280,40 @@ defaultColToSave = [
 ]
 
 LHE_vars = [
-    # "LHEPart_eta",
-    # "LHEPart_incomingpz",
-    # "LHEPart_mass",
-    # "LHEPart_pdgId",
-    # "LHEPart_phi",
-    # "LHEPart_pt",
-    # "LHEPart_spin",
-    # "LHEPart_status",
+    "LHE_AlphaS",
+    "LHE_HT",
+    "LHE_HTIncoming",
+    "LHE_Nb",
+    "LHE_Nc",
+    "LHE_Nglu",
+    "LHE_Njets",
+    "LHE_NpLO",
     "LHE_NpNLO",
+    "LHE_Nuds",
     "LHE_Vpt",
+    "LHEPdfSumw",
+    "LHEScaleSumw",
+    "PSSumw",
+    "LHEPdfWeight",
+    "nLHEPdfWeight",
+    "LHEReweightingWeight",
+    "nLHEReweightingWeight",
+    "LHEScaleWeight",
+    "nLHEScaleWeight",
+    "LHEWeight_originalXWGTUP",
+    "LHEPart_eta",
+    "LHEPart_firstMotherIdx ",
+    "LHEPart_incomingpz ",
+    "LHEPart_lastMotherIdx ",
+    "LHEPart_mass ",
+    "LHEPart_pdgId ",
+    "LHEPart_phi ",
+    "LHEPart_pt ",
+    "LHEPart_spin ",
+    "LHEPart_status ",
+    "nLHEPart",
+    "PSWeight",
+    "nPSWeight"
 ]
 additional_VBFStudies_vars = [
     "GenJet_eta",
@@ -429,20 +453,20 @@ def addAllVariables(
             if "p4" in muon_obs:
                 # print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
                 dfw.df = dfw.df.Define(
-                    f"mu{leg_idx+1}_{muon_obs}", f"{col}.at(mu{leg_idx+1}_idx)"
+                    f"mu{leg_idx+1}_{muon_obs}", f"mu{leg_idx+1}_idx>=0 ? {col}.at(mu{leg_idx+1}_idx) : ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(0., 0., 0., 0.);"
                 )
                 # print(f"""defining {muon_obs.replace("p4","pt")}""")
                 LegVar(
                     muon_obs.replace("p4", "pt"),
                     f"static_cast<float>({col}.at(mu{leg_idx+1}_idx).pt())",
-                    # var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
+                    var_cond= f"mu{leg_idx+1}_idx>=0",
                     default="-100000.f",
                 )
             else:
                 LegVar(
                     muon_obs,
                     f"{col}.at(mu{leg_idx+1}_idx)",
-                    # var_cond=f"HttCandidate.leg_type[{leg_idx}] == Leg::mu",
+                    var_cond= f"mu{leg_idx+1}_idx>=0",
                     default="-100000.f",
                 )
 
@@ -451,33 +475,35 @@ def addAllVariables(
                 "gen_kind",
                 f"genLeptons.at(mu{leg_idx+1}_genMatchIdx).kind()",
                 var_type="int",
-                var_cond=f"mu{leg_idx+1}_genMatchIdx>=0",
+                var_cond=f"mu{leg_idx+1}_idx>=0 && mu{leg_idx+1}_genMatchIdx>=0",
                 default="static_cast<int>(GenLeptonMatch::NoMatch)",
             )
             LegVar(
                 "gen_charge",
                 f"genLeptons.at(mu{leg_idx+1}_genMatchIdx).charge()",
                 var_type="int",
-                var_cond=f"mu{leg_idx+1}_genMatchIdx>=0",
+                var_cond=f"mu{leg_idx+1}_idx>=0 && mu{leg_idx+1}_genMatchIdx>=0",
                 default="-10",
             )
         else:
             LegVar(
                 "gen_kind",
-                f"-1",
+                f"static_cast<int>(GenLeptonMatch::NoMatch)",
+                var_cond= f"mu{leg_idx+1}_idx>=0",
                 var_type="int",
-                default="-10",
+                default="static_cast<int>(GenLeptonMatch::NoMatch)",
             )
             LegVar(
                 "gen_charge",
                 f"-10",
+                var_cond= f"mu{leg_idx+1}_idx>=0",
                 var_type="int",
                 default="-10",
             )
-    # dfw.Apply(
-    #     AnaBaseline.LowerMassCut,
-    #     suffixes=["p4_Central", "p4_nano", "p4_bsConstrainedPt"],
-    # )
+    dfw.Apply(
+        AnaBaseline.LowerMassCut,
+        suffixes=["p4_Central", "p4_nano", "p4_bsConstrainedPt"],
+    )
     jet_obs_names = []
     for jvar in ["pt", "eta", "phi", "mass"]:
         jet_obs_name = f"Jet_{jvar}"

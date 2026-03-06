@@ -63,6 +63,11 @@ GluGluHto2Mu_MiNNLO:
   nanoAOD:
     v12: /GluGluHto2Mu_M-125_TuneCP5_13p6TeV_powhegMiNNLO-pythia8/Run3Summer23NanoAODv12-130X_mcRun3_2023_realistic_v15-v2/NANOAODSIM
 
+VBFHto2Mu_M125_powheg:
+  crossSection: VBFHto2Mu
+  generator: powheg
+  nanoAOD:
+    v12: /VBFHto2Mu_M-125_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23NanoAODv12-130X_mcRun3_2023_realistic_v15-v2/NANOAODSIM
 VBFHto2Mu_m125_powheg:
   crossSection: VBFHto2Mu
   generator: powheg
