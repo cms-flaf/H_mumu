@@ -53,4 +53,3 @@ WPStudiesModel:
   signals:
     - VBFHto2Mu_M125_powheg
     - GluGluHto2Mu
-
