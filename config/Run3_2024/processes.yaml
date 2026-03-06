@@ -26,7 +26,7 @@ DYto2E_M_50:
   corrections:
     Vpt:
       type: DY
-      stages: [ 'AnalysisCache', 'HistTuple' ] 
+      stages: [ 'AnalysisCache', 'HistTuple' ]
   datasets:
     - DYto2E_M_50_amcatnloFXFX
     # - DYto2E_M_50_amcatnloFXFX_ext1
