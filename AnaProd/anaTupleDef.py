@@ -8,18 +8,26 @@ offline_legs = ["mu1", "mu2"]
 loadTF = False
 loadHHBtag = False
 
-
-Muon_observables = [
-    "IP_cov00",
-    "IP_cov10",
-    "IP_cov11",
-    "IP_cov20",
-    "IP_cov21",
-    "IP_cov22",
+Muon_observables_v15 = [
     "IPx",
     "IPy",
     "IPz",
-    "bField_z",
+    "VXBS_Cov00",
+    "VXBS_Cov03",
+    "VXBS_Cov33",
+    "bestTrackType",
+    "ipLengthSig",
+    "jetDF",
+    "pnScore_heavy",
+    "pnScore_light",
+    "pnScore_prompt",
+    "pnScore_tau",
+    "promptMVA",
+    "softMvaRun3",
+    "tuneP_charge",
+    "tuneP_pterr",
+]
+Muon_observables_base = [
     "bsConstrainedChi2",
     "bsConstrainedPt",
     "bsConstrainedPtErr",
@@ -27,18 +35,18 @@ Muon_observables = [
     "dxy",
     "dxyErr",
     "dxybs",
+    "dxybsErr",
     "dz",
     "dzErr",
-    "eta",
     "fsrPhotonIdx",
+    "genMatch",
+    "genMatchIdx",
     "genPartFlav",
     "genPartIdx",
-    "genMatchIdx",
     "highPtId",
     "highPurity",
     "inTimeMuon",
     "ip3d",
-    "ipLengthSig",
     "isGlobal",
     "isPFcand",
     "isStandalone",
@@ -48,7 +56,6 @@ Muon_observables = [
     "jetPtRelv2",
     "jetRelIso",
     "looseId",
-    "mass",
     "mediumId",
     "mediumPromptId",
     "miniIsoId",
@@ -65,9 +72,6 @@ Muon_observables = [
     "pfRelIso03_all",
     "pfRelIso03_chg",
     "pfRelIso04_all",
-    "phi",
-    "promptMVA",
-    "pt",
     "ptErr",
     "puppiIsoId",
     "segmentComp",
@@ -75,32 +79,11 @@ Muon_observables = [
     "softId",
     "softMva",
     "softMvaId",
-    "softMvaRun3",
     "svIdx",
     "tightCharge",
     "tightId",
     "tkIsoId",
     "tkRelIso",
-    "track_cov00",
-    "track_cov10",
-    "track_cov11",
-    "track_cov20",
-    "track_cov21",
-    "track_cov22",
-    "track_cov30",
-    "track_cov31",
-    "track_cov32",
-    "track_cov33",
-    "track_cov40",
-    "track_cov41",
-    "track_cov42",
-    "track_cov43",
-    "track_cov44",
-    "track_dsz",
-    "track_dxy",
-    "track_lambda",
-    "track_phi",
-    "track_qoverp",
     "triggerIdLoose",
     "tunepRelPt",
 ]
@@ -161,13 +144,10 @@ PUObservables = [
     "Pileup_sumLOOT",
 ]
 
-JetObservables = [
+JetObservables_base = [
     "PNetRegPtRawCorr",
     "PNetRegPtRawCorrNeutrino",
     "PNetRegPtRawRes",
-    "UParTAK4RegPtRawCorr",
-    "UParTAK4RegPtRawCorrNeutrino",
-    "UParTAK4RegPtRawRes",
     "area",
     "btagDeepFlavB",
     "btagDeepFlavCvB",
@@ -176,24 +156,18 @@ JetObservables = [
     "btagPNetB",
     "btagPNetCvB",
     "btagPNetCvL",
-    "btagPNetCvNotB",
     "btagPNetQvG",
     "btagPNetTauVJet",
-    "btagUParTAK4B",
-    "btagUParTAK4CvB",
-    "btagUParTAK4CvL",
-    "btagUParTAK4CvNotB",
-    "btagUParTAK4QvG",
-    "btagUParTAK4TauVJet",
+    "btagRobustParTAK4B",
+    "btagRobustParTAK4CvB",
+    "btagRobustParTAK4CvL",
+    "btagRobustParTAK4QG",
     "chEmEF",
     "chHEF",
-    # "chMultiplicity", # N/A in NanoAOD V12
     "electronIdx1",
     "electronIdx2",
     "eta",
     "genJetIdx",
-    "hfEmEF",
-    "hfHEF",
     "hfadjacentEtaStripsSize",
     "hfcentralEtaStripSize",
     "hfsigmaEtaEta",
@@ -210,34 +184,41 @@ JetObservables = [
     "nSVs",
     "neEmEF",
     "neHEF",
-    # "neMultiplicity", # N/A in NanoAOD V12
     "phi",
     "pt",
-    "puIdDisc",
-    "puId_beta",
-    "puId_dR2Mean",
-    "puId_frac01",
-    "puId_frac02",
-    "puId_frac03",
-    "puId_frac04",
-    "puId_jetR",
-    "puId_jetRchg",
-    "puId_majW",
-    "puId_minW",
-    "puId_nCharged",
-    "puId_ptD",
-    "puId_pull",
     "rawFactor",
     "svIdx1",
     "svIdx2",
-    "ptRes",
-    "vetoMap",
-    "vetoMapEle",
-    "passJetIdTight",
-    "passJetIdTightLepVeto",
-    "isInsideVetoRegion",
 ]
-
+JetObservables_v15 = [
+    "UParTAK4RegPtRawCorr",
+    "UParTAK4RegPtRawCorrNeutrino",
+    "UParTAK4RegPtRawRes",
+    "UParTAK4V1RegPtRawCorr",
+    "UParTAK4V1RegPtRawCorrNeutrino",
+    "UParTAK4V1RegPtRawRes",
+    "btagPNetCvNotB",
+    "btagUParTAK4B",
+    "btagUParTAK4CvB",
+    "btagUParTAK4CvL",
+    "btagUParTAK4CvNotB",
+    "btagUParTAK4Ele",
+    "btagUParTAK4Mu",
+    "btagUParTAK4QvG",
+    "btagUParTAK4SvCB",
+    "btagUParTAK4SvUDG",
+    "btagUParTAK4TauVJet",
+    "btagUParTAK4UDG",
+    "btagUParTAK4probb",
+    "btagUParTAK4probbb",
+    "chMultiplicity",
+    "hfEmEF",
+    "hfHEF",
+    "muonSubtrDeltaEta",
+    "muonSubtrDeltaPhi",
+    "neMultiplicity",
+    "puIdDisc",
+]
 JetObservablesMC = ["hadronFlavour", "partonFlavour"]
 
 FSRPhotonObservables = [
@@ -291,16 +272,13 @@ LHE_vars = [
     "LHE_NpNLO",
     "LHE_Nuds",
     "LHE_Vpt",
-    # the comment observables should be present in nanov15 (https://cms-xpog.docs.cern.ch/autoDoc/NanoAODv15/2024/doc_TTH-Hto2G_Par-M-125_TuneCP5_13p6TeV_amcatnloFXFX-pythia8_RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2.html#LHEScaleSumw) but actually if looking in the files it is not present (e.g. root -l davs://eoscms.cern.ch:443/eos/cms/store/mc/RunIII2024Summer24NanoAODv15/DYto2E-2Jets_Bin-MLL-10to50_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/90000/0cab6044-c840-461b-a46c-c8e5861775aa.root   and then Events->Print("*Sumw*") returns no branches) .. 
+    # the comment observables should be present in nanov15 (https://cms-xpog.docs.cern.ch/autoDoc/NanoAODv15/2024/doc_TTH-Hto2G_Par-M-125_TuneCP5_13p6TeV_amcatnloFXFX-pythia8_RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2.html#LHEScaleSumw) but actually if looking in the files it is not present (e.g. root -l davs://eoscms.cern.ch:443/eos/cms/store/mc/RunIII2024Summer24NanoAODv15/DYto2E-2Jets_Bin-MLL-10to50_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/90000/0cab6044-c840-461b-a46c-c8e5861775aa.root   and then Events->Print("*Sumw*") returns no branches) ..
     # "LHEPdfSumw",
     # "LHEScaleSumw",
     # "PSSumw",
     "LHEPdfWeight",
-    "nLHEPdfWeight",
     "LHEReweightingWeight",
-    "nLHEReweightingWeight",
     "LHEScaleWeight",
-    "nLHEScaleWeight",
     "LHEWeight_originalXWGTUP",
     "LHEPart_eta",
     "LHEPart_firstMotherIdx",
@@ -312,9 +290,7 @@ LHE_vars = [
     "LHEPart_pt",
     "LHEPart_spin",
     "LHEPart_status",
-    "nLHEPart",
     "PSWeight",
-    "nPSWeight",
 ]
 additional_VBFStudies_vars = [
     "GenJet_eta",
@@ -358,7 +334,7 @@ def getDefaultColumnsToSave(isData):
     if not isData:
         colToSave.extend(["Pileup_nTrueInt"])
         colToSave.extend(LHE_vars)
-    return colToSave
+    return list(set(colToSave))
 
 
 def addAllVariables(
@@ -373,6 +349,7 @@ def addAllVariables(
     channels,
     dataset_cfg,
 ):
+
     dfw.Apply(
         AnaBaseline.LeptonVeto,
         muon_pt_to_use=global_params.get("muon_pt_for_presel", "pt_nano"),
@@ -413,13 +390,7 @@ def addAllVariables(
             dfw.DefineAndAppend(f"mu{leg_idx+1}_{var_name}", define_expr)
 
         LegVar("legType", f"Leg::mu", check_leg_type=False)
-        # for var in ["pt", "eta", "phi", "mass"]:
-        #     LegVar(
-        #         var,
-        #         f"Muon_p4[mu{leg_idx+1}_idx].{var}()",
-        #         var_type="float",
-        #         default="-1000.f",
-        #     )
+
         # LegVar(
         #     f"index",
         #     f"Muon_idx[mu{leg_idx+1}_idx]",
@@ -444,34 +415,30 @@ def addAllVariables(
         #     f"mu{leg_idx+1}_p4_bsConstrainedPt",
         #     f"Muon_p4_bsConstrainedPt.at(mu{leg_idx+1}_idx)",
         # )
-        for col in dfw.df.GetColumnNames():  # Muon_observables:
-            muon_obs_split = str(col).split("_")
-            if not muon_obs_split[0] == "Muon":
-                continue
-            muon_obs = "_".join(muon_obs_split[1:])
-            if f"mu{leg_idx+1}_{muon_obs}" in dfw.df.GetColumnNames():
-                continue
-            if "p4" in muon_obs:
-                # print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
-                dfw.df = dfw.df.Define(
-                    f"mu{leg_idx+1}_{muon_obs}",
-                    f"mu{leg_idx+1}_idx>=0 ? {col}.at(mu{leg_idx+1}_idx) : ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(0., 0., 0., 0.);",
-                )
-                # print(f"""defining {muon_obs.replace("p4","pt")}""")
-                LegVar(
-                    muon_obs.replace("p4", "pt"),
-                    f"static_cast<float>({col}.at(mu{leg_idx+1}_idx).pt())",
-                    var_cond=f"mu{leg_idx+1}_idx>=0",
-                    default="-100000.f",
-                )
-            else:
-                LegVar(
-                    muon_obs,
-                    f"{col}.at(mu{leg_idx+1}_idx)",
-                    var_cond=f"mu{leg_idx+1}_idx>=0",
-                    default="-100000.f",
-                )
-
+        Muon_observables = Muon_observables_base
+        if global_params["nano_version"] == "v15":
+            Muon_observables.extend(Muon_observables_v15)
+        for muon_obs in list(set(Muon_observables)):
+            LegVar(
+                muon_obs,
+                f"Muon_{muon_obs}.at(mu{leg_idx+1}_idx)",
+                var_cond=f"mu{leg_idx+1}_idx>=0",
+                default="-100000.f",
+            )
+        for var in ["pt", "eta", "phi", "mass"]:
+            LegVar(
+                var,
+                f"Muon_p4[mu{leg_idx+1}_idx].{var}()",
+                var_cond=f"mu{leg_idx+1}_idx>=0",
+                var_type="float",
+                default="-1000.f",
+            )
+        LegVar(
+            "pt_nano",
+            f"Muon_p4_nano.at(mu{leg_idx+1}_idx).Pt()",
+            var_cond=f"mu{leg_idx+1}_idx>=0",
+            default="-100000.f",
+        )
         if not isData:
             LegVar(
                 "gen_kind",
@@ -502,16 +469,35 @@ def addAllVariables(
                 var_type="int",
                 default="-10",
             )
+
+    # defining each leg p4 for FindMatching from Muon_p4
+    for mu_idx in [1, 2]:
+        if f"mu{mu_idx}_p4" not in dfw.df.GetColumnNames():
+            dfw.df = dfw.df.Define(f"mu{mu_idx}_p4", f"Muon_p4.at(mu{mu_idx}_idx)")
+        if f"mu{mu_idx}_p4_bsConstrainedPt" not in dfw.df.GetColumnNames():
+            dfw.df = dfw.df.Define(
+                f"mu{mu_idx}_p4_bsConstrainedPt",
+                f"Muon_p4_bsConstrainedPt.at(mu{mu_idx}_idx)",
+            )
+        if f"mu{mu_idx}_p4_nano" not in dfw.df.GetColumnNames():
+            dfw.df = dfw.df.Define(
+                f"mu{mu_idx}_p4_nano", f"Muon_p4_nano.at(mu{mu_idx}_idx)"
+            )
+    # non è questo il problema
     dfw.Apply(
         AnaBaseline.LowerMassCut,
-        suffixes=["p4_Central", "p4_nano", "p4_bsConstrainedPt"],
+        suffixes=["p4", "p4_nano", "p4_bsConstrainedPt"],
     )
-    jet_obs_names = []
-    for jvar in ["pt", "eta", "phi", "mass"]:
-        jet_obs_name = f"Jet_{jvar}"
-        if f"{jet_obs_name}" in dfw.df.GetColumnNames():
-            dfw.DefineAndAppend(f"{jet_obs_name}_nano", jet_obs_name)
 
+    jet_obs_names = []
+    for jvar in ["pt"]:
+        jet_obs_name = f"v_ops::{var}(Jet_p4_nano)"
+        if f"{jet_obs_name}" in dfw.df.GetColumnNames():
+            dfw.DefineAndAppend(f"Jet_{jvar}_nano", jet_obs_name)
+
+    JetObservables = JetObservables_base
+    if global_params["nano_version"] == "v15":
+        JetObservables.extend(JetObservables_v15)
     if not isData:
         JetObservables.extend(JetObservablesMC)
 
@@ -519,15 +505,21 @@ def addAllVariables(
         jet_obs_name = f"Jet_{jetobs}"
         if jet_obs_name in dfw.df.GetColumnNames():
             jet_obs_names.append(jet_obs_name)
-    dfw.colToSave.extend(jet_obs_names)
-    for recoObsNew in (
-        PUObservables
-        + FSRPhotonObservables
-        + SoftActivityJetObservables
-        # + additional_VBFStudies_vars
+    dfw.colToSave.extend(list(set(jet_obs_names)))
+    # nemmeno i cazzo di jet sono il problems
+
+    for recoObsNew in list(
+        set(
+            PUObservables
+            + FSRPhotonObservables
+            + SoftActivityJetObservables
+            # + additional_VBFStudies_vars
+        )
     ):
         if recoObsNew in dfw.df.GetColumnNames():
             dfw.colToSave.extend([recoObsNew])
+
+    ### Keep commented in case we decide to store MET too
 
     # pf_str = global_params["met_type"]
     # dfw.DefineAndAppend(f"met_pt_nano", f"static_cast<float>({pf_str}_p4_nano.pt())")

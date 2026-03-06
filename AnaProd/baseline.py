@@ -54,9 +54,26 @@ def LowerMassCut(df, suffixes=None):
         for dfCol in df.GetColumnNames():
             if f"mu1_p4" in dfCol and "delta" not in dfCol:
                 suffixes.append("_".join(dfCol.split("_")[1:]))
+    masses_suffixes = []
     for suffix in suffixes:
-        df = df.Define(f"m_mumu_{suffix}", f"(mu1_{suffix}+mu2_{suffix}).M()")
-    masses_cut = " || ".join([f"m_mumu_{s} > 50" for s in suffixes])
+        # for mu_idx in [1, 2]:
+        #     if f"mu{mu_idx}_{suffix}" not in df.GetColumnNames():
+        #         df = df.Define(
+        #             f"mu{mu_idx}_{suffix}", f"Muon_{suffix}.at(mu{mu_idx}_idx)"
+        #         )
+        print(suffix)
+        split_suffix = suffix.split("_")
+        suffix_for_m_mumu = ""
+
+        if len(split_suffix) > 1:
+            suffix_for_m_mumu = "_" + ("_".join(split_suffix[1:]))
+        if f"m_mumu{suffix_for_m_mumu}" not in df.GetColumnNames():
+            df = df.Define(
+                f"m_mumu{suffix_for_m_mumu}", f"(mu1_{suffix}+mu2_{suffix}).M()"
+            )
+        masses_suffixes.append(suffix_for_m_mumu)
+    masses_cut = " || ".join([f"m_mumu{s} > 50" for s in masses_suffixes])
+    # print(masses_cut)
     df = df.Filter(masses_cut, "m(mumu) > 50 ")
     return df
 

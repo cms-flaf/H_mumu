@@ -19,7 +19,7 @@ corrections:
     jetCollection: Jet
     wantShape: False
   mu:
-    stage: HistTuple
+    stage: AnaTuple
     columns:
       pfRelIso04_all: pfRelIso04_all
       tightId: tightId
@@ -29,7 +29,7 @@ corrections:
       looseId: looseId
       p4: p4_bsConstrainedPt # p4_pt_nano
   trigger:
-    stage: HistTuple
+    stage: AnaTuple
     mode: SF
     extraFormat:
       pt: "bsConstrainedPt"
