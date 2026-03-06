@@ -14,10 +14,7 @@ DY_separated:
   color: "kAzure+7"
   color_mplhep: lightskyblue
   sub_processes:
-    # - DYto2L_InclusivePlusBinned
     - DYto2L
-    # - DYto2L_jet_binned
-    # - DYto2L_PtBinned
 
 DYto2L:
   processors: *DY_processors_allFlavors
@@ -59,7 +56,7 @@ DYto2L_InclusivePlusBinned:
   corrections:
     Vpt:
       type: DY
-      stages: ['AnalysisCache', 'HistTuple']
+      stages: [ 'AnalysisCache', 'HistTuple' ]
   datasets:
     - DYto2L_M_50_amcatnloFXFX
     - DYto2L_M_50_0J_amcatnloFXFX

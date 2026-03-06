@@ -5,7 +5,6 @@ DY:
   color_mplhep: lightskyblue
   sub_processes:
     - DYto2L_InclusivePlusBinned
-
 DYto2L:
   processors: *DY_processors_allFlavors
   name: "DY"
@@ -46,7 +45,7 @@ DYto2L_InclusivePlusBinned:
   corrections:
     Vpt:
       type: DY
-      stages: [ 'AnalysisCache', 'HistTuple' ]
+      stages: ['AnalysisCache', 'HistTuple']
   datasets:
     - DYto2L_M_50_amcatnloFXFX
     - DYto2L_M_50_0J_amcatnloFXFX
@@ -300,7 +299,6 @@ TTX:
     - TTZH
     - TTZZ
 
-
 ############## VBF signal ##############
 VBFHto2Mu_m125_amcatnlo:
   name: "VBFHto2Mu"
@@ -405,34 +403,47 @@ TTH_inclusive:
     - TTHto2B_M125
 
 ############### Data ##############
+
 Data_Full:
   name: "Data"
   datasets: [ ]
+
 Data_EGamma0:
   name: "Data EGamma0"
   datasets:
-    - EGamma0_Run2023D_v1
-    - EGamma0_Run2023D_v2
+    - EGamma0_Run2023C_v1
+    - EGamma0_Run2023C_v2
+    - EGamma0_Run2023C_v3
+    - EGamma0_Run2023C_v4
 
 Data_EGamma1:
   name: "Data EGamma1"
   datasets:
-    - EGamma1_Run2023D_v1
-    - EGamma1_Run2023D_v2
+    - EGamma1_Run2023C_v1
+    - EGamma1_Run2023C_v2
+    - EGamma1_Run2023C_v3
+    - EGamma1_Run2023C_v4
 
 Data_Muon:
   name: "Data Muon 0 "
   datasets:
-    - Muon0_Run2023D_v1
-    - Muon0_Run2023D_v2
-    - Muon1_Run2023D_v1
-    - Muon1_Run2023D_v2
+    - Muon0_Run2023C_v1
+    - Muon0_Run2023C_v2
+    - Muon0_Run2023C_v3
+    - Muon0_Run2023C_v4
+    - Muon1_Run2023C_v1
+    - Muon1_Run2023C_v2
+    - Muon1_Run2023C_v3
+    - Muon1_Run2023C_v4
 
 Data_MuonEG:
   name: "Data MuonEG"
   datasets:
-    - MuonEG_Run2023D_v1
-    - MuonEG_Run2023D_v2
+    - MuonEG_Run2023C_v1
+    - MuonEG_Run2023C_v2
+    - MuonEG_Run2023C_v3
+    - MuonEG_Run2023C_v4
+
 custom_CI_background:
   name: "CI -- Background"
   color: "kGreen-3"
@@ -449,4 +460,4 @@ custom_CI_data:
   name: "CI -- data"
   color: "kAzure+10"
   datasets:
-    - Muon0_Run2023D_v1
+    - Muon0_Run2023C_v1

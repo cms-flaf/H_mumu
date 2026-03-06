@@ -49,7 +49,7 @@ DYto2L_InclusivePlusBinned:
   corrections:
     Vpt:
       type: DY
-      stages: ['AnalysisCache', 'HistTuple']
+      stages: [ 'AnalysisCache', 'HistTuple' ]
   datasets:
     - DYto2L_M_50_amcatnloFXFX
     - DYto2L_M_50_0J_amcatnloFXFX
