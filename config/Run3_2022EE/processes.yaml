@@ -313,6 +313,13 @@ VBFHto2Mu_m125_amcatnlo:
   datasets:
     - VBFHto2Mu_m125_amcatnlo
 
+VBFHto2Mu_m125_powheg:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets:
+    - VBFHto2Mu_m125_powheg
+
 VBFHto2Mu_M125_powheg:
   name: "VBFHto2Mu"
   color: "kPink"
