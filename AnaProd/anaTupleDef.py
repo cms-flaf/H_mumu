@@ -291,9 +291,10 @@ LHE_vars = [
     "LHE_NpNLO",
     "LHE_Nuds",
     "LHE_Vpt",
-    "LHEPdfSumw",
-    "LHEScaleSumw",
-    "PSSumw",
+    # the comment observables should be present in nanov15 (https://cms-xpog.docs.cern.ch/autoDoc/NanoAODv15/2024/doc_TTH-Hto2G_Par-M-125_TuneCP5_13p6TeV_amcatnloFXFX-pythia8_RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2.html#LHEScaleSumw) but actually if looking in the files it is not present (e.g. root -l davs://eoscms.cern.ch:443/eos/cms/store/mc/RunIII2024Summer24NanoAODv15/DYto2E-2Jets_Bin-MLL-10to50_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/90000/0cab6044-c840-461b-a46c-c8e5861775aa.root   and then Events->Print("*Sumw*") returns no branches) .. 
+    # "LHEPdfSumw",
+    # "LHEScaleSumw",
+    # "PSSumw",
     "LHEPdfWeight",
     "nLHEPdfWeight",
     "LHEReweightingWeight",
