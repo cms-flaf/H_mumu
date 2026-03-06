@@ -313,7 +313,7 @@ LHE_vars = [
     "LHEPart_status ",
     "nLHEPart",
     "PSWeight",
-    "nPSWeight"
+    "nPSWeight",
 ]
 additional_VBFStudies_vars = [
     "GenJet_eta",
@@ -453,20 +453,21 @@ def addAllVariables(
             if "p4" in muon_obs:
                 # print(f"""defining but not saving mu{leg_idx+1}_{muon_obs}""")
                 dfw.df = dfw.df.Define(
-                    f"mu{leg_idx+1}_{muon_obs}", f"mu{leg_idx+1}_idx>=0 ? {col}.at(mu{leg_idx+1}_idx) : ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(0., 0., 0., 0.);"
+                    f"mu{leg_idx+1}_{muon_obs}",
+                    f"mu{leg_idx+1}_idx>=0 ? {col}.at(mu{leg_idx+1}_idx) : ROOT::Math::LorentzVector<ROOT::Math::PtEtaPhiM4D<double>>(0., 0., 0., 0.);",
                 )
                 # print(f"""defining {muon_obs.replace("p4","pt")}""")
                 LegVar(
                     muon_obs.replace("p4", "pt"),
                     f"static_cast<float>({col}.at(mu{leg_idx+1}_idx).pt())",
-                    var_cond= f"mu{leg_idx+1}_idx>=0",
+                    var_cond=f"mu{leg_idx+1}_idx>=0",
                     default="-100000.f",
                 )
             else:
                 LegVar(
                     muon_obs,
                     f"{col}.at(mu{leg_idx+1}_idx)",
-                    var_cond= f"mu{leg_idx+1}_idx>=0",
+                    var_cond=f"mu{leg_idx+1}_idx>=0",
                     default="-100000.f",
                 )
 
@@ -489,14 +490,14 @@ def addAllVariables(
             LegVar(
                 "gen_kind",
                 f"static_cast<int>(GenLeptonMatch::NoMatch)",
-                var_cond= f"mu{leg_idx+1}_idx>=0",
+                var_cond=f"mu{leg_idx+1}_idx>=0",
                 var_type="int",
                 default="static_cast<int>(GenLeptonMatch::NoMatch)",
             )
             LegVar(
                 "gen_charge",
                 f"-10",
-                var_cond= f"mu{leg_idx+1}_idx>=0",
+                var_cond=f"mu{leg_idx+1}_idx>=0",
                 var_type="int",
                 default="-10",
             )

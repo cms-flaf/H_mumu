@@ -79,7 +79,10 @@ def LeptonVeto(df, muon_pt_to_use="pt_nano"):
     big_ID_Iso_OR = f"({big_ID_OR} || {big_Iso_OR})"
     df = df.Define("Big_ID_Iso_OR", big_ID_Iso_OR)
     # veto events with more than 2 muons passing this big_id_Iso_OR:
-    df = df.Filter("Muon_idx[Muon_B0 && Big_ID_Iso_OR].size()==2", "Consider events with exactly 2 muons")
+    df = df.Filter(
+        "Muon_idx[Muon_B0 && Big_ID_Iso_OR].size()==2",
+        "Consider events with exactly 2 muons",
+    )
 
     ### for official anaTuple production uncomment this:
 
@@ -92,7 +95,7 @@ def LeptonVeto(df, muon_pt_to_use="pt_nano"):
     # df = df.Filter("Muon_idx[Muon_B0 && Muon_IsoIDOfficial].size()==2", "Consider events with exactly 2 muons")
 
     ####  COMPARISON WITH RUN2 ####
-    # # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246 
+    # # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246
     df = df.Define("mu1_idx", "Muon_idx[Muon_B0 && Big_ID_Iso_OR][0]")
     df = df.Define("mu2_idx", "Muon_idx[Muon_B0 && Big_ID_Iso_OR][1]")
     df = df.Filter("Muon_charge[mu1_idx]*Muon_charge[mu2_idx]<0", "OS muons")
