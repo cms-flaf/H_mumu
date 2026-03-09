@@ -9,6 +9,8 @@ loadTF = False
 loadHHBtag = False
 
 Muon_observables_v15 = [
+    "dxybs",
+    "dxybsErr",
     "IPx",
     "IPy",
     "IPz",
@@ -34,8 +36,6 @@ Muon_observables_base = [
     "charge",
     "dxy",
     "dxyErr",
-    "dxybs",
-    "dxybsErr",
     "dz",
     "dzErr",
     "fsrPhotonIdx",
@@ -281,9 +281,7 @@ LHE_vars = [
     "LHEScaleWeight",
     "LHEWeight_originalXWGTUP",
     "LHEPart_eta",
-    "LHEPart_firstMotherIdx",
     "LHEPart_incomingpz",
-    "LHEPart_lastMotherIdx",
     "LHEPart_mass",
     "LHEPart_pdgId",
     "LHEPart_phi",
@@ -292,6 +290,7 @@ LHE_vars = [
     "LHEPart_status",
     "PSWeight",
 ]
+LHE_vars_v15 = ["LHEPart_firstMotherIdx", "LHEPart_lastMotherIdx"]
 additional_VBFStudies_vars = [
     "GenJet_eta",
     "GenJet_hadronFlavour",
@@ -433,6 +432,7 @@ def addAllVariables(
                 var_type="float",
                 default="-1000.f",
             )
+
         LegVar(
             "pt_nano",
             f"Muon_p4_nano.at(mu{leg_idx+1}_idx).Pt()",
@@ -470,20 +470,15 @@ def addAllVariables(
                 default="-10",
             )
 
-    # defining each leg p4 for FindMatching from Muon_p4
-    for mu_idx in [1, 2]:
-        if f"mu{mu_idx}_p4" not in dfw.df.GetColumnNames():
-            dfw.df = dfw.df.Define(f"mu{mu_idx}_p4", f"Muon_p4.at(mu{mu_idx}_idx)")
-        if f"mu{mu_idx}_p4_bsConstrainedPt" not in dfw.df.GetColumnNames():
-            dfw.df = dfw.df.Define(
-                f"mu{mu_idx}_p4_bsConstrainedPt",
-                f"Muon_p4_bsConstrainedPt.at(mu{mu_idx}_idx)",
-            )
-        if f"mu{mu_idx}_p4_nano" not in dfw.df.GetColumnNames():
-            dfw.df = dfw.df.Define(
-                f"mu{mu_idx}_p4_nano", f"Muon_p4_nano.at(mu{mu_idx}_idx)"
-            )
-    # non è questo il problema
+        # defining each leg p4 for FindMatching from Muon_p4
+
+        for suffix in ["p4_bsConstrainedPt", "p4_nano", "p4"]:
+            if f"mu{leg_idx+1}_{suffix}" not in dfw.df.GetColumnNames():
+                dfw.df = dfw.df.Define(
+                    f"mu{leg_idx+1}_{suffix}",
+                    f"mu{leg_idx+1}_idx >= 0 ? Muon_{suffix}[mu{leg_idx+1}_idx] : LorentzVectorM(0.,0.,0.,0.)",
+                )
+
     dfw.Apply(
         AnaBaseline.LowerMassCut,
         suffixes=["p4", "p4_nano", "p4_bsConstrainedPt"],
@@ -507,6 +502,9 @@ def addAllVariables(
             jet_obs_names.append(jet_obs_name)
     dfw.colToSave.extend(list(set(jet_obs_names)))
     # nemmeno i cazzo di jet sono il problems
+
+    if not isData and global_params["nano_version"] == "v15":
+        dfw.colToSave.extend(LHE_vars_v15)
 
     for recoObsNew in list(
         set(
