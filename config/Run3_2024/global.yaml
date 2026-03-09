@@ -28,6 +28,9 @@ corrections:
       mediumId: mediumId
       looseId: looseId
       p4: p4_bsConstrainedPt # p4_pt_nano
+    lowPt: False
+    midPt: True
+    hiPt: False
   trigger:
     stage: AnaTuple
     mode: SF
