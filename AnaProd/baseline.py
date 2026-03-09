@@ -56,12 +56,6 @@ def LowerMassCut(df, suffixes=None):
                 suffixes.append("_".join(dfCol.split("_")[1:]))
     masses_suffixes = []
     for suffix in suffixes:
-        # for mu_idx in [1, 2]:
-        #     if f"mu{mu_idx}_{suffix}" not in df.GetColumnNames():
-        #         df = df.Define(
-        #             f"mu{mu_idx}_{suffix}", f"Muon_{suffix}.at(mu{mu_idx}_idx)"
-        #         )
-        print(suffix)
         split_suffix = suffix.split("_")
         suffix_for_m_mumu = ""
 
@@ -73,7 +67,7 @@ def LowerMassCut(df, suffixes=None):
             )
         masses_suffixes.append(suffix_for_m_mumu)
     masses_cut = " || ".join([f"m_mumu{s} > 50" for s in masses_suffixes])
-    # print(masses_cut)
+    print(masses_cut)
     df = df.Filter(masses_cut, "m(mumu) > 50 ")
     return df
 
@@ -101,20 +95,26 @@ def LeptonVeto(df, muon_pt_to_use="pt_nano"):
         "Consider events with exactly 2 muons",
     )
 
+    ### Comment for official production
+    # df = df.Define("mu1_idx", "Muon_idx[Muon_B0 && Big_ID_Iso_OR][0]")
+    # df = df.Define("mu2_idx", "Muon_idx[Muon_B0 && Big_ID_Iso_OR][1]")
+
     ### for official anaTuple production uncomment this:
 
-    # df = df.Define(
-    #     "Muon_IsoIDOfficial",
-    #     f"""
-    #     (Muon_mediumId && Muon_iso < 0.25)
-    #     """,
-    # )
-    # df = df.Filter("Muon_idx[Muon_B0 && Muon_IsoIDOfficial].size()==2", "Consider events with exactly 2 muons")
+    df = df.Define(
+        "Muon_IsoIDOfficial",
+        f"""
+        (Muon_mediumId && Muon_miniPFRelIso_all < 0.25)
+        """,
+    )
+    df = df.Filter(
+        "Muon_idx[Muon_B0 && Muon_IsoIDOfficial].size()==2",
+        "Consider events with exactly 2 muons",
+    )
 
-    ####  COMPARISON WITH RUN2 ####
-    # # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246
-    df = df.Define("mu1_idx", "Muon_idx[Muon_B0 && Big_ID_Iso_OR][0]")
-    df = df.Define("mu2_idx", "Muon_idx[Muon_B0 && Big_ID_Iso_OR][1]")
+    df = df.Define("mu1_idx", "Muon_idx[Muon_B0 && Muon_IsoIDOfficial][0]")
+    df = df.Define("mu2_idx", "Muon_idx[Muon_B0 && Muon_IsoIDOfficial][1]")
+
     df = df.Filter("Muon_charge[mu1_idx]*Muon_charge[mu2_idx]<0", "OS muons")
     ####  COMPARISON WITH RUN2 ####
     # Same electron selection w.r.t. Run 2 -- See AN/2019_185 lines 114 - 116
