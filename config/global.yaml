@@ -101,7 +101,7 @@ extraFormat_for_triggerMatchingAndSF:
   pt: "bsConstrainedPt"
 muon_pt_for_presel: "bsConstrainedPt"
 mu_pt_for_triggerMatchingAndSF: "Central"
-mu_pt_for_selection: "pt_Central"
+mu_pt_for_selection: "pt"
 
 mu_pt_for_definitions: "Central" # here options are different: corr, nano, bsConstrainedPt, roccor
 muonID_WP_for_triggerSF: "Medium" # only medium or tight for trigger SF, both iso and ID
@@ -165,6 +165,9 @@ corrections:
       mediumId: mediumId
       looseId: looseId
       p4: p4_bsConstrainedPt # p4_pt_nano
+    lowPt: False
+    midPt: True
+    hiPt: False
   trigger:
     stage: AnaTuple
     mode: SF
