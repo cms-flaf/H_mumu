@@ -271,14 +271,12 @@ LHE_vars = [
     "LHE_NpNLO",
     "LHE_Nuds",
     "LHE_Vpt",
+
+
     # the comment observables should be present in nanov15 (https://cms-xpog.docs.cern.ch/autoDoc/NanoAODv15/2024/doc_TTH-Hto2G_Par-M-125_TuneCP5_13p6TeV_amcatnloFXFX-pythia8_RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2.html#LHEScaleSumw) but actually if looking in the files it is not present (e.g. root -l davs://eoscms.cern.ch:443/eos/cms/store/mc/RunIII2024Summer24NanoAODv15/DYto2E-2Jets_Bin-MLL-10to50_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/NANOAODSIM/150X_mcRun3_2024_realistic_v2-v2/90000/0cab6044-c840-461b-a46c-c8e5861775aa.root   and then Events->Print("*Sumw*") returns no branches) ..
     # "LHEPdfSumw",
     # "LHEScaleSumw",
     # "PSSumw",
-    "LHEPdfWeight",
-    "LHEReweightingWeight",
-    "LHEScaleWeight",
-    "LHEWeight_originalXWGTUP",
     "LHEPart_eta",
     "LHEPart_incomingpz",
     "LHEPart_mass",
@@ -287,8 +285,15 @@ LHE_vars = [
     "LHEPart_pt",
     "LHEPart_spin",
     "LHEPart_status",
-    "PSWeight",
+    "LHEWeight_originalXWGTUP",
 ]
+LHE_vars_needed_underscore = [
+    ("LHEPdfWeight","LHEPdf_Weight"),
+    ("LHEReweightingWeight","LHEReweighting_Weight"),
+    ("LHEScaleWeight","LHEScale_Weight"),
+    ("PSWeight","PS_Weight"),
+]
+PS_weight_list = []
 LHE_vars_v15 = ["LHEPart_firstMotherIdx", "LHEPart_lastMotherIdx"]
 additional_VBFStudies_vars = [
     "GenJet_eta",
@@ -438,6 +443,7 @@ def addAllVariables(
             "pt_nano",
             f"Muon_p4_nano.at(mu{leg_idx+1}_idx).Pt()",
             var_cond=f"mu{leg_idx+1}_idx>=0",
+            var_type="float",
             default="-100000.f",
         )
         if not isData:
@@ -506,6 +512,8 @@ def addAllVariables(
 
     if not isData and global_params["nano_version"] == "v15":
         dfw.colToSave.extend(LHE_vars_v15)
+        for var in LHE_vars_needed_underscore:
+            dfw.DefineAndAppend(var[1], var[0])
 
     for recoObsNew in list(
         set(
