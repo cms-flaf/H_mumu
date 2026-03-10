@@ -508,9 +508,7 @@ def addAllVariables(
 
     for jetobs in list(set(JetObservables)) + ["idx"]:
         jet_obs_name = f"Jet_{jetobs}"
-        print(jet_obs_name)
         if jet_obs_name in dfw.df.GetColumnNames():
-            print(f"defining {jet_obs_name}")
             jet_obs_names.append(jet_obs_name)
     dfw.colToSave.extend(list(set(jet_obs_names)))
 
