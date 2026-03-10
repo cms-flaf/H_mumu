@@ -100,10 +100,10 @@ categories:
 extraFormat_for_triggerMatchingAndSF:
   pt: "bsConstrainedPt"
 muon_pt_for_presel: "bsConstrainedPt"
-mu_pt_for_triggerMatchingAndSF: "Central"
+mu_pt_for_triggerMatchingAndSF: ""
 mu_pt_for_selection: "pt"
 
-mu_pt_for_definitions: "Central" # here options are different: corr, nano, bsConstrainedPt, roccor
+mu_pt_for_definitions: "" # here options are different: corr, nano, bsConstrainedPt, roccor
 muonID_WP_for_triggerSF: "Medium" # only medium or tight for trigger SF, both iso and ID
 muIDWP: "Medium"
 muIsoWP: "Loose"
