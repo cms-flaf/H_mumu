@@ -82,7 +82,7 @@ def get_scale_factor_error(eff_data, eff_mc, err_data, err_mc):
 
 def defineTriggerWeights(dfBuilder, pt_to_use):  # needs application region def
     print(f"using pt = {pt_to_use} for trigger SFs")
-    if f"weight_TrgSF_singleMu_IsoMu24Central" in dfBuilder.GetColumnNames():
+    if f"weight_TrgSF_singleMu_IsoMu24Central" in dfBuilder.df.GetColumnNames():
         print(
             "Warning, weight_TrgSF_singleMu_IsoMu24Central already in col names, passing"
         )
