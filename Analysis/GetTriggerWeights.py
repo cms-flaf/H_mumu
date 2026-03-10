@@ -5,8 +5,7 @@ if __name__ == "__main__":
     sys.path.append(os.environ["ANALYSIS_PATH"])
 
 
-ROOT.gInterpreter.Declare(
-    """
+ROOT.gInterpreter.Declare("""
     float get_scale_factor_error(const float& effData, const float& effMC, const float& errData, const float& errMC, std::string err_name) {
 
     float SF_error = 0.;
@@ -58,8 +57,7 @@ ROOT.gInterpreter.Declare(
     throw std::invalid_argument("ERROR: no suitable single lepton candidate");
 
     }
-    """
-)
+    """)
 
 
 def get_scale_factor_error(eff_data, eff_mc, err_data, err_mc):
@@ -84,10 +82,15 @@ def get_scale_factor_error(eff_data, eff_mc, err_data, err_mc):
 
 def defineTriggerWeights(dfBuilder, pt_to_use):  # needs application region def
     print(f"using pt = {pt_to_use} for trigger SFs")
-    dfBuilder.df = dfBuilder.df.Define(
-        f"weight_TrgSF_singleMu_IsoMu24Central",
-        f"if (HLT_singleMu && muMu) {{return getCorrectSingleLepWeight(mu1_{pt_to_use}, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TrgSF_singleMu_Central,mu2_{pt_to_use}, mu2_eta, mu2_HasMatching_singleMu, weight_mu2_TrgSF_singleMu_Central) ;}}return 1.f;",
-    )
+    if f"weight_TrgSF_singleMu_IsoMu24Central" in dfBuilder.GetColumnNames():
+        print(
+            "Warning, weight_TrgSF_singleMu_IsoMu24Central already in col names, passing"
+        )
+    else:
+        dfBuilder.df = dfBuilder.df.Define(
+            f"weight_TrgSF_singleMu_IsoMu24Central",
+            f"if (HLT_singleMu && muMu) {{return getCorrectSingleLepWeight(mu1_{pt_to_use}, mu1_eta, mu1_HasMatching_singleMu, weight_mu1_TrgSF_singleMu_Central,mu2_{pt_to_use}, mu2_eta, mu2_HasMatching_singleMu, weight_mu2_TrgSF_singleMu_Central) ;}}return 1.f;",
+        )
 
 
 def defineTriggerWeightsErrors(dfBuilder, pt_to_use):
