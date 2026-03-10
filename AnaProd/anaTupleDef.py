@@ -41,8 +41,6 @@ Muon_observables_base = [
     "fsrPhotonIdx",
     "genMatch",
     "genMatchIdx",
-    "genPartFlav",
-    "genPartIdx",
     "highPtId",
     "highPurity",
     "inTimeMuon",
@@ -87,6 +85,7 @@ Muon_observables_base = [
     "triggerIdLoose",
     "tunepRelPt",
 ]
+MuonObservables_MC = ["genPartFlav", "genPartIdx"]
 
 PrimaryVertexObservables = [
     "PVBS_chi2",
@@ -415,6 +414,8 @@ def addAllVariables(
         #     f"Muon_p4_bsConstrainedPt.at(mu{leg_idx+1}_idx)",
         # )
         Muon_observables = Muon_observables_base
+        if not isData:
+            Muon_observables.extend(MuonObservables_MC)
         if global_params["nano_version"] == "v15":
             Muon_observables.extend(Muon_observables_v15)
         for muon_obs in list(set(Muon_observables)):
