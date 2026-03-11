@@ -36,3 +36,20 @@ TestModel:
     - custom_CI_signal
   data:
     - custom_CI_data
+
+OnlyData:
+  name: "data only model"
+  data:
+    - Data_Muon
+
+
+WPStudiesModel:
+  name: "Base Model"
+  backgrounds:
+    - DY
+    - TT
+    - W_NJets
+    - EWK
+  signals:
+    - VBFHto2Mu_M125_powheg
+    - GluGluHto2Mu

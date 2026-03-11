@@ -276,7 +276,7 @@ def PrepareDFBuilder(dfBuilder):
         )
 
     dfBuilder.df = GetAllMuMuCorrectedPtRelatedObservables(
-        dfBuilder.df, suffix=dfBuilder.config["mu_pt_for_definitions"]
+        dfBuilder.df, suff=dfBuilder.config["mu_pt_for_definitions"]
     )
     # if "m_mumu_resolution" in dfBuilder.config["variables"]:
     #     dfBuilder.df = GetMuMuMassResolution(dfBuilder.df, dfBuilder.config["pt_to_use"])

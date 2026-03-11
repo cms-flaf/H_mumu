@@ -15,6 +15,7 @@ DY_M_10to50:
   corrections:
     Vpt:
       type: DY
+      stages: [ 'AnalysisCache', 'HistTuple' ]
   datasets:
     - DYto2E_M_10to50_amcatnloFXFX
     - DYto2Mu_M_10to50_amcatnloFXFX
@@ -25,6 +26,7 @@ DYto2E_M_50:
   corrections:
     Vpt:
       type: DY
+      stages: [ 'AnalysisCache', 'HistTuple' ]
   datasets:
     - DYto2E_M_50_amcatnloFXFX
     # - DYto2E_M_50_amcatnloFXFX_ext1
@@ -47,6 +49,7 @@ DYto2Mu_M_50:
   corrections:
     Vpt:
       type: DY
+      stages: [ 'AnalysisCache', 'HistTuple' ]
   datasets:
     - DYto2Mu_M_50_amcatnloFXFX
     # - DYto2Mu_M_50_amcatnloFXFX_ext1
@@ -69,6 +72,7 @@ DYto2Tau_M_50:
   corrections:
     Vpt:
       type: DY
+      stages: [ 'AnalysisCache', 'HistTuple' ]
   datasets:
     - DYto2Tau_M_50_0J_amcatnloFXFX
     - DYto2Tau_M_50_1J_amcatnloFXFX
@@ -266,14 +270,21 @@ VBFHto2Mu_m125_amcatnlo:
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_M125_amcatnlo
+    - VBFHto2Mu_m125_amcatnlo
+
+VBFHto2Mu_M125_powheg:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets:
+    - VBFHto2Mu_M125_powheg
 
 VBFHto2Mu_m125_powheg:
   name: "VBFHto2Mu"
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_M125_powheg
+    - VBFHto2Mu_m125_powheg
 
 VBFHto2Mu_m120:
   name: "VBFHto2Mu"
@@ -294,14 +305,14 @@ VBFHto2Mu_m125_tuneDown:
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_M125_tuneCP5Down_amcatnlo
+    - VBFHto2Mu_m125_tuneCP5Down_amcatnlo
 
 VBFHto2Mu_m125_tuneUp:
   name: "VBFHto2Mu"
   color: "kPink"
   color_mplhep: fuchsia
   datasets:
-    - VBFHto2Mu_M125_tuneCP5Up_amcatnlo
+    - VBFHto2Mu_m125_tuneCP5Up_amcatnlo
 
 VBFHto2Mu_Herwig:
   name: "VBFHto2Mu_Herwig"
@@ -452,7 +463,7 @@ custom_CI_signal:
   name: "CI -- signals"
   color: "kAzure+10"
   datasets:
-    - VBFHto2Mu_M125_powheg
+    - VBFHto2Mu_m125_powheg
 
 custom_CI_data:
   name: "CI -- data"

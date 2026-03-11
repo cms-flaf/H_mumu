@@ -6,6 +6,12 @@
 #   nanoAOD:
 #     v15:
 
+DYto2Mu_MLL_105to160_amcatnloFXFX_Flashsim:
+  crossSection: DYto2Mu_MLL_105to160_amcatnloFXFX
+  crossSectionStitch: DYto2Mu_MLL_105to160_amcatnloFXFX
+  nanoAOD:
+    v15: DYto2Mu-2Jets_Bin-MLL-105to160_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/fvaselli-DY2Mu_2Jets_MLL-105to160-RunIII2024Summer24MiniAODv6-150X_mcRun3_2024_realistic_v2-packedTrackGenJetAK4-limit-TrkGJ_eta-to-tracker-66034083b387d860d393385d18a4f59d/USER
+
 DYto2Mu_MLL_105to160_amcatnloFXFX:
   crossSection: DYto2Mu_MLL_105to160_amcatnloFXFX
   crossSectionStitch: DYto2Mu_MLL_105to160_amcatnloFXFX
@@ -22,6 +28,12 @@ EWK_2L2J_madgraph_herwig:
   generator: madgraph
   nanoAOD:
     v15: /EWK-2L2J_Bin-MLL-50-MJJ-120_TuneCH3_13p6TeV_madgraph-herwig7/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
+
+EWK_2Mu2J_MLL_105to160_pythia_Flashsim:
+  crossSection: EWK_2Mu2J_MLL105to160_MJJ120
+  generator: madgraph
+  nanoAOD:
+    v15: /EWK-2Mu2J_Bin-M2Mu-105to160-M2J-120_TuneCP5_13p6TeV_madgraph-pythia8/fvaselli-EWK-2Mu2J_Bin-M2Mu-105to160-M2J-120-RunIII2024Summer24MiniAODv6-150X_mcRun3_2024_realistic_v2-packedTrackGenJetAK4-ace5d3f4ddab40d8fc0f18e7a8dbab44/USER
 
 EWK_2Mu2J_MLL_105to160_herwig:
   crossSection: EWK_2Mu2J_MLL105to160_MJJ120
@@ -74,12 +86,17 @@ VBFHto2Mu_M125_powheg:
   generator: powheg
   nanoAOD:
     v15: /VBFH-Hto2Mu_Par-M-125_TuneCP5_13p6TeV_powheg-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
-VBFHto2Mu_M125_tuneCP5Up_amcatnlo:
+VBFHto2Mu_m125_powheg:
+  crossSection: VBFHto2Mu
+  generator: powheg
+  nanoAOD:
+    v15: /VBFH-Hto2Mu_Par-M-125_TuneCP5_13p6TeV_powheg-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
+VBFHto2Mu_m125_tuneCP5Up_amcatnlo:
   crossSection: VBFHto2Mu
   generator: amcatnlo
   nanoAOD:
     v15: /VBF-Hto2Mu_Par-M-125_TuneCP5Up_13p6TeV_amcatnlo-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
-VBFHto2Mu_M125_tuneCP5Down_amcatnlo:
+VBFHto2Mu_m125_tuneCP5Down_amcatnlo:
   crossSection: VBFHto2Mu
   generator: amcatnlo
   nanoAOD:
@@ -89,7 +106,7 @@ VBFHto2Mu_M120_amcatnlo:
   generator: amcatnlo
   nanoAOD:
     v15: /VBF-Hto2Mu_Par-M-120_TuneCP5_13p6TeV_amcatnlo-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM
-VBFHto2Mu_M125_amcatnlo:
+VBFHto2Mu_m125_amcatnlo:
   crossSection: VBFHto2Mu
   generator: amcatnlo
   nanoAOD:
