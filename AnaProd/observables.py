@@ -776,7 +776,7 @@ observables = {
 }
 
 
-def GetObservablesCols(obs_gname, isData, nano_version="v12"):
+def GetObservablesCols(obs_name, isData, nano_version="v12"):
     obs_to_store = []
     if obs_name not in observables.keys():
         raise RuntimeError(f"Invalid observable name, not found in keys {obs_name}")
