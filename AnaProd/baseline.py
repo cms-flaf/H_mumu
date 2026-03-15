@@ -1,6 +1,6 @@
 from FLAF.Common.Utilities import *
 
-channels = ["muMu"]  
+channels = ["muMu"]
 leg_names = ["Electron", "Muon", "Tau"]
 
 
