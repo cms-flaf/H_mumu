@@ -1,6 +1,6 @@
 from FLAF.Common.Utilities import *
 
-channels = ["muMu"]  # in order of importance during the channel selection
+channels = ["muMu"]  
 leg_names = ["Electron", "Muon", "Tau"]
 
 
@@ -14,7 +14,6 @@ def LowerMassCut(df, suffixes=None):
     for suffix in suffixes:
         split_suffix = suffix.split("_")
         suffix_for_m_mumu = ""
-
         if len(split_suffix) > 1:
             suffix_for_m_mumu = "_" + ("_".join(split_suffix[1:]))
         if f"m_mumu{suffix_for_m_mumu}" not in df.GetColumnNames():
@@ -23,7 +22,6 @@ def LowerMassCut(df, suffixes=None):
             )
         masses_suffixes.append(suffix_for_m_mumu)
     masses_cut = " || ".join([f"m_mumu{s} > 50" for s in masses_suffixes])
-    print(masses_cut)
     df = df.Filter(masses_cut, "m(mumu) > 50 ")
     return df
 
