@@ -32,19 +32,14 @@ def LeptonsSelection(df):
         "Muon_B0", f"""(v_ops::pt(Muon_p4) > 15 && abs(v_ops::eta(Muon_p4)) < 2.4)"""
     )
     df = df.Define(
-        "Muon_B0",
-        f"""v_ops::pt({muon_sel_p4}) > 10 && abs(v_ops::eta({muon_sel_p4})) < 2.4 """,  #  loose id and very loose iso
-        # v_ops::pt({muon_sel_p4}) > 10 && abs(v_ops::eta({muon_sel_p4})) < 2.4 && (Muon_looseId && Muon_iso < 0.4)""",  #  loose id and very loose iso
-        # f"""
-        # v_ops::pt(Muon_p4) > 20 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25)""", # uncomment for sync purposes
-        # v_ops::pt(Muon_p4) > 10 && abs(v_ops::eta(Muon_p4)) < 2.4 && (Muon_mediumId && Muon_iso < 0.25) && abs(Muon_dz) < 1. && abs(Muon_dxy) < 0.5""",
+        "Muon_IsoIDOfficial", f"""(Muon_mediumId && Muon_miniPFRelIso_all < 0.25)"""
     )
-
-    ####  COMPARISON WITH RUN2 ####
-    # # exactly two muons -- See AN/2019_185 line 118 and AN/2019_205 lines 246
-    df = df.Filter("Muon_idx[Muon_B0].size()==2", "Exactly 2 muons")
-    df = df.Define("mu1_idx", "Muon_idx[Muon_B0][0]")
-    df = df.Define("mu2_idx", "Muon_idx[Muon_B0][1]")
+    df = df.Filter(
+        "Muon_idx[Muon_B0 && Muon_IsoIDOfficial].size()==2",
+        "Consider events with exactly 2 muons",
+    )
+    df = df.Define("mu1_idx", "Muon_idx[Muon_B0 && Muon_IsoIDOfficial][0]")
+    df = df.Define("mu2_idx", "Muon_idx[Muon_B0 && Muon_IsoIDOfficial][1]")
     df = df.Filter("Muon_charge[mu1_idx]*Muon_charge[mu2_idx]<0", "OS muons")
 
     ### electron veto ###
