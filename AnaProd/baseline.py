@@ -5,6 +5,7 @@ leg_names = ["Electron", "Muon", "Tau"]
 
 
 def LowerMassCut(df, p4_cols=["p4"], cut_value=50):
+    masses_suffixes = []
     for p4_col in p4_cols:
         for mu_idx in [1, 2]:
             if f"mu{mu_idx}_{p4_col}" not in df.GetColumnNames():
