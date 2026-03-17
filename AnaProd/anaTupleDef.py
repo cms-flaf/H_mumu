@@ -134,7 +134,8 @@ def addAllVariables(
 
     dfw.Apply(
         AnaBaseline.LowerMassCut,
-        suffixes=["p4", "p4_nano", "p4_bsConstrainedPt"],
+        p4_cols=["p4", "p4_nano", "p4_bsConstrainedPt"],
+        cut_value=50,
     )
 
     ##### Jets observables ###

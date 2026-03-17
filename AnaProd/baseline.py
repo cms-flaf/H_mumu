@@ -4,25 +4,20 @@ channels = ["muMu"]
 leg_names = ["Electron", "Muon", "Tau"]
 
 
-def LowerMassCut(df, suffixes=None):
-    if suffixes is None:
-        suffixes = []
-        for dfCol in df.GetColumnNames():
-            if f"mu1_p4" in dfCol and "delta" not in dfCol:
-                suffixes.append("_".join(dfCol.split("_")[1:]))
-    masses_suffixes = []
-    for suffix in suffixes:
-        split_suffix = suffix.split("_")
-        suffix_for_m_mumu = ""
-        if len(split_suffix) > 1:
-            suffix_for_m_mumu = "_" + ("_".join(split_suffix[1:]))
-        if f"m_mumu{suffix_for_m_mumu}" not in df.GetColumnNames():
-            df = df.Define(
-                f"m_mumu{suffix_for_m_mumu}", f"(mu1_{suffix}+mu2_{suffix}).M()"
-            )
-        masses_suffixes.append(suffix_for_m_mumu)
-    masses_cut = " || ".join([f"m_mumu{s} > 50" for s in masses_suffixes])
-    df = df.Filter(masses_cut, "m(mumu) > 50 ")
+def LowerMassCut(df, p4_cols=["p4"], cut_value=50):
+    for p4_col in p4_cols:
+        for mu_idx in [1, 2]:
+            if f"mu{mu_idx}_{p4_col}" not in df.GetColumnNames():
+                raise RuntimeError(f"mu{mu_idx}_{p4_col} not in df col names!!")
+        mass_suffix_split = p4_col.split("_")
+        mass_suffix = ""
+        if len(mass_suffix_split) > 1:
+            mass_suffix = "_" + ("_".join(mass_suffix_split[1:]))
+        if f"m_mumu{mass_suffix}" not in df.GetColumnNames():
+            df = df.Define(f"m_mumu{mass_suffix}", f"(mu1_{suffix}+mu2_{suffix}).M()")
+        masses_suffixes.append(mass_suffix)
+    masses_cut = " || ".join([f"m_mumu{s} > {cut_value}" for s in masses_suffixes])
+    df = df.Filter(masses_cut, masses_cut)
     return df
 
 
@@ -32,7 +27,8 @@ def LeptonsSelection(df):
         "Muon_B0", f"""(v_ops::pt(Muon_p4) > 15 && abs(v_ops::eta(Muon_p4)) < 2.4)"""
     )
     df = df.Define(
-        "Muon_IsoIDOfficial", f"""(Muon_mediumId && Muon_miniPFRelIso_all < 0.25)"""
+        "Muon_IsoIDOfficial",
+        f"""(Muon_mediumId && (Muon_pfRelIso04_all < 0.25 || Muon_pfIsoId >= 2) ) """,  # medium ID, loose Iso
     )
     df = df.Filter(
         "Muon_idx[Muon_B0 && Muon_IsoIDOfficial].size()==2",
