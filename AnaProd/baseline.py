@@ -14,7 +14,7 @@ def LowerMassCut(df, p4_cols=["p4"], cut_value=50):
         if len(mass_suffix_split) > 1:
             mass_suffix = "_" + ("_".join(mass_suffix_split[1:]))
         if f"m_mumu{mass_suffix}" not in df.GetColumnNames():
-            df = df.Define(f"m_mumu{mass_suffix}", f"(mu1_{suffix}+mu2_{suffix}).M()")
+            df = df.Define(f"m_mumu{mass_suffix}", f"(mu1_{p4_col}+mu2_{p4_col}).M()")
         masses_suffixes.append(mass_suffix)
     masses_cut = " || ".join([f"m_mumu{s} > {cut_value}" for s in masses_suffixes])
     df = df.Filter(masses_cut, masses_cut)
