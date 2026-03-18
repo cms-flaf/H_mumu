@@ -7,17 +7,8 @@ leg_names = ["Electron", "Muon", "Tau"]
 def LowerMassCut(df, p4_cols=["p4"], cut_value=50):
     masses_suffixes = []
     for p4_col in p4_cols:
-        for mu_idx in [1, 2]:
-            if f"mu{mu_idx}_{p4_col}" not in df.GetColumnNames():
-                raise RuntimeError(f"mu{mu_idx}_{p4_col} not in df col names!!")
-        mass_suffix_split = p4_col.split("_")
-        mass_suffix = ""
-        if len(mass_suffix_split) > 1:
-            mass_suffix = "_" + ("_".join(mass_suffix_split[1:]))
-        if f"m_mumu{mass_suffix}" not in df.GetColumnNames():
-            df = df.Define(f"m_mumu{mass_suffix}", f"(mu1_{p4_col}+mu2_{p4_col}).M()")
-        masses_suffixes.append(mass_suffix)
-    masses_cut = " || ".join([f"m_mumu{s} > {cut_value}" for s in masses_suffixes])
+        df = df.Define(f"m_mumu_{p4_col}", f"(mu1_{p4_col}+mu2_{p4_col}).M()")
+    masses_cut = " || ".join([f"m_mumu_{p4_col} > {cut_value}" for p4_col in p4_cols])
     df = df.Filter(masses_cut, masses_cut)
     return df
 
