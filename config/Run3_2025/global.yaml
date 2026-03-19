@@ -1,0 +1,57 @@
+triggerFile: config/Run3_2025/triggers.yaml
+nano_version: v15
+nanoAODVersions:
+  data: v15
+  mc: v15
+ignore_missing_nanoAOD_files:
+  data: False
+  signals: True
+  backgrounds: True
+bTagAlgo: UParTAK4
+corrections:
+  btag:
+    stages: [ AnaTuple, AnalysisCache, HistTuple ]
+    modes:
+      AnaTuple: none
+      HistTuple: none
+      AnalysisCache: none
+    tagger: UParTAK4
+    jetCollection: Jet
+    wantShape: False
+  mu:
+    stage: AnaTuple
+    columns:
+      pfRelIso04_all: pfRelIso04_all
+      tightId: tightId
+      tkRelIso: tkRelIso
+      highPtId: highPtId
+      mediumId: mediumId
+      looseId: looseId
+      p4: p4_bsConstrainedPt # p4_pt_nano
+    lowPt: False
+    midPt: True
+    hiPt: False
+  trigger:
+    stage: AnaTuple
+    mode: SF
+    extraFormat:
+      pt: "bsConstrainedPt"
+  # muScaRe: # N/A in 2025
+  #   stage: AnaTuple # later it will become anaTuple.
+  #   # stage: HistTuple # later it will become anaTuple.
+  #   mu_pt_for_ScaReApplication: "bsConstrainedPt"
+  #   apply_scare: true
+  #   apply_fsr_recovery: true
+  lumi: { stage: AnaTuple }
+  xs: { stage: AnaTuple }
+  gen: { stage: AnaTuple }
+  # pu:
+  #   stages: [ AnaTuple, AnaTupleMerge ]
+  #   enabled:
+  #     AnaTuple: true
+  #     AnaTupleMerge: false
+  base: { stage: AnaTupleMerge }
+  JEC: { stage: AnaTuple }
+  JER:
+    stage: AnaTuple
+    apply_jet_horns_fix: true
