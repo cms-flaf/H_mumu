@@ -456,12 +456,12 @@ Other:
 custom_CI_background:
   name: "CI -- Background"
   color: "kGreen-3"
-  datasets: []
+  datasets: [ ]
 
 custom_CI_signal:
   name: "CI -- signals"
   color: "kAzure+10"
-  datasets: []
+  datasets: [ ]
 
 custom_CI_data:
   name: "CI -- data"
