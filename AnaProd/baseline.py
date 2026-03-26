@@ -15,14 +15,14 @@ def LowerMassCut(df, p4_cols=["p4"], cut_value=50):
 def LeptonsSelection(df):
     ### muon selection: pt > 15 GeV, abs(eta) < 2.4, medium ID, loose PF Iso ###
     df = df.Define(
-        "Muon_accpetanceSel",
+        "Muon_acceptanceSel",
         "v_ops::pt(Muon_p4) > 15 && abs(v_ops::eta(Muon_p4)) < 2.4",
     )
     df = df.Define(
         "Muon_idIsoSel",
         "Muon_mediumId && Muon_pfIsoId >= 2",
     )
-    df = df.Define("Muon_selectedIdx", "Muon_idx[Muon_accpetanceSel && Muon_idIsoSel]")
+    df = df.Define("Muon_selectedIdx", "Muon_idx[Muon_acceptanceSel && Muon_idIsoSel]")
     df = df.Filter("Muon_selectedIdx.size()==2", "n_muons=2")
     df = df.Define(
         "Muon_selectedIdxSorted",
