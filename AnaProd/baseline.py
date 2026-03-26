@@ -15,7 +15,8 @@ def LowerMassCut(df, p4_cols=["p4"], cut_value=50):
 def LeptonsSelection(df):
     ### muon selection: pt > 15 GeV, abs(eta) < 2.4, medium ID, loose PF Iso ###
     df = df.Define(
-        "Muon_accpetanceSel", "v_ops::pt(Muon_p4) > 15 && abs(v_ops::eta(Muon_p4)) < 2.4"
+        "Muon_accpetanceSel",
+        "v_ops::pt(Muon_p4) > 15 && abs(v_ops::eta(Muon_p4)) < 2.4",
     )
     df = df.Define(
         "Muon_idIsoSel",
@@ -23,11 +24,14 @@ def LeptonsSelection(df):
     )
     df = df.Define("Muon_selectedIdx", "Muon_idx[Muon_accpetanceSel && Muon_idIsoSel]")
     df = df.Filter("Muon_selectedIdx.size()==2", "n_muons=2")
-    df = df.Define("Muon_selectedIdxSorted", """
+    df = df.Define(
+        "Muon_selectedIdxSorted",
+        """
                     auto indices = Muon_selectedIdx;
                     if(Muon_p4[indices[1]].pt() > Muon_p4[indices[0]].pt())
                         std::swap(indices[0], indices[1]);
-                    return indices; """)
+                    return indices; """,
+    )
     df = df.Define("mu1_idx", "Muon_selectedIdxSorted[0]")
     df = df.Define("mu2_idx", "Muon_selectedIdxSorted[1]")
     # df = df.Filter("Muon_charge[mu1_idx]*Muon_charge[mu2_idx]<0", "OS muons")
