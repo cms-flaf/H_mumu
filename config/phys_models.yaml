@@ -9,7 +9,7 @@ BaseModel:
     - EWK
     - EWK_2Mu2J_MLL_105to160_pythia
     - EWK_2Mu2J_MLL_105to160_herwig
-    - EWK_2Mu2J_MLL_105to160_pythia_Flashsim
+    # - EWK_2Mu2J_MLL_105to160_pythia_Flashsim
     - W_NJets
     - ST
     - TW
