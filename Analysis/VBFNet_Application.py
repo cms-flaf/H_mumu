@@ -84,7 +84,7 @@ class VBFNetProducer:
         filepath = os.path.join(directory, "config.toml")
         with open(filepath, "rb") as f:
             config = tomllib.load(f)
-        parity = config["kfold"]["k"]
+        parity = config["splitting"]["k"]
         input_features = config["dataset"]["data_columns"]
         return parity, input_features
 
@@ -117,7 +117,7 @@ class VBFNetProducer:
             all_predictions[:, parityIdx] = predictions.reshape(predictions.shape[0])
         final_predictions = np.sum(all_predictions, axis=1)
         # Last save the branches
-        branches["VBFNetOutput"] = final_predictions.transpose().astype(np.float32)
+        branches["NNOutput"] = final_predictions.transpose().astype(np.float32)
         print("Finishing call, memory?")
         process = psutil.Process(os.getpid())
         mem_mb = process.memory_info().rss / 1024 / 1024
