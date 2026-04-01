@@ -14,8 +14,8 @@ def get_arguments():
     Builds an argument parser to get CLI arguments for the config file and dataset directory.
     """
     parser = argparse.ArgumentParser(
-        prog="NN_Generator",
-        description="For a given dataset and config file, creates a network, trains it, and runs testing",
+        prog="ONNX Inference Script",
+        description="A script to run ONNX inference on a dataset using k-fold models",
     )
     parser.add_argument(
         "--directory",
