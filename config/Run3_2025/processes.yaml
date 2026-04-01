@@ -1,3 +1,255 @@
+############## DY ##############
+DY:
+  name: "DY"
+  color: "kAzure+7"
+  color_mplhep: lightskyblue
+  sub_processes: [ ]
+
+DY_M_10to50:
+  name: "DY M10to50"
+  color: "kAzure+10"
+  corrections:
+    Vpt:
+      type: DY
+      stages: [ 'AnalysisCache', 'HistTuple' ]
+  datasets: [ ]
+
+DYto2E_M_50:
+  processors: *DY_processors_singleFlavor
+  corrections:
+    Vpt:
+      type: DY
+      stages: [ 'AnalysisCache', 'HistTuple' ]
+  datasets: [ ]
+
+DYto2Mu_M_50:
+  processors: *DY_processors_singleFlavor
+  corrections:
+    Vpt:
+      type: DY
+      stages: [ 'AnalysisCache', 'HistTuple' ]
+  datasets: [ ]
+
+DYto2Tau_M_50:
+  processors: *DY_processors_singleFlavor
+  corrections:
+    Vpt:
+      type: DY
+      stages: [ 'AnalysisCache', 'HistTuple' ]
+  datasets: [ ]
+
+DYto2Mu_MLL105To160:
+  name: "DY"
+  color: "kAzure+7"
+  color_mplhep: lightskyblue
+  sub_processes: [ ]
+
+############## TT ##############
+TT:
+  name: "t $\\bar{t}$"
+  color: "kGreen-3"
+  color_mplhep: darkblue
+  datasets: [ ]
+
+TT_Inclusive:
+  name: "t#bar{t} Inclusive"
+  color: "kGreen-3"
+  color_mplhep: darkgreen
+  datasets: [ ]
+
+
+############## WJetsToLNu ##############
+W:
+  name: "W"
+  color: "kGreen"  # eliminates need for plot.yaml
+  color_mplhep: yellow
+  datasets: [ ]
+
+W_NJets:
+  name: "W $\\rightarrow \\ell \\nu$+ jets"
+  color: "kGreen"  # eliminates need for plot.yaml
+  color_mplhep: yellow
+  datasets: [ ]
+
+############## EWK ##############
+EWK_LLJJ:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets: [ ]
+
+EWK:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets: [ ]
+
+EWK_2Mu2J_MLL_105to160_herwig:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets: [ ]
+
+
+EWK_2Mu2J_MLL_105to160_pythia:
+  name: "EWK"
+  color: kMagenta+3
+  color_mplhep: darkmagenta
+  datasets: [ ]
+
+############## Other single H  ##############
+H_mainBckg:
+  name: "Single H"
+  color: kPink
+  color_mplhep: aqua
+  datasets: [ ]
+
+############## VV ##############
+VV_Inclusive:
+  name: "VV Inclusive"
+  color: kPink+2
+  color_mplhep: tomato
+  datasets: [ ]
+
+VV:
+  name: "VV"
+  color: kPink+2
+  color_mplhep: tomato
+  datasets: [ ]
+
+############## VH non-inclusive ##############
+VH_inclusive:
+  name: "VH"
+  color: kPink+2
+  color_mplhep: slateblue
+  datasets: [ ]
+    # - ZH_Hto2B_Zto2L
+    # - ZH_Hto2B_Zto2Q
+    # - ggZH_Hto2B_Zto2L
+    # - ggZH_Hto2B_Zto2Q
+    # # - WminusH_Hto2B_Wto2Q
+    # - WminusH_Hto2B_WtoLNu
+    # # - WplusH_Hto2B_Wto2Q
+    # - WplusH_Hto2B_WtoLNu
+
+############## VVV inclusive ##############
+VVV:
+  name: "VVV"
+  color: kOrange-4
+  color_mplhep: plum
+  datasets: [ ]
+
+
+############## ST ##############
+ST:
+  name: "ST"
+  color: kCyan-1
+  color_mplhep: cyan
+  datasets: [ ]
+
+
+############## TW ##############
+TW:
+  name: "TW"
+  color: kCyan-1
+  color_mplhep: green
+  datasets: [ ]
+
+############## TTX ##############
+TTX:
+  name: "TT+X"
+  color: kBlue-10
+  color_mplhep: pink
+  datasets: [ ]
+
+
+############## VBF signal ##############
+VBFHto2Mu_m125_amcatnlo:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets: [ ]
+
+VBFHto2Mu_M125_powheg:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets: [ ]
+
+VBFHto2Mu_m125_powheg:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets: [ ]
+
+VBFHto2Mu_m120:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets: [ ]
+
+VBFHto2Mu_m130:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets: [ ]
+
+VBFHto2Mu_m125_tuneDown:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets: [ ]
+
+VBFHto2Mu_m125_tuneUp:
+  name: "VBFHto2Mu"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets: [ ]
+
+VBFHto2Mu_Herwig:
+  name: "VBFHto2Mu_Herwig"
+  color: "kPink"
+  color_mplhep: fuchsia
+  datasets: [ ]
+
+############## ggH signal ##############
+
+GluGluHto2Mu_MiNNLO:
+  name: "GluGluHto2Mu"
+  color: "kCyan"
+  color_mplhep: cyan
+  datasets: [ ]
+
+GluGluHto2Mu:
+  name: "GluGluHto2Mu"
+  color: "kCyan"
+  color_mplhep: cyan
+  datasets: [ ]
+
+############## VH signal ##############
+
+VHto2Mu:
+  name: "VHto2Mu"
+  color: "kPink"
+  color_mplhep: red
+  datasets: [ ]
+
+############## TTH signal ##############
+
+TTHto2Mu:
+  name: "TTHto2Mu"
+  color: "kPink"
+  color_mplhep: red
+  datasets: [ ]
+
+TTH_inclusive:
+  name: "ttH"
+  color: "kpink"
+  color_mplhep: red
+  datasets: [ ]
+
+############### Data ##############
+
 Data_Full:
   name: "Data"
   datasets:
@@ -94,6 +346,12 @@ Data_MuonEG:
     - MuonEG_Run2025F_v2
     - MuonEG_Run2025G_v1
 
+
+Other:
+  name: "Other"
+  color: kGray+1
+  color_mplhep: slateblue
+  datasets: [ ]
 
 custom_CI_background:
   name: "CI -- Background"
