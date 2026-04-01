@@ -144,17 +144,42 @@ DYto2Mu_MLL105To160:
   name: "DY"
   color: "kAzure+7"
   color_mplhep: lightskyblue
-  sub_processes:
+  datasets:
     - DYto2Mu_MLL_105to160_amcatnloFXFX
+
+DYto2Mu_MLL105To160_FlashSim:
+  name: "DY"
+  color: "kAzure+7"
+  color_mplhep: lightskyblue
+  datasets: [ ]
+
 ############## TT ##############
 TT:
   name: "t $\\bar{t}$"
   color: "kGreen-3"  # eliminates need for plot.yaml
   color_mplhep: darkblue  # turquoise
-  datasets:
+  sub_processes:
     - TTto2L2Nu
     - TTtoLNu2Q
     - TTto4Q
+
+TTto2L2Nu:
+  processors: *ext_processor
+  datasets:
+    - TTto2L2Nu
+    - TTto2L2Nu_ext1
+
+TTtoLNu2Q:
+  processors: *ext_processor
+  datasets:
+    - TTtoLNu2Q
+    - TTtoLNu2Q_ext1
+
+TTto4Q:
+  processors: *ext_processor
+  datasets:
+    - TTto4Q
+    - TTto4Q_ext1
 
 TT_Inclusive:
   name: "t#bar{t} Inclusive"
@@ -208,18 +233,21 @@ EWK_2Mu2J_MLL_105to160_pythia:
   color_mplhep: darkmagenta
   datasets:
     - EWK_2Mu2J_MLL_105to160_pythia
+EWK_2Mu2J_MLL_105to160_pythia_Flashsim:
+  name: "DY"
+  color: "kAzure+7"
+  color_mplhep: lightskyblue
+  datasets: [ ]
 ############## Other single H  ##############
 H_mainBckg:
   name: "Single H"
   color: kPink
   color_mplhep: aqua
   datasets:
-    - GluGluHto2Tau_UncorrelatedDecay_Filtered
     - GluGluHto2Tau_UncorrelatedDecay_UnFiltered
     - GluGluHto2B_M125
     - VBFHto2B_M125
     - VBFHto2Tau_UncorrelatedDecay_UnFiltered
-    - VBFHto2Tau_UncorrelatedDecay_Filtered
     - GluGluHto2Wto2L2Nu_M125
 
 ############## VV ##############
