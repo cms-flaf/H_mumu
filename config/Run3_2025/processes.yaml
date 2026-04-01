@@ -253,7 +253,7 @@ TTH_inclusive:
 Data_Full:
   name: "Data"
   datasets:
-    - Muon0_Run2025B_v1
+    # - Muon0_Run2025B_v1
     - Muon0_Run2025C_v1
     - Muon0_Run2025C_v2
     - Muon0_Run2025D_v1
@@ -261,7 +261,7 @@ Data_Full:
     - Muon0_Run2025F_v1
     - Muon0_Run2025F_v2
     - Muon0_Run2025G_v1
-    - Muon1_Run2025B_v1
+    # - Muon1_Run2025B_v1
     - Muon1_Run2025C_v1
     - Muon1_Run2025C_v2
     - Muon1_Run2025D_v1
@@ -269,7 +269,7 @@ Data_Full:
     - Muon1_Run2025F_v1
     - Muon1_Run2025F_v2
     - Muon1_Run2025G_v1
-    - MuonEG_Run2025B_v1
+    # - MuonEG_Run2025B_v1
     - MuonEG_Run2025C_v1
     - MuonEG_Run2025C_v2
     - MuonEG_Run2025D_v1
@@ -281,7 +281,7 @@ Data_Full:
 Data_EGamma:
   name: "Data EGamma"
   datasets:
-    - EGamma0_Run2025B_v1
+    # - EGamma0_Run2025B_v1
     - EGamma0_Run2025C_v1
     - EGamma0_Run2025C_v2
     - EGamma0_Run2025D_v1
@@ -289,7 +289,7 @@ Data_EGamma:
     - EGamma0_Run2025F_v1
     - EGamma0_Run2025F_v2
     - EGamma0_Run2025G_v1
-    - EGamma1_Run2025B_v1
+    # - EGamma1_Run2025B_v1
     - EGamma1_Run2025C_v1
     - EGamma1_Run2025C_v2
     - EGamma1_Run2025D_v1
@@ -297,7 +297,7 @@ Data_EGamma:
     - EGamma1_Run2025F_v1
     - EGamma1_Run2025F_v2
     - EGamma1_Run2025G_v1
-    - EGamma2_Run2025B_v1
+    # - EGamma2_Run2025B_v1
     - EGamma2_Run2025C_v1
     - EGamma2_Run2025C_v2
     - EGamma2_Run2025D_v1
@@ -305,7 +305,7 @@ Data_EGamma:
     - EGamma2_Run2025F_v1
     - EGamma2_Run2025F_v2
     - EGamma2_Run2025G_v1
-    - EGamma3_Run2025B_v1
+    # - EGamma3_Run2025B_v1
     - EGamma3_Run2025C_v1
     - EGamma3_Run2025C_v2
     - EGamma3_Run2025D_v1
@@ -317,7 +317,7 @@ Data_EGamma:
 Data_Muon:
   name: "Data Muon"
   datasets:
-    - Muon0_Run2025B_v1
+    # - Muon0_Run2025B_v1
     - Muon0_Run2025C_v1
     - Muon0_Run2025C_v2
     - Muon0_Run2025D_v1
@@ -325,7 +325,7 @@ Data_Muon:
     - Muon0_Run2025F_v1
     - Muon0_Run2025F_v2
     - Muon0_Run2025G_v1
-    - Muon1_Run2025B_v1
+    # - Muon1_Run2025B_v1
     - Muon1_Run2025C_v1
     - Muon1_Run2025C_v2
     - Muon1_Run2025D_v1
@@ -337,7 +337,7 @@ Data_Muon:
 Data_MuonEG:
   name: "Data MuonEG"
   datasets:
-    - MuonEG_Run2025B_v1
+    # - MuonEG_Run2025B_v1
     - MuonEG_Run2025C_v1
     - MuonEG_Run2025C_v2
     - MuonEG_Run2025D_v1
@@ -367,4 +367,4 @@ custom_CI_data:
   name: "CI -- data"
   color: "kAzure+10"
   datasets:
-    - Muon0_Run2025B_v1
+    - Muon0_Run2025C_v1
