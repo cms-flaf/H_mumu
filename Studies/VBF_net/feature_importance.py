@@ -47,7 +47,7 @@ def load_model_and_data():
 
 def main(model, df, data_cols, process=None):
     """
-    Computes the actual SHAP scores and saves violin plots of top features. 
+    Computes the actual SHAP scores and saves violin plots of top features.
     """
     plt.clf()
     # Explainer population
