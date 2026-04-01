@@ -8,7 +8,7 @@ class PandasLoader:
     Class to input the initial .pkl file and set weights.
     Class_Weight is the column used for inferencing plotting.
     Train_Wiehgt is the column used for weighting the loss function for training.
-    These may be the same, but Train_Weight usually gets some addtional rescaling/norming applied. 
+    These may be the same, but Train_Weight usually gets some addtional rescaling/norming applied.
     """
 
     def __init__(

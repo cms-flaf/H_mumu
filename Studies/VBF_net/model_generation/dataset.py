@@ -1,7 +1,7 @@
-'''
-Deprecated, but keeping around. This defined a new Dataset object that would zero pad jet variables on the fly. 
+"""
+Deprecated, but keeping around. This defined a new Dataset object that would zero pad jet variables on the fly.
 It's (obviously) faster to do this on the Root side and then pass in a normal dataset object to Torch.
-'''
+"""
 
 import awkward as ak
 import numpy as np
@@ -43,7 +43,7 @@ class JetDataset(Dataset):
 
     def pad(self, arr):
         """
-        Pads the array with zeros if fewer than max_jets jets are available. 
+        Pads the array with zeros if fewer than max_jets jets are available.
         """
         arr = arr[: self.max_jets]
         padlen = self.max_jets - len(arr)
@@ -53,7 +53,7 @@ class JetDataset(Dataset):
 
     def __getitem__(self, idx):
         """
-        Defines the next vector to return. 
+        Defines the next vector to return.
         """
         mumu = self.mumu_pt[idx]
         pt_pad = self.pad(self.pt[idx])

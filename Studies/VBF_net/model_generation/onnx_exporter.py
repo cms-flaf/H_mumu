@@ -6,6 +6,7 @@ class ExportNetwork(torch.nn.Module):
     Wrapper to include input renorm as an initial layer of model.
     Builds the scaling into the network.
     """
+
     def __init__(self, model, device, renorm_mean, renorm_std):
         super().__init__()
         self.device = device
@@ -40,7 +41,7 @@ class ExportNetwork(torch.nn.Module):
 
 def export_to_onnx(x_data, model, outname, device, renorm_mean, renorm_std):
     """
-    The main external callable function. Wraps the model and does the export. 
+    The main external callable function. Wraps the model and does the export.
     """
     export_model = ExportNetwork(model, device, renorm_mean, renorm_std)
     torch.onnx.export(

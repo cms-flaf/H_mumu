@@ -1,4 +1,3 @@
-
 import matplotlib.pyplot as plt
 import mplhep
 import numpy as np

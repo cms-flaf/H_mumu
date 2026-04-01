@@ -5,8 +5,9 @@ import pandas as pd
 class KFolder:
     """
     K-fold training support. Returns events by modulus of the selection column.
-    This column is "FullEventId" by default. 
+    This column is "FullEventId" by default.
     """
+
     def __init__(self, k, fold_idx_only=False):
         self.k = k
         self.selection_column = "FullEventId"

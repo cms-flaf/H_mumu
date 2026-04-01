@@ -27,7 +27,7 @@ class Trainer:
     ):
         # Any config parameters specific for the optimizer
         self.hyperparams = hyperparams
-        self.optimizer = None # This is set on the call to train (needs model passed)
+        self.optimizer = None  # This is set on the call to train (needs model passed)
         # Other passed params
         self.batch_size = batch_size
         self.epochs = epochs
