@@ -94,3 +94,20 @@ Data_MuonEG:
     - MuonEG_Run2025F_v1
     - MuonEG_Run2025F_v2
     - MuonEG_Run2025G_v1
+
+
+custom_CI_background:
+  name: "CI -- Background"
+  color: "kGreen-3"
+  datasets: [ ]
+
+custom_CI_signal:
+  name: "CI -- signals"
+  color: "kAzure+10"
+  datasets: [ ]
+
+custom_CI_data:
+  name: "CI -- data"
+  color: "kAzure+10"
+  datasets:
+    - Muon0_Run2025B_v1
