@@ -26,7 +26,7 @@ data_columns = [
     'R_pt',
     'minDeltaEtaSigned',
     'minDeltaPhi',
-    'Zepperfield_Var',
+    'Zeppenfeld_Var',
     'pt_centrality',
     'j1_eta',
     'j1_pt',
