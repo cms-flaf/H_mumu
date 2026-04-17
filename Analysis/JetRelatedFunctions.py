@@ -230,7 +230,7 @@ def VBFNetJetCollectionDef(df, max_jets=4):
     jet_vars = [
         "pt",
         "eta",
-        # "phi",
+        "phi",
         # "btagPNetB",
         # "btagPNetCvB",
         "btagPNetCvL",
