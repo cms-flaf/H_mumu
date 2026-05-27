@@ -94,7 +94,7 @@ class DNNProducer:
         return parity, input_features
 
     ### Functions for running the inference ###
-
+    """
     def prepare_dfw(self, dfw, dataset_name):
         print("*********** Running prepare_dfw...")
         corrections = Corrections.getGlobal()
@@ -107,6 +107,7 @@ class DNNProducer:
         dfw = analysis.PrepareDFBuilder(dfw)
         print(f"on top of PrepareDFBuilder it has {dfw.df.Count().GetValue()} entries")
         return dfw
+    """
 
     def ApplyDNN(self, branches):
         print("*********** Running ApplyDNN...")
