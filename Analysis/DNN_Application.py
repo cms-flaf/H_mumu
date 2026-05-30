@@ -97,15 +97,16 @@ class DNNProducer:
 
     def prepare_dfw(self, dfw, dataset_name):
         print("*********** Running prepare_dfw...")
-        corrections = Corrections.getGlobal()
-        dfw = analysis.DataFrameBuilderForHistograms(
-            dfw.df, self.global_cfg, self.period, corrections
-        )
-        print(
-            f"when creating DataFrameBuilderForHistograms, dfw has {dfw.df.Count().GetValue()} entries"
-        )
-        dfw = analysis.PrepareDFBuilder(dfw)
-        print(f"on top of PrepareDFBuilder it has {dfw.df.Count().GetValue()} entries")
+        # Moving AnalysisCache to work on the HistTupleDef DFW
+        # corrections = Corrections.getGlobal()
+        # dfw = analysis.DataFrameBuilderForHistograms(
+        #     dfw.df, self.global_cfg, self.period, corrections
+        # )
+        # print(
+        #     f"when creating DataFrameBuilderForHistograms, dfw has {dfw.df.Count().GetValue()} entries"
+        # )
+        # dfw = analysis.PrepareDFBuilder(dfw)
+        # print(f"on top of PrepareDFBuilder it has {dfw.df.Count().GetValue()} entries")
         return dfw
 
     def ApplyDNN(self, branches):

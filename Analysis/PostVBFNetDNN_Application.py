@@ -96,11 +96,12 @@ class PostVBFNetDNNProducer:
 
     def prepare_dfw(self, dfw, dataset_name):
         print("*********** Running prepare_dfw...")
-        corrections = Corrections.getGlobal()
-        dfw = analysis.DataFrameBuilderForHistograms(
-            dfw.df, self.global_cfg, self.period, corrections
-        )
-        dfw = analysis.PrepareDFBuilder(dfw)
+        # Moving AnalysisCache to work on the HistTupleDef DFW
+        # corrections = Corrections.getGlobal()
+        # dfw = analysis.DataFrameBuilderForHistograms(
+        #     dfw.df, self.global_cfg, self.period, corrections
+        # )
+        # dfw = analysis.PrepareDFBuilder(dfw)
         dfw.df = VBFNetJetCollectionDef(dfw.df)
         return dfw
 
