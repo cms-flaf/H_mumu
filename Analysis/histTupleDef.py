@@ -40,7 +40,7 @@ def GetDfw(df, setup, dataset_name):
     )  # here go the customisations for each analysis eventually extrcting stuff from the global params
     kwargset["isData"] = global_params["process_group"] == "data"
     kwargset["wantTriggerSFErrors"] = (
-        global_params["compute_rel_weights"]
+        global_params.get("compute_rel_weights", False)
         and "trigger" in corrections.to_apply.keys()
     )
     print(kwargset["wantTriggerSFErrors"])
