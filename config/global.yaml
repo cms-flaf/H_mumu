@@ -197,6 +197,8 @@ corrections:
   JER:
     stage: AnaTuple
     apply_jet_horns_fix: true
+  Vpt:
+    stages: [ AnalysisCache, HistTuple ]
 
 
 scales:
