@@ -10,6 +10,7 @@ bundles:
       - FLAF
       - AnaProd
       - Analysis
+      - Studies
       - config
       - env.sh
       - soft/flaf_env
