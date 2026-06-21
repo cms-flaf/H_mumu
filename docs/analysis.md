@@ -1,0 +1,48 @@
+# Running the analysis
+
+The pipeline — anaTuples, observables, histograms, plots — is the **standard FLAF chain**; follow
+the **[FLAF full-workflow walkthrough](https://cms-flaf.github.io/FLAF/workflow/walkthrough/)** for
+the commands (`InputFileTask` → … → `HistPlotTask`). This page collects what is **specific to
+H→μμ**.
+
+```sh
+ERA=Run3_2022
+VER=dev
+
+law run FLAF.Analysis.tasks.HistPlotTask \
+  --period $ERA --version $VER --workflow local --branches 0 --test 1000
+```
+
+## No statistical-inference stage here
+
+Unlike the HH analyses, H→μμ does **not** include a statistical-inference step in this repository —
+there is no `StatInference`/`inference` submodule, and the pipeline ends at histograms/plots. Any
+interpretation is done with separate tooling outside this repository.
+
+## Categories
+
+H→μμ is split into production-mode categories (e.g. VBF- and ggH-enriched selections). Category and
+channel selection is driven by `config/global.yaml`; adjust it there or via your
+[`user_custom.yaml`](https://cms-flaf.github.io/FLAF/configuration/user-custom/).
+
+## Running all eras
+
+H→μμ targets every Run 3 era. Run a stage per era, or — in CI — set `H_mumu_eras: ALL` (see
+[FLAF → Integration pipeline](https://cms-flaf.github.io/FLAF/ci/integration-pipeline/)). Remember
+that one `law run` processes **one** `--period` at a time.
+
+## Choosing which variables to histogram
+
+As for any FLAF analysis, the variable set is controlled by the `variables:` list in
+`user_custom.yaml` (or `--variables`):
+
+```yaml
+variables:
+  - mu1_pt
+  - m_mumu
+```
+
+!!! note "Lower-case CI process names"
+    H→μμ's CI process names are lower-case (`custom_CI_signal`, `custom_CI_background`,
+    `custom_CI_data`) — unlike the capitalised names in the HH analyses. Use the exact name from
+    `config/processes.yaml` when passing `--process`.
