@@ -17,7 +17,8 @@ variables:
   H_mumu_active: "1"
   H_mumu_task: "FLAF.Analysis.tasks.HistPlotTask"
   H_mumu_args: "--branches 0 --test 1000"
-  H_mumu_eras: "ALL"
+  H_mumu_eras: "Run3_2022 Run3_2022EE Run3_2023 Run3_2023BPix Run3_2024"
+  H_mumu_processes: "custom_CI_signal custom_CI_background custom_CI_data"
   TEST_TIMEOUT: "4h"
 
 gitlab_url: "https://gitlab.cern.ch/api/v4/projects/210600/trigger/pipeline"
