@@ -239,3 +239,16 @@ payload_producers:
     awkward_based: True
     uproot_stepsize: '50MB'
     dependencies: [ ]
+
+histTuple_flavor: default
+histTuple_flavors:
+  default:
+    fullResolution_variables: [ ]
+    variables: [ ]
+  CI:
+    fullResolution_variables: [ ]
+    variables:
+      - DNN_NNOutput
+      - VBFNet_NNOutput
+      - PostVBFNetDNN_NNOutput
+      - mu1_pt
