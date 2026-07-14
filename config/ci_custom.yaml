@@ -7,12 +7,4 @@ compute_unc_histograms: true
 store_noncentral: true
 
 phys_model: TestModel
-histTuple_flavor: default
-histTuple_flavors:
-  default:
-    fullResolution_variables: [ ]
-    variables:
-      - DNN_NNOutput
-      - VBFNet_NNOutput
-      - PostVBFNetDNN_NNOutput
-      - mu1_pt
+histTuple_flavor: CI
