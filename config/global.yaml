@@ -3,6 +3,39 @@ histTupleDef: Analysis/histTupleDef.py
 analysis_import: Analysis.H_mumu
 phys_model: BaseModel
 
+bundles:
+  core:
+    period_specific: false
+    patterns:
+      - FLAF
+      - AnaProd
+      - Analysis
+      - Studies
+      - config
+      - env.sh
+      - soft/flaf_env
+      - Corrections
+      - include
+  cmssw:
+    period_specific: false
+    patterns:
+      - soft/CMSSW_16_0_6
+  inputFileList:
+    period_specific: true
+    patterns:
+      - data/{version}/InputFileTask/{period}
+    task_requires:
+      module: FLAF.AnaProd.tasks
+      class: InputFileTask
+  AnaTupleFileList:
+    period_specific: true
+    patterns:
+      - data/{version}/AnaTupleFileListBuilderTask/{period}
+      - data/{version}/AnaTupleFileListTask/{period}
+    task_requires:
+      module: FLAF.AnaProd.tasks
+      class: AnaTupleFileListBuilderTask
+
 WLCGFileSystem:
   remotePathCacheHost: cms-flaf.cern.ch
   remotePathCachePort: 5000
