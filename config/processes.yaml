@@ -29,6 +29,16 @@
       AnaTuple: file
       AnaTupleMerge: process
 
+.DY_mll_processors: &DY_mll_processors
+  - name: Stitcher
+    module: FLAF.Processors.MCStitchingDYMll
+    class: DYMllStitcher
+    config: FLAF/config/Processors/stitching_DY_amcatnlo_Vpt_NpNLO_mll_Mu.yaml
+    stages: [ AnaTuple, AnaTupleMerge ]
+    dependency_level:
+      AnaTuple: file
+      AnaTupleMerge: process
+
 .ext_processor: &ext_processor
   - name: Stitcher
     verbose: 1
