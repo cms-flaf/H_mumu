@@ -29,11 +29,11 @@
       AnaTuple: file
       AnaTupleMerge: process
 
-.DY_mll_processors: &DY_mll_processors
+.DY_flavor_mll_processors: &DY_flavor_mll_processors
   - name: Stitcher
     module: FLAF.Processors.MCStitchingDYMll
     class: DYMllStitcher
-    config: FLAF/config/Processors/stitching_DY_amcatnlo_Vpt_NpNLO_mll_Mu.yaml
+    config: FLAF/config/Processors/stitching_DY_amcatnlo_Vpt_NpNLO_flavor_mll.yaml
     stages: [ AnaTuple, AnaTupleMerge ]
     dependency_level:
       AnaTuple: file

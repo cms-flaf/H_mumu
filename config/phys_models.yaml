@@ -2,7 +2,6 @@ BaseModel:
   name: "Base Model"
   backgrounds:
     - DY
-    - DYto2Mu_MLL105To160
     # - DYto2Mu_MLL105To160_FlashSim # no files available
     - TT
     - VV
