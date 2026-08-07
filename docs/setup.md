@@ -42,3 +42,5 @@ your [`user_custom.yaml`](https://cms-flaf.github.io/FLAF/configuration/user-cus
 - [Running the analysis](analysis.md) — the H→μμ-specific run notes.
 - [FLAF → Full workflow](https://cms-flaf.github.io/FLAF/workflow/walkthrough/) — the common
   pipeline, stage by stage.
+- [FLAF → HTCondor](https://cms-flaf.github.io/FLAF/workflow/htcondor/) /
+  [CRAB](https://cms-flaf.github.io/FLAF/workflow/crab/) — CERN batch and full WLCG submission.
