@@ -45,7 +45,7 @@ DYto2L_PtBinned:
     - DYto2L_M_50_PTLL_600_2J_amcatnloFXFX
 
 DYto2L_InclusivePlusBinned:
-  processors: *DY_processors_allFlavors
+  processors: *DY_flavor_mll_processors
   corrections:
     Vpt:
       type: DY
@@ -65,6 +65,7 @@ DYto2L_InclusivePlusBinned:
     - DYto2L_M_50_PTLL_200to400_2J_amcatnloFXFX
     - DYto2L_M_50_PTLL_400to600_2J_amcatnloFXFX
     - DYto2L_M_50_PTLL_600_2J_amcatnloFXFX
+    - DYto2Mu_MLL_105to160_amcatnloFXFX
 
 
 DY_M_10to50:
@@ -175,10 +176,21 @@ W_NJets:
   name: "W $\\rightarrow \\ell \\nu$+ jets"
   color: "kGreen"  # eliminates need for plot.yaml
   color_mplhep: yellow
+  processors: *W_processors
   datasets:
     - WtoLNu_0J_amcatnloFXFX
     - WtoLNu_1J_amcatnloFXFX
     - WtoLNu_2J_amcatnloFXFX
+    - WtoLNu_PTLNu_40to100_1J_amcatnloFXFX
+    - WtoLNu_PTLNu_100to200_1J_amcatnloFXFX
+    - WtoLNu_PTLNu_200to400_1J_amcatnloFXFX
+    - WtoLNu_PTLNu_400to600_1J_amcatnloFXFX
+    - WtoLNu_PTLNu_600_1J_amcatnloFXFX
+    - WtoLNu_PTLNu_40to100_2J_amcatnloFXFX
+    - WtoLNu_PTLNu_100to200_2J_amcatnloFXFX
+    - WtoLNu_PTLNu_200to400_2J_amcatnloFXFX
+    - WtoLNu_PTLNu_400to600_2J_amcatnloFXFX
+    - WtoLNu_PTLNu_600_2J_amcatnloFXFX
 
 ############## EWK ##############
 EWK_LLJJ:
