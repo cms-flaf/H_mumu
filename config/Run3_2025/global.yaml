@@ -45,11 +45,11 @@ corrections:
   lumi: { stage: AnaTuple }
   xs: { stage: AnaTuple }
   gen: { stage: AnaTuple }
-  # pu:
-  #   stages: [ AnaTuple, AnaTupleMerge ]
-  #   enabled:
-  #     AnaTuple: true
-  #     AnaTupleMerge: false
+  pu:
+    stages: [ AnaTuple, AnaTupleMerge ]
+    enabled:
+      AnaTuple: true
+      AnaTupleMerge: false
   base: { stage: AnaTupleMerge }
   JEC: { stage: AnaTuple }
   JER:

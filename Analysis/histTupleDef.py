@@ -135,6 +135,7 @@ def DefineWeightForHistograms(
             muIso_WP_for_SF,
             enable_trigger=enable_trigger,
             enable_ID=enable_ID,
+            weight_base_name=global_params.get("weight_base_branch", "weight_base"),
         )
         if process_group != "data"
         else "1"

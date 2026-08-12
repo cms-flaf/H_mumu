@@ -157,10 +157,16 @@ def SaveVarsForNNInput(variables):
 
 
 def GetWeight(
-    channel, process_name, muID_WP_for_SF, muIso_WP_for_SF, enable_ID, enable_trigger
+    channel,
+    process_name,
+    muID_WP_for_SF,
+    muIso_WP_for_SF,
+    enable_ID,
+    enable_trigger,
+    weight_base_name="weight_base",
 ):
     weights_to_apply = [
-        "weight_base",
+        weight_base_name,
     ]
     # quick fix for DY weights. In future should pass the full dataset and process info to DefineWeightForHistograms
     if process_name.startswith("DY"):
