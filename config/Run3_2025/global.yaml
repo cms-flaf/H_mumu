@@ -36,12 +36,11 @@ corrections:
     mode: SF
     extraFormat:
       pt: "bsConstrainedPt"
-  # muScaRe: # N/A in 2025
-  #   stage: AnaTuple # later it will become anaTuple.
-  #   # stage: HistTuple # later it will become anaTuple.
-  #   mu_pt_for_ScaReApplication: "bsConstrainedPt"
-  #   apply_scare: true
-  #   apply_fsr_recovery: true
+  muScaRe:
+    stage: AnaTuple
+    mu_pt_for_ScaReApplication: "bsConstrainedPt"
+    apply_scare: true
+    apply_fsr_recovery: true
   lumi: { stage: AnaTuple }
   xs: { stage: AnaTuple }
   gen: { stage: AnaTuple }
