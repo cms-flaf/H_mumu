@@ -381,16 +381,80 @@ TTH_inclusive:
 ############### Data ##############
 Data_Full:
   name: "Data"
-  datasets: [ ]  # 2026 data not yet catalogued
+  datasets:
+    - Muon0_Run2026A_v1
+    - Muon0_Run2026B_v1
+    - Muon0_Run2026C_v1
+    - Muon0_Run2026D_v1
+    - Muon1_Run2026A_v1
+    - Muon1_Run2026B_v1
+    - Muon1_Run2026C_v1
+    - Muon1_Run2026D_v1
+    - Muon2_Run2026A_v1
+    - Muon2_Run2026B_v1
+    - Muon2_Run2026C_v1
+    - Muon2_Run2026D_v1
+    - Muon3_Run2026A_v1
+    - Muon3_Run2026B_v1
+    - Muon3_Run2026C_v1
+    - Muon3_Run2026D_v1
+    - MuonEG_Run2026A_v1
+    - MuonEG_Run2026B_v1
+    - MuonEG_Run2026C_v1
+    - MuonEG_Run2026D_v1
 Data_EGamma:
   name: "Data EGamma"
-  datasets: [ ]  # 2026 data not yet catalogued
+  datasets:
+    - EGamma0_Run2026A_v1
+    - EGamma0_Run2026B_v1
+    - EGamma0_Run2026C_v1
+    - EGamma0_Run2026D_v1
+    - EGamma1_Run2026A_v1
+    - EGamma1_Run2026B_v1
+    - EGamma1_Run2026C_v1
+    - EGamma1_Run2026D_v1
+    - EGamma2_Run2026A_v1
+    - EGamma2_Run2026B_v1
+    - EGamma2_Run2026C_v1
+    - EGamma2_Run2026D_v1
+    - EGamma3_Run2026A_v1
+    - EGamma3_Run2026B_v1
+    - EGamma3_Run2026C_v1
+    - EGamma3_Run2026D_v1
+    - EGamma4_Run2026A_v1
+    - EGamma4_Run2026B_v1
+    - EGamma4_Run2026C_v1
+    - EGamma4_Run2026D_v1
+    - EGamma5_Run2026A_v1
+    - EGamma5_Run2026B_v1
+    - EGamma5_Run2026C_v1
+    - EGamma5_Run2026D_v1
 Data_Muon:
   name: "Data Muon"
-  datasets: [ ]  # 2026 data not yet catalogued
+  datasets:
+    - Muon0_Run2026A_v1
+    - Muon0_Run2026B_v1
+    - Muon0_Run2026C_v1
+    - Muon0_Run2026D_v1
+    - Muon1_Run2026A_v1
+    - Muon1_Run2026B_v1
+    - Muon1_Run2026C_v1
+    - Muon1_Run2026D_v1
+    - Muon2_Run2026A_v1
+    - Muon2_Run2026B_v1
+    - Muon2_Run2026C_v1
+    - Muon2_Run2026D_v1
+    - Muon3_Run2026A_v1
+    - Muon3_Run2026B_v1
+    - Muon3_Run2026C_v1
+    - Muon3_Run2026D_v1
 Data_MuonEG:
   name: "Data MuonEG"
-  datasets: [ ]  # 2026 data not yet catalogued
+  datasets:
+    - MuonEG_Run2026A_v1
+    - MuonEG_Run2026B_v1
+    - MuonEG_Run2026C_v1
+    - MuonEG_Run2026D_v1
 Other:
   name: "Other"
   color: kGray+1
@@ -412,4 +476,5 @@ custom_CI_signal:
 custom_CI_data:
   name: "CI -- data"
   color: "kAzure+10"
-  datasets: [ ]  # 2026 data not yet catalogued
+  datasets:
+    - Muon1_Run2026A_v1
