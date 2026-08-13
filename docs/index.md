@@ -23,7 +23,7 @@ analysis with the **leanest** FLAF setup.
 | Process | **Single** Higgs (H→μμ), not di-Higgs. |
 | Submodules | The simplest set: just **`FLAF`** and **`Corrections`**. |
 | Statistical inference | **None** in this repository — there is no `StatInference`/`inference` submodule. |
-| Eras | Runs over **all** Run 3 eras (CI uses `ALL`). |
+| Eras | Runs over **all** Run 3 eras (CI lists them explicitly). |
 | CI process names | **lower-case** (`custom_CI_signal`, `custom_CI_background`, `custom_CI_data`). |
 
 ## Quickstart
