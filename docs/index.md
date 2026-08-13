@@ -49,5 +49,6 @@ New to FLAF? Read [Key terms](https://cms-flaf.github.io/FLAF/getting-started/ke
 
 ## Eras
 
-H→μμ runs over all Run 3 eras (`Run3_2022`, `Run3_2022EE`, `Run3_2023`, `Run3_2023BPix`, and newer
-as they come online). See [FLAF → Eras](https://cms-flaf.github.io/FLAF/concepts/eras/).
+H→μμ runs over all Run 3 eras (`Run3_2022`, `Run3_2022EE`, `Run3_2023`, `Run3_2023BPix`,
+`Run3_2024`, `Run3_2025` and `Run3_2026`). See
+[FLAF → Eras](https://cms-flaf.github.io/FLAF/concepts/eras/).
