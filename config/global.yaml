@@ -105,6 +105,7 @@ singleMu_th:
   Run3_2023BPix: 26
   Run3_2024: 26
   Run3_2025: 26
+  Run3_2026: 26
 
 categories:
   - no_cuts
