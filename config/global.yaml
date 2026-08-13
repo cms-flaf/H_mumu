@@ -286,3 +286,7 @@ histTuple_flavors:
       - VBFNet_NNOutput
       - PostVBFNetDNN_NNOutput
       - mu1_pt
+
+crab:
+  whitelist:
+    - T2_CH_CERN
