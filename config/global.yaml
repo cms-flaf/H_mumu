@@ -286,3 +286,6 @@ histTuple_flavors:
       - VBFNet_NNOutput
       - PostVBFNetDNN_NNOutput
       - mu1_pt
+
+crab:
+  input_dataset: TTto2L2Nu
