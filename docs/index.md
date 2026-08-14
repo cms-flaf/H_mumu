@@ -23,7 +23,7 @@ analysis with the **leanest** FLAF setup.
 | Process | **Single** Higgs (H→μμ), not di-Higgs. |
 | Submodules | The simplest set: just **`FLAF`** and **`Corrections`**. |
 | Statistical inference | **None** in this repository — there is no `StatInference`/`inference` submodule. |
-| Eras | Runs over **all** Run 3 eras (CI uses `ALL`). |
+| Eras | Runs over **all** Run 3 eras (CI lists them explicitly). |
 | CI process names | **lower-case** (`custom_CI_signal`, `custom_CI_background`, `custom_CI_data`). |
 
 ## Quickstart
@@ -49,5 +49,6 @@ New to FLAF? Read [Key terms](https://cms-flaf.github.io/FLAF/getting-started/ke
 
 ## Eras
 
-H→μμ runs over all Run 3 eras (`Run3_2022`, `Run3_2022EE`, `Run3_2023`, `Run3_2023BPix`, and newer
-as they come online). See [FLAF → Eras](https://cms-flaf.github.io/FLAF/concepts/eras/).
+H→μμ runs over all Run 3 eras (`Run3_2022`, `Run3_2022EE`, `Run3_2023`, `Run3_2023BPix`,
+`Run3_2024`, `Run3_2025` and `Run3_2026`). See
+[FLAF → Eras](https://cms-flaf.github.io/FLAF/concepts/eras/).

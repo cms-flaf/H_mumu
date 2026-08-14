@@ -27,7 +27,7 @@ channel selection is driven by `config/global.yaml`; adjust it there or via your
 
 ## Running all eras
 
-H→μμ targets every Run 3 era. Run a stage per era, or — in CI — set `H_mumu_eras: ALL` (see
+H→μμ targets every Run 3 era. Run a stage per era, or — in CI — list them in `H_mumu_eras` (see
 [FLAF → Integration pipeline](https://cms-flaf.github.io/FLAF/ci/integration-pipeline/)). Remember
 that one `law run` processes **one** `--period` at a time.
 
