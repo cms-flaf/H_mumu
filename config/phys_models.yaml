@@ -33,7 +33,8 @@ BaseModel:
 TestModel:
   name: "Test model for CI"
   backgrounds:
-    - custom_CI_background
+    - custom_CI_background_TT
+    - custom_CI_background_DY
   signals:
     - custom_CI_signal
   data:

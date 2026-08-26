@@ -43,6 +43,12 @@ variables:
 ```
 
 !!! note "Lower-case CI process names"
-    H→μμ's CI process names are lower-case (`custom_CI_signal`, `custom_CI_background`,
-    `custom_CI_data`) — unlike the capitalised names in the HH analyses. Use the exact name from
-    `config/processes.yaml` when passing `--process`.
+    H→μμ's CI process names are lower-case (`custom_CI_signal`, `custom_CI_background_TT`,
+    `custom_CI_background_DY`, `custom_CI_data`) — unlike the capitalised names in the HH
+    analyses. Use the exact name from `config/processes.yaml` when passing `--process`.
+
+    There are two CI backgrounds: `custom_CI_background_TT` is one t̄t dataset (unstitched, like
+    the real `TT` process) and `custom_CI_background_DY` is one DY dataset carrying the same
+    stitcher the era's DY process uses — `DYMllStitcher` for 2022–2023BPix, the plain
+    single-flavour `MCStitcher` for 2024 onwards. That is what runs the stitching over the
+    whole anaTuple → merge chain in CI; keep them in step with the real processes.
