@@ -1,124 +1,88 @@
-# H_mumu Analysis Framework - Copilot Instructions
+# H_mumu — instructions for Copilot code review
 
-## Repository Overview
-H→μμ (Higgs to dimuon) analysis for CMS Run 3 using FLAF (Framework for Large-scale Analysis Framework). Analyzes NanoAOD data for Higgs boson decays to muon pairs (ggH and VBF modes).
+The H→μμ analysis, and the leanest member of the [FLAF](https://github.com/cms-flaf/FLAF)
+ecosystem: single-Higgs rather than di-Higgs, two submodules, no statistical-inference chain.
 
-**Type**: Physics analysis | **Size**: ~3.4MB | **Languages**: Python, C++ (ROOT/RDataFrame)  
-**Key Dependencies**: ROOT, law (Luigi Analysis Workflow), FLAF, Corrections frameworks  
-**Channel**: muMu (dimuon)
+**Read `FLAF/.github/copilot-instructions.md` first.** It carries the framework invariants — law
+task semantics, bundles, remote-storage caching, processor stages, concurrency — and the rules on
+what a useful comment looks like and what not to flag. The rule that documentation ships in the same PR applies here too, and is restated below with the pages that matter for this repository. Everything there applies here. This file
+adds only what is specific to this analysis.
 
-## Project Structure
+## Analysis-specific invariants
 
-### Root Files
-- `env.sh` - Setup script (sources FLAF/env.sh, sets ANALYSIS_PATH)
-- `.clang-format` - C++ formatting (Google style, 120 cols, 4 spaces)
-- `.editorconfig` - Editor config (4 spaces, UTF-8)
+### Naming
 
-### Key Directories
-- `AnaProd/` - Tuple production: `anaTupleDef.py` (observables), `baseline.py` (selection)
-- `Analysis/` - Main code: `H_mumu.py` (core logic), `histTupleDef.py`, `DNN_Application.py`, `GetTriggerWeights.py`, `models/` (ONNX files)
-- `include/` - C++ headers: `Helper.h` (VBF jets), `HmumuCore.h` (structures), `MuonScaRe.cc`
-- `config/` - YAML configs:
-  - `global.yaml` - Main config (channels, categories, corrections, regions)
-  - `law.cfg` - Law workflow config
-  - `signal_samples.yaml`, `phys_models.yaml`, `background_samples.yaml`
-  - `Run3_2022/`, `Run3_2022EE/`, `Run3_2023/`, `Run3_2023BPix/` - Period configs (samples, processes, triggers, weights)
-  - `ci_custom.yaml` - CI configuration
-- `run_tools/law_customizations.py` - Custom Task class
-- `Studies/DNN/` - Neural network training (configs, scripts)
-- `FLAF/`, `Corrections/` - Git submodules (required)
+**The CI process names are lower-case here** (`custom_CI_signal`, `custom_CI_background_TT`,
+`custom_CI_background_DY`, `custom_CI_data`) where the HH analyses capitalise them. Copying a
+snippet from HH_bbtautau or HH_bbWW without adjusting the case silently selects nothing.
 
-## Git Submodules
+### Stitching
 
-**CRITICAL**: Initialize submodules before any work:
-```bash
-git submodule update --init --recursive
-```
-Required: `FLAF` (core framework), `Corrections` (corrections library). Needs GitHub/GitLab SSH keys.
+- DY is stitched with `DYMllStitcher` (`*DY_flavor_mll_processors`) for 2022–2023BPix and with the
+  plain single-flavour `MCStitcher` from 2024 onwards; the per-era difference is deliberate.
+- `DYMllStitcher` derives `LHE_dilep_flavor` and `LHE_mll` from `LHEPart`, which this anaTuple
+  **does** store (`AnaProd/anaTupleDef.py` requests the `LHE` and `LHEPart` observable groups, defined in `AnaProd/observables.py`). A change that stops
+  storing those groups breaks the merge-stage stitching, with no failure until then.
+- Every stitching processor must declare `stages: [ AnaTuple, AnaTupleMerge ]` — see the FLAF file
+  for what happens otherwise.
 
-## Environment Setup
+### Integration test
 
-### Prerequisites
-- CMSSW environment (ROOT, CMSSW tools), Grid certificate, VOMS proxy
-- Python 3: law, luigi, ROOT, awkward, onnxruntime, numpy, pyyaml, tomllib, psutil
-- Storage: CERNBox (T3_CH_CERNBOX) or local
+`TestModel` runs `custom_CI_background_TT` and `custom_CI_background_DY` plus one signal and one
+data process, and each must carry the same `processors:` as the real `TT` / DY process **of that
+era**. A diff that changes a real process's processors and leaves the CI counterpart behind
+silently removes the coverage.
 
-### Setup Procedure
-1. **Initialize submodules**: `git submodule update --init --recursive`
-2. **Source environment**: `source env.sh` (sets ANALYSIS_PATH, loads FLAF/env.sh - **always run first**)
-3. **Index law tasks**: `law index` (run after setup or task changes)
-4. **VOMS proxy**: `voms-proxy-init -voms cms -rfc -valid 192:00`
-5. **Create** `config/user_custom.yaml` (see README.md for template with storage paths)
+The process names are also listed in `cms-flaf/FLAF_ci`, a **different repository**; renaming or
+adding one here needs that updated in step.
 
-## Analysis Workflow
+## Documentation must ship with the change
 
-### Typical Analysis Steps
+A PR must update the documentation **in the same PR** whenever it changes anything a user of the
+framework can observe. Treat this as a review item of the same weight as correctness — docs
+drifting from the code is the failure that motivated the current documentation, and a PR that
+lands without them is not complete.
 
-1. **Get input files**: `law run InputFileTask --period Run3_2022 --version <ver>` (creates `data/InputFileTask/`, **required first**)
-2. **Generate AnaCache**: `law run AnaCacheTask --period Run3_2022 --version <ver>` (add `--InputFileTask-version <ver>` if differs)
-3. **Analysis tuples**: `law run AnaTupleTask --period Run3_2022 --version <ver>`
-4. **Histograms**: `law run HistPlotTask --period Run3_2022 --version <ver>`
+Ask, for every diff: does it add, rename or remove any of these?
 
-**Law Parameters**: `--period` (Run3_2022/EE/2023/BPix), `--version`, `--customisations`, `--test`
+- a task or DAG node, or the arguments/parameters of one;
+- a command, a CLI flag, or the meaning of an existing one;
+- a configuration key — `global.yaml`, `user_custom.yaml`, `processes.yaml`, `phys_models.yaml`,
+  cross-sections, `fs_*` storage keys, bundle flavours, processor entries;
+- a dataset, era, process or physics-model name;
+- the environment, installation or setup steps;
+- storage locations, output paths or log locations;
+- a CI workflow, or how the integration test is triggered or configured;
+- any behaviour a user relies on, including a default that changes.
 
-## Code Formatting and Style
+If the answer is yes and the diff touches **no** documentation file, say so and name the page that
+should have changed. If the author states the change is internal-only, that is a legitimate
+answer — a pure refactor or bugfix with no user-visible effect is exempt — but it should be
+stated in the PR, not left implicit.
 
-### C++ Code (Google style, 120 cols, 4 spaces)
-- **Check**: `clang-format --dry-run -Werror include/*.h include/*.cc` (**run before commit**)
-- **Fix**: `clang-format -i include/*.h include/*.cc`
+Also flag the inverse: documentation edited to describe behaviour the diff does not implement, and
+new pages added without being wired into `mkdocs.yml`'s `nav` (the build fails on that, but the
+review should catch it first).
 
-### Python Code
-4-space indentation, UTF-8, trim trailing whitespace
+Where it goes:
 
-## GitHub Workflows (CI/CD)
+- `docs/` in this repository for analysis-specific material (`analysis.md`, `setup.md`, `index.md`).
+- **`FLAF/docs/` for anything framework-wide.** If the change alters shared behaviour, the
+  documentation belongs there, in a companion PR to `cms-flaf/FLAF` — flag that it is missing
+  rather than accepting an analysis-local description of a framework change.
+- New pages must be added to `nav:` in `mkdocs.yml`; verified with `mkdocs build --strict`.
 
-**PR Checks** (must pass):
-1. **Formatting Check** - C++ clang-format validation (FLAF workflow)
-2. **Sanity Checks** - Repository structure validation (FLAF workflow)
-3. **Integration Tests** - Trigger with `@cms-flaf-bot test` (authorized users only: kandrosov, valeriadamante, acyeagle)
+## Repository facts
 
-## Known Issues and Workarounds
+Verified 2026-08-27; re-check before relying on any of it.
 
-1. **Formatting violations**: Some files may have spacing issues around `==` or `+` operators. Always run `clang-format -i` before commit.
-2. **Submodule failures**: Requires SSH keys for GitHub/GitLab (check settings/keys on both platforms).
-3. **Missing dependencies**: law, luigi, ROOT provided by FLAF/env.sh - always `source env.sh` first.
-
-## Analysis-Specific Details
-
-**Selection**: muMu channel, opposite-sign muons, trigger matching (pT > 26 GeV), isolation, impact parameter cuts  
-**Categories**: no_cuts, OS_sel, trigger_sel, baseline, VBF, ggH, VBF_JetVeto  
-**Regions**: Z_sideband, Signal_Fit, H_sideband, Signal_ext, mass_inclusive  
-**Corrections**: JEC, JER, jet horns fix (Run3: veto 2.5<|η|<3.0, pT<50), trgSF, mu, Vpt, pu, muScaRe  
-**VBF Jets**: m_jj > 400 GeV, Δη > 2.5 (highest mass pair if multiple)  
-**DNN**: 4 k-fold ONNX models in `Analysis/models/`, VBF vs ggH classification
-
-## Naming Conventions
-Config: `*.yaml`, Python: lowercase_underscore, Law tasks: CamelCaseTask, C++: CamelCase.h, Models: trained_model_N.onnx
-
-## Testing and Validation
-
-**Before Commit**:
-1. Format C++: `clang-format -i include/*.h include/*.cc`
-2. Verify: `clang-format --dry-run -Werror include/*.h include/*.cc`
-3. Test setup: `source env.sh && law index --verbose`
-
-**CI Requirements**: C++ formatting, repo structure checks, integration tests (if triggered)
-
-## Important Notes
-
-1. **Always source env.sh** before running any law commands
-2. **Run law index** after environment setup or task changes
-3. **Initialize submodules** before first use
-4. **Format C++ code** before committing (CI will reject improperly formatted code)
-5. **Create user_custom.yaml** with your storage paths before running analysis tasks
-6. **Period-specific configs** must match your data: Run3_2022, Run3_2022EE, Run3_2023, Run3_2023BPix
-7. **Version consistency**: If InputFileTask and AnaCacheTask versions differ, specify both
-
-## Trust These Instructions
-
-These instructions are comprehensive and tested. Only search for additional information if:
-- Instructions are incomplete for your specific task
-- You encounter errors not covered here
-- Instructions appear outdated or incorrect based on error messages
-
-For most tasks, following these instructions exactly will prevent common issues and CI failures.
+| | |
+|---|---|
+| Layout | `AnaProd/` (`anaTupleDef.py`, `baseline.py`, `observables.py`), `Analysis/` (`H_mumu.py`, `histTupleDef.py`, ONNX models), `Studies/DNN/`, `config/`, `include/` (`Helper.h`, `HmumuCore.h`, `MuonScaRe.cc`), `docs/` |
+| Submodules | `FLAF` and `Corrections` only — no `StatInference`, no `inference` |
+| Eras | Run 3: 2022, 2022EE, 2023, 2023BPix, 2024, 2025, 2026 |
+| Configs | `config/global.yaml`, `config/processes.yaml` (processor anchors), `config/phys_models.yaml`, `config/<era>/` |
+| Tests | No unit tests in this repo; the framework's suites live in `FLAF/test/` |
+| Workflows | `formatting-check`, `repo-sanity-checks`, `test-setup-loading`, `deploy-docs`, `trigger-flaf-integration`. Formatting and era loading are checked automatically — do not comment on them |
+| Integration test | Triggered by `@cms-flaf-bot please test`; its configuration lives in `cms-flaf/FLAF_ci`, **not** in this repo |
+| Docs | `docs/`, plus the shared framework docs in `FLAF/docs/` |
