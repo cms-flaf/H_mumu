@@ -47,9 +47,6 @@ corrections:
   gen: { stage: AnaTuple }
   pu:
     stages: [ AnaTuple, AnaTupleMerge ]
-    enabled:
-      AnaTuple: true
-      AnaTupleMerge: false
   base: { stage: AnaTupleMerge }
   JEC: { stage: AnaTuple }
   JER:
