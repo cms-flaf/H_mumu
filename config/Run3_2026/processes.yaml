@@ -382,78 +382,66 @@ TTH_inclusive:
 Data_Full:
   name: "Data"
   datasets:
+    # No Run2026C: it is the dedicated low-PU run, with no certified luminosity.
     - Muon0_Run2026A_v1
     - Muon0_Run2026B_v1
-    - Muon0_Run2026C_v1
     - Muon0_Run2026D_v1
     - Muon1_Run2026A_v1
     - Muon1_Run2026B_v1
-    - Muon1_Run2026C_v1
     - Muon1_Run2026D_v1
     - Muon2_Run2026A_v1
     - Muon2_Run2026B_v1
-    - Muon2_Run2026C_v1
     - Muon2_Run2026D_v1
     - Muon3_Run2026A_v1
     - Muon3_Run2026B_v1
-    - Muon3_Run2026C_v1
     - Muon3_Run2026D_v1
     - MuonEG_Run2026A_v1
     - MuonEG_Run2026B_v1
-    - MuonEG_Run2026C_v1
     - MuonEG_Run2026D_v1
 Data_EGamma:
   name: "Data EGamma"
   datasets:
+    # No Run2026C: it is the dedicated low-PU run, with no certified luminosity.
     - EGamma0_Run2026A_v1
     - EGamma0_Run2026B_v1
-    - EGamma0_Run2026C_v1
     - EGamma0_Run2026D_v1
     - EGamma1_Run2026A_v1
     - EGamma1_Run2026B_v1
-    - EGamma1_Run2026C_v1
     - EGamma1_Run2026D_v1
     - EGamma2_Run2026A_v1
     - EGamma2_Run2026B_v1
-    - EGamma2_Run2026C_v1
     - EGamma2_Run2026D_v1
     - EGamma3_Run2026A_v1
     - EGamma3_Run2026B_v1
-    - EGamma3_Run2026C_v1
     - EGamma3_Run2026D_v1
     - EGamma4_Run2026A_v1
     - EGamma4_Run2026B_v1
-    - EGamma4_Run2026C_v1
     - EGamma4_Run2026D_v1
     - EGamma5_Run2026A_v1
     - EGamma5_Run2026B_v1
-    - EGamma5_Run2026C_v1
     - EGamma5_Run2026D_v1
 Data_Muon:
   name: "Data Muon"
   datasets:
+    # No Run2026C: it is the dedicated low-PU run, with no certified luminosity.
     - Muon0_Run2026A_v1
     - Muon0_Run2026B_v1
-    - Muon0_Run2026C_v1
     - Muon0_Run2026D_v1
     - Muon1_Run2026A_v1
     - Muon1_Run2026B_v1
-    - Muon1_Run2026C_v1
     - Muon1_Run2026D_v1
     - Muon2_Run2026A_v1
     - Muon2_Run2026B_v1
-    - Muon2_Run2026C_v1
     - Muon2_Run2026D_v1
     - Muon3_Run2026A_v1
     - Muon3_Run2026B_v1
-    - Muon3_Run2026C_v1
     - Muon3_Run2026D_v1
 Data_MuonEG:
   name: "Data MuonEG"
   datasets:
+    # No Run2026C: it is the dedicated low-PU run, with no certified luminosity.
     - MuonEG_Run2026A_v1
     - MuonEG_Run2026B_v1
-    - MuonEG_Run2026C_v1
     - MuonEG_Run2026D_v1
 Other:
   name: "Other"
