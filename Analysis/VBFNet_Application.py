@@ -17,10 +17,10 @@ from FLAF.Common.Utilities import DeclareHeader
 
 
 class VBFNetProducer:
-    def __init__(self, cfg, payload_name, period):
+    def __init__(self, cfg, payload_name, era):
         print("VBFNet Producer init!")
         # cfg is H_mumu/configs/global.yaml
-        self.period = period
+        self.era = era
         self.cfg = cfg
         self.global_cfg = self._load_global_config()
         self.payload_name = payload_name
@@ -52,10 +52,10 @@ class VBFNetProducer:
         filepath = os.path.join(os.environ["ANALYSIS_PATH"], "config", "global.yaml")
         with open(filepath, "r") as f:
             global_config = yaml.safe_load(f)
-        period_based_config_filepath = os.path.join(
-            os.environ["ANALYSIS_PATH"], "config", self.period, "global.yaml"
+        era_based_config_filepath = os.path.join(
+            os.environ["ANALYSIS_PATH"], "config", self.era, "global.yaml"
         )
-        with open(period_based_config_filepath, "r") as f:
+        with open(era_based_config_filepath, "r") as f:
             global_config.update(yaml.safe_load(f))
         return global_config
 

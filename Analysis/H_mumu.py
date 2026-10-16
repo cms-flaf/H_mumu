@@ -31,7 +31,7 @@ Taggers_branchesNames = {
 }
 
 
-def createKeyFilterDict(global_params, period):
+def createKeyFilterDict(global_params, era):
     filter_dict = {}
     filter_str = ""
     channels_to_consider = global_params["channels_to_consider"]
@@ -63,8 +63,8 @@ def createKeyFilterDict(global_params, period):
     triggers_dict = global_params["hist_triggers"]
     for ch in channels_to_consider:
         triggers = triggers_dict[ch]["default"]
-        if period in triggers_dict[ch].keys():
-            triggers = triggers_dict[ch][period]
+        if era in triggers_dict[ch].keys():
+            triggers = triggers_dict[ch][era]
         for reg in custom_regions:
             for cat in all_categories:
                 filter_base = f" ( {ch} && {triggers} && {reg} && {cat} ) "
@@ -228,7 +228,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self.colToSave.append("SS")
 
     def defineCategories(self):  # at the end
-        singleMuTh = self.config["singleMu_th"][self.period]
+        singleMuTh = self.config["singleMu_th"][self.era]
         WP_to_use = self.config["WP_to_use"]
         mu_pt_for_selection = self.config["mu_pt_for_selection"]
 
@@ -250,7 +250,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         self,
         df,
         config,
-        period,
+        era,
         corrections,
         isData=False,
         wantTriggerSFErrors=False,
@@ -260,7 +260,7 @@ class DataFrameBuilderForHistograms(DataFrameBuilderBase):
         super(DataFrameBuilderForHistograms, self).__init__(df)
         self.config = config
         self.isData = isData
-        self.period = period
+        self.era = era
         self.colToSave = colToSave
         self.wantTriggerSFErrors = wantTriggerSFErrors
         self.corrections = corrections

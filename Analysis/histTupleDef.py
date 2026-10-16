@@ -32,7 +32,7 @@ def analysis_setup(setup):
 
 def GetDfw(df, setup, dataset_name, *, corrections):
     global_params = setup.global_params
-    period = global_params["era"]
+    era = global_params["era"]
     kwargset = (
         {}
     )  # here go the customisations for each analysis eventually extrcting stuff from the global params
@@ -44,7 +44,7 @@ def GetDfw(df, setup, dataset_name, *, corrections):
     print(kwargset["wantTriggerSFErrors"])
     kwargset["colToSave"] = []
     dfw = analysis.DataFrameBuilderForHistograms(
-        df, global_params, period, corrections, **kwargset, is_not_Cache=True
+        df, global_params, era, corrections, **kwargset, is_not_Cache=True
     )
 
     new_dfw = analysis.PrepareDFBuilder(dfw)

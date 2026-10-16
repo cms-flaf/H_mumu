@@ -41,7 +41,7 @@ Then smoke-test the chain (see
 
 ```sh
 law run FLAF.Analysis.tasks.HistPlotTask \
-  --version my_first_run --period Run3_2022 --workflow local --branches 0 --test 1000
+  --version my_first_run --era Run3_2022 --workflow local --branches 0 --test 1000
 ```
 
 New to FLAF? Read [Key terms](https://cms-flaf.github.io/FLAF/getting-started/key-terms/) and

@@ -10,7 +10,7 @@ ERA=Run3_2022
 VER=dev
 
 law run FLAF.Analysis.tasks.HistPlotTask \
-  --period $ERA --version $VER --workflow local --branches 0 --test 1000
+  --era $ERA --version $VER --workflow local --branches 0 --test 1000
 ```
 
 ## No statistical-inference stage here
@@ -29,7 +29,7 @@ channel selection is driven by `config/global.yaml`; adjust it there or via your
 
 H→μμ targets every Run 3 era. Run a stage per era, or — in CI — list them in `H_mumu_eras` (see
 [FLAF → Integration pipeline](https://cms-flaf.github.io/FLAF/ci/integration-pipeline/)). Remember
-that one `law run` processes **one** `--period` at a time.
+that one `law run` processes **one** `--era` at a time.
 
 ## Choosing which variables to histogram
 
