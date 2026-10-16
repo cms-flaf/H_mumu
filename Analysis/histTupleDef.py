@@ -1,7 +1,6 @@
 import importlib
 from FLAF.Common.Utilities import *
 from FLAF.Common.HistHelper import *
-from Corrections.Corrections import Corrections
 from Corrections.CorrectionsCore import getSystName, central
 from Analysis.GetTriggerWeights import defineTriggerWeights, defineTriggerWeightsErrors
 from Analysis.MuonRelatedFunctions import *
@@ -31,9 +30,8 @@ def analysis_setup(setup):
     analysis = importlib.import_module(f"{analysis_import}")
 
 
-def GetDfw(df, setup, dataset_name):
+def GetDfw(df, setup, dataset_name, *, corrections):
     global_params = setup.global_params
-    corrections = Corrections.getGlobal()
     period = global_params["era"]
     kwargset = (
         {}
@@ -73,10 +71,10 @@ def DefineWeightForHistograms(
     global_params,
     final_weight_name,
     df_is_central,
+    corrections,
 ):
     is_central = uncName == central
     global central_df_weights_computed
-    corrections = Corrections.getGlobal()
     if not isData and (not central_df_weights_computed or not df_is_central):
         lepton_legs = ["mu1", "mu2"]
         offline_legs = ["mu1", "mu2"]
