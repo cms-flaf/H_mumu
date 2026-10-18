@@ -16,6 +16,16 @@ adds only what is specific to this analysis.
 `custom_CI_background_DY`, `custom_CI_data`) where the HH analyses capitalise them. Copying a
 snippet from HH_bbtautau or HH_bbWW without adjusting the case silently selects nothing.
 
+### Corrections reach the hooks as an argument
+
+FLAF builds one `Corrections` object per dataset, era and stage and passes it to the hooks as the
+required keyword `corrections`: `addAllVariables(..., *, corrections)`, `GetDfw(df, setup,
+dataset_name, *, corrections, ...)` and `DefineWeightForHistograms(..., corrections)`. There is no
+global instance: code that keeps one in a module-level variable, or builds its own, mixes eras
+when a process handles several. The object owns C++ providers that the dataframe refers to by
+address, so it must stay reachable while the dataframe is used (FLAF keeps it on the wrapper as
+`dfw.corrections`). The era is called `era` (`--era`); `period` is only the AnaTuple column.
+
 ### Stitching
 
 - DY is stitched with `DYMllStitcher` (`*DY_flavor_mll_processors`) for 2022–2023BPix and with the

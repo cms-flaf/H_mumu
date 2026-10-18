@@ -56,7 +56,7 @@ def AddColumnsToSave(config):
 
 
 def create_file(
-    config_dict, global_cfg_dict, general_cfg_dict, period, output_folder, out_filename
+    config_dict, global_cfg_dict, general_cfg_dict, era, output_folder, out_filename
 ):
     print(
         f"Starting create file. Memory usage in MB is {psutil.Process(os.getpid()).memory_info()[0] / float(2 ** 20)}"
@@ -195,7 +195,7 @@ def create_file(
     print("Going to snapshot")
     # Only need to save the prexisting columns plus the new DNN variables
     # to add kwargset for isData
-    dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, period)
+    dfw_out = analysis.DataFrameBuilderForHistograms(df_out, global_cfg_dict, era)
     dfw_out = analysis.PrepareDFBuilder(dfw_out)
     dfw_out.colToSave += [c for c in df_out.GetColumnNames()]
     col_to_save = AddColumnsToSave(general_cfg_dict)
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--config-folder", required=True, type=str, help="Config Folder from Step1"
     )
-    parser.add_argument("--period", required=True, type=str, help="period")
+    parser.add_argument("--era", required=True, type=str, help="era")
     args = parser.parse_args()
 
     headers_dir = os.path.dirname(os.path.abspath(__file__))
@@ -262,7 +262,7 @@ if __name__ == "__main__":
             config_dict,
             global_cfg_dict,
             general_cfg_dict,
-            args.period,
+            args.era,
             output_folder,
             "/afs/cern.ch/work/v/vdamante/H_mumu/Studies/DNN/test.root",
         )  # config_dict['meta_data']['input_filename']))

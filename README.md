@@ -54,14 +54,14 @@ Repository for the Hmumu analysis
 
 ### Get input files
 This step consists in saving filenames in local (```data/InputFileTask/...```) and is required for all subsequent steps:
-```law run InputFileTask --period ${ERA} --version ${VERSION_NAME}```
+```law run InputFileTask --era ${ERA} --version ${VERSION_NAME}```
 where you can either set the ${ERA} or just manually put the era name (Run3_2022,Run3_2022EE etc)
 and version consists in a general name (e.g. Run3_2022)
 
 ### Get AnaCache
 The anaCaches are yaml file storing inputs from both saved and non-saved events from original NanoAOD (needed for pu uncertainty)
 ```
-law run AnaCacheTask --period ${ERA} --version ${VERSION_NAME}
+law run AnaCacheTask --era ${ERA} --version ${VERSION_NAME}
 ```
 The ${ERA} is defined as before, whereas version can differ from InputFileTask (e.g. AnaCacheVersion is  Run3_2022_v1 and InputFileTaskVersion is Run3_2022). The important is that **if they differ** you need also to add
 ```

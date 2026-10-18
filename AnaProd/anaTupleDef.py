@@ -1,6 +1,5 @@
 import AnaProd.baseline as AnaBaseline
 import FLAF.Common.BaselineSelection as CommonBaseline
-from Corrections.Corrections import Corrections
 from AnaProd.observables import GetObservablesCols
 
 lepton_legs = ["mu1", "mu2"]
@@ -25,12 +24,14 @@ def addAllVariables(
     global_params,
     channels,
     dataset_cfg,
+    *,
+    corrections,
 ):
     #### baseline cuts (lepton selection + Jet Veto Map definition / application)
     dfw.Apply(AnaBaseline.LeptonsSelection)
-    dfw.Apply(Corrections.getGlobal().jet.getEnergyResolution)
-    dfw.Apply(Corrections.getGlobal().btag.getWPid, "Jet")
-    dfw.Apply(Corrections.getGlobal().JetVetoMap.GetJetVetoMap)
+    dfw.Apply(corrections.jet.getEnergyResolution)
+    dfw.Apply(corrections.btag.getWPid, "Jet")
+    dfw.Apply(corrections.JetVetoMap.GetJetVetoMap)
     dfw.Apply(
         CommonBaseline.ApplyJetVetoMap,
         apply_filter=False,
