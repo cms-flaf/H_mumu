@@ -27,9 +27,10 @@ channel selection is driven by `config/global.yaml`; adjust it there or via your
 
 ## Running all eras
 
-H→μμ targets every Run 3 era. Run a stage per era, or — in CI — list them in `H_mumu_eras` (see
-[FLAF → Integration pipeline](https://cms-flaf.github.io/FLAF/ci/integration-pipeline/)). Remember
-that one `law run` processes **one** `--era` at a time.
+H→μμ targets every Run 3 era. One `law run` covers several eras with `--era Run3_2022,Run3_2022EE,...`
+(see [FLAF → Eras](https://cms-flaf.github.io/FLAF/concepts/eras/#running-several-eras)), or run a stage
+per era; in CI, list them in `H_mumu_eras` (see
+[FLAF → Integration pipeline](https://cms-flaf.github.io/FLAF/ci/integration-pipeline/)).
 
 ## Choosing which variables to histogram
 
