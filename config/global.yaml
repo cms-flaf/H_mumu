@@ -44,8 +44,6 @@ bundles:
         class: AnaTupleFileListTask
 
 WLCGFileSystem:
-  remotePathCacheHost: cms-flaf.cern.ch
-  remotePathCachePort: 5000
   localPathCacheValidity: 600
   verbose: 0
 
