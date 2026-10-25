@@ -53,3 +53,14 @@ variables:
     stitcher the era's DY process uses — `DYMllStitcher` for 2022–2023BPix, the plain
     single-flavour `MCStitcher` for 2024 onwards. That is what runs the stitching over the
     whole anaTuple → merge chain in CI; keep them in step with the real processes.
+
+## Blinded mass window
+
+The plots of `m_mumu` and its variants (the `m_mumu(_.*)?` entry of `config/plot/histograms.yaml`)
+show no data between 115 and 135 GeV, in every region: `blind_ranges: [ 115, 135 ]` hides the data
+points of every bin that overlaps the window, in the plot and in the ratio panel. It acts on the
+`m_mumu` axis only: events inside the window still enter the plots of the other variables in the
+regions that select them (`Signal_Fit`, `Signal_ext`, `mass_inclusive`), the NN outputs included,
+unless those variables are blinded themselves (`blind: true`). The key is
+described under
+[FLAF → HistPlotTask](https://cms-flaf.github.io/FLAF/reference/tasks/#histplottask).

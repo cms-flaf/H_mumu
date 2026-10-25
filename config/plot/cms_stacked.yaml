@@ -171,7 +171,6 @@ data_hist:
   marker_color: kBlack  # black
   legend_style: PLE
   draw_opt: "0pe"
-  blind: true
 
 # page_setup:
 #   canvas_size: [ 1000, 1000 ]
