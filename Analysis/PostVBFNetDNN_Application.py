@@ -5,11 +5,11 @@ import sys
 import tomllib
 
 import numpy as np
-import onnxruntime as ort
 import psutil
 import yaml
 
 import Analysis.H_mumu as analysis
+import FLAF.Common.OnnxSession as OnnxSession
 import FLAF.Common.Utilities as Utilities
 from Analysis.JetRelatedFunctions import VBFNetJetCollectionDef
 from Corrections.Corrections import Corrections
@@ -76,7 +76,7 @@ class PostVBFNetDNNProducer:
         for i in range(parity):
             # The model itself
             filename = os.path.join(directory, f"trained_model_{i}.onnx")
-            model = ort.InferenceSession(filename)
+            model = OnnxSession.make_session(filename)
             models.append(model)
         return models
 
