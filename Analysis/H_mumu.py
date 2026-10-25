@@ -277,8 +277,9 @@ def PrepareDFBuilder(dfBuilder):
         "muScaRe" in dfBuilder.corrections.to_apply
         and dfBuilder.config["corrections"]["muScaRe"]["stage"] == "HistTuple"
     ):
-        dfBuilder.df = dfBuilder.corrections.muScaRe.getP4VariationsForLegs(
-            dfBuilder.df
+        raise RuntimeError(
+            "corrections.muScaRe.stage: HistTuple is not supported; the muon scale and"
+            " resolution correction is applied at the AnaTuple stage only (stage: AnaTuple)."
         )
 
     dfBuilder.df = GetAllMuMuCorrectedPtRelatedObservables(
