@@ -15,7 +15,6 @@ import FLAF.Common.OnnxSession as OnnxSession
 import FLAF.Common.Utilities as Utilities
 import Analysis.H_mumu as analysis
 from FLAF.Common.Utilities import DeclareHeader
-from Corrections.Corrections import Corrections
 
 
 class DNNProducer:
@@ -98,15 +97,6 @@ class DNNProducer:
     def prepare_dfw(self, dfw, dataset_name):
         print("*********** Running prepare_dfw...")
         # Moving AnalysisCache to work on the HistTupleDef DFW
-        # corrections = Corrections.getGlobal()
-        # dfw = analysis.DataFrameBuilderForHistograms(
-        #     dfw.df, self.global_cfg, self.period, corrections
-        # )
-        # print(
-        #     f"when creating DataFrameBuilderForHistograms, dfw has {dfw.df.Count().GetValue()} entries"
-        # )
-        # dfw = analysis.PrepareDFBuilder(dfw)
-        # print(f"on top of PrepareDFBuilder it has {dfw.df.Count().GetValue()} entries")
         return dfw
 
     def ApplyDNN(self, branches):

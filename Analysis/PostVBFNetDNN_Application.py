@@ -12,7 +12,6 @@ import Analysis.H_mumu as analysis
 import FLAF.Common.OnnxSession as OnnxSession
 import FLAF.Common.Utilities as Utilities
 from Analysis.JetRelatedFunctions import VBFNetJetCollectionDef
-from Corrections.Corrections import Corrections
 from FLAF.Common.Utilities import DeclareHeader
 
 
@@ -97,11 +96,6 @@ class PostVBFNetDNNProducer:
     def prepare_dfw(self, dfw, dataset_name):
         print("*********** Running prepare_dfw...")
         # Moving AnalysisCache to work on the HistTupleDef DFW
-        # corrections = Corrections.getGlobal()
-        # dfw = analysis.DataFrameBuilderForHistograms(
-        #     dfw.df, self.global_cfg, self.period, corrections
-        # )
-        # dfw = analysis.PrepareDFBuilder(dfw)
         dfw.df = VBFNetJetCollectionDef(dfw.df)
         return dfw
 
