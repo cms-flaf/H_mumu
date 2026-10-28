@@ -2,7 +2,6 @@ from __future__ import annotations
 import os, sys
 import numpy as np
 import awkward as ak
-import onnxruntime as ort
 import psutil
 import yaml
 import os
@@ -12,6 +11,7 @@ import pickle as pkl
 from pprint import pprint
 
 from Studies.DNN.model_generation.parse_column_names import parse_column_names
+import FLAF.Common.OnnxSession as OnnxSession
 import FLAF.Common.Utilities as Utilities
 import Analysis.H_mumu as analysis
 from FLAF.Common.Utilities import DeclareHeader
@@ -71,7 +71,7 @@ class DNNProducer:
         for i in range(self.parity):
             # The model itself
             filename = os.path.join(directory, f"trained_model_{i}.onnx")
-            model = ort.InferenceSession(filename)
+            model = OnnxSession.make_session(filename)
             models.append(model)
         return models
 

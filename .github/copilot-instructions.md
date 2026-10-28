@@ -36,6 +36,13 @@ address, so it must stay reachable while the dataframe is used (FLAF keeps it on
 - Every stitching processor must declare `stages: [ AnaTuple, AnaTupleMerge ]` — see the FLAF file
   for what happens otherwise.
 
+### ONNX sessions
+
+- The DNN, VBFNet and PostVBFNetDNN producers create their ONNX Runtime sessions with
+  `FLAF.Common.OnnxSession.make_session` (one thread). A bare `ort.InferenceSession` with the
+  default options makes the outputs depend on the core count of the batch node
+  (cms-flaf/FLAF#357).
+
 ### Integration test
 
 `TestModel` runs `custom_CI_background_TT` and `custom_CI_background_DY` plus one signal and one
